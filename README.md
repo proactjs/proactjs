@@ -1,4 +1,4 @@
-# proact.js [![GitHub version](https://badge.fury.io/gh/proactjs%2Fproactjs.svg)](http://badge.fury.io/gh/proactjs%2Fproactjs) [![Build Status](https://travis-ci.org/meddle0x53/pro.js.svg?branch=master)](https://travis-ci.org/meddle0x53/pro.js)
+# proact.js [![GitHub version](https://badge.fury.io/gh/proactjs%2Fproactjs.svg)](http://badge.fury.io/gh/proactjs%2Fproactjs) [![Build Status](https://travis-ci.org/proactjs/proactjs.svg?branch=master)](https://travis-ci.org/proactjs/proactjs)
 
 ## Download
  * [Development](https://raw.github.com/proactjs/proactjs/master/dist/js/proact.js)
