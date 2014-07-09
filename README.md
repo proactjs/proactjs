@@ -1,10 +1,12 @@
 # proact.js [![GitHub version](https://badge.fury.io/gh/proactjs%2Fproactjs.svg)](http://badge.fury.io/gh/proactjs%2Fproactjs) [![Build Status](https://travis-ci.org/proactjs/proactjs.svg?branch=master)](https://travis-ci.org/proactjs/proactjs)
 
+![alt tag](https://raw.githubusercontent.com/proactjs/proactjs/master/proact_logo.png)
+
 ## Download
  * [Development](https://raw.github.com/proactjs/proactjs/master/dist/js/proact.js)
  * [Production](https://raw.github.com/proactjs/proactjs/master/dist/js/proact.min.js)
 
-## About pro.js
+## About ProAct.js
   Reactive JavaScript object properties. In other words object oriented implementation of the [Reactive paradigm in the programming](http://en.wikipedia.org/wiki/Reactive_programming) in Javascript.
   In human language the reactive idea is the following: if we define sum=a+b and we change 'a' or 'b', 'sum' is automatically calculated.
   The library can be used to implement fast model layer for a small JS MVC (the reactive nature of pro.js gives you bindings). It can be used for observing changes on properties too.
