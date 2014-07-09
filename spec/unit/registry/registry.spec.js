@@ -212,6 +212,13 @@ describe('Pro.Registry.StreamProvider', function () {
           expect(res.length).toBe(4);
           expect(res).toEqual([1, 2, 6, 24]);
         });
+
+        it ('can use complex predefined accumulation expressions', function () {
+          reg.make('s:test', '@($1)|acc(+)', listener).trigger(1).trigger(1).trigger(1);
+
+          expect(res.length).toBe(3);
+          expect(res).toEqual([1, 2, 3]);
+        });
       });
 
       describe('order of operations', function () {

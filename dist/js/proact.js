@@ -5,7 +5,32 @@
 		window.Pro = pro();
 	}
 }(function() {
-	var Pro = {},
+	/**
+	 * ProAct.js turns plain JavaScript objects into holders of reactive properties.
+	 * You can define the dependencies between these objects and properties using the 'vanilla' js syntax.
+	 * For example if an object should have a property 'x', that depends on its two fields 'a' and 'b', the only thing that's needed
+	 * is to define a function 'x', that refers to 'this.a' and 'this.b'.
+	 *
+	 * So ProAct.js can turn every vanilla JavaScript value to a set of reactive properties, and this generates a dependency graph between them.
+	 * The data flow in this oriented graph is determined by its edges. So if we should receive data from the outside of this dependency system we'll need
+	 * a powerful but easy to use tool to turn every user or server generated action into a data event, common to the graph. Enter the Pro.Stream - the functional
+	 * part of ProAct.js
+	 *
+	 * ProAct.js can be used to define bindings, to separate views from models (mv*), for performance optimizations... It is a tool.
+	 * A powerful tool for creating other, high level tools, or applications.
+	 */
+	
+	/**
+	 * The main namespace that contains all the ProAct classes and methods.
+	 * Everything should be defined in this namespace. It can be used as P or Pro.
+	 *
+	 * @class ProAct
+	 * @static
+	 * @version 0.4.2
+	 * @author meddle0x53
+	 */
+	var ProAct = Pro = P = {},
+	
 	    arrayProto = Array.prototype,
 	    concat = arrayProto.concat,
 	    every = arrayProto.every,
@@ -34,14 +59,44 @@
 	    opStoreAll,
 	    streamProvider, functionProvider;
 	
-	Pro.States = {
+	
+	/**
+	 * @property VERSION
+	 * @type String
+	 * @static
+	 */
+	ProAct.VERSION = '0.4.2';
+	
+	/**
+	 * Defines the possible states of the ProAct objects.
+	 * <ul>
+	 *  <li>init - Initialized : It is not usable yet, but is market as ProAct object.</li>
+	 *  <li>ready - Ready for use.</li>
+	 *  <li>destroyed - Destroyed : An object that is ProAct dependent no more. All the ProAct logic should be cleaned up from it.</li>
+	 *  <li>error - There was some runtime error while creating or working with the object.</li>
+	 * </ul>
+	 *
+	 * @class ProAct.States
+	 * @namespace ProAct
+	 * @static
+	 */
+	ProAct.States = {
 	  init: 1,
 	  ready: 2,
 	  destroyed: 3,
 	  error: 4
 	};
 	
-	Pro.Utils = Pro.U = {
+	
+	/**
+	 * Contains a set of utility functions to ease working with arrays and objects.
+	 * Can be reffered by using 'ProAct.U' too.
+	 *
+	 * @class ProAct.Utils
+	 * @namespace ProAct
+	 * @static
+	 */
+	ProAct.Utils = Pro.U = {
 	  isFunction: function (property) {
 	    return typeof(property) === 'function';
 	  },
@@ -2716,8 +2771,16 @@
 	                }
 	              } else if (predefined && predefined[arg]) {
 	                arg = predefined[arg];
+	
+	                if (Pro.U.isArray(arg)) {
+	                  opArguments = opArguments.concat(arg);
+	                  arg = undefined;
+	                }
 	              }
-	              opArguments.push(arg);
+	
+	              if (arg !== undefined) {
+	                opArguments.push(arg);
+	              }
 	            }
 	          }
 	

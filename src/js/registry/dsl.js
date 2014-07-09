@@ -33,8 +33,16 @@ Pro.OpStore = {
                 }
               } else if (predefined && predefined[arg]) {
                 arg = predefined[arg];
+
+                if (Pro.U.isArray(arg)) {
+                  opArguments = opArguments.concat(arg);
+                  arg = undefined;
+                }
               }
-              opArguments.push(arg);
+
+              if (arg !== undefined) {
+                opArguments.push(arg);
+              }
             }
           }
 
