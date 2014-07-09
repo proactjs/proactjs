@@ -26,7 +26,7 @@ or
   <!-- Pro will be global object -->
 ```
 
-### Use as Node.js module [![NPM version](https://badge.fury.io/js/pro.js.svg)](http://badge.fury.io/js/pro.js)
+### Use as Node.js module [![NPM version](https://badge.fury.io/js/proact.js.svg)](http://badge.fury.io/js/proact.js)
 ```
   npm install proact.js
 ```
