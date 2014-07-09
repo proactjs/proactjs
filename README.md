@@ -1,4 +1,4 @@
-# proact.js [![GitHub version](https://badge.fury.io/gh/meddle0x53%2Fpro.js.svg)](http://badge.fury.io/gh/meddle0x53%2Fpro.js) [![Build Status](https://travis-ci.org/meddle0x53/pro.js.svg?branch=master)](https://travis-ci.org/meddle0x53/pro.js)
+# proact.js [![GitHub version](https://badge.fury.io/gh/proactjs%2Fproactjs.svg)](http://badge.fury.io/gh/proactjs%2Fproactjs) [![Build Status](https://travis-ci.org/meddle0x53/pro.js.svg?branch=master)](https://travis-ci.org/meddle0x53/pro.js)
 
 ## Download
  * [Development](https://raw.github.com/proactjs/proactjs/master/dist/js/proact.js)
@@ -17,27 +17,27 @@
   
 ### Use in sites
 ```html
-  <script src="pro.js" type="text/javascript"></script>
+  <script src="proact.js" type="text/javascript"></script>
   <!-- Pro will be global object -->
 ```
 or
 ```html
-  <script src="pro.min.js" type="text/javascript"></script>
+  <script src="proact.min.js" type="text/javascript"></script>
   <!-- Pro will be global object -->
 ```
 
 ### Use as Node.js module [![NPM version](https://badge.fury.io/js/pro.js.svg)](http://badge.fury.io/js/pro.js)
 ```
-  npm install pro.js
+  npm install proact.js
 ```
 
 ```javascript
-  var Pro = require('pro.js');
+  var Pro = require('proact.js');
 ```
 
 ### Build from source
   * Install Node.js and its package manager 'npm'
-  * Clone or fork and clone this project - for example ```git clone https://github.com/meddle0x53/pro.js.git```
+  * Clone or fork and clone this project - for example ```git clone https://github.com/proactjs/proactjs.git```
   * Go to the clonned project and run ``` npm install ``` to install the project dependencies. 
   * Run ``` grunt spec ``` to run the specs, should pass.
   * Run ``` grunt build ``` to build the project - the build will be located in ``` {project_folder}/dist ```
