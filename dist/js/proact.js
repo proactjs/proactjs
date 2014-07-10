@@ -2,7 +2,7 @@
 	if (typeof module === "object" && typeof module.exports === "object") {
 		module.exports = pro();
 	} else {
-		window.Pro = pro();
+		window.Pro = window.ProAct = window.P = pro();
 	}
 }(function() {
 	/**
@@ -423,7 +423,7 @@
 	   * @type Boolean
 	   * @memberof ProAct.Configuration
 	   * @static
-	   * @see {@link ProAct.Configuration#keypropList}
+	   * @see {@link ProAct.Configuration.keypropList}
 	   */
 	  keyprops: true,
 	
@@ -434,7 +434,7 @@
 	   * @type Array
 	   * @memberof ProAct.Configuration
 	   * @static
-	   * @see {@link ProAct.Configuration#keyprops}
+	   * @see {@link ProAct.Configuration.keyprops}
 	   */
 	  keypropList: ['p']
 	};
@@ -643,7 +643,7 @@
 	   * Pushes an action to this queue only once.
 	   * <p>
 	   *  If the action is pushed for the second time using this method, instead of
-	   *  adding it to the queue, it priority is goes up and its arguments are updated.
+	   *  adding it to the queue, its priority goes up and its arguments are updated.
 	   *  This means that this action will be executed after all the other actions, pushed only once.
 	   * </p>
 	   * <p>
@@ -671,7 +671,7 @@
 	   * @see {@link ProAct.Queue.push}
 	   */
 	  pushOnce: function (context, action, args) {
-	    if (context && Pro.Utils.isFunction(context)) {
+	    if (context && P.U.isFunction(context)) {
 	      args = action;
 	      action = context;
 	      context = null;
@@ -742,7 +742,7 @@
 	        prio = queue[i + 3];
 	
 	        if (prio === priority) {
-	          Pro.Queue.runAction(this, obj, method, args, err);
+	          P.Q.runAction(this, obj, method, args, err);
 	        } else if (prio > priority) {
 	          going = true;
 	          tl = i + 4;
@@ -771,6 +771,43 @@
 	P.Q.prototype.deferOnce = P.Q.prototype.enqueOnce = P.Q.prototype.addOnce = P.Q.prototype.pushOnce;
 	P.Q.prototype.run = P.Q.prototype.go;
 	
+	/**
+	 * <p>
+	 *  Creates a queue of {@link ProAct.Queue}s. The order of these sub-queues is used
+	 *  to determine the order in which they will be dequed.
+	 * </p>
+	 * <p>
+	 *  The idea of this class is to have different queues for the different layers
+	 *  of an application. That way lower level actions will always execuded before higher level.
+	 * </p>
+	 * <p>
+	 *  If a higher level queue enques actions in lower level one, the action flow returns stops and returns
+	 *  from the lower level one.
+	 * </p>
+	 * <p>
+	 *  The {@link ProAct.Queues#go} method deques all the actions from all the queues and executes them in the right
+	 *  order, using their priorities and queue order.
+	 * </p>
+	 * <p>
+	 *  A ProAct.Queues can be used to setup very complex the action flow.
+	 *  ProAct.js uses it with only one queue - 'proq' to create an action flow if something changes.
+	 * </p>
+	 *
+	 * TODO We need to pass before, after and error callbacks here too. ~meddle@2014-07-10
+	 *
+	 * @class ProAct.Queues
+	 * @param {Array} queueNames
+	 *      Array with the names of the sub-queues. The size of this array determines
+	 *      the number of the sub-queues.
+	 * @param {Object} options
+	 *    Various options for the ProAct.Queues.
+	 *    <p>Available options:</p>
+	 *    <ul>
+	 *      <li>queue - An options object containing options to be passed to all the sub-queues. For more information see {@link ProAct.Queue}.</li>
+	 *    </ul>
+	 * @see {@link ProAct.Queue}
+	 * @see {@link ProAct.Flow}
+	 */
 	ProAct.Queues = P.QQ = function (queueNames, options) {
 	  if (!queueNames) {
 	    queueNames = ['proq'];
@@ -781,14 +818,34 @@
 	
 	  this._queues = {};
 	
-	  var i, length = this.queueNames.length;
-	  for (i = 0; i < length; i++) {
-	    this._queues[this.queueNames[i]] = new Pro.Queue(this.queueNames[i], this.options.queue);
+	  var i, ln = this.queueNames.length;
+	  for (i = 0; i < ln; i++) {
+	    this._queues[this.queueNames[i]] = new P.Q(this.queueNames[i], this.options.queue);
 	  }
 	};
 	
 	P.QQ.prototype = {
+	
+	  /**
+	   * Reference to the constructor of this object.
+	   *
+	   * @memberof ProAct.Queues
+	   * @instance
+	   * @constant
+	   * @type {Object}
+	   * @default ProAct.Queues
+	   */
 	  constructor: ProAct.Queues,
+	
+	  /**
+	   * Checks if this ProAct.Queues is empty.
+	   *
+	   * @memberof ProAct.Queues
+	   * @instance
+	   * @method isEmpty
+	   * @return {Boolean}
+	   *      True if there are no actions in any of the sub-queues.
+	   */
 	  isEmpty: function () {
 	    var queues = this._queues,
 	        names = this.queueNames,
@@ -806,11 +863,45 @@
 	
 	    return true;
 	  },
-	  push: function (queueName, obj, method, args) {
-	    if (queueName && !Pro.Utils.isString(queueName)) {
-	      args = method;
-	      method = obj;
-	      obj = queueName;
+	
+	  /**
+	   * Pushes an action to a sub-queue.
+	   * This method can enque the same action multiple times and always with priority of '1'.
+	   * <p>
+	   *  ProAct.Queues#defer, ProAct.Queues#enque and ProAct.Queues#add are aliases of this method.
+	   * </p>
+	   *
+	   * @memberof ProAct.Queues
+	   * @instance
+	   * @method push
+	   * @param {String} queueName
+	   *      The name of the queue to enque the action in.
+	   *      <p>
+	   *        On the place of this argument the context can be passed and the queue to push in
+	   *        becomes the first queue of the sub-queues.
+	   *      </p>
+	   * @param {Object} context
+	   *      The context of the action.
+	   *      It can be null.
+	   *      <p>
+	   *        If the method is called with a Function context, the context becomes the action.
+	   *        This way the method can be called with only one parameter for actions without context.
+	   *      </p>
+	   * @param {Function} action
+	   *      The action to enque.
+	   *      <p>
+	   *        If there is no context and the action is passed in place of the context,
+	   *        this parameter can hold the arguments of the action.
+	   *      </p>
+	   * @param {Array} args
+	   *      Arguments to be passed to the action when it is executed.
+	   * @see {@link ProAct.Queue#push}
+	   */
+	  push: function (queueName, context, action, args) {
+	    if (queueName && !P.U.isString(queueName)) {
+	      args = action;
+	      action = context;
+	      context = queueName;
 	      queueName = this.queueNames[0];
 	    }
 	    if (!queueName) {
@@ -819,14 +910,52 @@
 	
 	    var queue = this._queues[queueName];
 	    if (queue) {
-	      queue.push(obj, method, args);
+	      queue.push(context, action, args);
 	    }
 	  },
-	  pushOnce: function (queueName, obj, method, args) {
-	    if (queueName && !Pro.Utils.isString(queueName)) {
-	      args = method;
-	      method = obj;
-	      obj = queueName;
+	
+	  /**
+	   * Pushes an action to a sub-queue only once.
+	   * <p>
+	   *  If the action is pushed for the second time using this method, instead of
+	   *  adding it to the sub-queue, its priority goes up and its arguments are updated.
+	   *  This means that this action will be executed after all the other actions, pushed only once.
+	   * </p>
+	   * <p>
+	   *  ProAct.Queues#deferOnce, ProAct.Queues#enqueOnce and ProAct.Queues#addOnce are aliases of this method.
+	   * </p>
+	   *
+	   * @memberof ProAct.Queues
+	   * @instance
+	   * @method pushOnce
+	   * @param {String} queueName
+	   *      The name of the queue to enque the action in.
+	   *      <p>
+	   *        On the place of this argument the context can be passed and the queue to push in
+	   *        becomes the first queue of the sub-queues.
+	   *      </p>
+	   * @param {Object} context
+	   *      The context of the action.
+	   *      It can be null.
+	   *      <p>
+	   *        If the method is called with a Function context, the context becomes the action.
+	   *        This way the method can be called with only one parameter for actions without context.
+	   *      </p>
+	   * @param {Function} action
+	   *      The action to enque.
+	   *      <p>
+	   *        If there is no context and the action is passed in place of the context,
+	   *        this parameter can hold the arguments of the action.
+	   *      </p>
+	   * @param {Array} args
+	   *      Arguments to be passed to the action when it is executed.
+	   * @see {@link ProAct.Queue.pushOnce}
+	   */
+	  pushOnce: function (queueName, context, action, args) {
+	    if (queueName && !P.U.isString(queueName)) {
+	      args = action;
+	      action = context;
+	      context = queueName;
 	      queueName = this.queueNames[0];
 	    }
 	    if (!queueName) {
@@ -835,7 +964,7 @@
 	
 	    var queue = this._queues[queueName];
 	    if (queue) {
-	      queue.pushOnce(obj, method, args);
+	      queue.pushOnce(context, action, args);
 	    }
 	  },
 	  go: function (queueName) {
@@ -886,6 +1015,9 @@
 	    return -1;
 	  }
 	};
+	
+	P.QQ.prototype.defer = P.QQ.prototype.enque = P.QQ.prototype.add = P.QQ.prototype.push;
+	P.QQ.prototype.deferOnce = P.QQ.prototype.enqueOnce = P.QQ.prototype.addOnce = P.QQ.prototype.pushOnce;
 	
 	Pro.Flow = function (queueNames, options) {
 	  if (!queueNames) {
@@ -3290,7 +3422,7 @@
 	  types: {
 	    basic: function () { throw new Error('Abstract: implement!'); }
 	  },
-	  provide: function (options) {
+	  provide: function (options, meta) {
 	    if (this.useOptions) {
 	      var type = options[0],
 	          regexp, matched, args,
@@ -3309,7 +3441,7 @@
 	      }
 	    }
 	
-	    return this.types.basic(options);
+	    return this.types.basic(options, meta);
 	  }
 	};
 	
@@ -3338,8 +3470,8 @@
 	    registry.po = registry.proObject = Pro.U.bind(this, this.get);
 	  },
 	  types: {
-	    basic: function (value) {
-	      return Pro.prob(value);
+	    basic: function (value, meta) {
+	      return Pro.prob(value, meta);
 	    }
 	  }
 	});

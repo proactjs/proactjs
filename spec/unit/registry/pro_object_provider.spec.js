@@ -31,5 +31,22 @@ describe('Pro.Registry.ProObjectProvider', function () {
       expect(val.val).toEqual(5);
       expect(val.valPow).toEqual(25);
     });
+
+    it ('is able to pass meta-data while creating a ProAct object', function () {
+      var res = [], val = provider.make('test', {
+            x: 5,
+            y: 4,
+            pow: function () {return this.x * this.y;}
+          },
+          {
+            pow: ['@($1)', function (val) {res.push(val);}]
+          });
+
+      val.pow;
+      val.y = 5;
+
+      expect(res.length).toBe(1);
+      expect(res[0].type).toBe(ProAct.Event.Types.value);
+    });
   });
 });

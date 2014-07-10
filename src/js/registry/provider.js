@@ -32,7 +32,7 @@ Pro.Registry.Provider.prototype = {
   types: {
     basic: function () { throw new Error('Abstract: implement!'); }
   },
-  provide: function (options) {
+  provide: function (options, meta) {
     if (this.useOptions) {
       var type = options[0],
           regexp, matched, args,
@@ -51,7 +51,7 @@ Pro.Registry.Provider.prototype = {
       }
     }
 
-    return this.types.basic(options);
+    return this.types.basic(options, meta);
   }
 };
 
@@ -80,8 +80,8 @@ Pro.Registry.ProObjectProvider.prototype = Pro.U.ex(Object.create(Pro.Registry.P
     registry.po = registry.proObject = Pro.U.bind(this, this.get);
   },
   types: {
-    basic: function (value) {
-      return Pro.prob(value);
+    basic: function (value, meta) {
+      return Pro.prob(value, meta);
     }
   }
 });

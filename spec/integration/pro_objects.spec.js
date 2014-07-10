@@ -1,6 +1,6 @@
 'use strict';
 
-describe('Pro', function () {
+describe('ProAct', function () {
   it ('exists in the global object', function () {
     expect(Pro).not.toBe(undefined);
     expect(Pro).not.toBe(null);

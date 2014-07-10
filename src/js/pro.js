@@ -416,7 +416,7 @@ ProAct.Configuration = P.Conf = {
    * @type Boolean
    * @memberof ProAct.Configuration
    * @static
-   * @see {@link ProAct.Configuration#keypropList}
+   * @see {@link ProAct.Configuration.keypropList}
    */
   keyprops: true,
 
@@ -427,7 +427,7 @@ ProAct.Configuration = P.Conf = {
    * @type Array
    * @memberof ProAct.Configuration
    * @static
-   * @see {@link ProAct.Configuration#keyprops}
+   * @see {@link ProAct.Configuration.keyprops}
    */
   keypropList: ['p']
 };

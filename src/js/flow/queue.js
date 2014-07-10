@@ -173,7 +173,7 @@ P.Q.prototype = {
    * Pushes an action to this queue only once.
    * <p>
    *  If the action is pushed for the second time using this method, instead of
-   *  adding it to the queue, it priority is goes up and its arguments are updated.
+   *  adding it to the queue, its priority goes up and its arguments are updated.
    *  This means that this action will be executed after all the other actions, pushed only once.
    * </p>
    * <p>
@@ -201,7 +201,7 @@ P.Q.prototype = {
    * @see {@link ProAct.Queue.push}
    */
   pushOnce: function (context, action, args) {
-    if (context && Pro.Utils.isFunction(context)) {
+    if (context && P.U.isFunction(context)) {
       args = action;
       action = context;
       context = null;
@@ -272,7 +272,7 @@ P.Q.prototype = {
         prio = queue[i + 3];
 
         if (prio === priority) {
-          Pro.Queue.runAction(this, obj, method, args, err);
+          P.Q.runAction(this, obj, method, args, err);
         } else if (prio > priority) {
           going = true;
           tl = i + 4;

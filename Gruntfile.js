@@ -24,7 +24,7 @@ module.exports = function(grunt) {
             '\tif (typeof module === "object" && typeof module.exports === "object") {\n' +
             '\t\tmodule.exports = pro();\n' +
             '\t} else {\n' +
-            '\t\twindow.Pro = pro();\n' +
+            '\t\twindow.Pro = window.ProAct = window.P = pro();\n' +
             '\t}\n' +
             '}(function() {', '\treturn Pro;\n}));'
           ],
@@ -45,37 +45,32 @@ module.exports = function(grunt) {
     },
 
     jshint: {
-      dev: {
-        files: [
-          [
-          ]
-        ],
-        options: {
-          curly: true,
-          multistr: true,
-          quotmark: 'single',
-          camelcase: true,
-          bitwise: false,
-          unused: true,
-          eqeqeq: true,
-          indent: 2,
-          immed: true,
-          latedef: true,
-          newcap: true,
-          noarg: true,
-          sub: true,
-          boss: true,
-          es5: true,
-          eqnull: true,
-          evil: true,
-          scripturl: true,
-          smarttabs: true,
-          maxparams: 5,
-          maxdepth: 3,
-          maxlen: 100,
-          globals: {}
-        }
-      },
+      all: ['src/js/**/*.js'],
+      options: {
+        curly: true,
+        multistr: true,
+        quotmark: 'single',
+        camelcase: false,
+        bitwise: false,
+        unused: true,
+        eqeqeq: true,
+        indent: 2,
+        immed: true,
+        latedef: true,
+        newcap: true,
+        noarg: true,
+        sub: true,
+        boss: true,
+        es5: true,
+        eqnull: true,
+        evil: true,
+        scripturl: true,
+        smarttabs: true,
+        maxparams: 5,
+        maxdepth: 3,
+        maxlen: 100,
+        globals: {}
+      }
     },
 
     jsdoc : {
@@ -102,6 +97,7 @@ module.exports = function(grunt) {
         'spec/unit/flow/flow.spec.js',
         'spec/unit/arrays/pro_array.spec.js',
         'src/js/flow/queue.js',
+        'src/js/flow/queues.js',
         'src/js/flow/flow.js',
         'src/js/objects/observable.js',
         'src/js/streams/stream.js',
