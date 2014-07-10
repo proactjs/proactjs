@@ -97,7 +97,7 @@ ProAct.Queue = P.Q = function (name, options) {
  *        It can be null if the error should be catched from the outside.
  *      &lt;/p>
  */
-P.Q.runAction = function (queue, context, action, args, errHandler) {
+ProAct.Queue.runAction = function (queue, context, action, args, errHandler) {
   if (args && args.length > 0) {
     if (errHandler) {
       try {
@@ -121,7 +121,7 @@ P.Q.runAction = function (queue, context, action, args, errHandler) {
   }
 };
 
-P.U.ex(P.Q.prototype, {
+P.Q.prototype = {
 
   /**
    * Reference to the constructor of this object.
@@ -146,23 +146,92 @@ P.U.ex(P.Q.prototype, {
   length: function () {
     return this._queue.length / 4;
   },
+
+  /**
+   * Checks if this ProAct.Queue is empty.
+   *
+   * @memberof ProAct.Queue
+   * @instance
+   * @method isEmpty
+   * @return {Boolean}
+   *      True if there are no actions in this queue.
+   */
   isEmpty: function () {
     return this.length() === 0;
   },
-  push: function (obj, method, args) {
-    if (obj && Pro.Utils.isFunction(obj)) {
-      args = method;
-      method = obj;
-      obj = null;
+
+  /**
+   * Pushes an action to this queue.
+   * This method can enque the same action multiple times and always with priority of '1'.
+   * &lt;p>
+   *  ProAct.Queue#defer, ProAct.Queue#enque and ProAct.Queue#add are aliases of this method.
+   * &lt;/p>
+   *
+   * @memberof ProAct.Queue
+   * @instance
+   * @method push
+   * @param {Object} context
+   *      The context of the action.
+   *      It can be null.
+   *      &lt;p>
+   *        If the method is called with a Function context, the context becomes the action.
+   *        This way the method can be called with only one parameter for actions without context.
+   *      &lt;/p>
+   * @param {Function} action
+   *      The action to enque.
+   *      &lt;p>
+   *        If there is no context and the action is passed in place of the context,
+   *        this parameter can hold the arguments of the action.
+   *      &lt;/p>
+   * @param {Array} args
+   *      Arguments to be passed to the action when it is executed.
+   */
+  push: function (context, action, args) {
+    if (context && P.U.isFunction(context)) {
+      args = action;
+      action = context;
+      context = null;
     }
 
-    this._queue.push(obj, method, args, 1);
+    this._queue.push(context, action, args, 1);
   },
-  pushOnce: function (obj, method, args) {
-    if (obj && Pro.Utils.isFunction(obj)) {
-      args = method;
-      method = obj;
-      obj = null;
+
+  /**
+   * Pushes an action to this queue only once.
+   * &lt;p>
+   *  If the action is pushed for the second time using this method, instead of
+   *  adding it to the queue, it priority is goes up and its arguments are updated.
+   *  This means that this action will be executed after all the other actions, pushed only once.
+   * &lt;/p>
+   * &lt;p>
+   *  ProAct.Queue#deferOnce, ProAct.Queue#enqueOnce and ProAct.Queue#addOnce are aliases of this method.
+   * &lt;/p>
+   *
+   * @memberof ProAct.Queue
+   * @instance
+   * @method pushOnce
+   * @param {Object} context
+   *      The context of the action.
+   *      It can be null.
+   *      &lt;p>
+   *        If the method is called with a Function context, the context becomes the action.
+   *        This way the method can be called with only one parameter for actions without context.
+   *      &lt;/p>
+   * @param {Function} action
+   *      The action to enque.
+   *      &lt;p>
+   *        If there is no context and the action is passed in place of the context,
+   *        this parameter can hold the arguments of the action.
+   *      &lt;/p>
+   * @param {Array} args
+   *      Arguments to be passed to the action when it is executed.
+   * @see {@link ProAct.Queue.push}
+   */
+  pushOnce: function (context, action, args) {
+    if (context && Pro.Utils.isFunction(context)) {
+      args = action;
+      action = context;
+      context = null;
     }
 
     var queue = this._queue, current, currentMethod,
@@ -172,15 +241,38 @@ P.U.ex(P.Q.prototype, {
       current = queue[i];
       currentMethod = queue[i + 1];
 
-      if (current === obj && currentMethod === method) {
+      if (current === context && currentMethod === action) {
         queue[i + 2] = args;
         queue[i + 3] = queue[i + 3] + 1;
         return;
       }
     }
 
-    this.push(obj, method, args);
+    this.push(context, action, args);
   },
+
+  /**
+   * Starts the action flow.
+   * &lt;p>
+   *  Executes the actions in this queue in the order they were enqued, but also uses the priorities
+   *  to execute these with numerically higher priority after these with numerically lower priority.
+   * &lt;/p>
+   * &lt;p>
+   *  If some of the actions enques new actions in this queue and the parameter &lt;i>once&lt;/i> is set to false
+   *  this method is recursively called executing the new actions.
+   * &lt;/p>
+   * &lt;p>
+   *  ProAct.Queue#run is alias of this method.
+   * &lt;/p>
+   *
+   * @memberof ProAct.Queue
+   * @instance
+   * @method go
+   * @param {Boolean} once
+   *      True if 'go' should not be called for actions generated by the executed ones.
+   * @see {@link ProAct.Queue.push}
+   * @see {@link ProAct.Queue.pushOnce}
+   */
   go: function (once) {
     var queue = this._queue,
         options = this.options,
@@ -230,7 +322,11 @@ P.U.ex(P.Q.prototype, {
       this._queue.length = 0;
     }
   }
-});
+};
+
+P.Q.prototype.defer = P.Q.prototype.enque = P.Q.prototype.add = P.Q.prototype.push;
+P.Q.prototype.deferOnce = P.Q.prototype.enqueOnce = P.Q.prototype.addOnce = P.Q.prototype.pushOnce;
+P.Q.prototype.run = P.Q.prototype.go;
 </code></pre>
         </article>
     </section>
@@ -247,7 +343,7 @@ P.U.ex(P.Q.prototype, {
 <br clear="both">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.2</a> on Thu Jul 10 2014 18:08:59 GMT+0300 (EEST)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.2</a> on Thu Jul 10 2014 19:16:01 GMT+0300 (EEST)
 </footer>
 
 <script> prettyPrint(); </script>

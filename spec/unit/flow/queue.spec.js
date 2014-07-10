@@ -51,10 +51,10 @@ describe('Pro.Queue', function () {
     });
 
     it('stores object functions in the queue correctly', function () {
-      queue.push(obj, obj.f1);
+      queue.enque(obj, obj.f1);
       expect(queue.length()).toBe(1);
 
-      queue.push(obj, obj.f2);
+      queue.add(obj, obj.f2);
       expect(queue.length()).toBe(2);
 
       queue.push(obj, obj.f2, [12, 43]);
