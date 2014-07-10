@@ -62,7 +62,7 @@
  from the lower level one.
 </p>
 <p>
- The ProAct.Queues#go method deques all the actions from all the queues and executes them in the right
+ The <a href="ProAct.Queues.html#go">ProAct.Queues#go</a> method deques all the actions from all the queues and executes them in the right
  order, using their priorities and queue order.
 </p>
 <p>
@@ -191,7 +191,7 @@ TODO We need to pass before, after and error callbacks here too. ~meddle@2014-07
         <ul>
             <li><a href="ProAct.Queue.html">ProAct.Queue</a></li>
         
-            <li>ProAct.Flow</li>
+            <li><a href="ProAct.Flow.html">ProAct.Flow</a></li>
         </ul>
     </dd>
     
@@ -305,6 +305,143 @@ TODO We need to pass before, after and error callbacks here too. ~meddle@2014-07
         <h3 class="subsection-title">Methods</h3>
         
         <dl>
+            
+<dt>
+    <h4 class="name" id="go"><span class="type-signature"></span>go<span class="signature">(queueName)</span><span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Starts the action flow.
+<p>
+ Executes the actions in all the  sub-queues in the order they were enqued, but also uses the priorities
+ to execute these with numerically higher priority after these with numerically lower priority.
+</p>
+<p>
+ If some of the actions in the third queue pushes new actions to the second queue, the action flow returns
+ to the second queue again and then continues through all the queues.
+</p>
+<p>
+ ProAct.Queues#run is alias of this method.
+</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>queueName</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">The name of the queue to begin from. Can be null and defaults to the first sub-queue.</td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="queues.js.html">flow/queues.js</a>, <a href="queues.js.html#line198">line 198</a>
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    <dt class="tag-see">See:</dt>
+    <dd class="tag-see">
+        <ul>
+            <li><a href="ProAct.Queues.html#push">ProAct.Queues#push</a></li>
+        
+            <li><a href="ProAct.Queues.html#pushOnce">ProAct.Queues#pushOnce</a></li>
+        </ul>
+    </dd>
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
             
 <dt>
     <h4 class="name" id="isEmpty"><span class="type-signature"></span>isEmpty<span class="signature">()</span><span class="type-signature"> &rarr; {Boolean}</span></h4>
@@ -605,6 +742,220 @@ This method can enque the same action multiple times and always with priority of
     
 </dd>
 
+        
+            
+<dt>
+    <h4 class="name" id="pushOnce"><span class="type-signature"></span>pushOnce<span class="signature">(queueName, context, action, args)</span><span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Pushes an action to a sub-queue only once.
+<p>
+ If the action is pushed for the second time using this method, instead of
+ adding it to the sub-queue, its priority goes up and its arguments are updated.
+ This means that this action will be executed after all the other actions, pushed only once.
+</p>
+<p>
+ ProAct.Queues#deferOnce, ProAct.Queues#enqueOnce and ProAct.Queues#addOnce are aliases of this method.
+</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>queueName</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">The name of the queue to enque the action in.
+     <p>
+       On the place of this argument the context can be passed and the queue to push in
+       becomes the first queue of the sub-queues.
+     </p></td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>context</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">The context of the action.
+     It can be null.
+     <p>
+       If the method is called with a Function context, the context becomes the action.
+       This way the method can be called with only one parameter for actions without context.
+     </p></td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>action</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">The action to enque.
+     <p>
+       If there is no context and the action is passed in place of the context,
+       this parameter can hold the arguments of the action.
+     </p></td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>args</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">Array</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">Arguments to be passed to the action when it is executed.</td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="queues.js.html">flow/queues.js</a>, <a href="queues.js.html#line144">line 144</a>
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    <dt class="tag-see">See:</dt>
+    <dd class="tag-see">
+        <ul>
+            <li><a href="ProAct.Queue.html#pushOnce">ProAct.Queue#pushOnce</a></li>
+        </ul>
+    </dd>
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
         </dl>
     
     
@@ -621,13 +972,13 @@ This method can enque the same action multiple times and always with priority of
 </div>
 
 <nav>
-    <h2><a href="index.html">Index</a></h2><h3>Classes</h3><ul><li><a href="ProAct.Queue.html">Queue</a></li><li><a href="ProAct.Queues.html">Queues</a></li></ul><h3>Namespaces</h3><ul><li><a href="ProAct.html">ProAct</a></li><li><a href="ProAct.Configuration.html">Configuration</a></li><li><a href="ProAct.States.html">States</a></li><li><a href="ProAct.Utils.html">Utils</a></li></ul>
+    <h2><a href="index.html">Index</a></h2><h3>Classes</h3><ul><li><a href="ProAct.Flow.html">Flow</a></li><li><a href="ProAct.Queue.html">Queue</a></li><li><a href="ProAct.Queues.html">Queues</a></li></ul><h3>Namespaces</h3><ul><li><a href="ProAct.html">ProAct</a></li><li><a href="ProAct.Configuration.html">Configuration</a></li><li><a href="ProAct.States.html">States</a></li><li><a href="ProAct.Utils.html">Utils</a></li></ul>
 </nav>
 
 <br clear="both">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.2</a> on Thu Jul 10 2014 23:38:46 GMT+0300 (EEST)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.2</a> on Fri Jul 11 2014 00:10:10 GMT+0300 (EEST)
 </footer>
 
 <script> prettyPrint(); </script>

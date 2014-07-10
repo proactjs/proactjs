@@ -176,7 +176,7 @@ P.QQ.prototype = {
    *      </p>
    * @param {Array} args
    *      Arguments to be passed to the action when it is executed.
-   * @see {@link ProAct.Queue.pushOnce}
+   * @see {@link ProAct.Queue#pushOnce}
    */
   pushOnce: function (queueName, context, action, args) {
     if (queueName && !P.U.isString(queueName)) {
@@ -214,8 +214,8 @@ P.QQ.prototype = {
    * @method go
    * @param {String} queueName
    *      The name of the queue to begin from. Can be null and defaults to the first sub-queue.
-   * @see {@link ProAct.Queues.push}
-   * @see {@link ProAct.Queues.pushOnce}
+   * @see {@link ProAct.Queues#push}
+   * @see {@link ProAct.Queues#pushOnce}
    */
   go: function (queueName) {
     var currentQueueIndex = 0,

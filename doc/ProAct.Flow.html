@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Class: Flow</title>
+    
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+    
+    <h1 class="page-title">Class: Flow</h1>
+    
+    
+
+
+
+<section>
+    
+<header>
+    <h2>
+        <span class="ancestors"><a href="ProAct.html">ProAct</a>.</span>
+    
+    Flow
+    </h2>
+    
+</header>  
+
+<article>
+    <div class="container-overview">
+    
+    
+    
+        
+<dt>
+    <h4 class="name" id="Flow"><span class="type-signature"></span>new Flow<span class="signature">(queueNames, options)</span><span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>
+ Constructs the action flow of the ProAct.js; An action flow is a set of actions
+ executed in the reactive environment, which order is determined by the dependencies
+ between the reactive properties. The action flow puts on motion the data flow in the reactive
+ ecosystem. Every change on a property triggers an action flow, which triggers the data flow.
+</p>
+ ProAct.Flow is a simple fork of the <a href="https://github.com/ebryn/backburner.js">Ember's Backburner.js</a>.
+ The different things are the priority queues and some optimizations. It doesn't include debouncing and timed defer of actions.
+<p>
+ ProAct.Flow is used to solve many of the problems in the reactive programming, for example the diamond problem.
+</p>
+<p>
+ It can be used for other purposes too, for exmple to run rendering in a rendering queue, after all of the property updates.
+</p>
+<p>
+ ProAct.Flow, <a href="ProAct.Queues.html">ProAct.Queues</a> and <a href="ProAct.Queue.html">ProAct.Queue</a> together form the ActiveFlow module of ProAct.
+</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>queueNames</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">Array</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">Array with the names of the sub-queues of the <a href="ProAct.Queues.html">ProAct.Queues</a>es of the flow. The size of this array determines
+     the number of the sub-queues.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>options</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">Various options for the ProAct.Flow.
+   <p>Available options:</p>
+   <ul>
+     <li>start - A callback that will be called every time when the action flow starts.</li>
+     <li>stop - A callback that will be called every time when the action flow ends.</li>
+     <li>err - A callback that will be called if an error is thrown in the action flow.</li>
+     <li>flowInstance - Options object for the current flow instance. The flow instances are @{link ProAct.Queues}es.</li>
+   </ul></td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="flow.js.html">flow/flow.js</a>, <a href="flow.js.html#line1">line 1</a>
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    <dt class="tag-see">See:</dt>
+    <dd class="tag-see">
+        <ul>
+            <li><a href="ProAct.Queues.html">ProAct.Queues</a></li>
+        
+            <li><a href="ProAct.Queue.html">ProAct.Queue</a></li>
+        </ul>
+    </dd>
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+    
+    </div>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</article>
+
+</section>  
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Index</a></h2><h3>Classes</h3><ul><li><a href="ProAct.Flow.html">Flow</a></li><li><a href="ProAct.Queue.html">Queue</a></li><li><a href="ProAct.Queues.html">Queues</a></li></ul><h3>Namespaces</h3><ul><li><a href="ProAct.html">ProAct</a></li><li><a href="ProAct.Configuration.html">Configuration</a></li><li><a href="ProAct.States.html">States</a></li><li><a href="ProAct.Utils.html">Utils</a></li></ul>
+</nav>
+
+<br clear="both">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.2</a> on Fri Jul 11 2014 00:10:09 GMT+0300 (EEST)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

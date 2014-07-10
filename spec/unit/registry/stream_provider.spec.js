@@ -49,6 +49,7 @@ describe('Pro.Registry.StreamProvider', function () {
         expect(stream instanceof Pro.ThrottlingStream).toBe(true);
         expect(reg.get('s:test')).toBe(stream);
       });
+
     });
     describe('source', function () {
       it ('creates a simple stream that can be retrieved after that and used.', function () {
