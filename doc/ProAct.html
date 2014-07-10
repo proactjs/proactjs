@@ -101,11 +101,21 @@ Everything should be defined in this namespace. It can be used as P or Pro.</div
     
     
     
+        <h3 class="subsection-title">Classes</h3>
+        
+        <dl>
+            <dt><a href="ProAct.Queue.html">Queue</a></dt>
+            <dd></dd>
+        </dl>
+    
     
     
         <h3 class="subsection-title">Namespaces</h3>
         
         <dl>
+            <dt><a href="namespaces.html#ProAct.Configuration"><a href="ProAct.Configuration.html">Configuration</a></a></dt>
+            <dd></dd>
+        
             <dt><a href="namespaces.html#ProAct.States"><a href="ProAct.States.html">States</a></a></dt>
             <dd></dd>
         
@@ -120,7 +130,86 @@ Everything should be defined in this namespace. It can be used as P or Pro.</div
         <dl>
             
 <dt>
-    <h4 class="name" id="VERSION"><span class="type-signature">&lt;static> </span>VERSION<span class="type-signature"> :String</span></h4>
+    <h4 class="name" id="currentCaller"><span class="type-signature">&lt;static> </span>currentCaller<span class="type-signature"> :Object</span></h4>
+    
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        <p>
+ Represents the current caller of a method, the initiator of the current action.
+</p>
+<p>
+ This property does the magic when for example an ProAct.AutoProperty is called
+ for the first time and the dependencies to the other properties are created.
+ The current caller expects to be used in a single threaded environment.
+</p>
+<p>
+ Do not remove or modify this property manually.
+</p>
+    </div>
+    
+    
+    
+        <h5>Type:</h5>
+        <ul>
+            <li>
+                
+<span class="param-type">Object</span>
+
+
+            </li>
+        </ul>
+    
+
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-default">Default Value:</dt>
+    <dd class="tag-default"><ul class="dummy">
+            <li>null</li>
+        </ul></dd>
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="pro.js.html">pro.js</a>, <a href="pro.js.html#line462">line 462</a>
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="VERSION"><span class="type-signature">&lt;static, constant> </span>VERSION<span class="type-signature"> :String</span></h4>
     
     
 </dt>
@@ -143,50 +232,69 @@ Everything should be defined in this namespace. It can be used as P or Pro.</div
 <dl class="details">
     
         
-        <h5 class="subsection-title">Properties:</h5>
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="pro.js.html">pro.js</a>, <a href="pro.js.html#line61">line 61</a>
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+</dd>
+
+        </dl>
+    
+    
+    
+        <h3 class="subsection-title">Methods</h3>
         
         <dl>
+            
+<dt>
+    <h4 class="name" id="N"><span class="type-signature">&lt;static> </span>N<span class="signature">()</span><span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        No-action or emtpy function. Represent an action that does nothing.
+    </div>
+    
 
-<table class="props">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-		
-		<th>Type</th>
-		
-		
-		
-		
-		
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-	
-	<tbody>
-	
-	
-        <tr>
-            
-                <td class="name"><code>VERSION</code></td>
-            
-            
-            <td class="type">
-            
-            </td>
-            
-            
-            
-            
-            
-            <td class="description last"></td>
-        </tr>
-	
-	
-	</tbody>
-</table></dl>
-        
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
     
         
     
@@ -208,7 +316,7 @@ Everything should be defined in this namespace. It can be used as P or Pro.</div
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="pro.js.html">pro.js</a>, <a href="pro.js.html#line62">line 62</a>
+        <a href="pro.js.html">pro.js</a>, <a href="pro.js.html#line435">line 435</a>
     </li></ul></dd>
     
     
@@ -221,11 +329,19 @@ Everything should be defined in this namespace. It can be used as P or Pro.</div
 
     
     
+
+    
+
+    
+    
+    
+    
+    
+    
+    
 </dd>
 
         </dl>
-    
-    
     
     
     
@@ -241,13 +357,13 @@ Everything should be defined in this namespace. It can be used as P or Pro.</div
 </div>
 
 <nav>
-    <h2><a href="index.html">Index</a></h2><h3>Namespaces</h3><ul><li><a href="ProAct.html">ProAct</a></li><li><a href="ProAct.States.html">States</a></li><li><a href="ProAct.Utils.html">Utils</a></li></ul>
+    <h2><a href="index.html">Index</a></h2><h3>Classes</h3><ul><li><a href="ProAct.Queue.html">Queue</a></li></ul><h3>Namespaces</h3><ul><li><a href="ProAct.html">ProAct</a></li><li><a href="ProAct.Configuration.html">Configuration</a></li><li><a href="ProAct.States.html">States</a></li><li><a href="ProAct.Utils.html">Utils</a></li></ul>
 </nav>
 
 <br clear="both">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.2</a> on Thu Jul 10 2014 01:35:26 GMT+0300 (EEST)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.2</a> on Thu Jul 10 2014 18:08:59 GMT+0300 (EEST)
 </footer>
 
 <script> prettyPrint(); </script>

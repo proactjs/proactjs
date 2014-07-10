@@ -1,24 +1,51 @@
-/**
- * <p>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: flow/queue.js</title>
+    
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+    
+    <h1 class="page-title">Source: flow/queue.js</h1>
+    
+    
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source"><code>/**
+ * &lt;p>
  *   Creates a queue of actions or action queue.
- * </p>
- * <p>
+ * &lt;/p>
+ * &lt;p>
  *  The idea of the action queues is to decide the order of the actions pushed into them.
  *  For example if an action should be executed only once, but is pushed for a second time,
  *  it is moved in the end of the queue and its parameters are updated.
- * </p>
- * <p>
+ * &lt;/p>
+ * &lt;p>
  *  The ProAct.Queue is a priority queue, meaning every action has a numeric priority.
  *  The actions with the numerically lowest priority are with highes prority when executed.
- * </p>
- * <p>
+ * &lt;/p>
+ * &lt;p>
  *  The {@link ProAct.Queue#go} method deques all the actions from the queue and executes them in the right
  *  order, using their priorities.
- * </p>
- * <p>
+ * &lt;/p>
+ * &lt;p>
  *  A Pro.Queue can be used to setup the action flow - the order of the actions must be executed.
  *  ProAct.js uses it to create an action flow if something changes.
- * </p>
+ * &lt;/p>
  *
  * TODO Default name should be extracted to a constant. ~meddle@2014-07-10
  *
@@ -28,12 +55,12 @@
  *    The default value of the name is 'proq'. {@link ProAct.Queues} uses the names to manage its queues.
  * @param {Object} options
  *    Various options for the queue.
- *    <p>Available options:</p>
- *    <ul>
- *      <li>before - A callback called before each call of {@link ProAct.Queue#go}.</li>
- *      <li>after - A callback called after each call of {@link ProAct.Queue#go}.</li>
- *      <li>err - A callback called every time an error is thrown.</li>
- *    </ul>
+ *    &lt;p>Available options:&lt;/p>
+ *    &lt;ul>
+ *      &lt;li>before - A callback called before each call of {@link ProAct.Queue#go}.&lt;/li>
+ *      &lt;li>after - A callback called after each call of {@link ProAct.Queue#go}.&lt;/li>
+ *      &lt;li>err - A callback called every time an error is thrown.&lt;/li>
+ *    &lt;/ul>
  * @see {@link ProAct.Queues}
  */
 ProAct.Queue = P.Q = function (name, options) {
@@ -44,7 +71,7 @@ ProAct.Queue = P.Q = function (name, options) {
 };
 
 /**
- * Executes the passed <i>action</i>.
+ * Executes the passed &lt;i>action&lt;/i>.
  *
  * @function runAction
  * @memberof ProAct.Queue
@@ -53,22 +80,22 @@ ProAct.Queue = P.Q = function (name, options) {
  *      The queue managing the action to execute.
  * @param {Object} context
  *      The context in which the action should be executed.
- *      <p>
+ *      &lt;p>
  *        The action is a normal JavaScript function and the context is the object
- *        that should be bound to <i>this</i> when calling it.
- *      </p>
- *      <p>
+ *        that should be bound to &lt;i>this&lt;/i> when calling it.
+ *      &lt;/p>
+ *      &lt;p>
  *        It can be null or undefined.
- *      </p>
+ *      &lt;/p>
  * @param {Function} action
  *      The action to execute.
  * @param {Array} args
  *      The parameters to be passed to the action.
  * @param {Function} errHandler
  *      It is called if an error is thrown when executing the action.
- *      <p>
+ *      &lt;p>
  *        It can be null if the error should be catched from the outside.
- *      </p>
+ *      &lt;/p>
  */
 P.Q.runAction = function (queue, context, action, args, errHandler) {
   if (args && args.length > 0) {
@@ -119,16 +146,6 @@ P.U.ex(P.Q.prototype, {
   length: function () {
     return this._queue.length / 4;
   },
-
-  /**
-   * Checks if this ProAct.Queue is empty.
-   *
-   * @memberof ProAct.Queue
-   * @instance
-   * @method isEmpty
-   * @return {Boolean}
-   *      True if there are no actions in this queue.
-   */
   isEmpty: function () {
     return this.length() === 0;
   },
@@ -151,7 +168,7 @@ P.U.ex(P.Q.prototype, {
     var queue = this._queue, current, currentMethod,
         i, length = queue.length;
 
-    for (i = 0; i < length; i += 4) {
+    for (i = 0; i &lt; length; i += 4) {
       current = queue[i];
       currentMethod = queue[i + 1];
 
@@ -183,7 +200,7 @@ P.U.ex(P.Q.prototype, {
     while (going) {
       going = false;
       l = tl;
-      for (i = 0; i < l; i += 4) {
+      for (i = 0; i &lt; l; i += 4) {
         obj = queue[i];
         method = queue[i + 1];
         args = queue[i + 2];
@@ -214,3 +231,26 @@ P.U.ex(P.Q.prototype, {
     }
   }
 });
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Index</a></h2><h3>Classes</h3><ul><li><a href="ProAct.Queue.html">Queue</a></li></ul><h3>Namespaces</h3><ul><li><a href="ProAct.html">ProAct</a></li><li><a href="ProAct.Configuration.html">Configuration</a></li><li><a href="ProAct.States.html">States</a></li><li><a href="ProAct.Utils.html">Utils</a></li></ul>
+</nav>
+
+<br clear="both">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.2</a> on Thu Jul 10 2014 18:08:59 GMT+0300 (EEST)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

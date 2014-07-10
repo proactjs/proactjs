@@ -101,6 +101,7 @@ module.exports = function(grunt) {
       src : [
         'spec/unit/flow/flow.spec.js',
         'spec/unit/arrays/pro_array.spec.js',
+        'src/js/flow/queue.js',
         'src/js/flow/flow.js',
         'src/js/objects/observable.js',
         'src/js/streams/stream.js',
@@ -112,7 +113,8 @@ module.exports = function(grunt) {
         'src/js/arrays/pro_array.js',
         'src/js/arrays/listeners.js',
         'src/js/properties/property.js',
-        'src/js/registry/registry.js'
+        'src/js/registry/registry.js',
+        'src/js/registry/provider.js'
       ]
     },
 
@@ -160,6 +162,7 @@ module.exports = function(grunt) {
           'objects/prob',
           'registry/registry',
           'registry/dsl',
+          'registry/provider',
         ],
         args = this.args, customFiles = [], index, i = -1;
 

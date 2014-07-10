@@ -28,6 +28,7 @@ module.exports = function(karma) {
       'src/js/objects/prob.js',
       'src/js/registry/registry.js',
       'src/js/registry/dsl.js',
+      'src/js/registry/provider.js',
       'spec/spec_helper.js',
       'spec/unit/**/*.spec.js'
     ],

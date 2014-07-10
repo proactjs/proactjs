@@ -17,7 +17,6 @@
  * The main namespace that contains all the ProAct classes and methods.
  * Everything should be defined in this namespace. It can be used as P or Pro.
  *
- * @class ProAct
  * @namespace ProAct
  * @license MIT
  * @version 0.4.2
@@ -55,9 +54,9 @@ var ProAct = Pro = P = {},
 
 
 /**
- * @property VERSION
  * @type String
  * @static
+ * @constant
  */
 ProAct.VERSION = '0.4.2';
 
@@ -108,39 +107,133 @@ ProAct.Utils = Pro.U = {
    * @param {Object} value
    * @return {Boolean}
    */
-  isString: function (property) {
-    return typeof(property) === 'string';
+  isString: function (value) {
+    return typeof(value) === 'string';
   },
-  isObject: function (property) {
-    return typeof(property) === 'object';
+
+  /**
+   * Checks if the passed value is a JavaScript object or not.
+   *
+   * @memberof ProAct.Utils
+   * @function isObject
+   * @param {Object} value
+   * @return {Boolean}
+   */
+  isObject: function (value) {
+    return typeof(value) === 'object';
   },
-  isEmptyObject: function (object) {
+
+  /**
+   * Checks if the passed value is {} or not.
+   *
+   * @memberof ProAct.Utils
+   * @function isEmptyObject
+   * @param {Object} value
+   * @return {Boolean}
+   */
+  isEmptyObject: function (value) {
     var property;
-    for (property in object) {
-      if (object.hasOwnProperty(property)) {
+    for (property in value) {
+      if (value.hasOwnProperty(property)) {
         return false;
       }
     }
     return true;
   },
-  isError: function (property) {
-    return property !== null && Pro.U.isObject(property) && property.message && Object.prototype.toString.apply(property) === '[object Error]';
+
+  /**
+   * Checks if the passed value is a valid JavaScript error or not.
+   *
+   * @memberof ProAct.Utils
+   * @function isError
+   * @param {Object} value
+   * @return {Boolean}
+   */
+  isError: function (value) {
+    return value !== null && value instanceof Error;
   },
-  isArray: function (property) {
-    return Pro.U.isObject(property) && Object.prototype.toString.call(property) === '[object Array]';
+
+  /**
+   * Checks if the passed value is a valid JavaScript array or not.
+   *
+   * @memberof ProAct.Utils
+   * @function isArray
+   * @param {Object} value
+   * @return {Boolean}
+   */
+  isArray: function (value) {
+    return Pro.U.isObject(value) && Object.prototype.toString.call(value) === '[object Array]';
   },
-  isProArray: function (property) {
-    return property !== null && Pro.U.isObject(property) && Pro.U.isArray(property._array) && property.length !== undefined;
+
+  /**
+   * Checks if the passed value is instance of the Pro.Array type or not.
+   *
+   * @memberof ProAct.Utils
+   * @function isProArray
+   * @param {Object} value
+   * @return {Boolean}
+   * @see {@link Pro.Array}
+   */
+  isProArray: function (value) {
+    return value !== null && Pro.U.isObject(value) && Pro.U.isArray(value._array) && value.length !== undefined;
   },
-  isArrayObject: function (property) {
-    return Pro.U.isArray(property) || Pro.U.isProArray(property);
+
+  /**
+   * Checks if the passed value is a valid array-like object or not.
+   * Array like objects in ProAct.js are plain JavaScript arrays and Pro.Arrays.
+   *
+   * @memberof ProAct.Utils
+   * @function isArrayObject
+   * @param {Object} value
+   * @return {Boolean}
+   * @see {@link Pro.Array}
+   */
+  isArrayObject: function (value) {
+    return Pro.U.isArray(value) || Pro.U.isProArray(value);
   },
-  isProObject: function (property) {
-    return property && Pro.U.isObject(property) && property.__pro__ !== undefined && Pro.U.isObject(property.__pro__.properties);
+
+  /**
+   * Checks if the passed value is a valid ProAct.js object or not.
+   * ProAct.js object have a special '__pro__' object that is hidden in them, which should be instance of Pro.Core.
+   *
+   * @memberof ProAct.Utils
+   * @function isProObject
+   * @param {Object} value
+   * @return {Boolean}
+   * @see {@link Pro.Array}
+   * @see {@link Pro.Value}
+   * @see {@link Pro.Core}
+   */
+  isProObject: function (value) {
+    return value && Pro.U.isObject(value) && value.__pro__ !== undefined && Pro.U.isObject(value.__pro__.properties);
   },
-  isProVal: function (property) {
-    return Pro.U.isProObject(property) && property.__pro__.properties.v !== undefined;
+
+  /**
+   * Checks if the passed value is a valid Pro.Value or not.
+   * Pro.Value is a simple ProAct.js object that has only one reactive property - 'v'.
+   *
+   * @memberof ProAct.Utils
+   * @function isProVal
+   * @param {Object} value
+   * @return {Boolean}
+   * @see {@link Pro.Value}
+   */
+  isProVal: function (value) {
+    return Pro.U.isProObject(value) && value.__pro__.properties.v !== undefined;
   },
+
+  /**
+   * Extends the destination object with the properties and methods of the source object.
+   *
+   * @memberof ProAct.Utils
+   * @function ex
+   * @param {Object} destination
+   *      The object to be extended - it will be modified.
+   * @param {Object} source
+   *      The source holding the properties and the functions to extend destination with.
+   * @return {Object}
+   *      The changed destination object.
+   */
   ex: function(destination, source) {
     var p;
     for (p in source) {
@@ -150,20 +243,87 @@ ProAct.Utils = Pro.U = {
     }
     return destination;
   },
+
+  /**
+   * Binds a <i>function</i> to an object <i>context</i>.
+   * Every time the <i>function</i> is called the value <i>this</i> of this will be the object.
+   *
+   * @memberof ProAct.Utils
+   * @function bind
+   * @param {Object} ctx
+   *      The <i>context</i> to bind the <i>this</i> of the function to.
+   * @param {Function} func
+   *      The <i>function</i> to bind.
+   * @return {Function}
+   *      The bound <i>function</i>.
+   */
   bind: function (ctx, func) {
     return function () {
       return func.apply(ctx, arguments);
     };
   },
+
+  /**
+   * Checks if an <i>array</i> contains a <i>value</i>.
+   *
+   * @memberof ProAct.Utils
+   * @function contains
+   * @param {Array} array
+   *      The <i>array</i> to check.
+   * @param {Object} value
+   *      The <i>value</i> to check for.
+   * @return {Boolean}
+   *      True if the <i>array</i> contains the <i>value</i>, False otherwise.
+   */
   contains: function (array, value) {
     array.indexOf(value) !== -1;
   },
+
+  /**
+   * Removes the first appearance of the passed <i>value</i> in the passed <i>array</i>.
+   * If the <i>value</i> is not present in the passed <i>array</i> does nothing.
+   *
+   * @memberof ProAct.Utils
+   * @function remove
+   * @param {Array} array
+   *      The <i>array</i> to remove from.
+   * @param {Object} value
+   *      The <i>value</i> to be removed.
+   */
   remove: function (array, value) {
     var i = array.indexOf(value);
     if (i > -1) {
       array.splice(i, 1);
     }
   },
+
+  /**
+   * A powerful function that creates a diff object containing the differences between two arrays.
+   *
+   * @memberof ProAct.Utils
+   * @function diff
+   * @param {Array} array1
+   * @param {Array} array2
+   * @return {Object}
+   *      <p>The object returned contains a property for every index there is a difference between the passed arrays.</p>
+   *      <p>The object set on the index has two array properties : 'o' and 'n'.</p>
+   *      <p>The 'o' property represents the owned elemetns of the first array that are different from the other's.</p>
+   *      <p>The 'n' property contains all the elements that are not owned by the first array, but present in the other.</p>
+   *      <p>Example:</p>
+   *      <pre>
+   *        var array1 = [1, 3, 4, 5],
+   *            array2 = [1, 2, 7, 5, 6]
+   *            diff;
+   *
+   *        diff = ProAct.Utils.diff(array1, array2);
+   *
+   *        console.log(diff[0]); // undefined - the arrays are the same at he index 0
+   *        console.log(diff[1]); // {o: [3, 4], n: [2, 7]}
+   *        console.log(diff[2]); // undefined the change began from index 1, so it is stored there
+   *        console.log(diff[3]); // undefined - the arrays are the same at index 3
+   *        console.log(diff[4]); // {o: [], n: [6]}
+   *      </pre>
+   */
   diff: function (array1, array2) {
     var i, e1, e2,
         index = -1,
@@ -196,8 +356,8 @@ ProAct.Utils = Pro.U = {
         e1 = array1[i];
         diff[index].o.push(e1);
       }
-    } else if (l2 > l1) {
-      diff = Pro.U.diff(array2, array1)
+    } else {
+      diff = Pro.U.diff(array2, array1);
       for (i in diff) {
         el1 = diff[i];
         el2 = el1.n;
@@ -208,6 +368,26 @@ ProAct.Utils = Pro.U = {
 
     return diff;
   },
+
+  /**
+   * Defines a property to an object that contains a initial value.
+   * The property can be configured using the arguments passed if it is possible in the javascript implementation.
+   *
+   * @memberof ProAct.Utils
+   * @function defValProp
+   * @param {Object} obj
+   *      The object to define a property in.
+   * @param {String} prop
+   *      The name of the property to define.
+   * @param {Boolean} enumerable
+   *      If the property should be enumerable.<br /> In other words visible when doing <pre>for (p in obj) {}</pre>
+   * @param {Boolean} configurable
+   *      If the property should be configurable.<br /> In other words if the parameters of the property for example enumerable or writable can be changed in the future.
+   * @param {Boolean} writable
+   *      If the property can be changed.
+   * @param {Object} val
+   *      The initial value of the property.
+   */
   defValProp: function (obj, prop, enumerable, configurable, writable, val) {
     try {
       Object.defineProperty(obj, prop, {
@@ -222,11 +402,61 @@ ProAct.Utils = Pro.U = {
   }
 };
 
-Pro.Configuration = {
+/**
+ * Contains various configurations for the ProAct.js library.
+ *
+ * @namespace ProAct.Configuration
+ */
+ProAct.Configuration = P.Conf = {
+  /**
+   * If this option is set to true, when a ProAct.js object is created and has properties named
+   * as one or more of the properties listed in <i>ProAct.Configuration.keypropList</i> an Error will be thrown.
+   * In other words declares some of the properties of every ProAct objects as keyword properties.
+   *
+   * @type Boolean
+   * @memberof ProAct.Configuration
+   * @static
+   * @see {@link ProAct.Configuration#keypropList}
+   */
   keyprops: true,
+
+  /**
+   * Defines a list of the keyword properties that can not be used in ProAct.js objects.
+   * The {@link ProAct.Configuration.keyprops} option must be set to true in order for this list to be used.
+   *
+   * @type Array
+   * @memberof ProAct.Configuration
+   * @static
+   * @see {@link ProAct.Configuration#keyprops}
+   */
   keypropList: ['p']
 };
 
-Pro.N = function () {};
+/**
+ * No-action or emtpy function. Represent an action that does nothing.
+ *
+ * @function N
+ * @memberof ProAct
+ * @static
+ */
+ProAct.N = function () {};
 
-Pro.currentCaller = null;
+/**
+ * <p>
+ *  Represents the current caller of a method, the initiator of the current action.
+ * </p>
+ * <p>
+ *  This property does the magic when for example an {@link ProAct.AutoProperty} is called
+ *  for the first time and the dependencies to the other properties are created.
+ *  The current caller expects to be used in a single threaded environment.
+ * </p>
+ * <p>
+ *  Do not remove or modify this property manually.
+ * </p>
+ *
+ * @type Object
+ * @memberof ProAct
+ * @default null
+ * @static
+ */
+ProAct.currentCaller = null;

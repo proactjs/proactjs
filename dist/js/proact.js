@@ -24,8 +24,8 @@
 	 * The main namespace that contains all the ProAct classes and methods.
 	 * Everything should be defined in this namespace. It can be used as P or Pro.
 	 *
-	 * @class ProAct
-	 * @static
+	 * @namespace ProAct
+	 * @license MIT
 	 * @version 0.4.2
 	 * @author meddle0x53
 	 */
@@ -61,9 +61,9 @@
 	
 	
 	/**
-	 * @property VERSION
 	 * @type String
 	 * @static
+	 * @constant
 	 */
 	ProAct.VERSION = '0.4.2';
 	
@@ -76,9 +76,7 @@
 	 *  <li>error - There was some runtime error while creating or working with the object.</li>
 	 * </ul>
 	 *
-	 * @class ProAct.States
-	 * @namespace ProAct
-	 * @static
+	 * @namespace ProAct.States
 	 */
 	ProAct.States = {
 	  init: 1,
@@ -92,47 +90,157 @@
 	 * Contains a set of utility functions to ease working with arrays and objects.
 	 * Can be reffered by using 'ProAct.U' too.
 	 *
-	 * @class ProAct.Utils
-	 * @namespace ProAct
-	 * @static
+	 * @namespace ProAct.Utils
 	 */
 	ProAct.Utils = Pro.U = {
-	  isFunction: function (property) {
-	    return typeof(property) === 'function';
+	
+	  /**
+	   * Checks if the passed value is a function or not.
+	   *
+	   * @memberof ProAct.Utils
+	   * @function isFunction
+	   * @param {Object} value
+	   * @return {Boolean}
+	   */
+	  isFunction: function (value) {
+	    return typeof(value) === 'function';
 	  },
-	  isString: function (property) {
-	    return typeof(property) === 'string';
+	
+	  /**
+	   * Checks if the passed value is a string or not.
+	   *
+	   * @memberof ProAct.Utils
+	   * @function isString
+	   * @param {Object} value
+	   * @return {Boolean}
+	   */
+	  isString: function (value) {
+	    return typeof(value) === 'string';
 	  },
-	  isObject: function (property) {
-	    return typeof(property) === 'object';
+	
+	  /**
+	   * Checks if the passed value is a JavaScript object or not.
+	   *
+	   * @memberof ProAct.Utils
+	   * @function isObject
+	   * @param {Object} value
+	   * @return {Boolean}
+	   */
+	  isObject: function (value) {
+	    return typeof(value) === 'object';
 	  },
-	  isEmptyObject: function (object) {
+	
+	  /**
+	   * Checks if the passed value is {} or not.
+	   *
+	   * @memberof ProAct.Utils
+	   * @function isEmptyObject
+	   * @param {Object} value
+	   * @return {Boolean}
+	   */
+	  isEmptyObject: function (value) {
 	    var property;
-	    for (property in object) {
-	      if (object.hasOwnProperty(property)) {
+	    for (property in value) {
+	      if (value.hasOwnProperty(property)) {
 	        return false;
 	      }
 	    }
 	    return true;
 	  },
-	  isError: function (property) {
-	    return property !== null && Pro.U.isObject(property) && property.message && Object.prototype.toString.apply(property) === '[object Error]';
+	
+	  /**
+	   * Checks if the passed value is a valid JavaScript error or not.
+	   *
+	   * @memberof ProAct.Utils
+	   * @function isError
+	   * @param {Object} value
+	   * @return {Boolean}
+	   */
+	  isError: function (value) {
+	    return value !== null && value instanceof Error;
 	  },
-	  isArray: function (property) {
-	    return Pro.U.isObject(property) && Object.prototype.toString.call(property) === '[object Array]';
+	
+	  /**
+	   * Checks if the passed value is a valid JavaScript array or not.
+	   *
+	   * @memberof ProAct.Utils
+	   * @function isArray
+	   * @param {Object} value
+	   * @return {Boolean}
+	   */
+	  isArray: function (value) {
+	    return Pro.U.isObject(value) && Object.prototype.toString.call(value) === '[object Array]';
 	  },
-	  isProArray: function (property) {
-	    return property !== null && Pro.U.isObject(property) && Pro.U.isArray(property._array) && property.length !== undefined;
+	
+	  /**
+	   * Checks if the passed value is instance of the Pro.Array type or not.
+	   *
+	   * @memberof ProAct.Utils
+	   * @function isProArray
+	   * @param {Object} value
+	   * @return {Boolean}
+	   * @see {@link Pro.Array}
+	   */
+	  isProArray: function (value) {
+	    return value !== null && Pro.U.isObject(value) && Pro.U.isArray(value._array) && value.length !== undefined;
 	  },
-	  isArrayObject: function (property) {
-	    return Pro.U.isArray(property) || Pro.U.isProArray(property);
+	
+	  /**
+	   * Checks if the passed value is a valid array-like object or not.
+	   * Array like objects in ProAct.js are plain JavaScript arrays and Pro.Arrays.
+	   *
+	   * @memberof ProAct.Utils
+	   * @function isArrayObject
+	   * @param {Object} value
+	   * @return {Boolean}
+	   * @see {@link Pro.Array}
+	   */
+	  isArrayObject: function (value) {
+	    return Pro.U.isArray(value) || Pro.U.isProArray(value);
 	  },
-	  isProObject: function (property) {
-	    return property && Pro.U.isObject(property) && property.__pro__ !== undefined && Pro.U.isObject(property.__pro__.properties);
+	
+	  /**
+	   * Checks if the passed value is a valid ProAct.js object or not.
+	   * ProAct.js object have a special '__pro__' object that is hidden in them, which should be instance of Pro.Core.
+	   *
+	   * @memberof ProAct.Utils
+	   * @function isProObject
+	   * @param {Object} value
+	   * @return {Boolean}
+	   * @see {@link Pro.Array}
+	   * @see {@link Pro.Value}
+	   * @see {@link Pro.Core}
+	   */
+	  isProObject: function (value) {
+	    return value && Pro.U.isObject(value) && value.__pro__ !== undefined && Pro.U.isObject(value.__pro__.properties);
 	  },
-	  isProVal: function (property) {
-	    return Pro.U.isProObject(property) && property.__pro__.properties.v !== undefined;
+	
+	  /**
+	   * Checks if the passed value is a valid Pro.Value or not.
+	   * Pro.Value is a simple ProAct.js object that has only one reactive property - 'v'.
+	   *
+	   * @memberof ProAct.Utils
+	   * @function isProVal
+	   * @param {Object} value
+	   * @return {Boolean}
+	   * @see {@link Pro.Value}
+	   */
+	  isProVal: function (value) {
+	    return Pro.U.isProObject(value) && value.__pro__.properties.v !== undefined;
 	  },
+	
+	  /**
+	   * Extends the destination object with the properties and methods of the source object.
+	   *
+	   * @memberof ProAct.Utils
+	   * @function ex
+	   * @param {Object} destination
+	   *      The object to be extended - it will be modified.
+	   * @param {Object} source
+	   *      The source holding the properties and the functions to extend destination with.
+	   * @return {Object}
+	   *      The changed destination object.
+	   */
 	  ex: function(destination, source) {
 	    var p;
 	    for (p in source) {
@@ -142,20 +250,87 @@
 	    }
 	    return destination;
 	  },
+	
+	  /**
+	   * Binds a <i>function</i> to an object <i>context</i>.
+	   * Every time the <i>function</i> is called the value <i>this</i> of this will be the object.
+	   *
+	   * @memberof ProAct.Utils
+	   * @function bind
+	   * @param {Object} ctx
+	   *      The <i>context</i> to bind the <i>this</i> of the function to.
+	   * @param {Function} func
+	   *      The <i>function</i> to bind.
+	   * @return {Function}
+	   *      The bound <i>function</i>.
+	   */
 	  bind: function (ctx, func) {
 	    return function () {
 	      return func.apply(ctx, arguments);
 	    };
 	  },
+	
+	  /**
+	   * Checks if an <i>array</i> contains a <i>value</i>.
+	   *
+	   * @memberof ProAct.Utils
+	   * @function contains
+	   * @param {Array} array
+	   *      The <i>array</i> to check.
+	   * @param {Object} value
+	   *      The <i>value</i> to check for.
+	   * @return {Boolean}
+	   *      True if the <i>array</i> contains the <i>value</i>, False otherwise.
+	   */
 	  contains: function (array, value) {
 	    array.indexOf(value) !== -1;
 	  },
+	
+	  /**
+	   * Removes the first appearance of the passed <i>value</i> in the passed <i>array</i>.
+	   * If the <i>value</i> is not present in the passed <i>array</i> does nothing.
+	   *
+	   * @memberof ProAct.Utils
+	   * @function remove
+	   * @param {Array} array
+	   *      The <i>array</i> to remove from.
+	   * @param {Object} value
+	   *      The <i>value</i> to be removed.
+	   */
 	  remove: function (array, value) {
 	    var i = array.indexOf(value);
 	    if (i > -1) {
 	      array.splice(i, 1);
 	    }
 	  },
+	
+	  /**
+	   * A powerful function that creates a diff object containing the differences between two arrays.
+	   *
+	   * @memberof ProAct.Utils
+	   * @function diff
+	   * @param {Array} array1
+	   * @param {Array} array2
+	   * @return {Object}
+	   *      <p>The object returned contains a property for every index there is a difference between the passed arrays.</p>
+	   *      <p>The object set on the index has two array properties : 'o' and 'n'.</p>
+	   *      <p>The 'o' property represents the owned elemetns of the first array that are different from the other's.</p>
+	   *      <p>The 'n' property contains all the elements that are not owned by the first array, but present in the other.</p>
+	   *      <p>Example:</p>
+	   *      <pre>
+	   *        var array1 = [1, 3, 4, 5],
+	   *            array2 = [1, 2, 7, 5, 6]
+	   *            diff;
+	   *
+	   *        diff = ProAct.Utils.diff(array1, array2);
+	   *
+	   *        console.log(diff[0]); // undefined - the arrays are the same at he index 0
+	   *        console.log(diff[1]); // {o: [3, 4], n: [2, 7]}
+	   *        console.log(diff[2]); // undefined the change began from index 1, so it is stored there
+	   *        console.log(diff[3]); // undefined - the arrays are the same at index 3
+	   *        console.log(diff[4]); // {o: [], n: [6]}
+	   *      </pre>
+	   */
 	  diff: function (array1, array2) {
 	    var i, e1, e2,
 	        index = -1,
@@ -188,8 +363,8 @@
 	        e1 = array1[i];
 	        diff[index].o.push(e1);
 	      }
-	    } else if (l2 > l1) {
-	      diff = Pro.U.diff(array2, array1)
+	    } else {
+	      diff = Pro.U.diff(array2, array1);
 	      for (i in diff) {
 	        el1 = diff[i];
 	        el2 = el1.n;
@@ -200,6 +375,26 @@
 	
 	    return diff;
 	  },
+	
+	  /**
+	   * Defines a property to an object that contains a initial value.
+	   * The property can be configured using the arguments passed if it is possible in the javascript implementation.
+	   *
+	   * @memberof ProAct.Utils
+	   * @function defValProp
+	   * @param {Object} obj
+	   *      The object to define a property in.
+	   * @param {String} prop
+	   *      The name of the property to define.
+	   * @param {Boolean} enumerable
+	   *      If the property should be enumerable.<br /> In other words visible when doing <pre>for (p in obj) {}</pre>
+	   * @param {Boolean} configurable
+	   *      If the property should be configurable.<br /> In other words if the parameters of the property for example enumerable or writable can be changed in the future.
+	   * @param {Boolean} writable
+	   *      If the property can be changed.
+	   * @param {Object} val
+	   *      The initial value of the property.
+	   */
 	  defValProp: function (obj, prop, enumerable, configurable, writable, val) {
 	    try {
 	      Object.defineProperty(obj, prop, {
@@ -214,23 +409,138 @@
 	  }
 	};
 	
-	Pro.Configuration = {
+	/**
+	 * Contains various configurations for the ProAct.js library.
+	 *
+	 * @namespace ProAct.Configuration
+	 */
+	ProAct.Configuration = P.Conf = {
+	  /**
+	   * If this option is set to true, when a ProAct.js object is created and has properties named
+	   * as one or more of the properties listed in <i>ProAct.Configuration.keypropList</i> an Error will be thrown.
+	   * In other words declares some of the properties of every ProAct objects as keyword properties.
+	   *
+	   * @type Boolean
+	   * @memberof ProAct.Configuration
+	   * @static
+	   * @see {@link ProAct.Configuration#keypropList}
+	   */
 	  keyprops: true,
+	
+	  /**
+	   * Defines a list of the keyword properties that can not be used in ProAct.js objects.
+	   * The {@link ProAct.Configuration.keyprops} option must be set to true in order for this list to be used.
+	   *
+	   * @type Array
+	   * @memberof ProAct.Configuration
+	   * @static
+	   * @see {@link ProAct.Configuration#keyprops}
+	   */
 	  keypropList: ['p']
 	};
 	
-	Pro.N = function () {};
+	/**
+	 * No-action or emtpy function. Represent an action that does nothing.
+	 *
+	 * @function N
+	 * @memberof ProAct
+	 * @static
+	 */
+	ProAct.N = function () {};
 	
-	Pro.currentCaller = null;
+	/**
+	 * <p>
+	 *  Represents the current caller of a method, the initiator of the current action.
+	 * </p>
+	 * <p>
+	 *  This property does the magic when for example an {@link ProAct.AutoProperty} is called
+	 *  for the first time and the dependencies to the other properties are created.
+	 *  The current caller expects to be used in a single threaded environment.
+	 * </p>
+	 * <p>
+	 *  Do not remove or modify this property manually.
+	 * </p>
+	 *
+	 * @type Object
+	 * @memberof ProAct
+	 * @default null
+	 * @static
+	 */
+	ProAct.currentCaller = null;
 	
-	Pro.Queue = function (name, options) {
+	/**
+	 * <p>
+	 *   Creates a queue of actions or action queue.
+	 * </p>
+	 * <p>
+	 *  The idea of the action queues is to decide the order of the actions pushed into them.
+	 *  For example if an action should be executed only once, but is pushed for a second time,
+	 *  it is moved in the end of the queue and its parameters are updated.
+	 * </p>
+	 * <p>
+	 *  The ProAct.Queue is a priority queue, meaning every action has a numeric priority.
+	 *  The actions with the numerically lowest priority are with highes prority when executed.
+	 * </p>
+	 * <p>
+	 *  The {@link ProAct.Queue#go} method deques all the actions from the queue and executes them in the right
+	 *  order, using their priorities.
+	 * </p>
+	 * <p>
+	 *  A Pro.Queue can be used to setup the action flow - the order of the actions must be executed.
+	 *  ProAct.js uses it to create an action flow if something changes.
+	 * </p>
+	 *
+	 * TODO Default name should be extracted to a constant. ~meddle@2014-07-10
+	 *
+	 * @class ProAct.Queue
+	 * @param {String} name
+	 *    The name of the queue, every ProAct.Queue must have a name.
+	 *    The default value of the name is 'proq'. {@link ProAct.Queues} uses the names to manage its queues.
+	 * @param {Object} options
+	 *    Various options for the queue.
+	 *    <p>Available options:</p>
+	 *    <ul>
+	 *      <li>before - A callback called before each call of {@link ProAct.Queue#go}.</li>
+	 *      <li>after - A callback called after each call of {@link ProAct.Queue#go}.</li>
+	 *      <li>err - A callback called every time an error is thrown.</li>
+	 *    </ul>
+	 * @see {@link ProAct.Queues}
+	 */
+	ProAct.Queue = P.Q = function (name, options) {
 	  this.name = name || 'proq';
 	  this.options = options || {};
 	
 	  this._queue = [];
 	};
 	
-	Pro.Queue.runAction = function (queue, context, action, args, errHandler) {
+	/**
+	 * Executes the passed <i>action</i>.
+	 *
+	 * @function runAction
+	 * @memberof ProAct.Queue
+	 * @static
+	 * @param {Pro.Queue} queue
+	 *      The queue managing the action to execute.
+	 * @param {Object} context
+	 *      The context in which the action should be executed.
+	 *      <p>
+	 *        The action is a normal JavaScript function and the context is the object
+	 *        that should be bound to <i>this</i> when calling it.
+	 *      </p>
+	 *      <p>
+	 *        It can be null or undefined.
+	 *      </p>
+	 * @param {Function} action
+	 *      The action to execute.
+	 * @param {Array} args
+	 *      The parameters to be passed to the action.
+	 * @param {Function} errHandler
+	 *      It is called if an error is thrown when executing the action.
+	 *      <p>
+	 *        It can be null if the error should be catched from the outside.
+	 *      </p>
+	 */
+	P.Q.runAction = function (queue, context, action, args, errHandler) {
 	  if (args && args.length > 0) {
 	    if (errHandler) {
 	      try {
@@ -254,11 +564,41 @@
 	  }
 	};
 	
-	Pro.U.ex(Pro.Queue.prototype, {
-	  constructor: Pro.Queue,
+	P.U.ex(P.Q.prototype, {
+	
+	  /**
+	   * Reference to the constructor of this object.
+	   *
+	   * @memberof ProAct.Queue
+	   * @instance
+	   * @constant
+	   * @type {Object}
+	   * @default ProAct.Queue
+	   */
+	  constructor: ProAct.Queue,
+	
+	  /**
+	   * Retrieves the lenght of this ProAct.Queue.
+	   *
+	   * @memberof ProAct.Queue
+	   * @instance
+	   * @method length
+	   * @return {Number}
+	   *      The number of actions queued in this queue.
+	   */
 	  length: function () {
 	    return this._queue.length / 4;
 	  },
+	
+	  /**
+	   * Checks if this ProAct.Queue is empty.
+	   *
+	   * @memberof ProAct.Queue
+	   * @instance
+	   * @method isEmpty
+	   * @return {Boolean}
+	   *      True if there are no actions in this queue.
+	   */
 	  isEmpty: function () {
 	    return this.length() === 0;
 	  },
@@ -2661,81 +3001,6 @@
 	  }
 	};
 	
-	Pro.U.ex(Pro.Registry, {
-	  Provider: function () {
-	    this.stored = {};
-	  },
-	  StreamProvider: function () {
-	    Pro.Registry.Provider.call(this);
-	  },
-	  FunctionProvider: function () {
-	    Pro.Registry.Provider.call(this);
-	  }
-	});
-	
-	Pro.Registry.Provider.prototype = {
-	  constructor: Pro.Registry.Provider,
-	  make: function (key, options) {
-	    var stream;
-	    this.stored[key] = stream = this.provide(options);
-	    return stream;
-	  },
-	  store: function (key, func, options) { return this.stored[key] = func; },
-	  get: function (key) { return this.stored[key]; },
-	  del: function(key) {
-	    var deleted = this.get(key);
-	    delete this.stored[key];
-	    return deleted;
-	  },
-	  registered: function (registry) {},
-	  types: {
-	    basic: function () { throw new Error('Abstract: implement!'); }
-	  },
-	  provide: function (options) {
-	    var type = options[0], regexp, matched, args;
-	    if (type) {
-	      regexp = new RegExp("(\\w*)\\(([\\s\\S]*)\\)");
-	      matched = regexp.exec(type);
-	      args = matched[2];
-	      if (args) {
-	        args = args.split(',');
-	      }
-	      type = matched[1];
-	      if (type && this.types[type]) {
-	        return this.types[type].call(this, args);
-	      }
-	    }
-	
-	    return this.types.basic(options);
-	  }
-	};
-	
-	Pro.Registry.StreamProvider.prototype = Pro.U.ex(Object.create(Pro.Registry.Provider.prototype), {
-	  constructor: Pro.Registry.StreamProvider,
-	  registered: function (registry) {
-	    registry.s = registry.stream = Pro.U.bind(this, this.get);
-	  },
-	  types: {
-	    basic: function () { return new Pro.Stream(); },
-	    delayed: function (args) { return new Pro.DelayedStream(parseInt(args[0], 10)); },
-	    size: function (args) { return new Pro.SizeBufferedStream(parseInt(args[0], 10)); },
-	    debouncing: function (args) { return new Pro.DebouncingStream(parseInt(args[0], 10)); },
-	    throttling: function (args) { return new Pro.ThrottlingStream(parseInt(args[0], 10)); }
-	  }
-	});
-	
-	Pro.Registry.FunctionProvider.prototype = Pro.U.ex(Object.create(Pro.Registry.Provider.prototype), {
-	  constructor: Pro.Registry.FunctionProvider
-	});
-	
-	streamProvider = new Pro.Registry.StreamProvider();
-	functionProvider = new Pro.Registry.FunctionProvider();
-	
-	Pro.registry = new Pro.Registry()
-	  .register('s', streamProvider)
-	  .register('f', functionProvider)
-	  .register('l', functionProvider);
-	
 	Pro.OpStore = {
 	  all: {
 	    simpleOp: function(name, sym) {
@@ -2908,6 +3173,105 @@
 	
 	dsl = Pro.DSL;
 	dslOps = dsl.ops;
+	
+	Pro.U.ex(Pro.Registry, {
+	  Provider: function () {
+	    this.stored = {};
+	  },
+	  StreamProvider: function () {
+	    Pro.Registry.Provider.call(this);
+	  },
+	  FunctionProvider: function () {
+	    Pro.Registry.Provider.call(this);
+	  },
+	  ProObjectProvider: function () {
+	    Pro.Registry.Provider.call(this);
+	  }
+	});
+	
+	Pro.Registry.Provider.prototype = {
+	  constructor: Pro.Registry.Provider,
+	  useOptions: true,
+	  make: function (key, options) {
+	    var provided, args = slice.call(arguments, 1);
+	    this.stored[key] = provided = this.provide.apply(this, args);
+	    return provided;
+	  },
+	  store: function (key, func, options) { return this.stored[key] = func; },
+	  get: function (key) { return this.stored[key]; },
+	  del: function(key) {
+	    var deleted = this.get(key);
+	    delete this.stored[key];
+	    return deleted;
+	  },
+	  registered: function (registry) {},
+	  types: {
+	    basic: function () { throw new Error('Abstract: implement!'); }
+	  },
+	  provide: function (options) {
+	    if (this.useOptions) {
+	      var type = options[0],
+	          regexp, matched, args,
+	          argumentData = slice.call(arguments, 1);
+	      if (type) {
+	        regexp = new RegExp("(\\w*)\\(([\\s\\S]*)\\)");
+	        matched = regexp.exec(type);
+	        args = matched[2];
+	        if (args) {
+	          args = args.split(',');
+	        }
+	        type = matched[1];
+	        if (type && this.types[type]) {
+	          return this.types[type].apply(this, [args].concat(argumentData));
+	        }
+	      }
+	    }
+	
+	    return this.types.basic(options);
+	  }
+	};
+	
+	Pro.Registry.StreamProvider.prototype = Pro.U.ex(Object.create(Pro.Registry.Provider.prototype), {
+	  constructor: Pro.Registry.StreamProvider,
+	  registered: function (registry) {
+	    registry.s = registry.stream = Pro.U.bind(this, this.get);
+	  },
+	  types: {
+	    basic: function () { return new Pro.Stream(); },
+	    delayed: function (args) { return new Pro.DelayedStream(parseInt(args[0], 10)); },
+	    size: function (args) { return new Pro.SizeBufferedStream(parseInt(args[0], 10)); },
+	    debouncing: function (args) { return new Pro.DebouncingStream(parseInt(args[0], 10)); },
+	    throttling: function (args) { return new Pro.ThrottlingStream(parseInt(args[0], 10)); }
+	  }
+	});
+	
+	Pro.Registry.FunctionProvider.prototype = Pro.U.ex(Object.create(Pro.Registry.Provider.prototype), {
+	  constructor: Pro.Registry.FunctionProvider
+	});
+	
+	Pro.Registry.ProObjectProvider.prototype = Pro.U.ex(Object.create(Pro.Registry.Provider.prototype), {
+	  constructor: Pro.Registry.ProObjectProvider,
+	  useOptions: false,
+	  registered: function (registry) {
+	    registry.po = registry.proObject = Pro.U.bind(this, this.get);
+	  },
+	  types: {
+	    basic: function (value) {
+	      return Pro.prob(value);
+	    }
+	  }
+	});
+	
+	streamProvider = new Pro.Registry.StreamProvider();
+	functionProvider = new Pro.Registry.FunctionProvider();
+	proObjectProvider = new Pro.Registry.ProObjectProvider();
+	
+	Pro.registry = new Pro.Registry()
+	  .register('s', streamProvider)
+	  .register('po', proObjectProvider)
+	  .register('obj', proObjectProvider)
+	  .register('f', functionProvider)
+	  .register('l', functionProvider);
 	
 	return Pro;
 }));
