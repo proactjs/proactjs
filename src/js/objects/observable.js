@@ -36,13 +36,35 @@ ProAct.Observable = function (transforms) {
   this.parent = null;
 };
 
-Pro.U.ex(Pro.Observable, {
+P.U.ex(P.Observable, {
+
+  /**
+   * A constant defining bad values or bad events.
+   *
+   * @type Object
+   * @static
+   * @constant
+   */
   BadValue: {},
+
+  /**
+   * Transforms the passed <i>val</i> using the ProAct.Observable#transforms of the passed <i>observable</i>.
+   *
+   * @function transforms
+   * @memberof ProAct.Observable
+   * @static
+   * @param {ProAct.Observable} observable
+   *      The ProAct.Observable which transformations should be used.
+   * @param {Object} val
+   *      The value to transform.
+   * @return {Object}
+   *      The transformed value.
+   */
   transform: function (observable, val) {
     var i, t = observable.transforms, ln = t.length;
     for (i = 0; i < ln; i++) {
       val = t[i].call(observable, val);
-      if (val === Pro.Observable.BadValue) {
+      if (val === P.Observable.BadValue) {
         break;
       }
     }
@@ -51,13 +73,57 @@ Pro.U.ex(Pro.Observable, {
   }
 });
 
-Pro.Observable.prototype = {
-  constructor: Pro.Observable,
+P.Observable.prototype = {
 
+  /**
+   * Reference to the constructor of this object.
+   *
+   * @memberof ProAct.Observable
+   * @instance
+   * @constant
+   * @type {Object}
+   * @default ProAct.Observable
+   */
+  constructor: ProAct.Observable,
+
+  /**
+   * Creates the <i>listener</i> of this observable.
+   * Every observable should have one listener that should pass to other observables.
+   * <p>
+   *  This listener turns the observable in a observer.
+   * </p>
+   * <p>
+   *  Should be overriden with specific listener, by default it returns null.
+   * </p>
+   *
+   * @memberof ProAct.Observable
+   * @instance
+   * @method makeListener
+   * @default null
+   * @return {Object}
+   *      The <i>listener of this observer</i>.
+   */
   makeListener: function () {
     return null;
   },
 
+  /**
+   * Creates the <i>error listener</i> of this observable.
+   * Every observable should have one error listener that should pass to other observables.
+   * <p>
+   *  This listener turns the observable in a observer for errors.
+   * </p>
+   * <p>
+   *  Should be overriden with specific listener, by default it returns null.
+   * </p>
+   *
+   * @memberof ProAct.Observable
+   * @instance
+   * @method makeErrListener
+   * @default null
+   * @return {Object}
+   *      The <i>error listener of this observer</i>.
+   */
   makeErrListener: function () {
     return null;
   },

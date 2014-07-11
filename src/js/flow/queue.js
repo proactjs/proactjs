@@ -49,7 +49,7 @@ ProAct.Queue = P.Q = function (name, options) {
  * @function runAction
  * @memberof ProAct.Queue
  * @static
- * @param {Pro.Queue} queue
+ * @param {ProAct.Queue} queue
  *      The queue managing the action to execute.
  * @param {Object} context
  *      The context in which the action should be executed.
