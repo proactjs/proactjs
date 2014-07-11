@@ -15,7 +15,6 @@ Pro.U.ex(Pro.Registry, {
 
 Pro.Registry.Provider.prototype = {
   constructor: Pro.Registry.Provider,
-  useOptions: true,
   make: function (key, options) {
     var provided, args = slice.call(arguments, 1);
     this.stored[key] = provided = this.provide.apply(this, args);
@@ -32,8 +31,8 @@ Pro.Registry.Provider.prototype = {
   types: {
     basic: function () { throw new Error('Abstract: implement!'); }
   },
-  provide: function (options, meta) {
-    if (this.useOptions) {
+  provide: function (options) {
+    if (options) {
       var type = options[0],
           regexp, matched, args,
           argumentData = slice.call(arguments, 1);
@@ -51,7 +50,7 @@ Pro.Registry.Provider.prototype = {
       }
     }
 
-    return this.types.basic(options, meta);
+    return this.types.basic.apply(this, arguments);
   }
 };
 
@@ -75,12 +74,14 @@ Pro.Registry.FunctionProvider.prototype = Pro.U.ex(Object.create(Pro.Registry.Pr
 
 Pro.Registry.ProObjectProvider.prototype = Pro.U.ex(Object.create(Pro.Registry.Provider.prototype), {
   constructor: Pro.Registry.ProObjectProvider,
-  useOptions: false,
   registered: function (registry) {
     registry.po = registry.proObject = Pro.U.bind(this, this.get);
+    registry.prob = P.U.bind(this, function (key, val, meta) {
+      return this.make(key, null, val, meta);
+    });
   },
   types: {
-    basic: function (value, meta) {
+    basic: function (options, value, meta) {
       return Pro.prob(value, meta);
     }
   }

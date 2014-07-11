@@ -206,7 +206,7 @@ P.QQ.prototype = {
    *  to the second queue again and then continues through all the queues.
    * </p>
    * <p>
-   *  ProAct.Queues#run is alias of this method.
+   *  ProAct.Queues#run and ProAct.Queues#flush are aliases of this method.
    * </p>
    *
    * @memberof ProAct.Queues
@@ -268,4 +268,4 @@ P.QQ.prototype = {
 
 P.QQ.prototype.defer = P.QQ.prototype.enque = P.QQ.prototype.add = P.QQ.prototype.push;
 P.QQ.prototype.deferOnce = P.QQ.prototype.enqueOnce = P.QQ.prototype.addOnce = P.QQ.prototype.pushOnce;
-P.QQ.prototype.run = P.QQ.prototype.go;
+P.QQ.prototype.flush = P.QQ.prototype.run = P.QQ.prototype.go;

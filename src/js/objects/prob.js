@@ -3,7 +3,7 @@ Pro.prob = function (object, meta) {
       isAr = Pro.Utils.isArray;
 
   if (object === null || (!Pro.U.isObject(object) && !isAr(object))) {
-    return new Pro.Val(object);
+    return new Pro.Val(object, meta);
   }
 
   if (isAr(object)) {

@@ -16,6 +16,18 @@ describe('Pro.Val', function () {
       expect(Pro.Utils.isProObject(val)).toBe(true);
       expect(val.v).toBe(undefined);
     });
+
+    it ('meta can be passed to the constructor', function () {
+      var val = new Pro.Val(0, ['@($1)', function (v) {
+            res.push(v);
+          }]),
+          res = [];
+
+      val.v = 5;
+      expect(res.length).toBe(1);
+      expect(res[0].type).toBe(ProAct.Event.Types.value);
+      expect(res[0].args[2]).toBe(5);
+    });
   });
 
   describe('#type', function () {

@@ -1,6 +1,6 @@
 'use strict';
 
-describe('Pro.Registry.ProObjectProvider', function () {
+describe('ProAct.Registry.ProObjectProvider', function () {
   var provider;
   beforeEach(function () {
     provider = new Pro.Registry.ProObjectProvider();
@@ -8,21 +8,21 @@ describe('Pro.Registry.ProObjectProvider', function () {
 
   describe('#make', function () {
     it ('creates and stores in the registry a Pro.Value if called with simple value', function () {
-      var val = provider.make('test', 5);
+      var val = provider.make('test', null, 5);
 
       expect(P.U.isProVal(val)).toBe(true);
       expect(val.v).toBe(5);
     });
 
     it ('creates and stores in the registry a Pro.Array if called with array value', function () {
-      var val = provider.make('test', [4, 5, 6]);
+      var val = provider.make('test', null, [4, 5, 6]);
 
       expect(P.U.isProArray(val)).toBe(true);
       expect(val.valueOf()).toEqual([4, 5, 6]);
     });
 
     it ('creates and stores in the registry a pro object if called with object value', function () {
-      var val = provider.make('test', {
+      var val = provider.make('test', null, {
         val: 5,
         valPow: function () {return this.val * this.val;}
       });
@@ -33,7 +33,7 @@ describe('Pro.Registry.ProObjectProvider', function () {
     });
 
     it ('is able to pass meta-data while creating a ProAct object', function () {
-      var res = [], val = provider.make('test', {
+      var res = [], val = provider.make('test', null, {
             x: 5,
             y: 4,
             pow: function () {return this.x * this.y;}
@@ -47,6 +47,19 @@ describe('Pro.Registry.ProObjectProvider', function () {
 
       expect(res.length).toBe(1);
       expect(res[0].type).toBe(ProAct.Event.Types.value);
+    });
+
+    describe('in the ProAct.Registry', function () {
+      it ('creates and stores ProAct.Vals in the registry', function () {
+        var reg = new ProAct.Registry().register('po', provider), res = [];
+
+        reg.prob('test', 0, ['@($1)', function (v) {
+          res.push(v);
+        }]);
+
+        expect(reg.get('po:test')).not.toBe(undefined);
+        expect(P.U.isProVal(reg.get('po:test'))).toBe(true);
+      });
     });
   });
 });

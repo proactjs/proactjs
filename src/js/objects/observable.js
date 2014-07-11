@@ -1,4 +1,29 @@
-Pro.Observable = function (transforms) {
+/**
+ * <p>
+ *  Constructs a ProAct.Observable. It can be used both as observer and observable.
+ * </p>
+ * <p>
+ *  The observables in ProAct.js form the dependency graph.
+ *  If some observable listens to changes from another - it depends on it.
+ * </p>
+ * <p>
+ *  The observables can transform the values or events incoming to them.
+ * </p>
+ * <p>
+ *  Every observable can have a parent observable, that will be notified for all the changes
+ *  on the child-observable, it is something as special observer.
+ * </p>
+ * <p>
+ *  ProAct.Observable is part of the core module of ProAct.js.
+ * </p>
+ *
+ * TODO listeners must be divided to types in one hash map.
+ *
+ * @class ProAct.Observable
+ * @param {Array} transforms
+ *      A list of transformation to be used on all incoming chages.
+ */
+ProAct.Observable = function (transforms) {
   this.listeners = [];
   this.errListeners = [];
   this.sources = [];
