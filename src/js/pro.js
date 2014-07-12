@@ -54,6 +54,8 @@ var ProAct = Pro = P = {},
 
 
 /**
+ * The current version of the library.
+ *
  * @type String
  * @static
  * @constant
