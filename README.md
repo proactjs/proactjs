@@ -40,7 +40,7 @@ or
 ### Build from source
   * Install Node.js and its package manager 'npm'
   * Clone or fork and clone this project - for example ```git clone https://github.com/proactjs/proactjs.git```
-  * Go to the clonned project and run ``` npm install ``` to install the project dependencies. 
+  * Go to the cloned project and run ``` npm install ``` to install the project dependencies. 
   * Run ``` grunt spec ``` to run the specs, should pass.
   * Run ``` grunt build ``` to build the project - the build will be located in ``` {project_folder}/dist ```
 
