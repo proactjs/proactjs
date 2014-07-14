@@ -418,6 +418,23 @@ P.Observable.prototype = {
     });
   },
 
+  /**
+   * Adds an accumulation transformation to <i>this observable</i>.
+   * <p>
+   *  Accumulation is used to compute a value based on the previous one.
+   * </p>
+   *
+   * @memberof ProAct.Observable
+   * @instance
+   * @method accumulation
+   * @param {Object} initVal
+   *      Initial value for the accumulation. For example '0' for sum.
+   * @param {Object} filteringFunction
+   *      The filtering function or object with a call method, should return boolean.
+   * @return {ProAct.Observable}
+   *      <b>this</b>
+   * @see {@link ProAct.Observable#transform}
+   */
   accumulation: function (initVal, f) {
     var _this = this, val = initVal;
     return this.transform(function (newVal) {
