@@ -429,6 +429,169 @@ TODO listeners must be divided to types in one hash map.
         
             
 <dt>
+    <h4 class="name" id="into"><span class="type-signature"></span>into<span class="signature">()</span><span class="type-signature"> &rarr; {<a href="ProAct.Observable.html">ProAct.Observable</a>}</span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Links source observables into this observable. This means that <i>this observable</i>
+is listening for changes from the <i>sources</i>.
+<p>
+ A good example is one stream to have another as as source -> if data comes into the source
+ stream, it is passed to the listening too. That way the source stream is plugged <b>into</b> the listening one.
+</p>
+<p>
+ The listeners from <a href="ProAct.Observable.html#makeListener">ProAct.Observable#makeListener</a> and <a href="ProAct.Observable.html#makeErrListener">ProAct.Observable#makeErrListener</a> are used.
+</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		<th>Argument</th>
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>...</code></td>
+            
+            
+            <td class="type">
+            
+            </td>
+            
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+                    
+                
+                    
+                
+                </td>
+            
+            
+            
+            
+            <td class="description last">Zero or more source ProAct.Observables to set as sources.</td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="observable.js.html">objects/observable.js</a>, <a href="observable.js.html#line274">line 274</a>
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    <dt class="tag-see">See:</dt>
+    <dd class="tag-see">
+        <ul>
+            <li><a href="ProAct.Observable.html#makeListener">ProAct.Observable#makeListener</a></li>
+        
+            <li><a href="ProAct.Observable.html#makeErrListener">ProAct.Observable#makeErrListener</a></li>
+        </ul>
+    </dd>
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    <b>this</b>
+</div>
+
+
+
+<dl>
+	<dt>
+		Type
+	</dt>
+	<dd>
+		
+<span class="param-type"><a href="ProAct.Observable.html">ProAct.Observable</a></span>
+
+
+	</dd>
+</dl>
+
+        
+    
+    
+</dd>
+
+        
+            
+<dt>
     <h4 class="name" id="makeErrListener"><span class="type-signature"></span>makeErrListener<span class="signature">()</span><span class="type-signature"> &rarr; {Object}</span></h4>
     
     
@@ -931,6 +1094,185 @@ Every observable should have one listener that should pass to other observables.
     
     
     
+    <dt class="tag-see">See:</dt>
+    <dd class="tag-see">
+        <ul>
+            <li><a href="ProAct.Observable.html#on">ProAct.Observable#on</a></li>
+        </ul>
+    </dd>
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    <b>this</b>
+</div>
+
+
+
+<dl>
+	<dt>
+		Type
+	</dt>
+	<dd>
+		
+<span class="param-type"><a href="ProAct.Observable.html">ProAct.Observable</a></span>
+
+
+	</dd>
+</dl>
+
+        
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="offErr"><span class="type-signature"></span>offErr<span class="signature">(action, listener)</span><span class="type-signature"> &rarr; {<a href="ProAct.Observable.html">ProAct.Observable</a>}</span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Removes an error <i>listener</i> from the passed <i>action</i>.
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>action</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">The action to stop listening for errors. It is the default action if it is empty or skipped.
+     <p>
+       The action can be skipped and on its place as first parameter to be passed the <i>listener</i>.
+     </p></td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>listener</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">The listener to detach. If it is skipped, null or undefined all the listeners are removed from this observable.</td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="observable.js.html">objects/observable.js</a>, <a href="observable.js.html#line253">line 253</a>
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    <dt class="tag-see">See:</dt>
+    <dd class="tag-see">
+        <ul>
+            <li><a href="ProAct.Observable.html#onErr">ProAct.Observable#onErr</a></li>
+        </ul>
+    </dd>
+    
     
     
 </dl>
@@ -1163,6 +1505,326 @@ TODO The action is not used here, ProAct.Observable#listeners should be a set of
     
 </dd>
 
+        
+            
+<dt>
+    <h4 class="name" id="onErr"><span class="type-signature"></span>onErr<span class="signature">(action, listener)</span><span class="type-signature"> &rarr; {<a href="ProAct.Observable.html">ProAct.Observable</a>}</span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Attaches a new error listener to this ProAct.Observable.
+The listener may be function or object that defines a <i>call</i> method.
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>action</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">The action to listen for errors. It is the default action if it is empty or skipped.
+     <p>
+       The action can be skipped and on its place as first parameter to be passed the <i>listener</i>.
+     </p></td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>listener</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">The listener to attach. It must be instance of Function or object with a <i>call</i> method.</td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="observable.js.html">objects/observable.js</a>, <a href="observable.js.html#line231">line 231</a>
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    <dt class="tag-see">See:</dt>
+    <dd class="tag-see">
+        <ul>
+            <li><a href="ProAct.Observable.html#on">ProAct.Observable#on</a></li>
+        </ul>
+    </dd>
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    <b>this</b>
+</div>
+
+
+
+<dl>
+	<dt>
+		Type
+	</dt>
+	<dd>
+		
+<span class="param-type"><a href="ProAct.Observable.html">ProAct.Observable</a></span>
+
+
+	</dd>
+</dl>
+
+        
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="out"><span class="type-signature"></span>out<span class="signature">(destination)</span><span class="type-signature"> &rarr; {<a href="ProAct.Observable.html">ProAct.Observable</a>}</span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        The reverse of <a href="ProAct.Observable.html#into">ProAct.Observable#into</a> - sets <i>this observable</i> as a source
+to the passed <i>destination</i> observable.
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>destination</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type"><a href="ProAct.Observable.html">ProAct.Observable</a></span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">The observable to set as source <i>this</i> to.</td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="observable.js.html">objects/observable.js</a>, <a href="observable.js.html#line308">line 308</a>
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    <dt class="tag-see">See:</dt>
+    <dd class="tag-see">
+        <ul>
+            <li><a href="ProAct.Observable.html#into">ProAct.Observable#into</a></li>
+        </ul>
+    </dd>
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    <b>this</b>
+</div>
+
+
+
+<dl>
+	<dt>
+		Type
+	</dt>
+	<dd>
+		
+<span class="param-type"><a href="ProAct.Observable.html">ProAct.Observable</a></span>
+
+
+	</dd>
+</dl>
+
+        
+    
+    
+</dd>
+
         </dl>
     
     
@@ -1185,7 +1847,7 @@ TODO The action is not used here, ProAct.Observable#listeners should be a set of
 <br clear="both">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.2</a> on Sat Jul 12 2014 18:46:38 GMT+0300 (EEST)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.2</a> on Mon Jul 14 2014 09:34:17 GMT+0300 (EEST)
 </footer>
 
 <script> prettyPrint(); </script>

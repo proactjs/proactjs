@@ -271,6 +271,27 @@ P.Observable.prototype = {
     return this.off(action, listener, this.errListeners);
   },
 
+  /**
+   * Links source observables into this observable. This means that <i>this observable</i>
+   * is listening for changes from the <i>sources</i>.
+   * <p>
+   *  A good example is one stream to have another as as source -> if data comes into the source
+   *  stream, it is passed to the listening too. That way the source stream is plugged <b>into</b> the listening one.
+   * </p>
+   * <p>
+   *  The listeners from {@link ProAct.Observable#makeListener} and {@link ProAct.Observable#makeErrListener} are used.
+   * </p>
+   *
+   * @memberof ProAct.Observable
+   * @instance
+   * @method into
+   * @param [...]
+   *      Zero or more source ProAct.Observables to set as sources.
+   * @return {ProAct.Observable}
+   *      <b>this</b>
+   * @see {@link ProAct.Observable#makeListener}
+   * @see {@link ProAct.Observable#makeErrListener}
+   */
   into: function () {
     var args = slice.call(arguments),
         ln = args.length, i, source;
@@ -284,36 +305,116 @@ P.Observable.prototype = {
     return this;
   },
 
+  /**
+   * The reverse of {@link ProAct.Observable#into} - sets <i>this observable</i> as a source
+   * to the passed <i>destination</i> observable.
+   *
+   * @memberof ProAct.Observable
+   * @instance
+   * @method out
+   * @param {ProAct.Observable} destination
+   *      The observable to set as source <i>this</i> to.
+   * @return {ProAct.Observable}
+   *      <b>this</b>
+   * @see {@link ProAct.Observable#into}
+   */
   out: function (destination) {
     destination.into(this);
 
     return this;
   },
 
+  /**
+   * Removes a <i>source observable</i> from <i>this</i>.
+   *
+   * @memberof ProAct.Observable
+   * @instance
+   * @method offSource
+   * @param {ProAct.Observable} source
+   *      The ProAct.Observable to remove as <i>source</i>.
+   * @return {ProAct.Observable}
+   *      <b>this</b>
+   * @see {@link ProAct.Observable#into}
+   */
   offSource: function (source) {
-    Pro.U.remove(this.sources, source);
+    P.U.remove(this.sources, source);
     source.off(this.listener);
     source.offErr(this.errListener);
 
     return this;
   },
 
+  /**
+   * Adds a new <i>transformation</i> to the list of transformations
+   * of <i>this observable</i>.
+   * <p>
+   *  A transformation is a function or an object that has a <i>call</i> method defined.
+   *  This function or call method should have one argument and to return a transformed version of it.
+   *  If the returned value is ProAct.Observable.BadValue, the next transformations are skipped and the updating
+   *  value/event becomes - bad value.
+   * </p>
+   * <p>
+   *  Every value/event that updates <i>this observable</i> will be transformed using the new transformation.
+   * </p>
+   *
+   * @memberof ProAct.Observable
+   * @instance
+   * @method transform
+   * @param {Object} transformation
+   *      The transformation to add.
+   * @return {ProAct.Observable}
+   *      <b>this</b>
+   * @see {@link ProAct.Observable.transform}
+   */
   transform: function (transformation) {
     this.transforms.push(transformation);
     return this;
   },
 
-  mapping: function (f) {
-    return this.transform(f)
+  /**
+   * Adds a mapping transformation to <i>this observable</i>.
+   * <p>
+   *  Mapping transformations just transform one value into another. For example if we get update with
+   *  the value of <i>3</i> and we have mapping transformation that returns the updating value powered by <i>2</i>,
+   *  we'll get <i>9</i> as actual updating value.
+   * </p>
+   *
+   * @memberof ProAct.Observable
+   * @instance
+   * @method mapping
+   * @param {Object} mappingFunction
+   *      Function or object with a <i>call method</i> to use as map function.
+   * @return {ProAct.Observable}
+   *      <b>this</b>
+   * @see {@link ProAct.Observable#transform}
+   */
+  mapping: function (mappingFunction) {
+    return this.transform(mappingFunction)
   },
 
-  filtering: function(f) {
+  /**
+   * Adds a filtering transformation to <i>this observable</i>.
+   * <p>
+   *  Filtering can be used to filter the incoming update values. For example you can
+   *  filter by only odd numbers as update values.
+   * </p>
+   *
+   * @memberof ProAct.Observable
+   * @instance
+   * @method filtering
+   * @param {Object} filteringFunction
+   *      The filtering function or object with a call method, should return boolean.
+   * @return {ProAct.Observable}
+   *      <b>this</b>
+   * @see {@link ProAct.Observable#transform}
+   */
+  filtering: function(filteringFunction) {
     var _this = this;
     return this.transform(function (val) {
-      if (f.call(_this, val)) {
+      if (filteringFunction.call(_this, val)) {
         return val;
       }
-      return Pro.Observable.BadValue;
+      return P.Observable.BadValue;
     });
   },
 
@@ -325,12 +426,12 @@ P.Observable.prototype = {
     });
   },
 
-  map: Pro.N,
-  filter: Pro.N,
-  accumulate: Pro.N,
+  map: P.N,
+  filter: P.N,
+  accumulate: P.N,
 
   reduce: function (initVal, f) {
-    return new Pro.Val(initVal).into(this.accumulate(initVal, f));
+    return new P.Val(initVal).into(this.accumulate(initVal, f));
   },
 
   update: function (source, callbacks) {
@@ -339,8 +440,8 @@ P.Observable.prototype = {
     }
 
     var observable = this;
-    if (!Pro.flow.isRunning()) {
-      Pro.flow.run(function () {
+    if (!P.flow.isRunning()) {
+      P.flow.run(function () {
         observable.willUpdate(source, callbacks);
       });
     } else {
@@ -351,7 +452,7 @@ P.Observable.prototype = {
 
   willUpdate: function (source, callbacks) {
     var i, listener,
-        listeners = Pro.U.isArray(callbacks) ? callbacks : this.listeners,
+        listeners = P.U.isArray(callbacks) ? callbacks : this.listeners,
         length = listeners.length,
         event = this.makeEvent(source);
 
@@ -373,10 +474,10 @@ P.Observable.prototype = {
   },
 
   defer: function (event, callback) {
-    if (Pro.U.isFunction(callback)) {
-      Pro.flow.pushOnce(callback, [event]);
+    if (P.U.isFunction(callback)) {
+      P.flow.pushOnce(callback, [event]);
     } else {
-      Pro.flow.pushOnce(callback, callback.call, [event]);
+      P.flow.pushOnce(callback, callback.call, [event]);
     }
     return this;
   }
