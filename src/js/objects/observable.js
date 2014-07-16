@@ -98,14 +98,13 @@ P.Observable.prototype = {
    *
    * @memberof ProAct.Observable
    * @instance
+   * @abstract
    * @method makeListener
    * @default null
    * @return {Object}
    *      The <i>listener of this observer</i>.
    */
-  makeListener: function () {
-    return null;
-  },
+  makeListener: P.N,
 
   /**
    * Creates the <i>error listener</i> of this observable.
@@ -119,14 +118,13 @@ P.Observable.prototype = {
    *
    * @memberof ProAct.Observable
    * @instance
+   * @abstract
    * @method makeErrListener
    * @default null
    * @return {Object}
    *      The <i>error listener of this observer</i>.
    */
-  makeErrListener: function () {
-    return null;
-  },
+  makeErrListener: P.N,
 
   /**
    * Creates the <i>event</i> to be send to the listeners on update.
@@ -429,29 +427,136 @@ P.Observable.prototype = {
    * @method accumulation
    * @param {Object} initVal
    *      Initial value for the accumulation. For example '0' for sum.
-   * @param {Object} filteringFunction
-   *      The filtering function or object with a call method, should return boolean.
+   * @param {Object} accumulationFunction
+   *      The function to accumulate.
    * @return {ProAct.Observable}
    *      <b>this</b>
    * @see {@link ProAct.Observable#transform}
    */
-  accumulation: function (initVal, f) {
+  accumulation: function (initVal, accumulationFunction) {
     var _this = this, val = initVal;
     return this.transform(function (newVal) {
-      val = f.call(_this, val, newVal)
+      val = accumulationFunction.call(_this, val, newVal)
       return val;
     });
   },
 
+  /**
+   * Creates a new ProAct.Observable instance with source <i>this</i> and mapping
+   * the passed <i>mapping function</i>.
+   * <p>
+   *  Should be overridden with creating the right observable.
+   * </p>
+   *
+   * @memberof ProAct.Observable
+   * @instance
+   * @abstract
+   * @method map
+   * @param {Object} mappingFunction
+   *      Function or object with a <i>call method</i> to use as map function.
+   * @return {ProAct.Observable}
+   *      A new ProAct.Observable instance with the <i>mapping</i> applied.
+   * @see {@link ProAct.Observable#mapping}
+   */
   map: P.N,
+
+  /**
+   * Creates a new ProAct.Observable instance with source <i>this</i> and filtering
+   * the passed <i>filtering function</i>.
+   * <p>
+   *  Should be overridden with creating the right observable.
+   * </p>
+   *
+   * @memberof ProAct.Observable
+   * @instance
+   * @abstract
+   * @method filter
+   * @param {Object} initVal
+   *      Initial value for the accumulation. For example '0' for sum.
+   * @param {Object} filteringFunction
+   *      The filtering function or object with a call method, should return boolean.
+   * @return {ProAct.Observable}
+   *      A new ProAct.Observable instance with the <i>filtering</i> applied.
+   * @see {@link ProAct.Observable#filtering}
+   */
   filter: P.N,
+
+  /**
+   * Creates a new ProAct.Observable instance with source <i>this</i> and accumulation
+   * the passed <i>accumulation function</i>.
+   * <p>
+   *  Should be overridden with creating the right observable.
+   * </p>
+   *
+   * @memberof ProAct.Observable
+   * @instance
+   * @abstract
+   * @method accumulate
+   * @param {Object} initVal
+   *      Initial value for the accumulation. For example '0' for sum.
+   * @param {Object} accumulationFunction
+   *      The function to accumulate.
+   * @return {ProAct.Observable}
+   *      A new ProAct.Observable instance with the <i>accumulation</i> applied.
+   * @see {@link ProAct.Observable#accumulation}
+   */
   accumulate: P.N,
 
-  reduce: function (initVal, f) {
-    return new P.Val(initVal).into(this.accumulate(initVal, f));
+  /**
+   * Generates a new {@link ProAct.Val} containing the state of an accumulations.
+   * <p>
+   *  The value will be updated with every update coming to this observable.
+   * </p>
+   *
+   * @memberof ProAct.Observable
+   * @instance
+   * @method reduce
+   * @param {Object} initVal
+   *      Initial value for the accumulation. For example '0' for sum.
+   * @param {Object} accumulationFunction
+   *      The function to accumulate.
+   * @return {ProAct.Val}
+   *      A {@link ProAct.Val} instance observing <i>this</i> with the accumulation applied.
+   * @see {@link ProAct.Observable#accumulate}
+   * @see {@link ProAct.Val}
+   */
+  reduce: function (initVal, accumulationFunction) {
+    return new P.Val(initVal).into(this.accumulate(initVal, accumulationFunction));
   },
 
-  update: function (source, callbacks) {
+  /**
+   * Update notifies all the observers of thise ProAct.Observable.
+   * <p>
+   *  If there is running {@link ProAct.flow} instance it uses it to call the
+   *  {@link ProAct.Observable.willUpdate} action with the passed <i>parameters</i>.
+   * </p>
+   * <p>
+   *  If {@link ProAct.flow} is not running, a new instance is created and the
+   *  {@link ProAct.Observable.willUpdate} action of <i>this</i> is called in it.
+   * </p>
+   *
+   * @memberof ProAct.Observable
+   * @instance
+   * @method update
+   * @param {Object} source
+   *      The source of the update, for example update of ProAct.Observable, that <i></i> this is observing.
+   *      <p>
+   *        Can be null - no source.
+   *      </p>
+   *      <p>
+   *        In the most cases {@link ProAct.Event} is the source.
+   *      </p>
+   * @param {Array} listeners
+   *      An array of listeners to notify, in the most cases this is null or undefined.
+   *      <p>
+   *        When this parameter is null or undefined, the ProAct.Observable.listeners array is used.
+   *      </p>
+   * @return {ProAct.Observable}
+   *      <i>this</i>
+   * @see {@link ProAct.Observable#willUpdate}
+   * @see {@link ProAct.flow}
+   */
+  update: function (source, listeners) {
     if (this.listeners.length === 0 && this.errListeners.length === 0 && this.parent === null) {
       return this;
     }
@@ -459,17 +564,55 @@ P.Observable.prototype = {
     var observable = this;
     if (!P.flow.isRunning()) {
       P.flow.run(function () {
-        observable.willUpdate(source, callbacks);
+        observable.willUpdate(source, listeners);
       });
     } else {
-      observable.willUpdate(source, callbacks);
+      observable.willUpdate(source, listeners);
     }
     return this;
   },
 
-  willUpdate: function (source, callbacks) {
+  /**
+   * Will update is the method used to notify observers that <i>this</i> ProAct.Observable will be updated.
+   * <p>
+   *  It uses the {@link ProAct.Observable#defer} to defer the listeners of the listening ProAct.Observables.
+   *  The idea is that everything should be executed in a running {@link ProAct.Flow}, so there will be no repetative
+   *  updates.
+   * </p>
+   * <p>
+   *  The update value will come from the {@link ProAct.Observable#makeEvent} method and the <i>source</i>
+   *  parameter will be passed to it.
+   * </p>
+   * <p>
+   *  If <i>this</i> ProAct.Observable has a <i>parent</i> ProAct.Observable it will be notified in the running flow
+   *  as well.
+   * </p>
+   *
+   * @memberof ProAct.Observable
+   * @instance
+   * @method willUpdate
+   * @param {Object} source
+   *      The source of the update, for example update of ProAct.Observable, that <i></i> this is observing.
+   *      <p>
+   *        Can be null - no source.
+   *      </p>
+   *      <p>
+   *        In the most cases {@link ProAct.Event} is the source.
+   *      </p>
+   * @param {Array} listeners
+   *      An array of listeners to notify, in the most cases this is null or undefined.
+   *      <p>
+   *        When this parameter is null or undefined, the ProAct.Observable.listeners array is used.
+   *      </p>
+   * @return {ProAct.Observable}
+   *      <i>this</i>
+   * @see {@link ProAct.Observable#defer}
+   * @see {@link ProAct.Observable#makeEvent}
+   * @see {@link ProAct.flow}
+   */
+  willUpdate: function (source, listeners) {
     var i, listener,
-        listeners = P.U.isArray(callbacks) ? callbacks : this.listeners,
+        listeners = P.U.isArray(listeners) ? listeners : this.listeners,
         length = listeners.length,
         event = this.makeEvent(source);
 
@@ -490,11 +633,31 @@ P.Observable.prototype = {
     return this;
   },
 
-  defer: function (event, callback) {
-    if (P.U.isFunction(callback)) {
-      P.flow.pushOnce(callback, [event]);
+  /**
+   * Defers a ProAct.Observable listener.
+   * <p>
+   *  By default this means that the listener is put into active {@link ProAct.Flow} using it's
+   *  {@link ProAct.Flow#pushOnce} method, but it can be overridden.
+   * </p>
+   *
+   * @memberof ProAct.Observable
+   * @instance
+   * @method defer
+   * @param {Object} event
+   *      The event/value to pass to the listener.
+   * @param {Object} listener
+   *      The listener to defer. It should be a function or object defining the <i>call</i> method.
+   * @return {ProAct.Observable}
+   *      <i>this</i>
+   * @see {@link ProAct.Observable#willUpdate}
+   * @see {@link ProAct.Observable#makeListener}
+   * @see {@link ProAct.flow}
+   */
+  defer: function (event, listener) {
+    if (P.U.isFunction(listener)) {
+      P.flow.pushOnce(listener, [event]);
     } else {
-      P.flow.pushOnce(callback, callback.call, [event]);
+      P.flow.pushOnce(listener, listener.call, [event]);
     }
     return this;
   }
