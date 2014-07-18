@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Namespace: Configuration</title>
+    <title>JSDoc: Namespace: Types</title>
     
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
     
-    <h1 class="page-title">Namespace: Configuration</h1>
+    <h1 class="page-title">Namespace: Types</h1>
     
     
 
@@ -27,9 +27,9 @@
     
 <header>
     <h2>
-        <span class="ancestors"><a href="ProAct.html">ProAct</a>.</span>
+        <span class="ancestors"><a href="ProAct.html">ProAct</a><a href="ProAct.Event.html">.Event</a>.</span>
     
-    Configuration
+    Types
     </h2>
     
 </header>  
@@ -40,7 +40,7 @@
     
     
         
-            <div class="description">Contains various configurations for the ProAct.js library.</div>
+            <div class="description">Defines the possible types of the ProAct.Events.</div>
         
         
         
@@ -66,7 +66,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="pro.js.html">pro.js</a>, <a href="pro.js.html#line407">line 407</a>
+        <a href="pro_event.js.html">events/pro_event.js</a>, <a href="pro_event.js.html#line26">line 26</a>
     </li></ul></dd>
     
     
@@ -98,15 +98,17 @@
         <dl>
             
 <dt>
-    <h4 class="name" id="keypropList"><span class="type-signature">&lt;static> </span>keypropList<span class="type-signature"> :Array</span></h4>
+    <h4 class="name" id="array"><span class="type-signature">&lt;static, constant> </span>array<span class="type-signature"> :Number</span></h4>
     
     
 </dt>
 <dd>
     
     <div class="description">
-        Defines a list of the keyword properties that can not be used in ProAct.js objects.
-The <a href="ProAct.Configuration.html#keyprops">ProAct.Configuration.keyprops</a> option must be set to true in order for this list to be used.
+        Array type events. Events for changes in ProAct.Array.
+<p>
+ The args should consist of operation, index, old values, new values.
+</p>
     </div>
     
     
@@ -115,7 +117,7 @@ The <a href="ProAct.Configuration.html#keyprops">ProAct.Configuration.keyprops</
         <ul>
             <li>
                 
-<span class="param-type">Array</span>
+<span class="param-type">Number</span>
 
 
             </li>
@@ -145,7 +147,7 @@ The <a href="ProAct.Configuration.html#keyprops">ProAct.Configuration.keyprops</
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="pro.js.html">pro.js</a>, <a href="pro.js.html#line434">line 434</a>
+        <a href="pro_event.js.html">events/pro_event.js</a>, <a href="pro_event.js.html#line57">line 57</a>
     </li></ul></dd>
     
     
@@ -155,7 +157,7 @@ The <a href="ProAct.Configuration.html#keyprops">ProAct.Configuration.keyprops</
     <dt class="tag-see">See:</dt>
     <dd class="tag-see">
         <ul>
-            <li><a href="ProAct.Configuration.html#keyprops">ProAct.Configuration.keyprops</a></li>
+            <li>ProAct.Array.Operations</li>
         </ul>
     </dd>
     
@@ -170,16 +172,14 @@ The <a href="ProAct.Configuration.html#keyprops">ProAct.Configuration.keyprops</
         
             
 <dt>
-    <h4 class="name" id="keyprops"><span class="type-signature">&lt;static> </span>keyprops<span class="type-signature"> :Boolean</span></h4>
+    <h4 class="name" id="close"><span class="type-signature">&lt;static, constant> </span>close<span class="type-signature"> :Number</span></h4>
     
     
 </dt>
 <dd>
     
     <div class="description">
-        If this option is set to true, when a ProAct.js object is created and has properties named
-as one or more of the properties listed in <i>ProAct.Configuration.keypropList</i> an Error will be thrown.
-In other words declares some of the properties of every ProAct objects as keyword properties.
+        Close type events. Events for closing streams or destroying properties.
     </div>
     
     
@@ -188,7 +188,7 @@ In other words declares some of the properties of every ProAct objects as keywor
         <ul>
             <li>
                 
-<span class="param-type">Boolean</span>
+<span class="param-type">Number</span>
 
 
             </li>
@@ -218,19 +218,144 @@ In other words declares some of the properties of every ProAct objects as keywor
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="pro.js.html">pro.js</a>, <a href="pro.js.html#line423">line 423</a>
+        <a href="pro_event.js.html">events/pro_event.js</a>, <a href="pro_event.js.html#line66">line 66</a>
     </li></ul></dd>
     
     
     
     
     
-    <dt class="tag-see">See:</dt>
-    <dd class="tag-see">
+    
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="error"><span class="type-signature">&lt;static, constant> </span>error<span class="type-signature"> :Number</span></h4>
+    
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        Error type events. Events for errors.
+    </div>
+    
+    
+    
+        <h5>Type:</h5>
         <ul>
-            <li><a href="ProAct.Configuration.html#keypropList">ProAct.Configuration.keypropList</a></li>
+            <li>
+                
+<span class="param-type">Number</span>
+
+
+            </li>
         </ul>
-    </dd>
+    
+
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="pro_event.js.html">events/pro_event.js</a>, <a href="pro_event.js.html#line75">line 75</a>
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="value"><span class="type-signature">&lt;static, constant> </span>value<span class="type-signature"> :Number</span></h4>
+    
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        Value type events. Events for changing a value.
+<p>
+ For properties the args of the event contain the ProAct Object, the old value
+ of the property and the new value.
+</p>
+    </div>
+    
+    
+    
+        <h5>Type:</h5>
+        <ul>
+            <li>
+                
+<span class="param-type">Number</span>
+
+
+            </li>
+        </ul>
+    
+
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="pro_event.js.html">events/pro_event.js</a>, <a href="pro_event.js.html#line44">line 44</a>
+    </li></ul></dd>
+    
+    
+    
+    
     
     
     

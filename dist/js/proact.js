@@ -61,6 +61,8 @@
 	
 	
 	/**
+	 * The current version of the library.
+	 *
 	 * @type String
 	 * @static
 	 * @constant
@@ -1541,14 +1543,13 @@
 	   *
 	   * @memberof ProAct.Observable
 	   * @instance
+	   * @abstract
 	   * @method makeListener
 	   * @default null
 	   * @return {Object}
 	   *      The <i>listener of this observer</i>.
 	   */
-	  makeListener: function () {
-	    return null;
-	  },
+	  makeListener: P.N,
 	
 	  /**
 	   * Creates the <i>error listener</i> of this observable.
@@ -1562,63 +1563,178 @@
 	   *
 	   * @memberof ProAct.Observable
 	   * @instance
+	   * @abstract
 	   * @method makeErrListener
 	   * @default null
 	   * @return {Object}
 	   *      The <i>error listener of this observer</i>.
 	   */
-	  makeErrListener: function () {
-	    return null;
-	  },
+	  makeErrListener: P.N,
 	
+	  /**
+	   * Creates the <i>event</i> to be send to the listeners on update.
+	   * <p>
+	   *  The <i>event</i> should be an instance of {@link ProAct.Event}.
+	   * </p>
+	   * <p>
+	   *  By default this method returns {@link ProAct.Event.Types.value} event.
+	   * </p>
+	   *
+	   * @memberof ProAct.Observable
+	   * @instance
+	   * @method makeEvent
+	   * @default {ProAct.Event} with type {@link ProAct.Event.Types.value}
+	   * @param {ProAct.Event} source
+	   *      The source event of the event. It can be null
+	   * @return {ProAct.Event}
+	   *      The event.
+	   */
 	  makeEvent: function (source) {
-	    return new Pro.Event(source, this, Pro.Event.Types.value);
+	    return new P.Event(source, this, P.Event.Types.value);
 	  },
 	
-	  on: function (action, callback, callbacks) {
-	    if (!Pro.U.isString(action)) {
-	      callback = action;
+	  /**
+	   * Attaches a new listener to this ProAct.Observable.
+	   * The listener may be function or object that defines a <i>call</i> method.
+	   *
+	   * TODO The action is not used here, ProAct.Observable#listeners should be a set of collections. ~meddle@2014-07-12
+	   *
+	   * @memberof ProAct.Observable
+	   * @instance
+	   * @method on
+	   * @param {String} action
+	   *      The action to listen for. It is the default action if it is empty or skipped.
+	   *      <p>
+	   *        The action can be skipped and on its place as first parameter to be passed the <i>listener</i>.
+	   *      </p>
+	   * @param {Object} listener
+	   *      The listener to attach. It must be instance of Function or object with a <i>call</i> method.
+	   * @param {Array} listeners
+	   *      By default the listener is attached to the ProAct.Observable#listeners collection.
+	   *      This behavior can be changed by passing another collection here.
+	   * @return {ProAct.Observable}
+	   *      <b>this</b>
+	   */
+	  on: function (action, listener, listeners) {
+	    if (!P.U.isString(action)) {
+	      listener = action;
 	    }
 	
-	    if (Pro.U.isArray(callbacks)) {
-	      callbacks.push(callback);
+	    if (P.U.isArray(listeners)) {
+	      listeners.push(listener);
 	    } else {
-	      this.listeners.push(callback);
+	      this.listeners.push(listener);
 	    }
 	
 	    return this;
 	  },
 	
-	  off: function (action, callback, callbacks) {
-	    if (!action && !callback) {
-	      if (Pro.U.isArray(callbacks)) {
-	        callbacks.length = 0;
+	  /**
+	   * Removes a <i>listener</i> from the passed <i>action</i>.
+	   *
+	   * @memberof ProAct.Observable
+	   * @instance
+	   * @method off
+	   * @param {String} action
+	   *      The action to stop listening for. It is the default action if it is empty or skipped.
+	   *      <p>
+	   *        The action can be skipped and on its place as first parameter to be passed the <i>listener</i>.
+	   *      </p>
+	   * @param {Object} listener
+	   *      The listener to detach. If it is skipped, null or undefined all the listeners are removed from this observable.
+	   * @param {Array} listeners
+	   *      By default the listener is detached from the ProAct.Observable#listeners collection.
+	   *      This behavior can be changed by passing another collection here.
+	   * @return {ProAct.Observable}
+	   *      <b>this</b>
+	   * @see {@link ProAct.Observable#on}
+	   */
+	  off: function (action, listener, listeners) {
+	    if (!action && !listener) {
+	      if (P.U.isArray(listeners)) {
+	        listeners.length = 0;
 	      } else {
 	        this.listeners = [];
 	      }
 	      return;
 	    }
-	    if (!Pro.U.isString(action)) {
-	      callback = action;
+	    if (!P.U.isString(action)) {
+	      listener = action;
 	    }
 	
-	    if (Pro.U.isArray(callbacks)) {
-	      Pro.U.remove(callbacks, callback);
+	    if (P.U.isArray(listeners)) {
+	      P.U.remove(listeners, listener);
 	    } else {
-	      Pro.U.remove(this.listeners, callback);
+	      P.U.remove(this.listeners, listener);
 	    }
 	
 	    return this;
 	  },
 	
-	  onErr: function (action, callback) {
-	    return this.on(action, callback, this.errListeners);
+	  /**
+	   * Attaches a new error listener to this ProAct.Observable.
+	   * The listener may be function or object that defines a <i>call</i> method.
+	   *
+	   * @memberof ProAct.Observable
+	   * @instance
+	   * @method onErr
+	   * @param {String} action
+	   *      The action to listen for errors. It is the default action if it is empty or skipped.
+	   *      <p>
+	   *        The action can be skipped and on its place as first parameter to be passed the <i>listener</i>.
+	   *      </p>
+	   * @param {Object} listener
+	   *      The listener to attach. It must be instance of Function or object with a <i>call</i> method.
+	   * @return {ProAct.Observable}
+	   *      <b>this</b>
+	   * @see {@link ProAct.Observable#on}
+	   */
+	  onErr: function (action, listener) {
+	    return this.on(action, listener, this.errListeners);
 	  },
 	
-	  offErr: function (action, callback) {
-	    return this.off(action, callback, this.errListeners);
+	  /**
+	   * Removes an error <i>listener</i> from the passed <i>action</i>.
+	   *
+	   * @memberof ProAct.Observable
+	   * @instance
+	   * @method offErr
+	   * @param {String} action
+	   *      The action to stop listening for errors. It is the default action if it is empty or skipped.
+	   *      <p>
+	   *        The action can be skipped and on its place as first parameter to be passed the <i>listener</i>.
+	   *      </p>
+	   * @param {Object} listener
+	   *      The listener to detach. If it is skipped, null or undefined all the listeners are removed from this observable.
+	   * @return {ProAct.Observable}
+	   *      <b>this</b>
+	   * @see {@link ProAct.Observable#onErr}
+	   */
+	  offErr: function (action, listener) {
+	    return this.off(action, listener, this.errListeners);
 	  },
 	
+	  /**
+	   * Links source observables into this observable. This means that <i>this observable</i>
+	   * is listening for changes from the <i>sources</i>.
+	   * <p>
+	   *  A good example is one stream to have another as as source -> if data comes into the source
+	   *  stream, it is passed to the listening too. That way the source stream is plugged <b>into</b> the listening one.
+	   * </p>
+	   * <p>
+	   *  The listeners from {@link ProAct.Observable#makeListener} and {@link ProAct.Observable#makeErrListener} are used.
+	   * </p>
+	   *
+	   * @memberof ProAct.Observable
+	   * @instance
+	   * @method into
+	   * @param [...]
+	   *      Zero or more source ProAct.Observables to set as sources.
+	   * @return {ProAct.Observable}
+	   *      <b>this</b>
+	   * @see {@link ProAct.Observable#makeListener}
+	   * @see {@link ProAct.Observable#makeErrListener}
+	   */
 	  into: function () {
 	    var args = slice.call(arguments),
 	        ln = args.length, i, source;
@@ -1632,74 +1748,316 @@
 	    return this;
 	  },
 	
+	  /**
+	   * The reverse of {@link ProAct.Observable#into} - sets <i>this observable</i> as a source
+	   * to the passed <i>destination</i> observable.
+	   *
+	   * @memberof ProAct.Observable
+	   * @instance
+	   * @method out
+	   * @param {ProAct.Observable} destination
+	   *      The observable to set as source <i>this</i> to.
+	   * @return {ProAct.Observable}
+	   *      <b>this</b>
+	   * @see {@link ProAct.Observable#into}
+	   */
 	  out: function (destination) {
 	    destination.into(this);
 	
 	    return this;
 	  },
 	
+	  /**
+	   * Removes a <i>source observable</i> from <i>this</i>.
+	   *
+	   * @memberof ProAct.Observable
+	   * @instance
+	   * @method offSource
+	   * @param {ProAct.Observable} source
+	   *      The ProAct.Observable to remove as <i>source</i>.
+	   * @return {ProAct.Observable}
+	   *      <b>this</b>
+	   * @see {@link ProAct.Observable#into}
+	   */
 	  offSource: function (source) {
-	    Pro.U.remove(this.sources, source);
+	    P.U.remove(this.sources, source);
 	    source.off(this.listener);
 	    source.offErr(this.errListener);
 	
 	    return this;
 	  },
 	
+	  /**
+	   * Adds a new <i>transformation</i> to the list of transformations
+	   * of <i>this observable</i>.
+	   * <p>
+	   *  A transformation is a function or an object that has a <i>call</i> method defined.
+	   *  This function or call method should have one argument and to return a transformed version of it.
+	   *  If the returned value is ProAct.Observable.BadValue, the next transformations are skipped and the updating
+	   *  value/event becomes - bad value.
+	   * </p>
+	   * <p>
+	   *  Every value/event that updates <i>this observable</i> will be transformed using the new transformation.
+	   * </p>
+	   *
+	   * @memberof ProAct.Observable
+	   * @instance
+	   * @method transform
+	   * @param {Object} transformation
+	   *      The transformation to add.
+	   * @return {ProAct.Observable}
+	   *      <b>this</b>
+	   * @see {@link ProAct.Observable.transform}
+	   */
 	  transform: function (transformation) {
 	    this.transforms.push(transformation);
 	    return this;
 	  },
 	
-	  mapping: function (f) {
-	    return this.transform(f)
+	  /**
+	   * Adds a mapping transformation to <i>this observable</i>.
+	   * <p>
+	   *  Mapping transformations just transform one value into another. For example if we get update with
+	   *  the value of <i>3</i> and we have mapping transformation that returns the updating value powered by <i>2</i>,
+	   *  we'll get <i>9</i> as actual updating value.
+	   * </p>
+	   *
+	   * @memberof ProAct.Observable
+	   * @instance
+	   * @method mapping
+	   * @param {Object} mappingFunction
+	   *      Function or object with a <i>call method</i> to use as map function.
+	   * @return {ProAct.Observable}
+	   *      <b>this</b>
+	   * @see {@link ProAct.Observable#transform}
+	   */
+	  mapping: function (mappingFunction) {
+	    return this.transform(mappingFunction)
 	  },
 	
-	  filtering: function(f) {
+	  /**
+	   * Adds a filtering transformation to <i>this observable</i>.
+	   * <p>
+	   *  Filtering can be used to filter the incoming update values. For example you can
+	   *  filter by only odd numbers as update values.
+	   * </p>
+	   *
+	   * @memberof ProAct.Observable
+	   * @instance
+	   * @method filtering
+	   * @param {Object} filteringFunction
+	   *      The filtering function or object with a call method, should return boolean.
+	   * @return {ProAct.Observable}
+	   *      <b>this</b>
+	   * @see {@link ProAct.Observable#transform}
+	   */
+	  filtering: function(filteringFunction) {
 	    var _this = this;
 	    return this.transform(function (val) {
-	      if (f.call(_this, val)) {
+	      if (filteringFunction.call(_this, val)) {
 	        return val;
 	      }
-	      return Pro.Observable.BadValue;
+	      return P.Observable.BadValue;
 	    });
 	  },
 	
-	  accumulation: function (initVal, f) {
+	  /**
+	   * Adds an accumulation transformation to <i>this observable</i>.
+	   * <p>
+	   *  Accumulation is used to compute a value based on the previous one.
+	   * </p>
+	   *
+	   * @memberof ProAct.Observable
+	   * @instance
+	   * @method accumulation
+	   * @param {Object} initVal
+	   *      Initial value for the accumulation. For example '0' for sum.
+	   * @param {Object} accumulationFunction
+	   *      The function to accumulate.
+	   * @return {ProAct.Observable}
+	   *      <b>this</b>
+	   * @see {@link ProAct.Observable#transform}
+	   */
+	  accumulation: function (initVal, accumulationFunction) {
 	    var _this = this, val = initVal;
 	    return this.transform(function (newVal) {
-	      val = f.call(_this, val, newVal)
+	      val = accumulationFunction.call(_this, val, newVal)
 	      return val;
 	    });
 	  },
 	
-	  map: Pro.N,
-	  filter: Pro.N,
-	  accumulate: Pro.N,
+	  /**
+	   * Creates a new ProAct.Observable instance with source <i>this</i> and mapping
+	   * the passed <i>mapping function</i>.
+	   * <p>
+	   *  Should be overridden with creating the right observable.
+	   * </p>
+	   *
+	   * @memberof ProAct.Observable
+	   * @instance
+	   * @abstract
+	   * @method map
+	   * @param {Object} mappingFunction
+	   *      Function or object with a <i>call method</i> to use as map function.
+	   * @return {ProAct.Observable}
+	   *      A new ProAct.Observable instance with the <i>mapping</i> applied.
+	   * @see {@link ProAct.Observable#mapping}
+	   */
+	  map: P.N,
 	
-	  reduce: function (initVal, f) {
-	    return new Pro.Val(initVal).into(this.accumulate(initVal, f));
+	  /**
+	   * Creates a new ProAct.Observable instance with source <i>this</i> and filtering
+	   * the passed <i>filtering function</i>.
+	   * <p>
+	   *  Should be overridden with creating the right observable.
+	   * </p>
+	   *
+	   * @memberof ProAct.Observable
+	   * @instance
+	   * @abstract
+	   * @method filter
+	   * @param {Object} initVal
+	   *      Initial value for the accumulation. For example '0' for sum.
+	   * @param {Object} filteringFunction
+	   *      The filtering function or object with a call method, should return boolean.
+	   * @return {ProAct.Observable}
+	   *      A new ProAct.Observable instance with the <i>filtering</i> applied.
+	   * @see {@link ProAct.Observable#filtering}
+	   */
+	  filter: P.N,
+	
+	  /**
+	   * Creates a new ProAct.Observable instance with source <i>this</i> and accumulation
+	   * the passed <i>accumulation function</i>.
+	   * <p>
+	   *  Should be overridden with creating the right observable.
+	   * </p>
+	   *
+	   * @memberof ProAct.Observable
+	   * @instance
+	   * @abstract
+	   * @method accumulate
+	   * @param {Object} initVal
+	   *      Initial value for the accumulation. For example '0' for sum.
+	   * @param {Object} accumulationFunction
+	   *      The function to accumulate.
+	   * @return {ProAct.Observable}
+	   *      A new ProAct.Observable instance with the <i>accumulation</i> applied.
+	   * @see {@link ProAct.Observable#accumulation}
+	   */
+	  accumulate: P.N,
+	
+	  /**
+	   * Generates a new {@link ProAct.Val} containing the state of an accumulations.
+	   * <p>
+	   *  The value will be updated with every update coming to this observable.
+	   * </p>
+	   *
+	   * @memberof ProAct.Observable
+	   * @instance
+	   * @method reduce
+	   * @param {Object} initVal
+	   *      Initial value for the accumulation. For example '0' for sum.
+	   * @param {Object} accumulationFunction
+	   *      The function to accumulate.
+	   * @return {ProAct.Val}
+	   *      A {@link ProAct.Val} instance observing <i>this</i> with the accumulation applied.
+	   * @see {@link ProAct.Observable#accumulate}
+	   * @see {@link ProAct.Val}
+	   */
+	  reduce: function (initVal, accumulationFunction) {
+	    return new P.Val(initVal).into(this.accumulate(initVal, accumulationFunction));
 	  },
 	
-	  update: function (source, callbacks) {
+	  /**
+	   * Update notifies all the observers of thise ProAct.Observable.
+	   * <p>
+	   *  If there is running {@link ProAct.flow} instance it uses it to call the
+	   *  {@link ProAct.Observable.willUpdate} action with the passed <i>parameters</i>.
+	   * </p>
+	   * <p>
+	   *  If {@link ProAct.flow} is not running, a new instance is created and the
+	   *  {@link ProAct.Observable.willUpdate} action of <i>this</i> is called in it.
+	   * </p>
+	   *
+	   * @memberof ProAct.Observable
+	   * @instance
+	   * @method update
+	   * @param {Object} source
+	   *      The source of the update, for example update of ProAct.Observable, that <i></i> this is observing.
+	   *      <p>
+	   *        Can be null - no source.
+	   *      </p>
+	   *      <p>
+	   *        In the most cases {@link ProAct.Event} is the source.
+	   *      </p>
+	   * @param {Array} listeners
+	   *      An array of listeners to notify, in the most cases this is null or undefined.
+	   *      <p>
+	   *        When this parameter is null or undefined, the ProAct.Observable.listeners array is used.
+	   *      </p>
+	   * @return {ProAct.Observable}
+	   *      <i>this</i>
+	   * @see {@link ProAct.Observable#willUpdate}
+	   * @see {@link ProAct.flow}
+	   */
+	  update: function (source, listeners) {
 	    if (this.listeners.length === 0 && this.errListeners.length === 0 && this.parent === null) {
 	      return this;
 	    }
 	
 	    var observable = this;
-	    if (!Pro.flow.isRunning()) {
-	      Pro.flow.run(function () {
-	        observable.willUpdate(source, callbacks);
+	    if (!P.flow.isRunning()) {
+	      P.flow.run(function () {
+	        observable.willUpdate(source, listeners);
 	      });
 	    } else {
-	      observable.willUpdate(source, callbacks);
+	      observable.willUpdate(source, listeners);
 	    }
 	    return this;
 	  },
 	
-	  willUpdate: function (source, callbacks) {
+	  /**
+	   * Will update is the method used to notify observers that <i>this</i> ProAct.Observable will be updated.
+	   * <p>
+	   *  It uses the {@link ProAct.Observable#defer} to defer the listeners of the listening ProAct.Observables.
+	   *  The idea is that everything should be executed in a running {@link ProAct.Flow}, so there will be no repetative
+	   *  updates.
+	   * </p>
+	   * <p>
+	   *  The update value will come from the {@link ProAct.Observable#makeEvent} method and the <i>source</i>
+	   *  parameter will be passed to it.
+	   * </p>
+	   * <p>
+	   *  If <i>this</i> ProAct.Observable has a <i>parent</i> ProAct.Observable it will be notified in the running flow
+	   *  as well.
+	   * </p>
+	   *
+	   * @memberof ProAct.Observable
+	   * @instance
+	   * @method willUpdate
+	   * @param {Object} source
+	   *      The source of the update, for example update of ProAct.Observable, that <i></i> this is observing.
+	   *      <p>
+	   *        Can be null - no source.
+	   *      </p>
+	   *      <p>
+	   *        In the most cases {@link ProAct.Event} is the source.
+	   *      </p>
+	   * @param {Array} listeners
+	   *      An array of listeners to notify, in the most cases this is null or undefined.
+	   *      <p>
+	   *        When this parameter is null or undefined, the ProAct.Observable.listeners array is used.
+	   *      </p>
+	   * @return {ProAct.Observable}
+	   *      <i>this</i>
+	   * @see {@link ProAct.Observable#defer}
+	   * @see {@link ProAct.Observable#makeEvent}
+	   * @see {@link ProAct.flow}
+	   */
+	  willUpdate: function (source, listeners) {
 	    var i, listener,
-	        listeners = Pro.U.isArray(callbacks) ? callbacks : this.listeners,
+	        listeners = P.U.isArray(listeners) ? listeners : this.listeners,
 	        length = listeners.length,
 	        event = this.makeEvent(source);
 	
@@ -1720,44 +2078,192 @@
 	    return this;
 	  },
 	
-	  defer: function (event, callback) {
-	    if (Pro.U.isFunction(callback)) {
-	      Pro.flow.pushOnce(callback, [event]);
+	  /**
+	   * Defers a ProAct.Observable listener.
+	   * <p>
+	   *  By default this means that the listener is put into active {@link ProAct.Flow} using it's
+	   *  {@link ProAct.Flow#pushOnce} method, but it can be overridden.
+	   * </p>
+	   *
+	   * @memberof ProAct.Observable
+	   * @instance
+	   * @method defer
+	   * @param {Object} event
+	   *      The event/value to pass to the listener.
+	   * @param {Object} listener
+	   *      The listener to defer. It should be a function or object defining the <i>call</i> method.
+	   * @return {ProAct.Observable}
+	   *      <i>this</i>
+	   * @see {@link ProAct.Observable#willUpdate}
+	   * @see {@link ProAct.Observable#makeListener}
+	   * @see {@link ProAct.flow}
+	   */
+	  defer: function (event, listener) {
+	    if (P.U.isFunction(listener)) {
+	      P.flow.pushOnce(listener, [event]);
 	    } else {
-	      Pro.flow.pushOnce(callback, callback.call, [event]);
+	      P.flow.pushOnce(listener, listener.call, [event]);
 	    }
 	    return this;
 	  }
 	};
 	
-	Pro.Event = function (source, target, type) {
+	/**
+	 * <p>
+	 *  Constructs a ProAct.Event. The event contains information of the update.
+	 * </p>
+	 * <p>
+	 *  ProAct.Event is part of the core module of ProAct.js.
+	 * </p>
+	 *
+	 * @class ProAct.Event
+	 * @param {ProAct.Event} source
+	 *      If there is an event that coused this event - it is the source. Can be null - no source.
+	 * @param {Object} target
+	 *      The thing that triggered this event.
+	 * @param {ProAct.Event.Types} type
+	 *      The type of the event
+	 * @param [...] args
+	 *      Arguments of the event, for example for value event, these are the old value and the new value.
+	 */
+	ProAct.Event = function (source, target, type) {
 	  this.source = source;
 	  this.target = target;
 	  this.type = type;
 	  this.args = slice.call(arguments, 3);
 	};
 	
-	Pro.Event.Types = {
+	/**
+	 * Defines the possible types of the ProAct.Events.
+	 *
+	 * @namespace ProAct.Event.Types
+	 */
+	ProAct.Event.Types = {
+	
+	  /**
+	   * Value type events. Events for changing a value.
+	   * <p>
+	   *  For properties the args of the event contain the ProAct Object, the old value
+	   *  of the property and the new value.
+	   * </p>
+	   *
+	   * @type Number
+	   * @static
+	   * @constant
+	   */
 	  value: 0,
+	
+	  /**
+	   * Array type events. Events for changes in {@link ProAct.Array}.
+	   * <p>
+	   *  The args should consist of operation, index, old values, new values.
+	   * </p>
+	   *
+	   * @type Number
+	   * @static
+	   * @constant
+	   * @see {@link ProAct.Array.Operations}
+	   */
 	  array: 1,
+	
+	  /**
+	   * Close type events. Events for closing streams or destroying properties.
+	   *
+	   * @type Number
+	   * @static
+	   * @constant
+	   */
 	  close: 2,
+	
+	  /**
+	   * Error type events. Events for errors.
+	   *
+	   * @type Number
+	   * @static
+	   * @constant
+	   */
 	  error: 3
 	};
 	
-	Pro.Stream = function (source, transforms) {
-	  Pro.Observable.call(this, transforms);
+	/**
+	 * <p>
+	 *  Constructs a ProAct.Stream. The stream is a simple {@link ProAct.Observable}, without state.
+	 * </p>
+	 * <p>
+	 *  The streams are ment to emit values, events, changes and can be plugged into another observables.
+	 *  For example you can connect many streams, to merge them and to divide them, to plug them into properties.
+	 * </p>
+	 * <p>
+	 *  The reactive environment consists of the properties and the objects containing them, but
+	 *  the outside world is not reactive. It is possible to use the ProAct.Streams as connections from the
+	 *  outside world to the reactive environment.
+	 * </p>
+	 * <p>
+	 *    The transformations can be used to change the events or values emitetted.
+	 * </p>
+	 * <p>
+	 *  ProAct.Stream is part of the streams module of ProAct.js.
+	 * </p>
+	 *
+	 * @class ProAct.Stream
+	 * @extends ProAct.Observable
+	 * @param {ProAct.Observable} source
+	 *      A devfault source of the stream, can be null.
+	 * @param {Array} transforms
+	 *      A list of transformation to be used on all incoming chages.
+	 */
+	ProAct.Stream = ProAct.S = function (source, transforms) {
+	  P.Observable.call(this, transforms);
 	
 	  if (source) {
 	    this.into(source);
 	  }
 	};
 	
-	Pro.Stream.prototype = Pro.U.ex(Object.create(Pro.Observable.prototype), {
-	  constructor: Pro.Stream,
+	ProAct.Stream.prototype = P.U.ex(Object.create(P.Observable.prototype), {
+	
+	  /**
+	   * Reference to the constructor of this object.
+	   *
+	   * @memberof ProAct.Stream
+	   * @instance
+	   * @constant
+	   * @type {Object}
+	   * @default ProAct.Stream
+	   */
+	  constructor: ProAct.Stream,
+	
+	  /**
+	   * Creates the <i>event</i> to be send to the listeners on update.
+	   * <p>
+	   *  Streams don't create new events by default, the event is the source.
+	   * </p>
+	   *
+	   * @memberof ProAct.Stream
+	   * @instance
+	   * @method makeEvent
+	   * @param {ProAct.Event} source
+	   *      The source event of the event. It can be null
+	   * @return {ProAct.Event}
+	   *      The event.
+	   */
 	  makeEvent: function (source) {
 	    return source;
 	  },
-	  makeListener: function (source) {
+	
+	  /**
+	   * Creates the <i>listener</i> of this stream.
+	   * <p>
+	   *  The listener of the stream just calls the method {@link ProAct.Stream#trigger} with the incoming event/value.
+	   * </p>
+	   *
+	   * @memberof ProAct.Stream
+	   * @instance
+	   * @method makeListener
+	   * @return {Object}
+	   *      The <i>listener of this stream</i>.
+	   */
+	  makeListener: function () {
 	    if (!this.listener) {
 	      var stream = this;
 	      this.listener = function (event) {
@@ -1767,7 +2273,20 @@
 	
 	    return this.listener;
 	  },
-	  makeErrListener: function (source) {
+	
+	  /**
+	   * Creates the <i>error listener</i> of this stream.
+	   * <p>
+	   *  The listener just calls {@link ProAct.Stream#triggerErr} of <i>this</i> with the incoming error.
+	   * </p>
+	   *
+	   * @memberof ProAct.Stream
+	   * @instance
+	   * @method makeErrListener
+	   * @return {Object}
+	   *      The <i>error listener of this stream</i>.
+	   */
+	  makeErrListener: function () {
 	    if (!this.errListener) {
 	      var stream = this;
 	      this.errListener = function (error) {
@@ -1777,16 +2296,17 @@
 	
 	    return this.errListener;
 	  },
-	  defer: function (event, callback) {
-	    if (callback.property) {
-	      Pro.Observable.prototype.defer.call(this, event, callback);
+	
+	  defer: function (event, listener) {
+	    if (listener.property) {
+	      P.Observable.prototype.defer.call(this, event, listener);
 	      return;
 	    }
 	
-	    if (Pro.Utils.isFunction(callback)) {
-	      Pro.flow.push(callback, [event]);
+	    if (P.U.isFunction(listener)) {
+	      P.flow.push(listener, [event]);
 	    } else {
-	      Pro.flow.push(callback, callback.call, [event]);
+	      P.flow.push(listener, listener.call, [event]);
 	    }
 	  },
 	  trigger: function (event, useTransformations) {
@@ -1803,37 +2323,37 @@
 	
 	    if (useTransformations) {
 	      try {
-	        event = Pro.Observable.transform(this, event);
+	        event = P.Observable.transform(this, event);
 	      } catch (e) {
 	        this.triggerErr(e);
 	        return this;
 	      }
 	    }
 	
-	    if (event === Pro.Observable.BadValue) {
+	    if (event === P.Observable.BadValue) {
 	      return this;
 	    }
 	
 	    return this.update(event);
 	  },
 	  map: function (f) {
-	    return new Pro.Stream(this).mapping(f);
+	    return new P.S(this).mapping(f);
 	  },
 	  filter: function (f) {
-	    return new Pro.Stream(this).filtering(f);
+	    return new P.S(this).filtering(f);
 	  },
 	  accumulate: function (initVal, f) {
-	    return new Pro.Stream(this).accumulation(initVal, f);
+	    return new P.S(this).accumulation(initVal, f);
 	  },
 	  merge: function (stream) {
-	    return new Pro.Stream().into(this, stream);
+	    return new P.S().into(this, stream);
 	  }
 	});
 	
-	Pro.U.ex(Pro.Flow.prototype, {
+	P.U.ex(P.F.prototype, {
 	  errStream: function () {
 	    if (!this.errStreamVar) {
-	      this.errStreamVar = new Pro.Stream();
+	      this.errStreamVar = new P.S();
 	    }
 	
 	    return this.errStreamVar;

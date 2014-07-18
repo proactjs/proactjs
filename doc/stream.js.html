@@ -1,22 +1,49 @@
-/**
- * <p>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: streams/stream.js</title>
+    
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+    
+    <h1 class="page-title">Source: streams/stream.js</h1>
+    
+    
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source"><code>/**
+ * &lt;p>
  *  Constructs a ProAct.Stream. The stream is a simple {@link ProAct.Observable}, without state.
- * </p>
- * <p>
+ * &lt;/p>
+ * &lt;p>
  *  The streams are ment to emit values, events, changes and can be plugged into another observables.
  *  For example you can connect many streams, to merge them and to divide them, to plug them into properties.
- * </p>
- * <p>
+ * &lt;/p>
+ * &lt;p>
  *  The reactive environment consists of the properties and the objects containing them, but
  *  the outside world is not reactive. It is possible to use the ProAct.Streams as connections from the
  *  outside world to the reactive environment.
- * </p>
- * <p>
+ * &lt;/p>
+ * &lt;p>
  *    The transformations can be used to change the events or values emitetted.
- * </p>
- * <p>
+ * &lt;/p>
+ * &lt;p>
  *  ProAct.Stream is part of the streams module of ProAct.js.
- * </p>
+ * &lt;/p>
  *
  * @class ProAct.Stream
  * @extends ProAct.Observable
@@ -47,14 +74,15 @@ ProAct.Stream.prototype = P.U.ex(Object.create(P.Observable.prototype), {
   constructor: ProAct.Stream,
 
   /**
-   * Creates the <i>event</i> to be send to the listeners on update.
-   * <p>
+   * Creates the &lt;i>event&lt;/i> to be send to the listeners on update.
+   * &lt;p>
    *  Streams don't create new events by default, the event is the source.
-   * </p>
+   * &lt;/p>
    *
    * @memberof ProAct.Stream
    * @instance
    * @method makeEvent
+   * @default {ProAct.Event} with type {@link ProAct.Event.Types.value}
    * @param {ProAct.Event} source
    *      The source event of the event. It can be null
    * @return {ProAct.Event}
@@ -63,20 +91,7 @@ ProAct.Stream.prototype = P.U.ex(Object.create(P.Observable.prototype), {
   makeEvent: function (source) {
     return source;
   },
-
-  /**
-   * Creates the <i>listener</i> of this stream.
-   * <p>
-   *  The listener of the stream just calls the method {@link ProAct.Stream#trigger} with the incoming event/value.
-   * </p>
-   *
-   * @memberof ProAct.Stream
-   * @instance
-   * @method makeListener
-   * @return {Object}
-   *      The <i>listener of this stream</i>.
-   */
-  makeListener: function () {
+  makeListener: function (source) {
     if (!this.listener) {
       var stream = this;
       this.listener = function (event) {
@@ -86,20 +101,7 @@ ProAct.Stream.prototype = P.U.ex(Object.create(P.Observable.prototype), {
 
     return this.listener;
   },
-
-  /**
-   * Creates the <i>error listener</i> of this stream.
-   * <p>
-   *  The listener just calls {@link ProAct.Stream#triggerErr} of <i>this</i> with the incoming error.
-   * </p>
-   *
-   * @memberof ProAct.Stream
-   * @instance
-   * @method makeErrListener
-   * @return {Object}
-   *      The <i>error listener of this stream</i>.
-   */
-  makeErrListener: function () {
+  makeErrListener: function (source) {
     if (!this.errListener) {
       var stream = this;
       this.errListener = function (error) {
@@ -109,17 +111,16 @@ ProAct.Stream.prototype = P.U.ex(Object.create(P.Observable.prototype), {
 
     return this.errListener;
   },
-
-  defer: function (event, listener) {
-    if (listener.property) {
-      P.Observable.prototype.defer.call(this, event, listener);
+  defer: function (event, callback) {
+    if (callback.property) {
+      P.Observable.prototype.defer.call(this, event, callback);
       return;
     }
 
-    if (P.U.isFunction(listener)) {
-      P.flow.push(listener, [event]);
+    if (P.U.isFunction(callback)) {
+      P.flow.push(callback, [event]);
     } else {
-      P.flow.push(listener, listener.call, [event]);
+      P.flow.push(callback, callback.call, [event]);
     }
   },
   trigger: function (event, useTransformations) {
@@ -172,3 +173,26 @@ P.U.ex(P.F.prototype, {
     return this.errStreamVar;
   }
 });
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Index</a></h2><h3>Classes</h3><ul><li><a href="ProAct.Event.html">Event</a></li><li><a href="ProAct.Flow.html">Flow</a></li><li><a href="ProAct.Observable.html">Observable</a></li><li><a href="ProAct.Queue.html">Queue</a></li><li><a href="ProAct.Queues.html">Queues</a></li><li><a href="ProAct.Stream.html">Stream</a></li></ul><h3>Namespaces</h3><ul><li><a href="ProAct.html">ProAct</a></li><li><a href="ProAct.Configuration.html">Configuration</a></li><li><a href="ProAct.Event.Types.html">Types</a></li><li><a href="ProAct.States.html">States</a></li><li><a href="ProAct.Utils.html">Utils</a></li></ul><h3>Global</h3><ul><li><a href="global.html#BadValue">BadValue</a></li></ul>
+</nav>
+
+<br clear="both">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.2</a> on Fri Jul 18 2014 14:04:05 GMT+0300 (EEST)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Class: Observable</title>
+    <title>JSDoc: Class: Stream</title>
     
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
     
-    <h1 class="page-title">Class: Observable</h1>
+    <h1 class="page-title">Class: Stream</h1>
     
     
 
@@ -29,7 +29,7 @@
     <h2>
         <span class="ancestors"><a href="ProAct.html">ProAct</a>.</span>
     
-    Observable
+    Stream
     </h2>
     
 </header>  
@@ -41,7 +41,7 @@
     
         
 <dt>
-    <h4 class="name" id="Observable"><span class="type-signature"></span>new Observable<span class="signature">(transforms)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="Stream"><span class="type-signature"></span>new Stream<span class="signature">(source, transforms)</span><span class="type-signature"></span></h4>
     
     
 </dt>
@@ -50,24 +50,23 @@
     
     <div class="description">
         <p>
- Constructs a ProAct.Observable. It can be used both as observer and observable.
+ Constructs a ProAct.Stream. The stream is a simple <a href="ProAct.Observable.html">ProAct.Observable</a>, without state.
 </p>
 <p>
- The observables in ProAct.js form the dependency graph.
- If some observable listens to changes from another - it depends on it.
+ The streams are ment to emit values, events, changes and can be plugged into another observables.
+ For example you can connect many streams, to merge them and to divide them, to plug them into properties.
 </p>
 <p>
- The observables can transform the values or events incoming to them.
+ The reactive environment consists of the properties and the objects containing them, but
+ the outside world is not reactive. It is possible to use the ProAct.Streams as connections from the
+ outside world to the reactive environment.
 </p>
 <p>
- Every observable can have a parent observable, that will be notified for all the changes
- on the child-observable, it is something as special observer.
+   The transformations can be used to change the events or values emitetted.
 </p>
 <p>
- ProAct.Observable is part of the core module of ProAct.js.
+ ProAct.Stream is part of the streams module of ProAct.js.
 </p>
-
-TODO listeners must be divided to types in one hash map.
     </div>
     
 
@@ -97,6 +96,29 @@ TODO listeners must be divided to types in one hash map.
 	</thead>
 	
 	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>source</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type"><a href="ProAct.Observable.html">ProAct.Observable</a></span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">A devfault source of the stream, can be null.</td>
+        </tr>
+	
 	
 	
         <tr>
@@ -148,7 +170,7 @@ TODO listeners must be divided to types in one hash map.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="observable.js.html">objects/observable.js</a>, <a href="observable.js.html#line1">line 1</a>
+        <a href="stream.js.html">streams/stream.js</a>, <a href="stream.js.html#line1">line 1</a>
     </li></ul></dd>
     
     
@@ -176,6 +198,12 @@ TODO listeners must be divided to types in one hash map.
     
     </div>
     
+    
+        <h3 class="subsection-title">Extends</h3>
+        
+        <ul>
+            <li><a href="ProAct.Observable.html">ProAct.Observable</a></li>
+        </ul>
     
     
     
@@ -236,14 +264,14 @@ TODO listeners must be divided to types in one hash map.
     
     <dt class="tag-default">Default Value:</dt>
     <dd class="tag-default"><ul class="dummy">
-            <li>ProAct.Observable</li>
+            <li>ProAct.Stream</li>
         </ul></dd>
     
     
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="observable.js.html">objects/observable.js</a>, <a href="observable.js.html#line87">line 87</a>
+        <a href="stream.js.html">streams/stream.js</a>, <a href="stream.js.html#line47">line 47</a>
     </li></ul></dd>
     
     
@@ -265,168 +293,6 @@ TODO listeners must be divided to types in one hash map.
         <h3 class="subsection-title">Methods</h3>
         
         <dl>
-            
-<dt>
-    <h4 class="name" id="transforms"><span class="type-signature">&lt;static> </span>transforms<span class="signature">(observable, val)</span><span class="type-signature"> &rarr; {Object}</span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        Transforms the passed <i>val</i> using the ProAct.Observable#transforms of the passed <i>observable</i>.
-    </div>
-    
-
-    
-    
-    
-    
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-		
-		<th>Type</th>
-		
-		
-		
-		
-		
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-	
-	<tbody>
-	
-	
-        <tr>
-            
-                <td class="name"><code>observable</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type"><a href="ProAct.Observable.html">ProAct.Observable</a></span>
-
-
-            
-            </td>
-            
-            
-            
-            
-            
-            <td class="description last">The ProAct.Observable which transformations should be used.</td>
-        </tr>
-	
-	
-	
-        <tr>
-            
-                <td class="name"><code>val</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">Object</span>
-
-
-            
-            </td>
-            
-            
-            
-            
-            
-            <td class="description last">The value to transform.</td>
-        </tr>
-	
-	
-	</tbody>
-</table>
-    
-    
-    
-<dl class="details">
-    
-        
-    
-    
-    
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="observable.js.html">objects/observable.js</a>, <a href="observable.js.html#line50">line 50</a>
-    </li></ul></dd>
-    
-    
-    
-    
-    
-    
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    <h5>Returns:</h5>
-    
-            
-<div class="param-desc">
-    The transformed value.
-</div>
-
-
-
-<dl>
-	<dt>
-		Type
-	</dt>
-	<dd>
-		
-<span class="param-type">Object</span>
-
-
-	</dd>
-</dl>
-
-        
-    
-    
-</dd>
-
-        
             
 <dt>
     <h4 class="name" id="accumulate"><span class="type-signature">&lt;abstract> </span>accumulate<span class="signature">(initVal, accumulationFunction)</span><span class="type-signature"> &rarr; {<a href="ProAct.Observable.html">ProAct.Observable</a>}</span></h4>
@@ -530,6 +396,11 @@ the passed <i>accumulation function</i>.
     
     
 
+    
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from"><ul class="dummy"><li>
+        <a href="ProAct.Observable.html#accumulate">ProAct.Observable#accumulate</a>
+    </li></dd>
     
     
     
@@ -703,6 +574,11 @@ the passed <i>accumulation function</i>.
     
 
     
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from"><ul class="dummy"><li>
+        <a href="ProAct.Observable.html#accumulation">ProAct.Observable#accumulation</a>
+    </li></dd>
+    
     
     
     
@@ -875,6 +751,11 @@ the passed <i>accumulation function</i>.
     
     
 
+    
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from"><ul class="dummy"><li>
+        <a href="ProAct.Observable.html#defer">ProAct.Observable#defer</a>
+    </li></dd>
     
     
     
@@ -1053,6 +934,11 @@ the passed <i>filtering function</i>.
     
 
     
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from"><ul class="dummy"><li>
+        <a href="ProAct.Observable.html#filter">ProAct.Observable#filter</a>
+    </li></dd>
+    
     
     
     
@@ -1202,6 +1088,11 @@ the passed <i>filtering function</i>.
     
     
 
+    
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from"><ul class="dummy"><li>
+        <a href="ProAct.Observable.html#filtering">ProAct.Observable#filtering</a>
+    </li></dd>
     
     
     
@@ -1364,6 +1255,11 @@ is listening for changes from the <i>sources</i>.
     
 
     
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from"><ul class="dummy"><li>
+        <a href="ProAct.Observable.html#into">ProAct.Observable#into</a>
+    </li></dd>
+    
     
     
     
@@ -1471,6 +1367,11 @@ Every observable should have one error listener that should pass to other observ
     
 
     
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from"><ul class="dummy"><li>
+        <a href="ProAct.Observable.html#makeErrListener">ProAct.Observable#makeErrListener</a>
+    </li></dd>
+    
     
     
     
@@ -1550,10 +1451,7 @@ Every observable should have one error listener that should pass to other observ
     <div class="description">
         Creates the <i>event</i> to be send to the listeners on update.
 <p>
- The <i>event</i> should be an instance of <a href="ProAct.Event.html">ProAct.Event</a>.
-</p>
-<p>
- By default this method returns <a href="ProAct.Event.Types.html#value">ProAct.Event.Types.value</a> event.
+ Streams don't create new events by default, the event is the source.
 </p>
     </div>
     
@@ -1640,7 +1538,7 @@ Every observable should have one error listener that should pass to other observ
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="observable.js.html">objects/observable.js</a>, <a href="observable.js.html#line129">line 129</a>
+        <a href="stream.js.html">streams/stream.js</a>, <a href="stream.js.html#line49">line 49</a>
     </li></ul></dd>
     
     
@@ -1723,6 +1621,11 @@ Every observable should have one listener that should pass to other observables.
     
     
 
+    
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from"><ul class="dummy"><li>
+        <a href="ProAct.Observable.html#makeListener">ProAct.Observable#makeListener</a>
+    </li></dd>
     
     
     
@@ -1871,6 +1774,11 @@ the passed <i>mapping function</i>.
     
     
 
+    
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from"><ul class="dummy"><li>
+        <a href="ProAct.Observable.html#map">ProAct.Observable#map</a>
+    </li></dd>
     
     
     
@@ -2022,6 +1930,11 @@ the passed <i>mapping function</i>.
     
     
 
+    
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from"><ul class="dummy"><li>
+        <a href="ProAct.Observable.html#mapping">ProAct.Observable#mapping</a>
+    </li></dd>
     
     
     
@@ -2219,6 +2132,11 @@ the passed <i>mapping function</i>.
     
 
     
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from"><ul class="dummy"><li>
+        <a href="ProAct.Observable.html#off">ProAct.Observable#off</a>
+    </li></dd>
+    
     
     
     
@@ -2391,6 +2309,11 @@ the passed <i>mapping function</i>.
     
 
     
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from"><ul class="dummy"><li>
+        <a href="ProAct.Observable.html#offErr">ProAct.Observable#offErr</a>
+    </li></dd>
+    
     
     
     
@@ -2536,6 +2459,11 @@ the passed <i>mapping function</i>.
     
     
 
+    
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from"><ul class="dummy"><li>
+        <a href="ProAct.Observable.html#offSource">ProAct.Observable#offSource</a>
+    </li></dd>
     
     
     
@@ -2736,6 +2664,11 @@ TODO The action is not used here, ProAct.Observable#listeners should be a set of
     
 
     
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from"><ul class="dummy"><li>
+        <a href="ProAct.Observable.html#on">ProAct.Observable#on</a>
+    </li></dd>
+    
     
     
     
@@ -2902,6 +2835,11 @@ The listener may be function or object that defines a <i>call</i> method.
     
 
     
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from"><ul class="dummy"><li>
+        <a href="ProAct.Observable.html#onErr">ProAct.Observable#onErr</a>
+    </li></dd>
+    
     
     
     
@@ -3048,6 +2986,11 @@ to the passed <i>destination</i> observable.
     
     
 
+    
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from"><ul class="dummy"><li>
+        <a href="ProAct.Observable.html#out">ProAct.Observable#out</a>
+    </li></dd>
     
     
     
@@ -3221,6 +3164,11 @@ to the passed <i>destination</i> observable.
     
 
     
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from"><ul class="dummy"><li>
+        <a href="ProAct.Observable.html#reduce">ProAct.Observable#reduce</a>
+    </li></dd>
+    
     
     
     
@@ -3378,6 +3326,11 @@ of <i>this observable</i>.
     
     
 
+    
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from"><ul class="dummy"><li>
+        <a href="ProAct.Observable.html#transform">ProAct.Observable#transform</a>
+    </li></dd>
     
     
     
@@ -3564,6 +3517,11 @@ of <i>this observable</i>.
     
     
 
+    
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from"><ul class="dummy"><li>
+        <a href="ProAct.Observable.html#update">ProAct.Observable#update</a>
+    </li></dd>
     
     
     
@@ -3758,6 +3716,11 @@ of <i>this observable</i>.
     
 
     
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from"><ul class="dummy"><li>
+        <a href="ProAct.Observable.html#willUpdate">ProAct.Observable#willUpdate</a>
+    </li></dd>
+    
     
     
     
@@ -3852,7 +3815,7 @@ of <i>this observable</i>.
 <br clear="both">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.2</a> on Fri Jul 18 2014 14:04:06 GMT+0300 (EEST)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.2</a> on Fri Jul 18 2014 14:04:07 GMT+0300 (EEST)
 </footer>
 
 <script> prettyPrint(); </script>
