@@ -1,18 +1,19 @@
-Pro.DelayedStream = function (source, transforms, delay) {
+ProAct.DelayedStream = P.DBS = function (source, transforms, delay) {
   if (typeof source === 'number') {
     delay = source;
     source = null;
-  } else if (Pro.U.isObject(source) && typeof transforms === 'number') {
+  } else if (P.U.isObject(source) && typeof transforms === 'number') {
     delay = transforms;
     transforms = null;
   }
-  Pro.BufferedStream.call(this, source, transforms);
+  P.BS.call(this, source, transforms);
 
   this.delayId = null;
   this.setDelay(delay);
 };
 
-Pro.DelayedStream.prototype = Pro.U.ex(Object.create(Pro.BufferedStream.prototype), {
+ProAct.DelayedStream.prototype = P.U.ex(Object.create(P.BS.prototype), {
+  constructor: ProAct.DelayedStream,
   trigger: function (event, useTransformations) {
     this.buffer.push(event, useTransformations);
   },
@@ -30,16 +31,15 @@ Pro.DelayedStream.prototype = Pro.U.ex(Object.create(Pro.BufferedStream.prototyp
       return;
     }
 
-    var _this = this;
+    var self = this;
     this.delayId = setInterval(function () {
-      _this.flush();
+      self.flush();
     }, this.delay);
   }
 });
-Pro.DelayedStream.prototype.constructor = Pro.DelayedStream;
 
-Pro.U.ex(Pro.Stream.prototype, {
+P.U.ex(P.S.prototype, {
   delay: function (delay) {
-    return new Pro.DelayedStream(this, delay);
+    return new P.DBS(this, delay);
   }
 });

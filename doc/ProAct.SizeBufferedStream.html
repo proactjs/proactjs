@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Class: Observable</title>
+    <title>JSDoc: Class: SizeBufferedStream</title>
     
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
     
-    <h1 class="page-title">Class: Observable</h1>
+    <h1 class="page-title">Class: SizeBufferedStream</h1>
     
     
 
@@ -29,7 +29,7 @@
     <h2>
         <span class="ancestors"><a href="ProAct.html">ProAct</a>.</span>
     
-    Observable
+    SizeBufferedStream
     </h2>
     
 </header>  
@@ -41,7 +41,7 @@
     
         
 <dt>
-    <h4 class="name" id="Observable"><span class="type-signature"></span>new Observable<span class="signature">(transforms)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="SizeBufferedStream"><span class="type-signature"></span>new SizeBufferedStream<span class="signature">(source, transforms, size)</span><span class="type-signature"></span></h4>
     
     
 </dt>
@@ -50,24 +50,11 @@
     
     <div class="description">
         <p>
- Constructs a ProAct.Observable. It can be used both as observer and observable.
+ Constructs a ProAct.SizeBufferedStream. When the buffer is full (has the same size as <i>this</i> size), it is flushed.
 </p>
 <p>
- The observables in ProAct.js form the dependency graph.
- If some observable listens to changes from another - it depends on it.
+ ProAct.SizeBufferedStream is part of the streams module of ProAct.js.
 </p>
-<p>
- The observables can transform the values or events incoming to them.
-</p>
-<p>
- Every observable can have a parent observable, that will be notified for all the changes
- on the child-observable, it is something as special observer.
-</p>
-<p>
- ProAct.Observable is part of the core module of ProAct.js.
-</p>
-
-TODO listeners must be divided to types in one hash map.
     </div>
     
 
@@ -101,6 +88,32 @@ TODO listeners must be divided to types in one hash map.
 	
         <tr>
             
+                <td class="name"><code>source</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type"><a href="ProAct.Observable.html">ProAct.Observable</a></span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">A default source of the stream, can be null.
+     <p>
+       If this is the only one passed argument and it is a number - it becomes the size of the buffer.
+     </p></td>
+        </tr>
+	
+	
+	
+        <tr>
+            
                 <td class="name"><code>transforms</code></td>
             
             
@@ -117,7 +130,33 @@ TODO listeners must be divided to types in one hash map.
             
             
             
-            <td class="description last">A list of transformation to be used on all incoming chages.</td>
+            <td class="description last">A list of transformation to be used on all incoming chages.
+     <p>
+       If the arguments passed are two and this is a number - it becomes the size of the buffer.
+     </p></td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>size</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">Number</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">The size of the buffer.</td>
         </tr>
 	
 	
@@ -148,7 +187,7 @@ TODO listeners must be divided to types in one hash map.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="observable.js.html">objects/observable.js</a>, <a href="observable.js.html#line1">line 1</a>
+        <a href="size_buffered_stream.js.html">streams/size_buffered_stream.js</a>, <a href="size_buffered_stream.js.html#line1">line 1</a>
     </li></ul></dd>
     
     
@@ -167,6 +206,33 @@ TODO listeners must be divided to types in one hash map.
     
     
     
+    <h5>Throws:</h5>
+    
+            
+
+<dl>
+    <dt>
+        <div class="param-desc">
+        SizeBufferedStream must contain size, if there is no size passed to it.
+        </div>
+    </dt>
+    <dt>
+        <dl>
+            <dt>
+                Type
+            </dt>
+            <dd>
+                
+<span class="param-type">Error</span>
+
+
+            </dd>
+        </dl>
+    </dt>
+</dl>
+
+
+        
     
     
     
@@ -176,6 +242,12 @@ TODO listeners must be divided to types in one hash map.
     
     </div>
     
+    
+        <h3 class="subsection-title">Extends</h3>
+        
+        <ul>
+            <li><a href="ProAct.BufferedStream.html">ProAct.BufferedStream</a></li>
+        </ul>
     
     
     
@@ -236,14 +308,14 @@ TODO listeners must be divided to types in one hash map.
     
     <dt class="tag-default">Default Value:</dt>
     <dd class="tag-default"><ul class="dummy">
-            <li>ProAct.Observable</li>
+            <li>ProAct.SizeBufferedStream</li>
         </ul></dd>
     
     
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="observable.js.html">objects/observable.js</a>, <a href="observable.js.html#line87">line 87</a>
+        <a href="size_buffered_stream.js.html">streams/size_buffered_stream.js</a>, <a href="size_buffered_stream.js.html#line53">line 53</a>
     </li></ul></dd>
     
     
@@ -267,7 +339,7 @@ TODO listeners must be divided to types in one hash map.
         <dl>
             
 <dt>
-    <h4 class="name" id="transforms"><span class="type-signature">&lt;static> </span>transforms<span class="signature">(observable, val)</span><span class="type-signature"> &rarr; {Object}</span></h4>
+    <h4 class="name" id="accumulate"><span class="type-signature"></span>accumulate<span class="signature">(initVal, accumulationFunction)</span><span class="type-signature"> &rarr; {<a href="ProAct.Stream.html">ProAct.Stream</a>}</span></h4>
     
     
 </dt>
@@ -275,173 +347,8 @@ TODO listeners must be divided to types in one hash map.
     
     
     <div class="description">
-        Transforms the passed <i>val</i> using the ProAct.Observable#transforms of the passed <i>observable</i>.
-    </div>
-    
-
-    
-    
-    
-    
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-		
-		<th>Type</th>
-		
-		
-		
-		
-		
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-	
-	<tbody>
-	
-	
-        <tr>
-            
-                <td class="name"><code>observable</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type"><a href="ProAct.Observable.html">ProAct.Observable</a></span>
-
-
-            
-            </td>
-            
-            
-            
-            
-            
-            <td class="description last">The ProAct.Observable which transformations should be used.</td>
-        </tr>
-	
-	
-	
-        <tr>
-            
-                <td class="name"><code>val</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">Object</span>
-
-
-            
-            </td>
-            
-            
-            
-            
-            
-            <td class="description last">The value to transform.</td>
-        </tr>
-	
-	
-	</tbody>
-</table>
-    
-    
-    
-<dl class="details">
-    
-        
-    
-    
-    
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="observable.js.html">objects/observable.js</a>, <a href="observable.js.html#line50">line 50</a>
-    </li></ul></dd>
-    
-    
-    
-    
-    
-    
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    <h5>Returns:</h5>
-    
-            
-<div class="param-desc">
-    The transformed value.
-</div>
-
-
-
-<dl>
-	<dt>
-		Type
-	</dt>
-	<dd>
-		
-<span class="param-type">Object</span>
-
-
-	</dd>
-</dl>
-
-        
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="accumulate"><span class="type-signature">&lt;abstract> </span>accumulate<span class="signature">(initVal, accumulationFunction)</span><span class="type-signature"> &rarr; {<a href="ProAct.Observable.html">ProAct.Observable</a>}</span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        Creates a new ProAct.Observable instance with source <i>this</i> and accumulation
+        Creates a new ProAct.Stream instance with source <i>this</i> and accumulation
 the passed <i>accumulation function</i>.
-<p>
- Should be overridden with creating the right observable.
-</p>
     </div>
     
 
@@ -531,6 +438,11 @@ the passed <i>accumulation function</i>.
     
 
     
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from"><ul class="dummy"><li>
+        <a href="ProAct.Stream.html#accumulate">ProAct.Stream#accumulate</a>
+    </li></dd>
+    
     
     
     
@@ -545,7 +457,7 @@ the passed <i>accumulation function</i>.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="observable.js.html">objects/observable.js</a>, <a href="observable.js.html#line482">line 482</a>
+        <a href="stream.js.html">streams/stream.js</a>, <a href="stream.js.html#line278">line 278</a>
     </li></ul></dd>
     
     
@@ -577,7 +489,7 @@ the passed <i>accumulation function</i>.
     
             
 <div class="param-desc">
-    A new ProAct.Observable instance with the <i>accumulation</i> applied.
+    A new ProAct.Stream instance with the <i>accumulation</i> applied.
 </div>
 
 
@@ -588,7 +500,7 @@ the passed <i>accumulation function</i>.
 	</dt>
 	<dd>
 		
-<span class="param-type"><a href="ProAct.Observable.html">ProAct.Observable</a></span>
+<span class="param-type"><a href="ProAct.Stream.html">ProAct.Stream</a></span>
 
 
 	</dd>
@@ -703,6 +615,11 @@ the passed <i>accumulation function</i>.
     
 
     
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from"><ul class="dummy"><li>
+        <a href="ProAct.Observable.html#accumulation">ProAct.Observable#accumulation</a>
+    </li></dd>
+    
     
     
     
@@ -774,6 +691,177 @@ the passed <i>accumulation function</i>.
         
             
 <dt>
+    <h4 class="name" id="bufferit"><span class="type-signature"></span>bufferit<span class="signature">(size)</span><span class="type-signature"> &rarr; {<a href="ProAct.SizeBufferedStream.html">ProAct.SizeBufferedStream</a>}</span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Creates a new <a href="ProAct.SizeBufferedStream.html">ProAct.SizeBufferedStream</a> instance having as source <i>this</i>.
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>size</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">Number</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">The size of the buffer of the new ProAct.SizeBufferedStream.</td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from"><ul class="dummy"><li>
+        <a href="ProAct.Stream.html#bufferit">ProAct.Stream#bufferit</a>
+    </li></dd>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="size_buffered_stream.js.html">streams/size_buffered_stream.js</a>, <a href="size_buffered_stream.js.html#line86">line 86</a>
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    <h5>Throws:</h5>
+    
+            
+
+<dl>
+    <dt>
+        <div class="param-desc">
+        SizeBufferedStream must contain size, if there is no size passed to it.
+        </div>
+    </dt>
+    <dt>
+        <dl>
+            <dt>
+                Type
+            </dt>
+            <dd>
+                
+<span class="param-type">Error</span>
+
+
+            </dd>
+        </dl>
+    </dt>
+</dl>
+
+
+        
+    
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    A <a href="ProAct.SizeBufferedStream.html">ProAct.SizeBufferedStream</a> instance.
+</div>
+
+
+
+<dl>
+	<dt>
+		Type
+	</dt>
+	<dd>
+		
+<span class="param-type"><a href="ProAct.SizeBufferedStream.html">ProAct.SizeBufferedStream</a></span>
+
+
+	</dd>
+</dl>
+
+        
+    
+    
+</dd>
+
+        
+            
+<dt>
     <h4 class="name" id="defer"><span class="type-signature"></span>defer<span class="signature">(event, listener)</span><span class="type-signature"> &rarr; {<a href="ProAct.Observable.html">ProAct.Observable</a>}</span></h4>
     
     
@@ -784,8 +872,9 @@ the passed <i>accumulation function</i>.
     <div class="description">
         Defers a ProAct.Observable listener.
 <p>
- By default this means that the listener is put into active <a href="ProAct.Flow.html">ProAct.Flow</a> using it's
- <a href="ProAct.Flow.html#pushOnce">ProAct.Flow#pushOnce</a> method, but it can be overridden.
+ For streams this means pushing it to active flow using <a href="ProAct.Flow.html#push">ProAct.Flow#push</a>.
+ If the listener is object with 'property' field, it is done using <a href="ProAct.Observable.html#defer">ProAct.Observable#defer</a>.
+ That way the reactive environment is updated only once, but the streams are not part of it.
 </p>
     </div>
     
@@ -876,6 +965,11 @@ the passed <i>accumulation function</i>.
     
 
     
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from"><ul class="dummy"><li>
+        <a href="ProAct.Stream.html#defer">ProAct.Stream#defer</a>
+    </li></dd>
+    
     
     
     
@@ -890,7 +984,7 @@ the passed <i>accumulation function</i>.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="observable.js.html">objects/observable.js</a>, <a href="observable.js.html#line634">line 634</a>
+        <a href="stream.js.html">streams/stream.js</a>, <a href="stream.js.html#line113">line 113</a>
     </li></ul></dd>
     
     
@@ -951,7 +1045,7 @@ the passed <i>accumulation function</i>.
         
             
 <dt>
-    <h4 class="name" id="filter"><span class="type-signature">&lt;abstract> </span>filter<span class="signature">(filteringFunction)</span><span class="type-signature"> &rarr; {<a href="ProAct.Observable.html">ProAct.Observable</a>}</span></h4>
+    <h4 class="name" id="filter"><span class="type-signature"></span>filter<span class="signature">(filteringFunction)</span><span class="type-signature"> &rarr; {<a href="ProAct.Stream.html">ProAct.Stream</a>}</span></h4>
     
     
 </dt>
@@ -959,11 +1053,8 @@ the passed <i>accumulation function</i>.
     
     
     <div class="description">
-        Creates a new ProAct.Observable instance with source <i>this</i> and filtering
+        Creates a new ProAct.Stream instance with source <i>this</i> and filtering
 the passed <i>filtering function</i>.
-<p>
- Should be overridden with creating the right observable.
-</p>
     </div>
     
 
@@ -1030,6 +1121,11 @@ the passed <i>filtering function</i>.
     
 
     
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from"><ul class="dummy"><li>
+        <a href="ProAct.Stream.html#filter">ProAct.Stream#filter</a>
+    </li></dd>
+    
     
     
     
@@ -1044,7 +1140,7 @@ the passed <i>filtering function</i>.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="observable.js.html">objects/observable.js</a>, <a href="observable.js.html#line463">line 463</a>
+        <a href="stream.js.html">streams/stream.js</a>, <a href="stream.js.html#line261">line 261</a>
     </li></ul></dd>
     
     
@@ -1076,7 +1172,7 @@ the passed <i>filtering function</i>.
     
             
 <div class="param-desc">
-    A new ProAct.Observable instance with the <i>filtering</i> applied.
+    A new ProAct.Stream instance with the <i>filtering</i> applied.
 </div>
 
 
@@ -1087,7 +1183,7 @@ the passed <i>filtering function</i>.
 	</dt>
 	<dd>
 		
-<span class="param-type"><a href="ProAct.Observable.html">ProAct.Observable</a></span>
+<span class="param-type"><a href="ProAct.Stream.html">ProAct.Stream</a></span>
 
 
 	</dd>
@@ -1180,6 +1276,11 @@ the passed <i>filtering function</i>.
     
 
     
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from"><ul class="dummy"><li>
+        <a href="ProAct.Observable.html#filtering">ProAct.Observable#filtering</a>
+    </li></dd>
+    
     
     
     
@@ -1238,6 +1339,103 @@ the passed <i>filtering function</i>.
 	<dd>
 		
 <span class="param-type"><a href="ProAct.Observable.html">ProAct.Observable</a></span>
+
+
+	</dd>
+</dl>
+
+        
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="flush"><span class="type-signature"></span>flush<span class="signature">()</span><span class="type-signature"> &rarr; {<a href="ProAct.BufferedStream.html">ProAct.BufferedStream</a>}</span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Flushes the stream by emitting all the events/values stored in its buffer.
+The buffer becomes empty.
+    </div>
+    
+
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from"><ul class="dummy"><li>
+        <a href="ProAct.BufferedStream.html#flush">ProAct.BufferedStream#flush</a>
+    </li></dd>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="buffered_stream.js.html">streams/buffered_stream.js</a>, <a href="buffered_stream.js.html#line44">line 44</a>
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    <i>this</i>
+</div>
+
+
+
+<dl>
+	<dt>
+		Type
+	</dt>
+	<dd>
+		
+<span class="param-type"><a href="ProAct.BufferedStream.html">ProAct.BufferedStream</a></span>
 
 
 	</dd>
@@ -1341,6 +1539,11 @@ is listening for changes from the <i>sources</i>.
     
 
     
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from"><ul class="dummy"><li>
+        <a href="ProAct.Observable.html#into">ProAct.Observable#into</a>
+    </li></dd>
+    
     
     
     
@@ -1414,7 +1617,7 @@ is listening for changes from the <i>sources</i>.
         
             
 <dt>
-    <h4 class="name" id="makeErrListener"><span class="type-signature">&lt;abstract> </span>makeErrListener<span class="signature">()</span><span class="type-signature"> &rarr; {Object}</span></h4>
+    <h4 class="name" id="makeErrListener"><span class="type-signature"></span>makeErrListener<span class="signature">()</span><span class="type-signature"> &rarr; {Object}</span></h4>
     
     
 </dt>
@@ -1422,13 +1625,9 @@ is listening for changes from the <i>sources</i>.
     
     
     <div class="description">
-        Creates the <i>error listener</i> of this observable.
-Every observable should have one error listener that should pass to other observables.
+        Creates the <i>error listener</i> of this stream.
 <p>
- This listener turns the observable in a observer for errors.
-</p>
-<p>
- Should be overriden with specific listener, by default it returns null.
+ The listener just calls <a href="ProAct.Stream.html#triggerErr">ProAct.Stream#triggerErr</a> of <i>this</i> with the incoming error.
 </p>
     </div>
     
@@ -1448,6 +1647,10 @@ Every observable should have one error listener that should pass to other observ
     
 
     
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from"><ul class="dummy"><li>
+        <a href="ProAct.Stream.html#makeErrListener">ProAct.Stream#makeErrListener</a>
+    </li></dd>
     
     
     
@@ -1458,16 +1661,12 @@ Every observable should have one error listener that should pass to other observ
     
     
     
-    <dt class="tag-default">Default Value:</dt>
-    <dd class="tag-default"><ul class="dummy">
-            <li>null</li>
-        </ul></dd>
     
     
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="observable.js.html">objects/observable.js</a>, <a href="observable.js.html#line109">line 109</a>
+        <a href="stream.js.html">streams/stream.js</a>, <a href="stream.js.html#line90">line 90</a>
     </li></ul></dd>
     
     
@@ -1492,7 +1691,7 @@ Every observable should have one error listener that should pass to other observ
     
             
 <div class="param-desc">
-    The <i>error listener of this observer</i>.
+    The <i>error listener of this stream</i>.
 </div>
 
 
@@ -1527,10 +1726,7 @@ Every observable should have one error listener that should pass to other observ
     <div class="description">
         Creates the <i>event</i> to be send to the listeners on update.
 <p>
- The <i>event</i> should be an instance of <a href="ProAct.Event.html">ProAct.Event</a>.
-</p>
-<p>
- By default this method returns <a href="ProAct.Event.Types.html#value">ProAct.Event.Types.value</a> event.
+ Streams don't create new events by default, the event is the source.
 </p>
     </div>
     
@@ -1598,6 +1794,10 @@ Every observable should have one error listener that should pass to other observ
     
 
     
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from"><ul class="dummy"><li>
+        <a href="ProAct.Stream.html#makeEvent">ProAct.Stream#makeEvent</a>
+    </li></dd>
     
     
     
@@ -1608,16 +1808,12 @@ Every observable should have one error listener that should pass to other observ
     
     
     
-    <dt class="tag-default">Default Value:</dt>
-    <dd class="tag-default"><ul class="dummy">
-            <li>{ProAct.Event} with type <a href="ProAct.Event.Types.html#value">ProAct.Event.Types.value</a></li>
-        </ul></dd>
     
     
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="observable.js.html">objects/observable.js</a>, <a href="observable.js.html#line129">line 129</a>
+        <a href="stream.js.html">streams/stream.js</a>, <a href="stream.js.html#line49">line 49</a>
     </li></ul></dd>
     
     
@@ -1667,7 +1863,7 @@ Every observable should have one error listener that should pass to other observ
         
             
 <dt>
-    <h4 class="name" id="makeListener"><span class="type-signature">&lt;abstract> </span>makeListener<span class="signature">()</span><span class="type-signature"> &rarr; {Object}</span></h4>
+    <h4 class="name" id="makeListener"><span class="type-signature"></span>makeListener<span class="signature">()</span><span class="type-signature"> &rarr; {Object}</span></h4>
     
     
 </dt>
@@ -1675,13 +1871,9 @@ Every observable should have one error listener that should pass to other observ
     
     
     <div class="description">
-        Creates the <i>listener</i> of this observable.
-Every observable should have one listener that should pass to other observables.
+        Creates the <i>listener</i> of this stream.
 <p>
- This listener turns the observable in a observer.
-</p>
-<p>
- Should be overriden with specific listener, by default it returns null.
+ The listener of the stream just calls the method <a href="ProAct.Stream.html#trigger">ProAct.Stream#trigger</a> with the incoming event/value.
 </p>
     </div>
     
@@ -1701,6 +1893,10 @@ Every observable should have one listener that should pass to other observables.
     
 
     
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from"><ul class="dummy"><li>
+        <a href="ProAct.Stream.html#makeListener">ProAct.Stream#makeListener</a>
+    </li></dd>
     
     
     
@@ -1711,16 +1907,12 @@ Every observable should have one listener that should pass to other observables.
     
     
     
-    <dt class="tag-default">Default Value:</dt>
-    <dd class="tag-default"><ul class="dummy">
-            <li>null</li>
-        </ul></dd>
     
     
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="observable.js.html">objects/observable.js</a>, <a href="observable.js.html#line89">line 89</a>
+        <a href="stream.js.html">streams/stream.js</a>, <a href="stream.js.html#line67">line 67</a>
     </li></ul></dd>
     
     
@@ -1745,7 +1937,7 @@ Every observable should have one listener that should pass to other observables.
     
             
 <div class="param-desc">
-    The <i>listener of this observer</i>.
+    The <i>listener of this stream</i>.
 </div>
 
 
@@ -1770,7 +1962,7 @@ Every observable should have one listener that should pass to other observables.
         
             
 <dt>
-    <h4 class="name" id="map"><span class="type-signature">&lt;abstract> </span>map<span class="signature">(mappingFunction)</span><span class="type-signature"> &rarr; {<a href="ProAct.Observable.html">ProAct.Observable</a>}</span></h4>
+    <h4 class="name" id="map"><span class="type-signature"></span>map<span class="signature">(mappingFunction)</span><span class="type-signature"> &rarr; {<a href="ProAct.Stream.html">ProAct.Stream</a>}</span></h4>
     
     
 </dt>
@@ -1778,11 +1970,8 @@ Every observable should have one listener that should pass to other observables.
     
     
     <div class="description">
-        Creates a new ProAct.Observable instance with source <i>this</i> and mapping
+        Creates a new ProAct.Stream instance with source <i>this</i> and mapping
 the passed <i>mapping function</i>.
-<p>
- Should be overridden with creating the right observable.
-</p>
     </div>
     
 
@@ -1849,6 +2038,11 @@ the passed <i>mapping function</i>.
     
 
     
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from"><ul class="dummy"><li>
+        <a href="ProAct.Stream.html#map">ProAct.Stream#map</a>
+    </li></dd>
+    
     
     
     
@@ -1863,7 +2057,7 @@ the passed <i>mapping function</i>.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="observable.js.html">objects/observable.js</a>, <a href="observable.js.html#line444">line 444</a>
+        <a href="stream.js.html">streams/stream.js</a>, <a href="stream.js.html#line244">line 244</a>
     </li></ul></dd>
     
     
@@ -1895,7 +2089,7 @@ the passed <i>mapping function</i>.
     
             
 <div class="param-desc">
-    A new ProAct.Observable instance with the <i>mapping</i> applied.
+    A new ProAct.Stream instance with the <i>mapping</i> applied.
 </div>
 
 
@@ -1906,7 +2100,7 @@ the passed <i>mapping function</i>.
 	</dt>
 	<dd>
 		
-<span class="param-type"><a href="ProAct.Observable.html">ProAct.Observable</a></span>
+<span class="param-type"><a href="ProAct.Stream.html">ProAct.Stream</a></span>
 
 
 	</dd>
@@ -2000,6 +2194,11 @@ the passed <i>mapping function</i>.
     
 
     
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from"><ul class="dummy"><li>
+        <a href="ProAct.Observable.html#mapping">ProAct.Observable#mapping</a>
+    </li></dd>
+    
     
     
     
@@ -2058,6 +2257,158 @@ the passed <i>mapping function</i>.
 	<dd>
 		
 <span class="param-type"><a href="ProAct.Observable.html">ProAct.Observable</a></span>
+
+
+	</dd>
+</dl>
+
+        
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="merge"><span class="type-signature"></span>merge<span class="signature">()</span><span class="type-signature"> &rarr; {<a href="ProAct.Stream.html">ProAct.Stream</a>}</span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Creates a new ProAct.Stream instance that merges this with other streams.
+The new instance will have new value on value from any of the source streams.
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		<th>Argument</th>
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>...</code></td>
+            
+            
+            <td class="type">
+            
+            </td>
+            
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+                    
+                
+                    
+                
+                </td>
+            
+            
+            
+            
+            <td class="description last">A list of streams to be set as sources.</td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from"><ul class="dummy"><li>
+        <a href="ProAct.Stream.html#merge">ProAct.Stream#merge</a>
+    </li></dd>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="stream.js.html">streams/stream.js</a>, <a href="stream.js.html#line297">line 297</a>
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    A new ProAct.Stream instance with the sources this and all the passed streams.
+</div>
+
+
+
+<dl>
+	<dt>
+		Type
+	</dt>
+	<dd>
+		
+<span class="param-type"><a href="ProAct.Stream.html">ProAct.Stream</a></span>
 
 
 	</dd>
@@ -2195,6 +2546,11 @@ the passed <i>mapping function</i>.
     
     
 
+    
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from"><ul class="dummy"><li>
+        <a href="ProAct.Observable.html#off">ProAct.Observable#off</a>
+    </li></dd>
     
     
     
@@ -2368,6 +2724,11 @@ the passed <i>mapping function</i>.
     
 
     
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from"><ul class="dummy"><li>
+        <a href="ProAct.Observable.html#offErr">ProAct.Observable#offErr</a>
+    </li></dd>
+    
     
     
     
@@ -2513,6 +2874,11 @@ the passed <i>mapping function</i>.
     
     
 
+    
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from"><ul class="dummy"><li>
+        <a href="ProAct.Observable.html#offSource">ProAct.Observable#offSource</a>
+    </li></dd>
     
     
     
@@ -2713,6 +3079,11 @@ TODO The action is not used here, ProAct.Observable#listeners should be a set of
     
 
     
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from"><ul class="dummy"><li>
+        <a href="ProAct.Observable.html#on">ProAct.Observable#on</a>
+    </li></dd>
+    
     
     
     
@@ -2879,6 +3250,11 @@ The listener may be function or object that defines a <i>call</i> method.
     
 
     
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from"><ul class="dummy"><li>
+        <a href="ProAct.Observable.html#onErr">ProAct.Observable#onErr</a>
+    </li></dd>
+    
     
     
     
@@ -3025,6 +3401,11 @@ to the passed <i>destination</i> observable.
     
     
 
+    
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from"><ul class="dummy"><li>
+        <a href="ProAct.Observable.html#out">ProAct.Observable#out</a>
+    </li></dd>
     
     
     
@@ -3198,6 +3579,11 @@ to the passed <i>destination</i> observable.
     
 
     
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from"><ul class="dummy"><li>
+        <a href="ProAct.Observable.html#reduce">ProAct.Observable#reduce</a>
+    </li></dd>
+    
     
     
     
@@ -3356,6 +3742,11 @@ of <i>this observable</i>.
     
 
     
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from"><ul class="dummy"><li>
+        <a href="ProAct.Observable.html#transform">ProAct.Observable#transform</a>
+    </li></dd>
+    
     
     
     
@@ -3414,6 +3805,501 @@ of <i>this observable</i>.
 	<dd>
 		
 <span class="param-type"><a href="ProAct.Observable.html">ProAct.Observable</a></span>
+
+
+	</dd>
+</dl>
+
+        
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="trigger"><span class="type-signature"></span>trigger<span class="signature">(event, useTransformations)</span><span class="type-signature"> &rarr; {<a href="ProAct.Stream.html">ProAct.Stream</a>}</span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>
+ Triggers a new event/value to the stream. If the buffer is full, anything that is listening for events from
+ this stream will get updated with all the values/events in the buffer.
+</p>
+<p>
+ ProAct.Stream.t is alias of this method.
+</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>event</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">The event/value to pass to trigger.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>useTransformations</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">Boolean</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">If the stream should transform the triggered value. By default it is true (if not passed)</td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="size_buffered_stream.js.html">streams/size_buffered_stream.js</a>, <a href="size_buffered_stream.js.html#line55">line 55</a>
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    <dt class="tag-see">See:</dt>
+    <dd class="tag-see">
+        <ul>
+            <li><a href="ProAct.BufferedStream.html#flush">ProAct.BufferedStream#flush</a></li>
+        </ul>
+    </dd>
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    <i>this</i>
+</div>
+
+
+
+<dl>
+	<dt>
+		Type
+	</dt>
+	<dd>
+		
+<span class="param-type"><a href="ProAct.Stream.html">ProAct.Stream</a></span>
+
+
+	</dd>
+</dl>
+
+        
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="triggerErr"><span class="type-signature"></span>triggerErr<span class="signature">(err)</span><span class="type-signature"> &rarr; {<a href="ProAct.Observable.html">ProAct.Observable</a>}</span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>
+ Triggers a new error to the stream. Anything that is listening for errors from
+ this stream will get updated.
+</p>
+<p>
+ ProAct.Stream.te is alias of this method.
+</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>err</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">Error</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">The error to trigger.</td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from"><ul class="dummy"><li>
+        <a href="ProAct.Stream.html#triggerErr">ProAct.Stream#triggerErr</a>
+    </li></dd>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="stream.js.html">streams/stream.js</a>, <a href="stream.js.html#line202">line 202</a>
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    <dt class="tag-see">See:</dt>
+    <dd class="tag-see">
+        <ul>
+            <li><a href="ProAct.Observable.html#update">ProAct.Observable#update</a></li>
+        </ul>
+    </dd>
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    <i>this</i>
+</div>
+
+
+
+<dl>
+	<dt>
+		Type
+	</dt>
+	<dd>
+		
+<span class="param-type"><a href="ProAct.Observable.html">ProAct.Observable</a></span>
+
+
+	</dd>
+</dl>
+
+        
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="triggerMany"><span class="type-signature"></span>triggerMany<span class="signature">()</span><span class="type-signature"> &rarr; {<a href="ProAct.Stream.html">ProAct.Stream</a>}</span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>
+ Triggers all the passed params, using transformations.
+</p>
+<p>
+ ProAct.Stream.tt is alias of this method.
+</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		<th>Argument</th>
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>...</code></td>
+            
+            
+            <td class="type">
+            
+            </td>
+            
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+                    
+                
+                    
+                
+                </td>
+            
+            
+            
+            
+            <td class="description last">A list of events/values to trigger</td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from"><ul class="dummy"><li>
+        <a href="ProAct.Stream.html#triggerMany">ProAct.Stream#triggerMany</a>
+    </li></dd>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="stream.js.html">streams/stream.js</a>, <a href="stream.js.html#line175">line 175</a>
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    <dt class="tag-see">See:</dt>
+    <dd class="tag-see">
+        <ul>
+            <li><a href="ProAct.Stream.html#trigger">ProAct.Stream#trigger</a></li>
+        </ul>
+    </dd>
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    <i>this</i>
+</div>
+
+
+
+<dl>
+	<dt>
+		Type
+	</dt>
+	<dd>
+		
+<span class="param-type"><a href="ProAct.Stream.html">ProAct.Stream</a></span>
 
 
 	</dd>
@@ -3541,6 +4427,11 @@ of <i>this observable</i>.
     
     
 
+    
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from"><ul class="dummy"><li>
+        <a href="ProAct.Observable.html#update">ProAct.Observable#update</a>
+    </li></dd>
     
     
     
@@ -3735,6 +4626,11 @@ of <i>this observable</i>.
     
 
     
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from"><ul class="dummy"><li>
+        <a href="ProAct.Observable.html#willUpdate">ProAct.Observable#willUpdate</a>
+    </li></dd>
+    
     
     
     
@@ -3829,7 +4725,7 @@ of <i>this observable</i>.
 <br clear="both">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.2</a> on Sat Jul 19 2014 14:19:10 GMT+0300 (EEST)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.2</a> on Sat Jul 19 2014 14:19:11 GMT+0300 (EEST)
 </footer>
 
 <script> prettyPrint(); </script>

@@ -193,7 +193,7 @@ ProAct.Stream.prototype = P.U.ex(Object.create(P.Observable.prototype), {
     var i, args = slice.call(arguments), ln = args.length;
 
     for (i = 0; i < ln; i++) {
-      this.go(args[i], true);
+      this.trigger(args[i], true);
     }
 
     return this;
@@ -305,7 +305,6 @@ ProAct.Stream.prototype = P.U.ex(Object.create(P.Observable.prototype), {
    *      A list of streams to be set as sources.
    * @return {ProAct.Stream}
    *      A new ProAct.Stream instance with the sources this and all the passed streams.
-   * @see {@link ProAct.Observable#accumulation}
    */
   merge: function () {
     var sources = [this].concat(slice.call(arguments)),

@@ -2378,7 +2378,7 @@
 	    var i, args = slice.call(arguments), ln = args.length;
 	
 	    for (i = 0; i < ln; i++) {
-	      this.go(args[i], true);
+	      this.trigger(args[i], true);
 	    }
 	
 	    return this;
@@ -2490,7 +2490,6 @@
 	   *      A list of streams to be set as sources.
 	   * @return {ProAct.Stream}
 	   *      A new ProAct.Stream instance with the sources this and all the passed streams.
-	   * @see {@link ProAct.Observable#accumulation}
 	   */
 	  merge: function () {
 	    var sources = [this].concat(slice.call(arguments)),
@@ -2592,6 +2591,30 @@
 	  }
 	});
 	
+	/**
+	 * <p>
+	 *  Constructs a ProAct.SizeBufferedStream. When the buffer is full (has the same size as <i>this</i> size), it is flushed.
+	 * </p>
+	 * <p>
+	 *  ProAct.SizeBufferedStream is part of the streams module of ProAct.js.
+	 * </p>
+	 *
+	 * @class ProAct.SizeBufferedStream
+	 * @extends ProAct.BufferedStream
+	 * @param {ProAct.Observable} source
+	 *      A default source of the stream, can be null.
+	 *      <p>
+	 *        If this is the only one passed argument and it is a number - it becomes the size of the buffer.
+	 *      </p>
+	 * @param {Array} transforms
+	 *      A list of transformation to be used on all incoming chages.
+	 *      <p>
+	 *        If the arguments passed are two and this is a number - it becomes the size of the buffer.
+	 *      </p>
+	 * @param {Number} size
+	 *      The size of the buffer.
+	 * @throws {Error} SizeBufferedStream must contain size, if there is no size passed to it.
+	 */
 	ProAct.SizeBufferedStream = P.SBS = function (source, transforms, size) {
 	  if (arguments.length === 1 && typeof source === 'number') {
 	    size = source;
@@ -2610,7 +2633,38 @@
 	};
 	
 	ProAct.SizeBufferedStream.prototype = P.U.ex(Object.create(P.BS.prototype), {
+	
+	  /**
+	   * Reference to the constructor of this object.
+	   *
+	   * @memberof ProAct.SizeBufferedStream
+	   * @instance
+	   * @constant
+	   * @type {Object}
+	   * @default ProAct.SizeBufferedStream
+	   */
 	  constructor: ProAct.SizeBufferedStream,
+	
+	  /**
+	   * <p>
+	   *  Triggers a new event/value to the stream. If the buffer is full, anything that is listening for events from
+	   *  this stream will get updated with all the values/events in the buffer.
+	   * </p>
+	   * <p>
+	   *  ProAct.Stream.t is alias of this method.
+	   * </p>
+	   *
+	   * @memberof ProAct.SizeBufferedStream
+	   * @instance
+	   * @method trigger
+	   * @param {Object} event
+	   *      The event/value to pass to trigger.
+	   * @param {Boolean} useTransformations
+	   *      If the stream should transform the triggered value. By default it is true (if not passed)
+	   * @return {ProAct.Stream}
+	   *      <i>this</i>
+	   * @see {@link ProAct.BufferedStream#flush}
+	   */
 	  trigger: function (event, useTransformations) {
 	    this.buffer.push(event, useTransformations);
 	
@@ -2621,26 +2675,42 @@
 	});
 	
 	P.U.ex(P.S.prototype, {
+	
+	  /**
+	   * Creates a new {@link ProAct.SizeBufferedStream} instance having as source <i>this</i>.
+	   *
+	   * @memberof ProAct.Stream
+	   * @instance
+	   * @method bufferit
+	   * @param {Number} size
+	   *      The size of the buffer of the new ProAct.SizeBufferedStream.
+	   * @return {ProAct.SizeBufferedStream}
+	   *      A {@link ProAct.SizeBufferedStream} instance.
+	   * @throws {Error} SizeBufferedStream must contain size, if there is no size passed to it.
+	   */
 	  bufferit: function (size) {
 	    return new P.SBS(this, size);
 	  }
 	});
 	
-	Pro.DelayedStream = function (source, transforms, delay) {
+	P.SBS.prototype.t = P.SBS.prototype.trigger;
+	
+	ProAct.DelayedStream = P.DBS = function (source, transforms, delay) {
 	  if (typeof source === 'number') {
 	    delay = source;
 	    source = null;
-	  } else if (Pro.U.isObject(source) && typeof transforms === 'number') {
+	  } else if (P.U.isObject(source) && typeof transforms === 'number') {
 	    delay = transforms;
 	    transforms = null;
 	  }
-	  Pro.BufferedStream.call(this, source, transforms);
+	  P.BS.call(this, source, transforms);
 	
 	  this.delayId = null;
 	  this.setDelay(delay);
 	};
 	
-	Pro.DelayedStream.prototype = Pro.U.ex(Object.create(Pro.BufferedStream.prototype), {
+	ProAct.DelayedStream.prototype = P.U.ex(Object.create(P.BS.prototype), {
+	  constructor: ProAct.DelayedStream,
 	  trigger: function (event, useTransformations) {
 	    this.buffer.push(event, useTransformations);
 	  },
@@ -2658,17 +2728,16 @@
 	      return;
 	    }
 	
-	    var _this = this;
+	    var self = this;
 	    this.delayId = setInterval(function () {
-	      _this.flush();
+	      self.flush();
 	    }, this.delay);
 	  }
 	});
-	Pro.DelayedStream.prototype.constructor = Pro.DelayedStream;
 	
-	Pro.U.ex(Pro.Stream.prototype, {
+	P.U.ex(P.S.prototype, {
 	  delay: function (delay) {
-	    return new Pro.DelayedStream(this, delay);
+	    return new P.DBS(this, delay);
 	  }
 	});
 	
