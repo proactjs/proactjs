@@ -1418,7 +1418,7 @@
 	 */
 	ProAct.flow = new ProAct.Flow(['proq'], {
 	  err: function (e) {
-	    if (P.flow.errStream()) {
+	    if (P.flow.errStream) {
 	      P.flow.errStream().triggerErr(e);
 	    } else {
 	      console.log(e);
@@ -1427,7 +1427,7 @@
 	  flowInstance: {
 	    queue: {
 	      err: function (queue, e) {
-	        if (P.flow.errStream()) {
+	        if (P.flow.errStream) {
 	          P.flow.errStream().triggerErr(e);
 	        } else {
 	          console.log(e);
@@ -1916,8 +1916,6 @@
 	   * @instance
 	   * @abstract
 	   * @method filter
-	   * @param {Object} initVal
-	   *      Initial value for the accumulation. For example '0' for sum.
 	   * @param {Object} filteringFunction
 	   *      The filtering function or object with a call method, should return boolean.
 	   * @return {ProAct.Observable}
@@ -2297,6 +2295,27 @@
 	    return this.errListener;
 	  },
 	
+	  /**
+	   * Defers a ProAct.Observable listener.
+	   * <p>
+	   *  For streams this means pushing it to active flow using {@link ProAct.Flow#push}.
+	   *  If the listener is object with 'property' field, it is done using {@link ProAct.Observable#defer}.
+	   *  That way the reactive environment is updated only once, but the streams are not part of it.
+	   * </p>
+	   *
+	   * @memberof ProAct.Stream
+	   * @instance
+	   * @method defer
+	   * @param {Object} event
+	   *      The event/value to pass to the listener.
+	   * @param {Object} listener
+	   *      The listener to defer. It should be a function or object defining the <i>call</i> method.
+	   * @return {ProAct.Observable}
+	   *      <i>this</i>
+	   * @see {@link ProAct.Observable#willUpdate}
+	   * @see {@link ProAct.Observable#makeListener}
+	   * @see {@link ProAct.flow}
+	   */
 	  defer: function (event, listener) {
 	    if (listener.property) {
 	      P.Observable.prototype.defer.call(this, event, listener);
@@ -2309,15 +2328,51 @@
 	      P.flow.push(listener, listener.call, [event]);
 	    }
 	  },
+	
+	  /**
+	   * <p>
+	   *  Triggers a new event/value to the stream. Anything that is listening for events from
+	   *  this stream will get updated.
+	   * </p>
+	   *
+	   * @memberof ProAct.Stream
+	   * @instance
+	   * @method trigger
+	   * @param {Object} event
+	   *      The event/value to pass to trigger.
+	   * @param {Boolean} useTransformations
+	   *      If the stream should transform the triggered value. By default it is true (if not passed)
+	   * @return {ProAct.Observable}
+	   *      <i>this</i>
+	   * @see {@link ProAct.Observable#update}
+	   */
 	  trigger: function (event, useTransformations) {
 	    if (useTransformations === undefined) {
 	      useTransformations = true;
 	    }
 	    return this.go(event, useTransformations);
 	  },
+	
+	  /**
+	   * <p>
+	   *  Triggers a new error to the stream. Anything that is listening for errors from
+	   *  this stream will get updated.
+	   * </p>
+	   *
+	   * @memberof ProAct.Stream
+	   * @instance
+	   * @method triggerErr
+	   * @param {Error} err
+	   *      The error to trigger.
+	   * @return {ProAct.Observable}
+	   *      <i>this</i>
+	   * @see {@link ProAct.Observable#update}
+	   */
 	  triggerErr: function (err) {
 	    return this.update(err, this.errListeners);
 	  },
+	
+	  // private
 	  go: function (event, useTransformations) {
 	    var i, tr = this.transforms, ln = tr.length;
 	
@@ -2336,21 +2391,93 @@
 	
 	    return this.update(event);
 	  },
-	  map: function (f) {
-	    return new P.S(this).mapping(f);
+	
+	  /**
+	   * Creates a new ProAct.Stream instance with source <i>this</i> and mapping
+	   * the passed <i>mapping function</i>.
+	   *
+	   * @memberof ProAct.Stream
+	   * @instance
+	   * @method map
+	   * @param {Object} mappingFunction
+	   *      Function or object with a <i>call method</i> to use as map function.
+	   * @return {ProAct.Stream}
+	   *      A new ProAct.Stream instance with the <i>mapping</i> applied.
+	   * @see {@link ProAct.Observable#mapping}
+	   */
+	  map: function (mappingFunction) {
+	    return new P.S(this).mapping(mappingFunction);
 	  },
-	  filter: function (f) {
-	    return new P.S(this).filtering(f);
+	
+	  /**
+	   * Creates a new ProAct.Stream instance with source <i>this</i> and filtering
+	   * the passed <i>filtering function</i>.
+	   *
+	   * @memberof ProAct.Stream
+	   * @instance
+	   * @method filter
+	   * @param {Object} filteringFunction
+	   *      The filtering function or object with a call method, should return boolean.
+	   * @return {ProAct.Stream}
+	   *      A new ProAct.Stream instance with the <i>filtering</i> applied.
+	   * @see {@link ProAct.Observable#filtering}
+	   */
+	  filter: function (filteringFunction) {
+	    return new P.S(this).filtering(filteringFunction);
 	  },
-	  accumulate: function (initVal, f) {
-	    return new P.S(this).accumulation(initVal, f);
+	
+	  /**
+	   * Creates a new ProAct.Stream instance with source <i>this</i> and accumulation
+	   * the passed <i>accumulation function</i>.
+	   *
+	   * @memberof ProAct.Stream
+	   * @instance
+	   * @method accumulate
+	   * @param {Object} initVal
+	   *      Initial value for the accumulation. For example '0' for sum.
+	   * @param {Object} accumulationFunction
+	   *      The function to accumulate.
+	   * @return {ProAct.Stream}
+	   *      A new ProAct.Stream instance with the <i>accumulation</i> applied.
+	   * @see {@link ProAct.Observable#accumulation}
+	   */
+	  accumulate: function (initVal, accumulationFunction) {
+	    return new P.S(this).accumulation(initVal, accumulationFunction);
 	  },
-	  merge: function (stream) {
-	    return new P.S().into(this, stream);
+	
+	  /**
+	   * Creates a new ProAct.Stream instance that merges this with other streams.
+	   * The new instance will have new value on value from any of the source streams.
+	   *
+	   * @memberof ProAct.Stream
+	   * @instance
+	   * @method merge
+	   * @param [...]
+	   *      A list of streams to be set as sources.
+	   * @return {ProAct.Stream}
+	   *      A new ProAct.Stream instance with the sources this and all the passed streams.
+	   * @see {@link ProAct.Observable#accumulation}
+	   */
+	  merge: function () {
+	    var sources = [this].concat(slice.call(arguments)),
+	        result = new P.S();
+	
+	    return P.S.prototype.into.apply(result, sources);
 	  }
 	});
 	
 	P.U.ex(P.F.prototype, {
+	
+	  /**
+	   * Retrieves the errStream for logging errors from this flow.
+	   * If there is no error stream, it is created.
+	   *
+	   * @memberof ProAct.Flow
+	   * @instance
+	   * @method errStream
+	   * @return {ProAct.Stream}
+	   *      The error stream of the flow.
+	   */
 	  errStream: function () {
 	    if (!this.errStreamVar) {
 	      this.errStreamVar = new P.S();
@@ -2360,15 +2487,16 @@
 	  }
 	});
 	
-	Pro.BufferedStream = function (source, transforms, size, delay) {
-	  Pro.Stream.call(this, source, transforms);
+	ProAct.BufferedStream = function (source, transforms, size, delay) {
+	  P.S.call(this, source, transforms);
 	  this.buffer = [];
 	};
 	
-	Pro.BufferedStream.prototype = Pro.U.ex(Object.create(Pro.Stream.prototype), {
+	ProAct.BufferedStream.prototype = Pro.U.ex(Object.create(P.S.prototype), {
+	  constructor: ProAct.BufferedStream,
 	  flush: function () {
 	    var _this = this, i, b = this.buffer, ln = b.length;
-	    Pro.flow.run(function () {
+	    P.flow.run(function () {
 	      for (i = 0; i < ln; i+= 2) {
 	        _this.go(b[i], b[i+1]);
 	      }
@@ -2376,7 +2504,6 @@
 	    });
 	  }
 	});
-	Pro.BufferedStream.prototype.constructor = Pro.BufferedStream;
 	
 	Pro.SizeBufferedStream = function (source, transforms, size) {
 	  if (arguments.length === 1 && typeof source === 'number') {

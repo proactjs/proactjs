@@ -471,8 +471,6 @@ P.Observable.prototype = {
    * @instance
    * @abstract
    * @method filter
-   * @param {Object} initVal
-   *      Initial value for the accumulation. For example '0' for sum.
    * @param {Object} filteringFunction
    *      The filtering function or object with a call method, should return boolean.
    * @return {ProAct.Observable}

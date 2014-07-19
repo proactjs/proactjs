@@ -82,7 +82,6 @@ ProAct.Stream.prototype = P.U.ex(Object.create(P.Observable.prototype), {
    * @memberof ProAct.Stream
    * @instance
    * @method makeEvent
-   * @default {ProAct.Event} with type {@link ProAct.Event.Types.value}
    * @param {ProAct.Event} source
    *      The source event of the event. It can be null
    * @return {ProAct.Event}
@@ -91,7 +90,20 @@ ProAct.Stream.prototype = P.U.ex(Object.create(P.Observable.prototype), {
   makeEvent: function (source) {
     return source;
   },
-  makeListener: function (source) {
+
+  /**
+   * Creates the &lt;i>listener&lt;/i> of this stream.
+   * &lt;p>
+   *  The listener of the stream just calls the method {@link ProAct.Stream#trigger} with the incoming event/value.
+   * &lt;/p>
+   *
+   * @memberof ProAct.Stream
+   * @instance
+   * @method makeListener
+   * @return {Object}
+   *      The &lt;i>listener of this stream&lt;/i>.
+   */
+  makeListener: function () {
     if (!this.listener) {
       var stream = this;
       this.listener = function (event) {
@@ -101,7 +113,20 @@ ProAct.Stream.prototype = P.U.ex(Object.create(P.Observable.prototype), {
 
     return this.listener;
   },
-  makeErrListener: function (source) {
+
+  /**
+   * Creates the &lt;i>error listener&lt;/i> of this stream.
+   * &lt;p>
+   *  The listener just calls {@link ProAct.Stream#triggerErr} of &lt;i>this&lt;/i> with the incoming error.
+   * &lt;/p>
+   *
+   * @memberof ProAct.Stream
+   * @instance
+   * @method makeErrListener
+   * @return {Object}
+   *      The &lt;i>error listener of this stream&lt;/i>.
+   */
+  makeErrListener: function () {
     if (!this.errListener) {
       var stream = this;
       this.errListener = function (error) {
@@ -111,27 +136,85 @@ ProAct.Stream.prototype = P.U.ex(Object.create(P.Observable.prototype), {
 
     return this.errListener;
   },
-  defer: function (event, callback) {
-    if (callback.property) {
-      P.Observable.prototype.defer.call(this, event, callback);
+
+  /**
+   * Defers a ProAct.Observable listener.
+   * &lt;p>
+   *  For streams this means pushing it to active flow using {@link ProAct.Flow#push}.
+   *  If the listener is object with 'property' field, it is done using {@link ProAct.Observable#defer}.
+   *  That way the reactive environment is updated only once, but the streams are not part of it.
+   * &lt;/p>
+   *
+   * @memberof ProAct.Stream
+   * @instance
+   * @method defer
+   * @param {Object} event
+   *      The event/value to pass to the listener.
+   * @param {Object} listener
+   *      The listener to defer. It should be a function or object defining the &lt;i>call&lt;/i> method.
+   * @return {ProAct.Observable}
+   *      &lt;i>this&lt;/i>
+   * @see {@link ProAct.Observable#willUpdate}
+   * @see {@link ProAct.Observable#makeListener}
+   * @see {@link ProAct.flow}
+   */
+  defer: function (event, listener) {
+    if (listener.property) {
+      P.Observable.prototype.defer.call(this, event, listener);
       return;
     }
 
-    if (P.U.isFunction(callback)) {
-      P.flow.push(callback, [event]);
+    if (P.U.isFunction(listener)) {
+      P.flow.push(listener, [event]);
     } else {
-      P.flow.push(callback, callback.call, [event]);
+      P.flow.push(listener, listener.call, [event]);
     }
   },
+
+  /**
+   * &lt;p>
+   *  Triggers a new event/value to the stream. Anything that is listening for events from
+   *  this stream will get updated.
+   * &lt;/p>
+   *
+   * @memberof ProAct.Stream
+   * @instance
+   * @method trigger
+   * @param {Object} event
+   *      The event/value to pass to trigger.
+   * @param {Boolean} useTransformations
+   *      If the stream should transform the triggered value. By default it is true (if not passed)
+   * @return {ProAct.Observable}
+   *      &lt;i>this&lt;/i>
+   * @see {@link ProAct.Observable#update}
+   */
   trigger: function (event, useTransformations) {
     if (useTransformations === undefined) {
       useTransformations = true;
     }
     return this.go(event, useTransformations);
   },
+
+  /**
+   * &lt;p>
+   *  Triggers a new error to the stream. Anything that is listening for errors from
+   *  this stream will get updated.
+   * &lt;/p>
+   *
+   * @memberof ProAct.Stream
+   * @instance
+   * @method triggerErr
+   * @param {Error} err
+   *      The error to trigger.
+   * @return {ProAct.Observable}
+   *      &lt;i>this&lt;/i>
+   * @see {@link ProAct.Observable#update}
+   */
   triggerErr: function (err) {
     return this.update(err, this.errListeners);
   },
+
+  // private
   go: function (event, useTransformations) {
     var i, tr = this.transforms, ln = tr.length;
 
@@ -150,21 +233,93 @@ ProAct.Stream.prototype = P.U.ex(Object.create(P.Observable.prototype), {
 
     return this.update(event);
   },
-  map: function (f) {
-    return new P.S(this).mapping(f);
+
+  /**
+   * Creates a new ProAct.Stream instance with source &lt;i>this&lt;/i> and mapping
+   * the passed &lt;i>mapping function&lt;/i>.
+   *
+   * @memberof ProAct.Stream
+   * @instance
+   * @method map
+   * @param {Object} mappingFunction
+   *      Function or object with a &lt;i>call method&lt;/i> to use as map function.
+   * @return {ProAct.Stream}
+   *      A new ProAct.Stream instance with the &lt;i>mapping&lt;/i> applied.
+   * @see {@link ProAct.Observable#mapping}
+   */
+  map: function (mappingFunction) {
+    return new P.S(this).mapping(mappingFunction);
   },
-  filter: function (f) {
-    return new P.S(this).filtering(f);
+
+  /**
+   * Creates a new ProAct.Stream instance with source &lt;i>this&lt;/i> and filtering
+   * the passed &lt;i>filtering function&lt;/i>.
+   *
+   * @memberof ProAct.Stream
+   * @instance
+   * @method filter
+   * @param {Object} filteringFunction
+   *      The filtering function or object with a call method, should return boolean.
+   * @return {ProAct.Stream}
+   *      A new ProAct.Stream instance with the &lt;i>filtering&lt;/i> applied.
+   * @see {@link ProAct.Observable#filtering}
+   */
+  filter: function (filteringFunction) {
+    return new P.S(this).filtering(filteringFunction);
   },
-  accumulate: function (initVal, f) {
-    return new P.S(this).accumulation(initVal, f);
+
+  /**
+   * Creates a new ProAct.Stream instance with source &lt;i>this&lt;/i> and accumulation
+   * the passed &lt;i>accumulation function&lt;/i>.
+   *
+   * @memberof ProAct.Stream
+   * @instance
+   * @method accumulate
+   * @param {Object} initVal
+   *      Initial value for the accumulation. For example '0' for sum.
+   * @param {Object} accumulationFunction
+   *      The function to accumulate.
+   * @return {ProAct.Stream}
+   *      A new ProAct.Stream instance with the &lt;i>accumulation&lt;/i> applied.
+   * @see {@link ProAct.Observable#accumulation}
+   */
+  accumulate: function (initVal, accumulationFunction) {
+    return new P.S(this).accumulation(initVal, accumulationFunction);
   },
-  merge: function (stream) {
-    return new P.S().into(this, stream);
+
+  /**
+   * Creates a new ProAct.Stream instance that merges this with other streams.
+   * The new instance will have new value on value from any of the source streams.
+   *
+   * @memberof ProAct.Stream
+   * @instance
+   * @method merge
+   * @param [...]
+   *      A list of streams to be set as sources.
+   * @return {ProAct.Stream}
+   *      A new ProAct.Stream instance with the sources this and all the passed streams.
+   * @see {@link ProAct.Observable#accumulation}
+   */
+  merge: function () {
+    var sources = [this].concat(slice.call(arguments)),
+        result = new P.S();
+
+    return P.S.prototype.into.apply(result, sources);
   }
 });
 
 P.U.ex(P.F.prototype, {
+
+  /**
+   * Retrieves the errStream for logging errors from this flow.
+   * If there is no error stream, it is created.
+   *
+   * @memberof ProAct.Flow
+   * @instance
+   * @method errStream
+   * @return {ProAct.Stream}
+   *      The error stream of the flow.
+   */
   errStream: function () {
     if (!this.errStreamVar) {
       this.errStreamVar = new P.S();
@@ -189,7 +344,7 @@ P.U.ex(P.F.prototype, {
 <br clear="both">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.2</a> on Fri Jul 18 2014 14:04:05 GMT+0300 (EEST)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.2</a> on Sat Jul 19 2014 12:03:46 GMT+0300 (EEST)
 </footer>
 
 <script> prettyPrint(); </script>
