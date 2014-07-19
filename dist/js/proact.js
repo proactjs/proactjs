@@ -2206,7 +2206,7 @@
 	 * @class ProAct.Stream
 	 * @extends ProAct.Observable
 	 * @param {ProAct.Observable} source
-	 *      A devfault source of the stream, can be null.
+	 *      A default source of the stream, can be null.
 	 * @param {Array} transforms
 	 *      A list of transformation to be used on all incoming chages.
 	 */
@@ -2334,6 +2334,9 @@
 	   *  Triggers a new event/value to the stream. Anything that is listening for events from
 	   *  this stream will get updated.
 	   * </p>
+	   * <p>
+	   *  ProAct.Stream.t is alias of this method.
+	   * </p>
 	   *
 	   * @memberof ProAct.Stream
 	   * @instance
@@ -2342,7 +2345,7 @@
 	   *      The event/value to pass to trigger.
 	   * @param {Boolean} useTransformations
 	   *      If the stream should transform the triggered value. By default it is true (if not passed)
-	   * @return {ProAct.Observable}
+	   * @return {ProAct.Stream}
 	   *      <i>this</i>
 	   * @see {@link ProAct.Observable#update}
 	   */
@@ -2350,13 +2353,44 @@
 	    if (useTransformations === undefined) {
 	      useTransformations = true;
 	    }
+	
 	    return this.go(event, useTransformations);
+	  },
+	
+	  /**
+	   * <p>
+	   *  Triggers all the passed params, using transformations.
+	   * </p>
+	   * <p>
+	   *  ProAct.Stream.tt is alias of this method.
+	   * </p>
+	   *
+	   * @memberof ProAct.Stream
+	   * @instance
+	   * @method triggerMany
+	   * @param [...]
+	   *      A list of events/values to trigger
+	   * @return {ProAct.Stream}
+	   *      <i>this</i>
+	   * @see {@link ProAct.Stream#trigger}
+	   */
+	  triggerMany: function () {
+	    var i, args = slice.call(arguments), ln = args.length;
+	
+	    for (i = 0; i < ln; i++) {
+	      this.go(args[i], true);
+	    }
+	
+	    return this;
 	  },
 	
 	  /**
 	   * <p>
 	   *  Triggers a new error to the stream. Anything that is listening for errors from
 	   *  this stream will get updated.
+	   * </p>
+	   * <p>
+	   *  ProAct.Stream.te is alias of this method.
 	   * </p>
 	   *
 	   * @memberof ProAct.Stream
@@ -2487,25 +2521,78 @@
 	  }
 	});
 	
-	ProAct.BufferedStream = function (source, transforms, size, delay) {
+	P.S.prototype.t = P.S.prototype.trigger;
+	P.S.prototype.tt = P.S.prototype.triggerMany;
+	P.S.prototype.te = P.S.prototype.triggerErr;
+	
+	/**
+	 * <p>
+	 *  Constructs a ProAct.BufferedStream. This is a {@link ProAct.Stream} with a buffer.
+	 * </p>
+	 * <p>
+	 *  On new value/event the listeners are not updated, but the value/event is stored in the buffer.
+	 * </p>
+	 * <p>
+	 *  When the buffer is flushed every value/event is emitted to the listeners. In case with property listeners
+	 *  they are updated only once with the last event/value. Good for performance optimizations.
+	 * </p>
+	 * <p>
+	 *  For example if it is set to stream mouse move events, we don't care for each of the event but for a portion of them.
+	 * </p>
+	 * <p>
+	 *  ProAct.BufferedStream is part of the streams module of ProAct.js.
+	 * </p>
+	 *
+	 * @class ProAct.BufferedStream
+	 * @extends ProAct.Stream
+	 * @param {ProAct.Observable} source
+	 *      A default source of the stream, can be null.
+	 * @param {Array} transforms
+	 *      A list of transformation to be used on all incoming chages.
+	 */
+	ProAct.BufferedStream = P.BS = function (source, transforms) {
 	  P.S.call(this, source, transforms);
 	  this.buffer = [];
 	};
 	
 	ProAct.BufferedStream.prototype = Pro.U.ex(Object.create(P.S.prototype), {
+	
+	  /**
+	   * Reference to the constructor of this object.
+	   *
+	   * @memberof ProAct.BufferedStream
+	   * @instance
+	   * @constant
+	   * @type {Object}
+	   * @default ProAct.BufferedStream
+	   */
 	  constructor: ProAct.BufferedStream,
+	
+	  /**
+	   * Flushes the stream by emitting all the events/values stored in its buffer.
+	   * The buffer becomes empty.
+	   *
+	   * @memberof ProAct.BufferedStream
+	   * @instance
+	   * @method flush
+	   * @return {ProAct.BufferedStream}
+	   *      <i>this</i>
+	   */
 	  flush: function () {
-	    var _this = this, i, b = this.buffer, ln = b.length;
+	    var self = this, i, b = this.buffer, ln = b.length;
+	
 	    P.flow.run(function () {
 	      for (i = 0; i < ln; i+= 2) {
-	        _this.go(b[i], b[i+1]);
+	        self.go(b[i], b[i+1]);
 	      }
-	      _this.buffer = [];
+	      self.buffer = [];
 	    });
+	
+	    return this;
 	  }
 	});
 	
-	Pro.SizeBufferedStream = function (source, transforms, size) {
+	ProAct.SizeBufferedStream = P.SBS = function (source, transforms, size) {
 	  if (arguments.length === 1 && typeof source === 'number') {
 	    size = source;
 	    source = null;
@@ -2513,7 +2600,7 @@
 	    size = transforms;
 	    transforms = null;
 	  }
-	  Pro.BufferedStream.call(this, source, transforms);
+	  P.BS.call(this, source, transforms);
 	
 	  if (!size) {
 	    throw new Error('SizeBufferedStream must contain size!');
@@ -2522,7 +2609,8 @@
 	  this.size = size;
 	};
 	
-	Pro.SizeBufferedStream.prototype = Pro.U.ex(Object.create(Pro.BufferedStream.prototype), {
+	ProAct.SizeBufferedStream.prototype = P.U.ex(Object.create(P.BS.prototype), {
+	  constructor: ProAct.SizeBufferedStream,
 	  trigger: function (event, useTransformations) {
 	    this.buffer.push(event, useTransformations);
 	
@@ -2531,11 +2619,10 @@
 	    }
 	  }
 	});
-	Pro.SizeBufferedStream.prototype.constructor = Pro.SizeBufferedStream;
 	
-	Pro.U.ex(Pro.Stream.prototype, {
+	P.U.ex(P.S.prototype, {
 	  bufferit: function (size) {
-	    return new Pro.SizeBufferedStream(this, size);
+	    return new P.SBS(this, size);
 	  }
 	});
 	

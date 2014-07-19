@@ -21,7 +21,7 @@
  * @class ProAct.Stream
  * @extends ProAct.Observable
  * @param {ProAct.Observable} source
- *      A devfault source of the stream, can be null.
+ *      A default source of the stream, can be null.
  * @param {Array} transforms
  *      A list of transformation to be used on all incoming chages.
  */
@@ -149,6 +149,9 @@ ProAct.Stream.prototype = P.U.ex(Object.create(P.Observable.prototype), {
    *  Triggers a new event/value to the stream. Anything that is listening for events from
    *  this stream will get updated.
    * </p>
+   * <p>
+   *  ProAct.Stream.t is alias of this method.
+   * </p>
    *
    * @memberof ProAct.Stream
    * @instance
@@ -157,7 +160,7 @@ ProAct.Stream.prototype = P.U.ex(Object.create(P.Observable.prototype), {
    *      The event/value to pass to trigger.
    * @param {Boolean} useTransformations
    *      If the stream should transform the triggered value. By default it is true (if not passed)
-   * @return {ProAct.Observable}
+   * @return {ProAct.Stream}
    *      <i>this</i>
    * @see {@link ProAct.Observable#update}
    */
@@ -165,13 +168,44 @@ ProAct.Stream.prototype = P.U.ex(Object.create(P.Observable.prototype), {
     if (useTransformations === undefined) {
       useTransformations = true;
     }
+
     return this.go(event, useTransformations);
+  },
+
+  /**
+   * <p>
+   *  Triggers all the passed params, using transformations.
+   * </p>
+   * <p>
+   *  ProAct.Stream.tt is alias of this method.
+   * </p>
+   *
+   * @memberof ProAct.Stream
+   * @instance
+   * @method triggerMany
+   * @param [...]
+   *      A list of events/values to trigger
+   * @return {ProAct.Stream}
+   *      <i>this</i>
+   * @see {@link ProAct.Stream#trigger}
+   */
+  triggerMany: function () {
+    var i, args = slice.call(arguments), ln = args.length;
+
+    for (i = 0; i < ln; i++) {
+      this.go(args[i], true);
+    }
+
+    return this;
   },
 
   /**
    * <p>
    *  Triggers a new error to the stream. Anything that is listening for errors from
    *  this stream will get updated.
+   * </p>
+   * <p>
+   *  ProAct.Stream.te is alias of this method.
    * </p>
    *
    * @memberof ProAct.Stream
@@ -301,3 +335,7 @@ P.U.ex(P.F.prototype, {
     return this.errStreamVar;
   }
 });
+
+P.S.prototype.t = P.S.prototype.trigger;
+P.S.prototype.tt = P.S.prototype.triggerMany;
+P.S.prototype.te = P.S.prototype.triggerErr;

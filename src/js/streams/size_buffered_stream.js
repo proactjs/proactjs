@@ -1,4 +1,4 @@
-Pro.SizeBufferedStream = function (source, transforms, size) {
+ProAct.SizeBufferedStream = P.SBS = function (source, transforms, size) {
   if (arguments.length === 1 && typeof source === 'number') {
     size = source;
     source = null;
@@ -6,7 +6,7 @@ Pro.SizeBufferedStream = function (source, transforms, size) {
     size = transforms;
     transforms = null;
   }
-  Pro.BufferedStream.call(this, source, transforms);
+  P.BS.call(this, source, transforms);
 
   if (!size) {
     throw new Error('SizeBufferedStream must contain size!');
@@ -15,7 +15,8 @@ Pro.SizeBufferedStream = function (source, transforms, size) {
   this.size = size;
 };
 
-Pro.SizeBufferedStream.prototype = Pro.U.ex(Object.create(Pro.BufferedStream.prototype), {
+ProAct.SizeBufferedStream.prototype = P.U.ex(Object.create(P.BS.prototype), {
+  constructor: ProAct.SizeBufferedStream,
   trigger: function (event, useTransformations) {
     this.buffer.push(event, useTransformations);
 
@@ -24,10 +25,9 @@ Pro.SizeBufferedStream.prototype = Pro.U.ex(Object.create(Pro.BufferedStream.pro
     }
   }
 });
-Pro.SizeBufferedStream.prototype.constructor = Pro.SizeBufferedStream;
 
-Pro.U.ex(Pro.Stream.prototype, {
+P.U.ex(P.S.prototype, {
   bufferit: function (size) {
-    return new Pro.SizeBufferedStream(this, size);
+    return new P.SBS(this, size);
   }
 });
