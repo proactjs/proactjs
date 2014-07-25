@@ -50,10 +50,10 @@ ProAct.DelayedStream.prototype = P.U.ex(Object.create(P.BS.prototype), {
 
   /**
    * <p>
-   *  Triggers a new event/value to the stream. It is stored in the buffer of thr stream and not emitted.
+   *  Triggers a new event/value to the stream. It is stored in the buffer of the stream and not emitted.
    * </p>
    * <p>
-   *  ProAct.Stream.t is alias of this method.
+   *  ProAct.DelayedStream.t is alias of this method.
    * </p>
    *
    * @memberof ProAct.DelayedStream
@@ -68,6 +68,7 @@ ProAct.DelayedStream.prototype = P.U.ex(Object.create(P.BS.prototype), {
    */
   trigger: function (event, useTransformations) {
     this.buffer.push(event, useTransformations);
+    return this;
   },
 
   /**

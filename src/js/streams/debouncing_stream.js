@@ -1,8 +1,9 @@
-Pro.DebouncingStream = function (source, transforms, delay) {
-  Pro.DelayedStream.call(this, source, transforms, delay);
+ProAct.DebouncingStream = P.DDS = function (source, transforms, delay) {
+  P.DBS.call(this, source, transforms, delay);
 };
 
-Pro.DebouncingStream.prototype = Pro.U.ex(Object.create(Pro.DelayedStream.prototype), {
+ProAct.DebouncingStream.prototype = P.U.ex(Object.create(P.DBS.prototype), {
+  constructor: ProAct.DebouncingStream,
   trigger: function (event, useTransformations) {
     this.buffer = [];
     this.cancelDelay();
@@ -10,10 +11,9 @@ Pro.DebouncingStream.prototype = Pro.U.ex(Object.create(Pro.DelayedStream.protot
     this.buffer.push(event, useTransformations);
   }
 });
-Pro.DebouncingStream.prototype.constructor = Pro.DebouncingStream;
 
-Pro.U.ex(Pro.Stream.prototype, {
+P.U.ex(P.Stream.prototype, {
   debounce: function (delay) {
-    return new Pro.DebouncingStream(this, delay);
+    return new P.DDS(this, delay);
   }
 });

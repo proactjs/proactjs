@@ -2671,6 +2671,7 @@
 	    if (this.size !== null && (this.buffer.length / 2) === this.size) {
 	      this.flush();
 	    }
+	    return this;
 	  }
 	});
 	
@@ -2695,6 +2696,29 @@
 	
 	P.SBS.prototype.t = P.SBS.prototype.trigger;
 	
+	/**
+	 * <p>
+	 *  Constructs a ProAct.DelayedStream. When a given time interval passes the buffer of the stream is flushed authomatically.
+	 * </p>
+	 * <p>
+	 *  ProAct.DelayedStream is part of the streams module of ProAct.js.
+	 * </p>
+	 *
+	 * @class ProAct.DelayedStream
+	 * @extends ProAct.BufferedStream
+	 * @param {ProAct.Observable} source
+	 *      A default source of the stream, can be null.
+	 *      <p>
+	 *        If this is the only one passed argument and it is a number - it becomes the delay of the stream.
+	 *      </p>
+	 * @param {Array} transforms
+	 *      A list of transformation to be used on all incoming chages.
+	 *      <p>
+	 *        If the arguments passed are two and this is a number - it becomes the delay of the stream.
+	 *      </p>
+	 * @param {Number} delay
+	 *      The time delay to be used to flush the stream.
+	 */
 	ProAct.DelayedStream = P.DBS = function (source, transforms, delay) {
 	  if (typeof source === 'number') {
 	    delay = source;
@@ -2710,16 +2734,76 @@
 	};
 	
 	ProAct.DelayedStream.prototype = P.U.ex(Object.create(P.BS.prototype), {
+	
+	  /**
+	   * Reference to the constructor of this object.
+	   *
+	   * @memberof ProAct.DelayedStream
+	   * @instance
+	   * @constant
+	   * @type {Object}
+	   * @default ProAct.DelayedStream
+	   */
 	  constructor: ProAct.DelayedStream,
+	
+	  /**
+	   * <p>
+	   *  Triggers a new event/value to the stream. It is stored in the buffer of the stream and not emitted.
+	   * </p>
+	   * <p>
+	   *  ProAct.DelayedStream.t is alias of this method.
+	   * </p>
+	   *
+	   * @memberof ProAct.DelayedStream
+	   * @instance
+	   * @method trigger
+	   * @param {Object} event
+	   *      The event/value to pass to trigger.
+	   * @param {Boolean} useTransformations
+	   *      If the stream should transform the triggered value. By default it is true (if not passed)
+	   * @return {ProAct.DelayedStream}
+	   *      <i>this</i>
+	   */
 	  trigger: function (event, useTransformations) {
 	    this.buffer.push(event, useTransformations);
+	    return this;
 	  },
+	
+	  /**
+	   * <p>
+	   *  Cancels the delay interval flushes. If this method is called the stream will stop emitting incoming values/event,
+	   *  until the {@link ProAct.DelayedStream#setDelay} method is called.
+	   * </p>
+	   *
+	   * @memberof ProAct.DelayedStream
+	   * @instance
+	   * @method cancelDelay
+	   * @return {ProAct.DelayedStream}
+	   *      <i>this</i>
+	   * @see {@link ProAct.DelayedStream#setDelay}
+	   */
 	  cancelDelay: function () {
 	    if (this.delayId !== null){
 	      clearInterval(this.delayId);
 	      this.delayId = null;
 	    }
+	
+	    return this;
 	  },
+	
+	  /**
+	   * <p>
+	   *  Modifies the delay of the stream. The current delay is canceled using the {@link ProAct.DelayedStream#cancelDelay} method.
+	   * </p>
+	   *
+	   * @memberof ProAct.DelayedStream
+	   * @instance
+	   * @method setDelay
+	   * @param {Number} delay
+	   *      The new delay of the stream.
+	   * @return {ProAct.DelayedStream}
+	   *      <i>this</i>
+	   */
 	  setDelay: function (delay) {
 	    this.delay = delay;
 	    this.cancelDelay();
@@ -2732,38 +2816,129 @@
 	    this.delayId = setInterval(function () {
 	      self.flush();
 	    }, this.delay);
+	
+	    return this;
 	  }
 	});
 	
 	P.U.ex(P.S.prototype, {
+	
+	  /**
+	   * Creates a new {@link ProAct.DelayedStream} instance having as source <i>this</i>.
+	   *
+	   * @memberof ProAct.Stream
+	   * @instance
+	   * @method delay
+	   * @param {Number} delay
+	   *      The time delay to be used for flushing the buffer of the new stream.
+	   * @return {ProAct.DelayedStream}
+	   *      A {@link ProAct.DelayedStream} instance.
+	   */
 	  delay: function (delay) {
 	    return new P.DBS(this, delay);
 	  }
 	});
 	
-	Pro.ThrottlingStream = function (source, transforms, delay) {
-	  Pro.DelayedStream.call(this, source, transforms, delay);
+	P.DBS.prototype.t = P.DBS.prototype.trigger;
+	
+	/**
+	 * <p>
+	 *  Constructs a ProAct.ThrottlingStream. This is special kind of {@link ProAct.DelayedStream}.
+	 * </p>
+	 * <p>
+	 *  The main idea is the following : if <i>n</i> values/events are triggered to this stream before the time delay for
+	 *  flushing passes, only the last one, the <i>n</i>-th is emitted.
+	 * </p>
+	 * <p>
+	 *  ProAct.ThrottlingStream is part of the streams module of ProAct.js.
+	 * </p>
+	 *
+	 * @class ProAct.ThrottlingStream
+	 * @extends ProAct.DelayedStream
+	 * @param {ProAct.Observable} source
+	 *      A default source of the stream, can be null.
+	 *      <p>
+	 *        If this is the only one passed argument and it is a number - it becomes the delay of the stream.
+	 *      </p>
+	 * @param {Array} transforms
+	 *      A list of transformation to be used on all incoming chages.
+	 *      <p>
+	 *        If the arguments passed are two and this is a number - it becomes the delay of the stream.
+	 *      </p>
+	 * @param {Number} delay
+	 *      The time delay to be used to flush the stream.
+	 */
+	ProAct.ThrottlingStream = P.TDS = function (source, transforms, delay) {
+	  P.DBS.call(this, source, transforms, delay);
 	};
 	
-	Pro.ThrottlingStream.prototype = Pro.U.ex(Object.create(Pro.DelayedStream.prototype), {
+	ProAct.ThrottlingStream.prototype = P.U.ex(Object.create(P.DBS.prototype), {
+	
+	  /**
+	   * Reference to the constructor of this object.
+	   *
+	   * @memberof ProAct.ThrottlingStream
+	   * @instance
+	   * @constant
+	   * @type {Object}
+	   * @default ProAct.ThrottlingStream
+	   */
+	  constructor: ProAct.ThrottlingStream,
+	
+	  /**
+	   * <p>
+	   *  Triggers a new event/value to the stream. It is stored in the buffer of the stream and not emitted.
+	   *  But the buffer of ProAct.ThrottlingStream can store only one value/event, so when the delay passes only
+	   *  the last value/event triggered into the stream by this method is emitted.
+	   * </p>
+	   * <p>
+	   *  ProAct.ThrottlingStream.t is alias of this method.
+	   * </p>
+	   *
+	   * @memberof ProAct.ThrottlingStream
+	   * @instance
+	   * @method trigger
+	   * @param {Object} event
+	   *      The event/value to pass to trigger.
+	   * @param {Boolean} useTransformations
+	   *      If the stream should transform the triggered value. By default it is true (if not passed)
+	   * @return {ProAct.ThrottlingStream}
+	   *      <i>this</i>
+	   */
 	  trigger: function (event, useTransformations) {
-	    this.buffer = [];
-	    this.buffer.push(event, useTransformations);
+	    this.buffer[0] = event;
+	    this.buffer[1] = useTransformations;
+	
+	    return this;
 	  }
 	});
-	Pro.ThrottlingStream.prototype.constructor = Pro.ThrottlingStream;
 	
-	Pro.U.ex(Pro.Stream.prototype, {
+	P.U.ex(P.Stream.prototype, {
+	
+	  /**
+	   * Creates a new {@link ProAct.ThrottlingStream} instance having as source <i>this</i>.
+	   *
+	   * @memberof ProAct.Stream
+	   * @instance
+	   * @method throttle
+	   * @param {Number} delay
+	   *      The time delay to be used for flushing the buffer of the new stream.
+	   * @return {ProAct.ThrottlingStream}
+	   *      A {@link ProAct.ThrottlingStream} instance.
+	   */
 	  throttle: function (delay) {
-	    return new Pro.ThrottlingStream(this, delay);
+	    return new P.TDS(this, delay);
 	  }
 	});
 	
-	Pro.DebouncingStream = function (source, transforms, delay) {
-	  Pro.DelayedStream.call(this, source, transforms, delay);
+	P.TDS.prototype.t = P.TDS.prototype.trigger;
+	
+	ProAct.DebouncingStream = P.DDS = function (source, transforms, delay) {
+	  P.DBS.call(this, source, transforms, delay);
 	};
 	
-	Pro.DebouncingStream.prototype = Pro.U.ex(Object.create(Pro.DelayedStream.prototype), {
+	ProAct.DebouncingStream.prototype = P.U.ex(Object.create(P.DBS.prototype), {
+	  constructor: ProAct.DebouncingStream,
 	  trigger: function (event, useTransformations) {
 	    this.buffer = [];
 	    this.cancelDelay();
@@ -2771,11 +2946,10 @@
 	    this.buffer.push(event, useTransformations);
 	  }
 	});
-	Pro.DebouncingStream.prototype.constructor = Pro.DebouncingStream;
 	
-	Pro.U.ex(Pro.Stream.prototype, {
+	P.U.ex(P.Stream.prototype, {
 	  debounce: function (delay) {
-	    return new Pro.DebouncingStream(this, delay);
+	    return new P.DDS(this, delay);
 	  }
 	});
 	

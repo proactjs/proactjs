@@ -78,6 +78,7 @@ ProAct.SizeBufferedStream.prototype = P.U.ex(Object.create(P.BS.prototype), {
     if (this.size !== null && (this.buffer.length / 2) === this.size) {
       this.flush();
     }
+    return this;
   }
 });
 
