@@ -1,6 +1,6 @@
 'use strict';
 
-describe('Pro.Property', function () {
+describe('ProAct.Property', function () {
   var obj;
   beforeEach(function () {
     obj = {a: 'my val', b: 5};
@@ -72,7 +72,7 @@ describe('Pro.Property', function () {
       };
       property.get();
       Pro.currentCaller = null;
-      expect(property.listeners.length).toBe(1);
+      expect(property.listeners.change.length).toBe(1);
 
       Pro.flow.run(function () {
         property.willUpdate();

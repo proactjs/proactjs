@@ -1469,8 +1469,10 @@
 	 *      A list of transformation to be used on all incoming chages.
 	 */
 	ProAct.Observable = function (transforms) {
-	  this.listeners = [];
-	  this.errListeners = [];
+	  P.U.defValProp(this, 'listeners', false, false, true, {
+	    change: [],
+	    error: []
+	  });
 	  this.sources = [];
 	
 	  this.listener = null;
@@ -1618,12 +1620,17 @@
 	  on: function (action, listener, listeners) {
 	    if (!P.U.isString(action)) {
 	      listener = action;
+	      action = 'change';
+	    }
+	
+	    if (!this.listeners[action]) {
+	      this.listeners[action] = [];
 	    }
 	
 	    if (P.U.isArray(listeners)) {
 	      listeners.push(listener);
 	    } else {
-	      this.listeners.push(listener);
+	      this.listeners[action].push(listener);
 	    }
 	
 	    return this;
@@ -1654,18 +1661,22 @@
 	      if (P.U.isArray(listeners)) {
 	        listeners.length = 0;
 	      } else {
-	        this.listeners = [];
+	        this.listeners = {
+	          change: [],
+	          error: []
+	        };
 	      }
 	      return;
 	    }
 	    if (!P.U.isString(action)) {
 	      listener = action;
+	      action = 'change';
 	    }
 	
 	    if (P.U.isArray(listeners)) {
 	      P.U.remove(listeners, listener);
 	    } else {
-	      P.U.remove(this.listeners, listener);
+	      P.U.remove(this.listeners[action], listener);
 	    }
 	
 	    return this;
@@ -1689,8 +1700,8 @@
 	   *      <b>this</b>
 	   * @see {@link ProAct.Observable#on}
 	   */
-	  onErr: function (action, listener) {
-	    return this.on(action, listener, this.errListeners);
+	  onErr: function (listener) {
+	    return this.on('error', listener);
 	  },
 	
 	  /**
@@ -1711,7 +1722,7 @@
 	   * @see {@link ProAct.Observable#onErr}
 	   */
 	  offErr: function (action, listener) {
-	    return this.off(action, listener, this.errListeners);
+	    return this.off('error', listener);
 	  },
 	
 	  /**
@@ -2000,7 +2011,7 @@
 	   * @see {@link ProAct.flow}
 	   */
 	  update: function (source, listeners) {
-	    if (this.listeners.length === 0 && this.errListeners.length === 0 && this.parent === null) {
+	    if (this.listeners.change.length === 0 && this.listeners.error.length === 0 && this.parent === null) {
 	      return this;
 	    }
 	
@@ -2055,7 +2066,7 @@
 	   */
 	  willUpdate: function (source, listeners) {
 	    var i, listener,
-	        listeners = P.U.isArray(listeners) ? listeners : this.listeners,
+	        listeners = P.U.isArray(listeners) ? listeners : this.listeners.change,
 	        length = listeners.length,
 	        event = this.makeEvent(source);
 	
@@ -2403,7 +2414,7 @@
 	   * @see {@link ProAct.Observable#update}
 	   */
 	  triggerErr: function (err) {
-	    return this.update(err, this.errListeners);
+	    return this.update(err, this.listeners.error);
 	  },
 	
 	  // private
@@ -4066,7 +4077,7 @@
 	  reProb: function (property) {
 	    var po = property.proObject,
 	        p = property.property,
-	        l = property.listeners;
+	        l = property.listeners.change;
 	
 	    property.destroy();
 	    return po.__pro__.makeProp(p, l);
@@ -4268,10 +4279,10 @@
 	                if (!newProp) {
 	                  continue;
 	                }
-	                newListeners = newProp.listeners;
+	                newListeners = newProp.listeners.change;
 	
 	                oldProp = oldProps[oldPropName];
-	                oldListeners = oldProp.listeners;
+	                oldListeners = oldProp.listeners.change;
 	                oldListenersLength = oldListeners.length;
 	
 	                for (i = 0; i < oldListenersLength; i++) {
@@ -4400,7 +4411,7 @@
 	  afterInit: function () {}
 	});
 	
-	Pro.Core = function (object, meta) {
+	ProAct.Core = function (object, meta) {
 	  this.object = object;
 	  this.properties = {};
 	  this.state = Pro.States.init;
@@ -4474,7 +4485,7 @@
 	    }
 	
 	    if (listeners) {
-	      this.properties[property].listeners = this.properties[property].listeners.concat(listeners);
+	      this.properties[property].listeners.change = this.properties[property].listeners.change.concat(listeners);
 	    }
 	
 	    if (meta && Pro.registry) {

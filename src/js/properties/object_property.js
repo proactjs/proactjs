@@ -38,10 +38,10 @@ Pro.ObjectProperty = function (proObject, property) {
                 if (!newProp) {
                   continue;
                 }
-                newListeners = newProp.listeners;
+                newListeners = newProp.listeners.change;
 
                 oldProp = oldProps[oldPropName];
-                oldListeners = oldProp.listeners;
+                oldListeners = oldProp.listeners.change;
                 oldListenersLength = oldListeners.length;
 
                 for (i = 0; i < oldListenersLength; i++) {

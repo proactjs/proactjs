@@ -1,4 +1,4 @@
-Pro.Core = function (object, meta) {
+ProAct.Core = function (object, meta) {
   this.object = object;
   this.properties = {};
   this.state = Pro.States.init;
@@ -72,7 +72,7 @@ Pro.Core.prototype = Pro.U.ex(Object.create(Pro.Observable.prototype), {
     }
 
     if (listeners) {
-      this.properties[property].listeners = this.properties[property].listeners.concat(listeners);
+      this.properties[property].listeners.change = this.properties[property].listeners.change.concat(listeners);
     }
 
     if (meta && Pro.registry) {

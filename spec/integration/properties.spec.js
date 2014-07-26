@@ -1,6 +1,6 @@
 'use strict';
 
-describe('Pro.Property, Pro.AutoProperty, Pro.ObjectProperty, Pro.ArrayProperty and Pro.NullProperty', function () {
+describe('ProAct.Property, ProAct.AutoProperty, ProAct.ObjectProperty, ProAct.ArrayProperty and ProAct.NullProperty', function () {
   var obj;
   beforeEach(function () {
     obj = Pro.prob({
@@ -108,12 +108,12 @@ describe('Pro.Property, Pro.AutoProperty, Pro.ObjectProperty, Pro.ArrayProperty 
   it ('null property can become simple property', function () {
     expect(obj.p('c').type()).toEqual(Pro.Property.Types.nil);
     expect(obj.k).toEqual(false);
-    expect(obj.p('c').listeners.length).toEqual(1);
+    expect(obj.p('c').listeners.change.length).toEqual(1);
 
     obj.c = 17;
     expect(obj.c).toEqual(17);
     expect(obj.p('c').type()).toEqual(Pro.Property.Types.simple);
-    expect(obj.p('c').listeners.length).toEqual(1);
+    expect(obj.p('c').listeners.change.length).toEqual(1);
     expect(obj.k).toEqual(true);
 
     obj.c = 0;
@@ -128,7 +128,7 @@ describe('Pro.Property, Pro.AutoProperty, Pro.ObjectProperty, Pro.ArrayProperty 
     };
     expect(obj.c).toEqual(2.1);
     expect(obj.p('c').type()).toEqual(Pro.Property.Types.auto);
-    expect(obj.p('c').listeners.length).toEqual(1);
+    expect(obj.p('c').listeners.change.length).toEqual(1);
     expect(obj.k).toEqual(true);
 
     obj.e.a = 1;
@@ -146,7 +146,7 @@ describe('Pro.Property, Pro.AutoProperty, Pro.ObjectProperty, Pro.ArrayProperty 
     expect(Pro.U.isProArray(obj.c)).toBe(true);
     expect(obj.c.valueOf()).toEqual([4]);
     expect(obj.p('c').type()).toEqual(Pro.Property.Types.array);
-    expect(obj.p('c').listeners.length).toEqual(1);
+    expect(obj.p('c').listeners.change.length).toEqual(1);
     expect(obj.k).toEqual(true);
   });
 
@@ -157,7 +157,7 @@ describe('Pro.Property, Pro.AutoProperty, Pro.ObjectProperty, Pro.ArrayProperty 
     expect(Pro.U.isProObject(obj.c)).toBe(true);
     expect(obj.c.a).toEqual('null');
     expect(obj.p('c').type()).toEqual(Pro.Property.Types.object);
-    expect(obj.p('c').listeners.length).toEqual(1);
+    expect(obj.p('c').listeners.change.length).toEqual(1);
     expect(obj.k).toEqual(true);
 
     obj.c = {};

@@ -92,7 +92,7 @@ Pro.U.ex(Pro.Property, {
   reProb: function (property) {
     var po = property.proObject,
         p = property.property,
-        l = property.listeners;
+        l = property.listeners.change;
 
     property.destroy();
     return po.__pro__.makeProp(p, l);

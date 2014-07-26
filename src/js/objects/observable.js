@@ -24,8 +24,10 @@
  *      A list of transformation to be used on all incoming chages.
  */
 ProAct.Observable = function (transforms) {
-  this.listeners = [];
-  this.errListeners = [];
+  P.U.defValProp(this, 'listeners', false, false, true, {
+    change: [],
+    error: []
+  });
   this.sources = [];
 
   this.listener = null;
@@ -173,12 +175,17 @@ P.Observable.prototype = {
   on: function (action, listener, listeners) {
     if (!P.U.isString(action)) {
       listener = action;
+      action = 'change';
+    }
+
+    if (!this.listeners[action]) {
+      this.listeners[action] = [];
     }
 
     if (P.U.isArray(listeners)) {
       listeners.push(listener);
     } else {
-      this.listeners.push(listener);
+      this.listeners[action].push(listener);
     }
 
     return this;
@@ -209,18 +216,22 @@ P.Observable.prototype = {
       if (P.U.isArray(listeners)) {
         listeners.length = 0;
       } else {
-        this.listeners = [];
+        this.listeners = {
+          change: [],
+          error: []
+        };
       }
       return;
     }
     if (!P.U.isString(action)) {
       listener = action;
+      action = 'change';
     }
 
     if (P.U.isArray(listeners)) {
       P.U.remove(listeners, listener);
     } else {
-      P.U.remove(this.listeners, listener);
+      P.U.remove(this.listeners[action], listener);
     }
 
     return this;
@@ -244,8 +255,8 @@ P.Observable.prototype = {
    *      <b>this</b>
    * @see {@link ProAct.Observable#on}
    */
-  onErr: function (action, listener) {
-    return this.on(action, listener, this.errListeners);
+  onErr: function (listener) {
+    return this.on('error', listener);
   },
 
   /**
@@ -266,7 +277,7 @@ P.Observable.prototype = {
    * @see {@link ProAct.Observable#onErr}
    */
   offErr: function (action, listener) {
-    return this.off(action, listener, this.errListeners);
+    return this.off('error', listener);
   },
 
   /**
@@ -555,7 +566,7 @@ P.Observable.prototype = {
    * @see {@link ProAct.flow}
    */
   update: function (source, listeners) {
-    if (this.listeners.length === 0 && this.errListeners.length === 0 && this.parent === null) {
+    if (this.listeners.change.length === 0 && this.listeners.error.length === 0 && this.parent === null) {
       return this;
     }
 
@@ -610,7 +621,7 @@ P.Observable.prototype = {
    */
   willUpdate: function (source, listeners) {
     var i, listener,
-        listeners = P.U.isArray(listeners) ? listeners : this.listeners,
+        listeners = P.U.isArray(listeners) ? listeners : this.listeners.change,
         length = listeners.length,
         event = this.makeEvent(source);
 
