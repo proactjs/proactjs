@@ -2933,12 +2933,68 @@
 	
 	P.TDS.prototype.t = P.TDS.prototype.trigger;
 	
+	/**
+	 * <p>
+	 *  Constructs a ProAct.DelayedStream. A {@link ProAct.DelayedStream} that resets its flushing interval on every new value/event.
+	 *  Only the last event/value triggered in given interval will be emitted.
+	 * </p>
+	 * <p>
+	 *  ProAct.DebouncingStream is part of the streams module of ProAct.js.
+	 * </p>
+	 *
+	 * @class ProAct.DebouncingStream
+	 * @extends ProAct.DelayedStream
+	 * @param {ProAct.Observable} source
+	 *      A default source of the stream, can be null.
+	 *      <p>
+	 *        If this is the only one passed argument and it is a number - it becomes the delay of the stream.
+	 *      </p>
+	 * @param {Array} transforms
+	 *      A list of transformation to be used on all incoming chages.
+	 *      <p>
+	 *        If the arguments passed are two and this is a number - it becomes the delay of the stream.
+	 *      </p>
+	 * @param {Number} delay
+	 *      The time delay to be used to flush the stream.
+	 */
 	ProAct.DebouncingStream = P.DDS = function (source, transforms, delay) {
 	  P.DBS.call(this, source, transforms, delay);
 	};
 	
 	ProAct.DebouncingStream.prototype = P.U.ex(Object.create(P.DBS.prototype), {
+	
+	  /**
+	   * Reference to the constructor of this object.
+	   *
+	   * @memberof ProAct.DebouncingStream
+	   * @instance
+	   * @constant
+	   * @type {Object}
+	   * @default ProAct.DebouncingStream
+	   */
 	  constructor: ProAct.DebouncingStream,
+	
+	  /**
+	   * <p>
+	   *  Triggers a new event/value to the stream. It is stored in the buffer of the stream and not emitted.
+	   *  But the buffer of ProAct.DebouncingStream can store only one value/event, so when the delay passes only
+	   *  the last value/event triggered into the stream by this method is emitted. On every call of this method the delay is reset.
+	   *  So for example if you have mouse move as source, it will emit only the last mouse move event, that was send <i>delay</i> milliseconds ago.
+	   * </p>
+	   * <p>
+	   *  ProAct.DebouncingStream.t is alias of this method.
+	   * </p>
+	   *
+	   * @memberof ProAct.ThrottlingStream
+	   * @instance
+	   * @method trigger
+	   * @param {Object} event
+	   *      The event/value to pass to trigger.
+	   * @param {Boolean} useTransformations
+	   *      If the stream should transform the triggered value. By default it is true (if not passed)
+	   * @return {ProAct.ThrottlingStream}
+	   *      <i>this</i>
+	   */
 	  trigger: function (event, useTransformations) {
 	    this.buffer = [];
 	    this.cancelDelay();
@@ -2948,42 +3004,57 @@
 	});
 	
 	P.U.ex(P.Stream.prototype, {
+	
+	  /**
+	   * Creates a new {@link ProAct.DebouncingStream} instance having as source <i>this</i>.
+	   *
+	   * @memberof ProAct.Stream
+	   * @instance
+	   * @method debounce
+	   * @param {Number} delay
+	   *      The time delay to be used for flushing the buffer of the new stream.
+	   * @return {ProAct.DebouncingStream}
+	   *      A {@link ProAct.DebouncingStream} instance.
+	   */
 	  debounce: function (delay) {
 	    return new P.DDS(this, delay);
 	  }
 	});
 	
-	Pro.Array = pArray = function () {
+	P.DDS.prototype.t = P.DDS.prototype.trigger;
+	
+	ProAct.Array = P.A = pArray = function () {
+	  var self = this, getLength, setLength, i, oldLength, ln, arr;
+	
 	  if (arguments.length === 0) {
-	    this._array = [];
-	  } else if (arguments.length === 1 && Pro.U.isArray(arguments[0])) {
-	    this._array = arguments[0];
+	    arr = [];
+	  } else if (arguments.length === 1 && P.U.isArray(arguments[0])) {
+	    arr = arguments[0];
 	  } else {
-	    this._array = slice.call(arguments);
+	    arr = slice.call(arguments);
 	  }
 	
-	  this.indexListeners = [];
-	  this.lastIndexCaller = null;
-	  this.lengthListeners = [];
-	  this.lastLengthCaller = null;
-	
-	  var _this = this, getLength, setLength, i, oldLength;
+	  P.U.defValProp(this, '_array', false, false, true, arr);
+	  P.U.defValProp(this, 'indexListeners', false, false, true, []);
+	  P.U.defValProp(this, 'lastIndexCaller', false, false, true, null);
+	  P.U.defValProp(this, 'lengthListeners', false, false, true, []);
+	  P.U.defValProp(this, 'lastLengthCaller', false, false, true, null);
 	
 	  getLength = function () {
-	    _this.addCaller('length');
+	    self.addCaller('length');
 	
-	    return _this._array.length;
+	    return self._array.length;
 	  };
 	
 	  setLength = function (newLength) {
-	    if (_this._array.length === newLength) {
+	    if (self._array.length === newLength) {
 	      return;
 	    }
 	
-	    oldLength = _this._array.length;
-	    _this._array.length = newLength;
+	    oldLength = self._array.length;
+	    self._array.length = newLength;
 	
-	    _this.update(pArrayOps.setLength, -1, oldLength, newLength);
+	    self.update(pArrayOps.setLength, -1, oldLength, newLength);
 	
 	    return newLength;
 	  };
@@ -2994,27 +3065,26 @@
 	    get: getLength,
 	    set: setLength
 	  });
-	  Object.defineProperty(this, '__pro__', {
-	    enumerable: false,
-	    configurable: false,
-	    writeble: false,
-	    value: {}
+	
+	  P.U.defValProp(this, '__pro__', false, false, false, {
+	    state: P.States.init
 	  });
-	  this.__pro__.state = Pro.States.init;
 	
 	  try {
-	    for (i = 0; i < this._array.length; i++) {
+	    ln = this._array.length;
+	
+	    for (i = 0; i < ln; i++) {
 	      this.defineIndexProp(i);
 	    }
 	
-	    this.__pro__.state = Pro.States.ready;
+	    this.__pro__.state = P.States.ready;
 	  } catch (e) {
-	    this.__pro__.state = Pro.States.error;
+	    this.__pro__.state = P.States.error;
 	    throw e;
 	  }
 	};
 	
-	Pro.U.ex(pArray, {
+	P.U.ex(P.A, {
 	  Operations: {
 	    set: 0,
 	    add: 1,
@@ -3037,10 +3107,10 @@
 	});
 	pArrayOps = pArray.Operations;
 	
-	Pro.Array.prototype = pArrayProto = Pro.U.ex(Object.create(arrayProto), {
-	  constructor: Pro.Array,
+	ProAct.Array.prototype = pArrayProto = P.U.ex(Object.create(arrayProto), {
+	  constructor: ProAct.Array,
 	  on: function (action, listener) {
-	    if (!Pro.U.isString(action)) {
+	    if (!P.U.isString(action)) {
 	      listener = action;
 	      action = 'change';
 	    }
@@ -3055,18 +3125,18 @@
 	    }
 	  },
 	  off: function (action, listener) {
-	    if (!Pro.U.isString(action)) {
+	    if (!P.U.isString(action)) {
 	      listener = action;
 	      action = 'change';
 	    }
 	
 	    if (action === 'change') {
-	      Pro.U.remove(listener, this.lengthListeners);
-	      Pro.U.remove(listener, this.indexListeners);
+	      P.U.remove(listener, this.lengthListeners);
+	      P.U.remove(listener, this.indexListeners);
 	    } else if (action === 'lengthChange') {
-	      Pro.U.remove(listener, this.lengthListeners);
+	      P.U.remove(listener, this.lengthListeners);
 	    } else if (action === 'indexChange') {
-	      Pro.U.remove(listener, this.indexListeners);
+	      P.U.remove(listener, this.indexListeners);
 	    }
 	  },
 	  addCaller: function (type) {
@@ -3075,13 +3145,13 @@
 	      this.addCaller('length');
 	      return;
 	    }
-	    var caller = Pro.currentCaller,
+	    var caller = P.currentCaller,
 	        capType = type.charAt(0).toUpperCase() + type.slice(1),
 	        lastCallerField = 'last' + capType + 'Caller',
 	        lastCaller = this[lastCallerField],
 	        listeners = this[type + 'Listeners'];
 	
-	    if (caller && lastCaller !== caller && !Pro.U.contains(listeners, caller)) {
+	    if (caller && lastCaller !== caller && !P.U.contains(listeners, caller)) {
 	      this.on(type + 'Change', caller);
 	      this[lastCallerField] = caller;
 	    }
@@ -3090,16 +3160,16 @@
 	    var proArray = this,
 	        array = proArray._array,
 	        oldVal,
-	        isA = Pro.U.isArray,
-	        isO = Pro.U.isObject,
-	        isF = Pro.U.isFunction;
+	        isA = P.U.isArray,
+	        isO = P.U.isObject,
+	        isF = P.U.isFunction;
 	
 	    if (isA(array[i])) {
-	      new Pro.ArrayProperty(array, i);
+	      new P.ArrayProperty(array, i);
 	    } else if (isF(array[i])) {
 	    } else if (array[i] === null) {
 	    } else if (isO(array[i])) {
-	      new Pro.ObjectProperty(array, i);
+	      new P.ObjectProperty(array, i);
 	    }
 	
 	    Object.defineProperty(this, i, {
@@ -3123,8 +3193,8 @@
 	    });
 	  },
 	  makeEvent: function (op, ind, oldVal, newVal, source) {
-	    return new Pro.Event(source, this,
-	                         Pro.Event.Types.array, op, ind, oldVal, newVal);
+	    return new P.Event(source, this,
+	                         P.Event.Types.array, op, ind, oldVal, newVal);
 	  },
 	  willUpdate: function (op, ind, oldVal, newVal) {
 	    var listeners = pArrayOps.isIndexOp(op) ? this.indexListeners : this.lengthListeners;
@@ -3133,10 +3203,10 @@
 	  },
 	  update: function (op, ind, oldVal, newVal) {
 	    var _this = this;
-	    if (Pro.flow.isRunning()) {
+	    if (P.flow.isRunning()) {
 	      this.willUpdate(op, ind, oldVal, newVal);
 	    } else {
-	      Pro.flow.run(function () {
+	      P.flow.run(function () {
 	        _this.willUpdate(op, ind, oldVal, newVal);
 	      });
 	    }
@@ -3160,10 +3230,10 @@
 	  },
 	  updateSplice: function (index, sliced, newItems) {
 	    var _this = this;
-	    if (Pro.flow.isRunning()) {
+	    if (P.flow.isRunning()) {
 	      this.willUpdateSplice(index, sliced, newItems);
 	    } else {
-	      Pro.flow.run(function () {
+	      P.flow.run(function () {
 	        _this.willUpdateSplice(index, sliced, newItems);
 	      });
 	    }
@@ -3175,10 +3245,10 @@
 	    for (i = 0; i < length; i++) {
 	      listener = listeners[i];
 	
-	      if (Pro.U.isFunction(listener)) {
-	        Pro.flow.pushOnce(listener, [event]);
+	      if (P.U.isFunction(listener)) {
+	        P.flow.pushOnce(listener, [event]);
 	      } else {
-	        Pro.flow.pushOnce(listener, listener.call, [event]);
+	        P.flow.pushOnce(listener, listener.call, [event]);
 	      }
 	
 	      if (listener.property) {
@@ -3188,7 +3258,7 @@
 	  },
 	  updateByDiff: function (array) {
 	    var _this = this,
-	        j, diff = Pro.U.diff(array, this._array), cdiff;
+	        j, diff = P.U.diff(array, this._array), cdiff;
 	
 	    for (j in diff) {
 	      cdiff = diff[j];
@@ -3200,12 +3270,12 @@
 	  concat: function () {
 	    var res, rightProArray;
 	
-	    if (arguments.length === 1 && Pro.U.isProArray(arguments[0])) {
+	    if (arguments.length === 1 && P.U.isProArray(arguments[0])) {
 	      rightProArray = arguments[0];
 	      arguments[0] = rightProArray._array;
 	    }
 	
-	    res = new Pro.Array(concat.apply(this._array, arguments));
+	    res = new P.A(concat.apply(this._array, arguments));
 	    if (rightProArray) {
 	      this.on(pArrayLs.leftConcat(res, this, rightProArray));
 	      rightProArray.on(pArrayLs.rightConcat(res, this, rightProArray));
@@ -3221,7 +3291,7 @@
 	    return every.apply(this._array, arguments);
 	  },
 	  pevery: function (fun, thisArg) {
-	    var val = new Pro.Val(every.apply(this._array, arguments));
+	    var val = new P.Val(every.apply(this._array, arguments));
 	
 	    this.on(pArrayLs.every(val, this, arguments));
 	
@@ -3233,7 +3303,7 @@
 	    return some.apply(this._array, arguments);
 	  },
 	  psome: function (fun, thisArg) {
-	    var val = new Pro.Val(some.apply(this._array, arguments));
+	    var val = new P.Val(some.apply(this._array, arguments));
 	
 	    this.on(pArrayLs.some(val, this, arguments));
 	
@@ -3245,13 +3315,13 @@
 	    return forEach.apply(this._array, arguments);
 	  },
 	  filter: function (fun, thisArg) {
-	    var filtered = new Pro.Array(filter.apply(this._array, arguments));
+	    var filtered = new P.A(filter.apply(this._array, arguments));
 	    this.on(pArrayLs.filter(filtered, this, arguments));
 	
 	    return filtered;
 	  },
 	  map: function (fun, thisArg) {
-	    var mapped = new Pro.Array(map.apply(this._array, arguments));
+	    var mapped = new P.A(map.apply(this._array, arguments));
 	    this.on(pArrayLs.map(mapped, this, arguments));
 	
 	    return mapped;
@@ -3262,7 +3332,7 @@
 	    return reduce.apply(this._array, arguments);
 	  },
 	  preduce: function (fun /*, initialValue */) {
-	    var val = new Pro.Val(reduce.apply(this._array, arguments));
+	    var val = new P.Val(reduce.apply(this._array, arguments));
 	    this.on(pArrayLs.reduce(val, this, arguments));
 	
 	    return val;
@@ -3273,7 +3343,7 @@
 	    return reduceRight.apply(this._array, arguments);
 	  },
 	  preduceRight: function (fun /*, initialValue */) {
-	    var val = new Pro.Val(reduceRight.apply(this._array, arguments));
+	    var val = new P.Val(reduceRight.apply(this._array, arguments));
 	    this.on(pArrayLs.reduceRight(val, this, arguments));
 	
 	    return val;
@@ -3284,7 +3354,7 @@
 	    return indexOf.apply(this._array, arguments);
 	  },
 	  pindexOf: function () {
-	    var val = new Pro.Val(indexOf.apply(this._array, arguments));
+	    var val = new P.Val(indexOf.apply(this._array, arguments));
 	    this.on(pArrayLs.indexOf(val, this, arguments));
 	
 	    return val;
@@ -3295,7 +3365,7 @@
 	    return lastIndexOf.apply(this._array, arguments);
 	  },
 	  plastindexOf: function () {
-	    var val = new Pro.Val(lastIndexOf.apply(this._array, arguments));
+	    var val = new P.Val(lastIndexOf.apply(this._array, arguments));
 	    this.on(pArrayLs.lastIndexOf(val, this, arguments));
 	
 	    return val;
@@ -3308,7 +3378,7 @@
 	  pjoin: function (separator) {
 	    var reduced = this.preduce(function (i, el) {
 	      return i + separator + el;
-	    }, ''), res = new Pro.Val(function () {
+	    }, ''), res = new P.Val(function () {
 	      if (!reduced.v) {
 	        return '';
 	      }
@@ -3330,7 +3400,7 @@
 	    return this.toArray();
 	  },
 	  slice: function () {
-	    var sliced = new Pro.Array(slice.apply(this._array, arguments));
+	    var sliced = new P.A(slice.apply(this._array, arguments));
 	    this.on(pArrayLs.slice(sliced, this, arguments));
 	
 	    return sliced;
@@ -3376,7 +3446,7 @@
 	    }
 	
 	    _this.updateSplice(index, spliced, newItems);
-	    return new Pro.Array(spliced);
+	    return new P.A(spliced);
 	  },
 	  pop: function () {
 	    if (this._array.length === 0) {
@@ -3431,7 +3501,7 @@
 	  },
 	  toArray: function () {
 	    var result = [], i, ar = this._array, ln = ar.length, el,
-	        isPA = Pro.U.isProArray;
+	        isPA = P.U.isProArray;
 	
 	    for (i = 0; i < ln; i++) {
 	      el = ar[i];
@@ -3495,7 +3565,8 @@
 	        } else {
 	          toAdd = args;
 	        }
-	        transformed._array = concat.apply(original._array, toAdd);
+	        transformed._array.length = 0;
+	        push.apply(transformed._array, concat.apply(original._array, toAdd));
 	        transformed.updateByDiff(nvs);
 	      } else if (op === pArrayOps.splice) {
 	        pArrayProto.splice.apply(transformed, [ind, ov.length].concat(nv));
@@ -3529,7 +3600,8 @@
 	        transformed.length = oln + nv;
 	      } else if (op === pArrayOps.reverse || op === pArrayOps.sort) {
 	        nvs = transformed._array;
-	        transformed._array = concat.apply(original._array, right._array);
+	        transformed._array.length = 0;
+	        push.apply(transformed._array, concat.apply(original._array, right._array));
 	        transformed.updateByDiff(nvs);
 	      } else if (op === pArrayOps.splice) {
 	        pArrayProto.splice.apply(transformed, [ind + oln, ov.length].concat(nv));
@@ -3892,7 +3964,8 @@
 	        }
 	      } else {
 	        osl = sliced._array;
-	        sliced._array = slice.apply(original._array, args);
+	        sliced._array.length = 0;
+	        push.apply(sliced._array, slice.apply(original._array, args));
 	        sliced.updateByDiff(osl);
 	      }
 	    };

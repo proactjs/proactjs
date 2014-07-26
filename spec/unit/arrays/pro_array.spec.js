@@ -43,7 +43,7 @@ describe('Pro.Array', function () {
     expect(transformedArray.indexOf(9)).toBe(0);
 
     // Terminate relations...
-    array.indexListeners = [];
+    array.indexListeners.length = 0;
     array.lengthListeners = [];
 
     ind = 1;
