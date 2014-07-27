@@ -20,12 +20,12 @@
 ### Use in sites
 ```html
   <script src="proact.js" type="text/javascript"></script>
-  <!-- Pro will be global object -->
+  <!-- ProAct will be global object -->
 ```
 or
 ```html
   <script src="proact.min.js" type="text/javascript"></script>
-  <!-- Pro will be global object -->
+  <!-- ProAct will be global object -->
 ```
 
 ### Use as Node.js module [![NPM version](https://badge.fury.io/js/proact.js.svg)](http://badge.fury.io/js/proact.js)
@@ -34,7 +34,7 @@ or
 ```
 
 ```javascript
-  var Pro = require('proact.js');
+  var ProAct = require('proact.js');
 ```
 
 ### Build from source
@@ -49,15 +49,15 @@ or
 ### The reactive sum:
 
 Let's say we want to define sum=a+b. We want whenever 'a' or 'b' changes, 'sum' to be updated automatically.
-'Pro.prob' accepts a normal javascript object and returns a Pro Object. All the functions of the initial object are simple fields in the Pro Object, but they are computed using the original function. If something that the original function is depending on, changes, the value of the corresponding field is changed. So the implementation of the 'sum' is:
+'ProAct.prob' accepts a normal javascript object and returns a ProAct Object. All the functions of the initial object are simple fields in the ProAct Object, but they are computed using the original function. If something that the original function is depending on, changes, the value of the corresponding field is changed. So the implementation of the 'sum' is:
 ```javascript
-  var obj = Pro.prob({
+  var obj = ProAct.prob({
     a: 4,
     b: 3,
     sum: function () {
       return this.a + this.b;
     }
-  });  // Make obj Pro Object (object with reactive properties).
+  });  // Make obj ProAct Object (object with reactive properties).
   
   console.log(typeof(obj.sum)); // "number"
   console.log(obj.sum); // sum is simple field now and it is 7
@@ -68,7 +68,7 @@ Let's say we want to define sum=a+b. We want whenever 'a' or 'b' changes, 'sum' 
 ```
 Now. What about a sum of all the array's elements:
 ```javascript
-  var obj = Pro.prob({
+  var obj = ProAct.prob({
     a: [1, 2, 3, 4, 5],
     sum: function () {
       var result = 0, i, ln = this.a.length;
@@ -79,7 +79,7 @@ Now. What about a sum of all the array's elements:
       
       return result;
     }
-  });  // Make obj Pro Object (object with reactive properties).
+  });  // Make obj ProAct Object (object with reactive properties).
   
   console.log(typeof(obj.sum)); // "number"
   console.log(obj.sum); // sum is simple field now and it is 1 + 2 + 3 + 4 + 5 = 15
@@ -93,7 +93,7 @@ Now. What about a sum of all the array's elements:
 Of course we can use the reactive properties of an object to observe changes. I am going to implement the first example of [Watch.js](https://github.com/melanke/Watch.JS/), using a smart pro object.
 
 ```javascript
-  var obj = Pro.prob({
+  var obj = ProAct.prob({
     a: "initial value of a",
     aWatcher: function () {
       var newVal = this.a;
@@ -110,7 +110,7 @@ Of course we can use the reactive properties of an object to observe changes. I 
 This can be accomplished by adding listeners to a property too:
 
 ```javascript
-  var obj = Pro.prob({
+  var obj = ProAct.prob({
     a: "initial value of a"
   });
   
@@ -123,6 +123,6 @@ This can be accomplished by adding listeners to a property too:
 
 ### Streaming
 
-Here is an example for implementation of click counter using Pro.Val and streams for click events:
+Here is an example for implementation of click counter using ProAct.Val and streams for click events:
 [fiddle](http://jsfiddle.net/meddle/2Wrfq/)
 
