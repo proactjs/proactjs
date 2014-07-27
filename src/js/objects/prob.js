@@ -1,16 +1,16 @@
-Pro.prob = function (object, meta) {
+ProAct.prob = function (object, meta) {
   var core, property,
-      isAr = Pro.Utils.isArray;
+      isAr = P.U.isArray;
 
-  if (object === null || (!Pro.U.isObject(object) && !isAr(object))) {
+  if (object === null || (!P.U.isObject(object) && !isAr(object))) {
     return new Pro.Val(object, meta);
   }
 
   if (isAr(object)) {
-    return new Pro.Array(object);
+    return new P.A(object);
   }
 
-  core = new Pro.Core(object, meta);
+  core = new P.ObjectCore(object, meta);
   Object.defineProperty(object, '__pro__', {
     enumerable: false,
     configurable: false,

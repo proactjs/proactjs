@@ -1,13 +1,13 @@
 'use strict';
 
-describe('Pro.Core', function () {
+describe('ProAct.ObjectCore', function () {
   it ('is observable for all the properties it manages', function () {
       var obj = {
             a:1,
             b:2
           },
           count = 0,
-          core = new Pro.Core(obj);
+          core = new ProAct.ObjectCore(obj);
 
       obj.__pro__ = core;
       core.makeProp('a');
@@ -27,7 +27,7 @@ describe('Pro.Core', function () {
   });
   describe('#prob', function () {
     it ('is chainable', function () {
-      var core = new Pro.Core({});
+      var core = new ProAct.ObjectCore({});
       expect(core.prob()).toBe(core);
     });
   });
@@ -36,7 +36,7 @@ describe('Pro.Core', function () {
       var obj = {
             a:1
           },
-          core = new Pro.Core(obj);
+          core = new ProAct.ObjectCore(obj);
       obj.__pro__ = core;
       core.makeProp('a');
 
@@ -44,11 +44,11 @@ describe('Pro.Core', function () {
       expect(obj.a).toEqual(7);
     });
 
-    it ('adds non-present properties to the main object of the Pro.Core', function () {
+    it ('adds non-present properties to the main object of the ProAct.ObjectCore', function () {
       var obj = {
             a:1
           },
-          core = new Pro.Core(obj);
+          core = new ProAct.ObjectCore(obj);
       obj.__pro__ = core;
       core.makeProp('a');
 
@@ -78,7 +78,7 @@ describe('Pro.Core', function () {
                 return 'Saying ' + this.a;
               }
             },
-            core = new Pro.Core(obj, {
+            core = new ProAct.ObjectCore(obj, {
               a: ['noprop'],
               sayA: 'noprop'
             }).prob();

@@ -4401,20 +4401,20 @@
 	  afterInit: function () {}
 	});
 	
-	ProAct.Core = function (object, meta) {
+	ProAct.ObjectCore = function (object, meta) {
 	  this.object = object;
 	  this.properties = {};
 	  this.state = Pro.States.init;
 	  this.meta = meta || {};
 	
-	  Pro.Observable.call(this); // Super!
+	  P.Observable.call(this); // Super!
 	};
 	
-	Pro.Core.prototype = Pro.U.ex(Object.create(Pro.Observable.prototype), {
-	  constructor: Pro.Core,
+	ProAct.ObjectCore.prototype = P.U.ex(Object.create(P.Observable.prototype), {
+	  constructor: ProAct.ObjectCore,
 	  prob: function () {
 	    var _this = this, object = this.object,
-	        conf = Pro.Configuration,
+	        conf = P.Configuration,
 	        keyprops = conf.keyprops,
 	        keypropList = conf.keypropList;
 	
@@ -4424,7 +4424,7 @@
 	      }
 	
 	      if (keyprops && keypropList.indexOf('p') !== -1) {
-	        Pro.U.defValProp(object, 'p', false, false, false, function (p) {
+	        P.U.defValProp(object, 'p', false, false, false, function (p) {
 	          if (!p || p === '*') {
 	            return _this;
 	          }
@@ -4433,9 +4433,9 @@
 	        });
 	      }
 	
-	      this.state = Pro.States.ready;
+	      this.state = P.States.ready;
 	    } catch (e) {
-	      this.state = Pro.States.error;
+	      this.state = P.States.error;
 	      throw e;
 	    }
 	
@@ -4446,12 +4446,12 @@
 	  },
 	  makeProp: function (property, listeners, meta) {
 	    var object = this.object,
-	        conf = Pro.Configuration,
+	        conf = P.Configuration,
 	        keyprops = conf.keyprops,
 	        keypropList = conf.keypropList,
-	        isF = Pro.Utils.isFunction,
-	        isA = Pro.Utils.isArrayObject,
-	        isO = Pro.Utils.isObject, result;
+	        isF = P.U.isFunction,
+	        isA = P.U.isArrayObject,
+	        isO = P.U.isObject, result;
 	
 	    if (meta && (meta === 'noprop' || (meta.indexOf && meta.indexOf('noprop') >= 0))) {
 	      return;
@@ -4463,27 +4463,27 @@
 	    }
 	
 	    if (object.hasOwnProperty(property) && (object[property] === null || object[property] === undefined)) {
-	      result = new Pro.NullProperty(object, property);
+	      result = new P.NullProperty(object, property);
 	    } else if (object.hasOwnProperty(property) && !isF(object[property]) && !isA(object[property]) && !isO(object[property])) {
-	      result = new Pro.Property(object, property);
+	      result = new P.Property(object, property);
 	    } else if (object.hasOwnProperty(property) && isF(object[property])) {
-	      result = new Pro.AutoProperty(object, property);
+	      result = new P.AutoProperty(object, property);
 	    } else if (object.hasOwnProperty(property) && isA(object[property])) {
-	      result = new Pro.ArrayProperty(object, property);
+	      result = new P.ArrayProperty(object, property);
 	    } else if (object.hasOwnProperty(property) && isO(object[property])) {
-	      result = new Pro.ObjectProperty(object, property);
+	      result = new P.ObjectProperty(object, property);
 	    }
 	
 	    if (listeners) {
 	      this.properties[property].listeners.change = this.properties[property].listeners.change.concat(listeners);
 	    }
 	
-	    if (meta && Pro.registry) {
-	      if (!Pro.U.isArray(meta)) {
+	    if (meta && P.registry) {
+	      if (!P.U.isArray(meta)) {
 	        meta = [meta];
 	      }
 	
-	      Pro.registry.setup.apply(Pro.registry, [result].concat(meta));
+	      P.registry.setup.apply(P.registry, [result].concat(meta));
 	    }
 	
 	    return result;
@@ -4560,19 +4560,19 @@
 	  }
 	});
 	
-	Pro.prob = function (object, meta) {
+	ProAct.prob = function (object, meta) {
 	  var core, property,
-	      isAr = Pro.Utils.isArray;
+	      isAr = P.U.isArray;
 	
-	  if (object === null || (!Pro.U.isObject(object) && !isAr(object))) {
+	  if (object === null || (!P.U.isObject(object) && !isAr(object))) {
 	    return new Pro.Val(object, meta);
 	  }
 	
 	  if (isAr(object)) {
-	    return new Pro.Array(object);
+	    return new P.A(object);
 	  }
 	
-	  core = new Pro.Core(object, meta);
+	  core = new P.ObjectCore(object, meta);
 	  Object.defineProperty(object, '__pro__', {
 	    enumerable: false,
 	    configurable: false,
