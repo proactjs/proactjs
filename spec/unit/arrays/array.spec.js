@@ -2,7 +2,7 @@
 
 describe('ProAct.Array', function () {
   it('is array-like object', function () {
-    var array = new Pro.Array(3, 4, 5, 4), ind,
+    var array = new ProAct.Array(3, 4, 5, 4), ind,
         transformedArray, result;
 
     expect(array.length).toBe(4);
@@ -44,7 +44,7 @@ describe('ProAct.Array', function () {
 
     // Terminate relations...
     array.__pro__.listeners.index.length = 0;
-    array.lengthListeners = [];
+    array.__pro__.listeners.length.length = 0;
 
     ind = 1;
     result = array.reduce(function (curr, el, i, arr) {

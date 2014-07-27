@@ -31,9 +31,9 @@ Pro.ArrayProperty = function (proObject, property) {
                 oldIndListeners = _this.oldVal.__pro__.listeners.index,
                 oldIndListenersLn = oldIndListeners.length,
                 newIndListeners = _this.val.__pro__.listeners.index,
-                oldLenListeners = _this.oldVal.lengthListeners,
+                oldLenListeners = _this.oldVal.__pro__.listeners.length,
                 oldLenListenersLn = oldLenListeners.length,
-                newLenListeners = _this.val.lengthListeners;
+                newLenListeners = _this.val.__pro__.listeners.length;
 
             for (i = 0; i < oldIndListenersLn; i++) {
               listener = oldIndListeners[i];

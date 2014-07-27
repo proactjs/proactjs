@@ -10,7 +10,6 @@ ProAct.Array = P.A = pArray = function () {
   }
 
   P.U.defValProp(this, '_array', false, false, true, arr);
-  P.U.defValProp(this, 'lengthListeners', false, false, true, []);
 
   core = new P.AC(this);
   P.U.defValProp(this, '__pro__', false, false, false, core);
@@ -76,10 +75,10 @@ ProAct.Array.prototype = pArrayProto = P.U.ex(Object.create(arrayProto), {
     }
 
     if (action === 'change') {
-      this.lengthListeners.push(listener);
+      this.__pro__.on('length', listener);
       this.__pro__.on('index', listener);
     } else if (action === 'lengthChange') {
-      this.lengthListeners.push(listener);
+      this.__pro__.on('length', listener);
     } else if (action === 'indexChange') {
       this.__pro__.on('index', listener);
     }
@@ -91,10 +90,10 @@ ProAct.Array.prototype = pArrayProto = P.U.ex(Object.create(arrayProto), {
     }
 
     if (action === 'change') {
-      P.U.remove(listener, this.lengthListeners);
+      this.__pro__.off('length', listener);
       this.__pro__.off('index', listener);
     } else if (action === 'lengthChange') {
-      P.U.remove(listener, this.lengthListeners);
+      this.__pro__.off('length', listener);
     } else if (action === 'indexChange') {
       this.__pro__.off('index', listener);
     }
@@ -157,7 +156,7 @@ ProAct.Array.prototype = pArrayProto = P.U.ex(Object.create(arrayProto), {
                          P.Event.Types.array, op, ind, oldVal, newVal);
   },
   willUpdate: function (op, ind, oldVal, newVal) {
-    var listeners = pArrayOps.isIndexOp(op) ? this.__pro__.listeners.index : this.lengthListeners;
+    var listeners = pArrayOps.isIndexOp(op) ? this.__pro__.listeners.index : this.__pro__.listeners.length;
     listeners = listeners ? listeners : [];
 
     this.willUpdateListeners(listeners, op, ind, oldVal, newVal);
@@ -182,9 +181,9 @@ ProAct.Array.prototype = pArrayProto = P.U.ex(Object.create(arrayProto), {
     if (spliced.length === newItems.length) {
       listeners = this.__pro__.listeners.index;
     } else if (!newItems.length || !spliced.length) {
-      listeners = this.lengthListeners;
+      listeners = this.__pro__.listeners.length;
     } else {
-      listeners = this.lengthListeners.concat(this.__pro__.listeners.index);
+      listeners = this.__pro__.listeners.length.concat(this.__pro__.listeners.index);
     }
 
     this.willUpdateListeners(listeners, op, index, spliced, newItems);
