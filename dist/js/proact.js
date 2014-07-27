@@ -3071,42 +3071,6 @@
 	
 	ProAct.Array.prototype = pArrayProto = P.U.ex(Object.create(arrayProto), {
 	  constructor: ProAct.Array,
-	  defineIndexProp: function (i) {
-	    var proArray = this,
-	        array = proArray._array,
-	        oldVal,
-	        isA = P.U.isArray,
-	        isO = P.U.isObject,
-	        isF = P.U.isFunction;
-	
-	    if (isA(array[i])) {
-	      new P.ArrayProperty(array, i);
-	    } else if (isF(array[i])) {
-	    } else if (array[i] === null) {
-	    } else if (isO(array[i])) {
-	      new P.ObjectProperty(array, i);
-	    }
-	
-	    Object.defineProperty(this, i, {
-	      enumerable: true,
-	      configurable: true,
-	      get: function () {
-	        proArray.__pro__.addCaller('index');
-	
-	        return array[i];
-	      },
-	      set: function (newVal) {
-	        if (array[i] === newVal) {
-	          return;
-	        }
-	
-	        oldVal = array[i];
-	        array[i] = newVal;
-	
-	        proArray.update(pArrayOps.set, i, oldVal, newVal);
-	      }
-	    });
-	  },
 	  makeEvent: function (op, ind, oldVal, newVal, source) {
 	    return new P.Event(source, this,
 	                         P.Event.Types.array, op, ind, oldVal, newVal);
@@ -3352,7 +3316,7 @@
 	    if (newItems.length > howMany) {
 	      delta = newItems.length - howMany;
 	      while (delta--) {
-	        this.defineIndexProp(oldLn++);
+	        this.__pro__.defineIndexProp(oldLn++);
 	      }
 	    } else if (howMany > newItems.length) {
 	      delta = howMany - newItems.length;
@@ -3383,7 +3347,7 @@
 	    for (i = 0; i < ln; i++) {
 	      index = this._array.length;
 	      push.call(this._array, arguments[i]);
-	      this.defineIndexProp(index);
+	      this.__pro__.defineIndexProp(index);
 	    }
 	
 	    _this.update(pArrayOps.add, _this._array.length - 1, null, slice.call(vals, 0));
@@ -3408,7 +3372,7 @@
 	        _this = this;
 	    for (var i = 0; i < ln; i++) {
 	      array.splice(i, 0, arguments[i]);
-	      this.defineIndexProp(array.length - 1);
+	      this.__pro__.defineIndexProp(array.length - 1);
 	    }
 	
 	    _this.update(pArrayOps.add, 0, null, vals);
@@ -4451,7 +4415,7 @@
 	        getLength, setLength, oldLength, i;
 	
 	    for (i = 0; i < ln; i++) {
-	      array.defineIndexProp(i);
+	      this.defineIndexProp(i);
 	    }
 	
 	    getLength = function () {
@@ -4481,6 +4445,45 @@
 	    });
 	
 	  },
+	
+	  defineIndexProp: function (i) {
+	    var self = this,
+	        proArray = this.shell,
+	        array = proArray._array,
+	        oldVal,
+	        isA = P.U.isArray,
+	        isO = P.U.isObject,
+	        isF = P.U.isFunction;
+	
+	    if (isA(array[i])) {
+	      new P.ArrayProperty(array, i);
+	    } else if (isF(array[i])) {
+	    } else if (array[i] === null) {
+	    } else if (isO(array[i])) {
+	      new P.ObjectProperty(array, i);
+	    }
+	
+	    Object.defineProperty(proArray, i, {
+	      enumerable: true,
+	      configurable: true,
+	      get: function () {
+	        self.addCaller('index');
+	
+	        return array[i];
+	      },
+	      set: function (newVal) {
+	        if (array[i] === newVal) {
+	          return;
+	        }
+	
+	        oldVal = array[i];
+	        array[i] = newVal;
+	
+	        proArray.update(pArrayOps.set, i, oldVal, newVal);
+	      }
+	    });
+	  },
+	
 	  on: function (action, listener) {
 	    if (!P.U.isString(action)) {
 	      this.on('index', action);

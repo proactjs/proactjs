@@ -16,7 +16,7 @@ ProAct.ArrayCore.prototype = P.U.ex(Object.create(P.C.prototype), {
         getLength, setLength, oldLength, i;
 
     for (i = 0; i < ln; i++) {
-      array.defineIndexProp(i);
+      this.defineIndexProp(i);
     }
 
     getLength = function () {
@@ -46,6 +46,45 @@ ProAct.ArrayCore.prototype = P.U.ex(Object.create(P.C.prototype), {
     });
 
   },
+
+  defineIndexProp: function (i) {
+    var self = this,
+        proArray = this.shell,
+        array = proArray._array,
+        oldVal,
+        isA = P.U.isArray,
+        isO = P.U.isObject,
+        isF = P.U.isFunction;
+
+    if (isA(array[i])) {
+      new P.ArrayProperty(array, i);
+    } else if (isF(array[i])) {
+    } else if (array[i] === null) {
+    } else if (isO(array[i])) {
+      new P.ObjectProperty(array, i);
+    }
+
+    Object.defineProperty(proArray, i, {
+      enumerable: true,
+      configurable: true,
+      get: function () {
+        self.addCaller('index');
+
+        return array[i];
+      },
+      set: function (newVal) {
+        if (array[i] === newVal) {
+          return;
+        }
+
+        oldVal = array[i];
+        array[i] = newVal;
+
+        proArray.update(pArrayOps.set, i, oldVal, newVal);
+      }
+    });
+  },
+
   on: function (action, listener) {
     if (!P.U.isString(action)) {
       this.on('index', action);
