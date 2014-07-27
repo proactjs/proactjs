@@ -3044,33 +3044,6 @@
 	  core = new P.AC(this);
 	  P.U.defValProp(this, '__pro__', false, false, false, core);
 	  core.prob();
-	
-	  getLength = function () {
-	    core.addCaller('length');
-	
-	    return self._array.length;
-	  };
-	
-	  setLength = function (newLength) {
-	    if (self._array.length === newLength) {
-	      return;
-	    }
-	
-	    oldLength = self._array.length;
-	    self._array.length = newLength;
-	
-	    self.update(pArrayOps.setLength, -1, oldLength, newLength);
-	
-	    return newLength;
-	  };
-	
-	  Object.defineProperty(this, 'length', {
-	    configurable: false,
-	    enumerable: true,
-	    get: getLength,
-	    set: setLength
-	  });
-	
 	};
 	
 	P.U.ex(P.A, {
@@ -4472,13 +4445,41 @@
 	ProAct.ArrayCore.prototype = P.U.ex(Object.create(P.C.prototype), {
 	  constructor: ProAct.ArrayCore,
 	  setup: function () {
-	    var array = this.shell,
+	    var self = this,
+	        array = this.shell,
 	        ln = array._array.length,
-	        i;
+	        getLength, setLength, oldLength, i;
 	
 	    for (i = 0; i < ln; i++) {
 	      array.defineIndexProp(i);
 	    }
+	
+	    getLength = function () {
+	      self.addCaller('length');
+	
+	      return array._array.length;
+	    };
+	
+	    setLength = function (newLength) {
+	      if (array._array.length === newLength) {
+	        return;
+	      }
+	
+	      oldLength = array._array.length;
+	      array._array.length = newLength;
+	
+	      array.update(pArrayOps.setLength, -1, oldLength, newLength);
+	
+	      return newLength;
+	    };
+	
+	    Object.defineProperty(array, 'length', {
+	      configurable: false,
+	      enumerable: true,
+	      get: getLength,
+	      set: setLength
+	    });
+	
 	  },
 	  on: function (action, listener) {
 	    if (!P.U.isString(action)) {

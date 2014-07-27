@@ -18,33 +18,6 @@ ProAct.Array = P.A = pArray = function () {
   core = new P.AC(this);
   P.U.defValProp(this, '__pro__', false, false, false, core);
   core.prob();
-
-  getLength = function () {
-    core.addCaller('length');
-
-    return self._array.length;
-  };
-
-  setLength = function (newLength) {
-    if (self._array.length === newLength) {
-      return;
-    }
-
-    oldLength = self._array.length;
-    self._array.length = newLength;
-
-    self.update(pArrayOps.setLength, -1, oldLength, newLength);
-
-    return newLength;
-  };
-
-  Object.defineProperty(this, 'length', {
-    configurable: false,
-    enumerable: true,
-    get: getLength,
-    set: setLength
-  });
-
 };
 
 P.U.ex(P.A, {
