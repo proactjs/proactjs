@@ -1689,11 +1689,6 @@
 	   * @memberof ProAct.Observable
 	   * @instance
 	   * @method onErr
-	   * @param {String} action
-	   *      The action to listen for errors. It is the default action if it is empty or skipped.
-	   *      <p>
-	   *        The action can be skipped and on its place as first parameter to be passed the <i>listener</i>.
-	   *      </p>
 	   * @param {Object} listener
 	   *      The listener to attach. It must be instance of Function or object with a <i>call</i> method.
 	   * @return {ProAct.Observable}
@@ -1710,18 +1705,13 @@
 	   * @memberof ProAct.Observable
 	   * @instance
 	   * @method offErr
-	   * @param {String} action
-	   *      The action to stop listening for errors. It is the default action if it is empty or skipped.
-	   *      <p>
-	   *        The action can be skipped and on its place as first parameter to be passed the <i>listener</i>.
-	   *      </p>
 	   * @param {Object} listener
 	   *      The listener to detach. If it is skipped, null or undefined all the listeners are removed from this observable.
 	   * @return {ProAct.Observable}
 	   *      <b>this</b>
 	   * @see {@link ProAct.Observable#onErr}
 	   */
-	  offErr: function (action, listener) {
+	  offErr: function (listener) {
 	    return this.off('error', listener);
 	  },
 	
