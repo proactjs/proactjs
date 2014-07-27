@@ -1,48 +1,32 @@
 ProAct.ObjectCore = function (object, meta) {
-  this.object = object;
+  P.C.call(this, object, meta); // Super!
   this.properties = {};
-  this.state = Pro.States.init;
-  this.meta = meta || {};
-
-  P.Observable.call(this); // Super!
 };
 
-ProAct.ObjectCore.prototype = P.U.ex(Object.create(P.Observable.prototype), {
+ProAct.ObjectCore.prototype = P.U.ex(Object.create(P.C.prototype), {
   constructor: ProAct.ObjectCore,
-  prob: function () {
-    var _this = this, object = this.object,
+  setup: function () {
+    var self = this, object = this.shell,
         conf = P.Configuration,
         keyprops = conf.keyprops,
         keypropList = conf.keypropList;
 
-    try {
-      for (property in object) {
-        this.makeProp(property, null, this.meta[property]);
-      }
-
-      if (keyprops && keypropList.indexOf('p') !== -1) {
-        P.U.defValProp(object, 'p', false, false, false, function (p) {
-          if (!p || p === '*') {
-            return _this;
-          }
-
-          return _this.properties[p];
-        });
-      }
-
-      this.state = P.States.ready;
-    } catch (e) {
-      this.state = P.States.error;
-      throw e;
+    for (property in object) {
+      this.makeProp(property, null, this.meta[property]);
     }
 
-    return this;
-  },
-  call: function (event) {
-    this.update(event);
+    if (keyprops && keypropList.indexOf('p') !== -1) {
+      P.U.defValProp(object, 'p', false, false, false, function (p) {
+        if (!p || p === '*') {
+          return self;
+        }
+
+        return self.properties[p];
+      });
+    }
   },
   makeProp: function (property, listeners, meta) {
-    var object = this.object,
+    var object = this.shell,
         conf = P.Configuration,
         keyprops = conf.keyprops,
         keypropList = conf.keypropList,
@@ -86,7 +70,7 @@ ProAct.ObjectCore.prototype = P.U.ex(Object.create(P.Observable.prototype), {
     return result;
   },
   set: function (property, value) {
-    var object = this.object;
+    var object = this.shell;
 
     object[property] = value;
     if (this.properties[property]) {
