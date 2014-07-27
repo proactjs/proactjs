@@ -1,5 +1,5 @@
 ProAct.Array = P.A = pArray = function () {
-  var self = this, getLength, setLength, i, oldLength, ln, arr;
+  var self = this, getLength, setLength, i, oldLength, ln, arr, core;
 
   if (arguments.length === 0) {
     arr = [];
@@ -10,10 +10,11 @@ ProAct.Array = P.A = pArray = function () {
   }
 
   P.U.defValProp(this, '_array', false, false, true, arr);
-  P.U.defValProp(this, 'indexListeners', false, false, true, []);
-  P.U.defValProp(this, 'lastIndexCaller', false, false, true, null);
   P.U.defValProp(this, 'lengthListeners', false, false, true, []);
-  P.U.defValProp(this, 'lastLengthCaller', false, false, true, null);
+
+  core = new P.AC(this);
+  P.U.defValProp(this, '__pro__', false, false, false, core);
+  core.prob();
 
   getLength = function () {
     self.addCaller('length');
@@ -41,22 +42,6 @@ ProAct.Array = P.A = pArray = function () {
     set: setLength
   });
 
-  P.U.defValProp(this, '__pro__', false, false, false, {
-    state: P.States.init
-  });
-
-  try {
-    ln = this._array.length;
-
-    for (i = 0; i < ln; i++) {
-      this.defineIndexProp(i);
-    }
-
-    this.__pro__.state = P.States.ready;
-  } catch (e) {
-    this.__pro__.state = P.States.error;
-    throw e;
-  }
 };
 
 P.U.ex(P.A, {
@@ -92,11 +77,11 @@ ProAct.Array.prototype = pArrayProto = P.U.ex(Object.create(arrayProto), {
 
     if (action === 'change') {
       this.lengthListeners.push(listener);
-      this.indexListeners.push(listener);
+      this.__pro__.on('index', listener);
     } else if (action === 'lengthChange') {
       this.lengthListeners.push(listener);
     } else if (action === 'indexChange') {
-      this.indexListeners.push(listener);
+      this.__pro__.on('index', listener);
     }
   },
   off: function (action, listener) {
@@ -107,11 +92,11 @@ ProAct.Array.prototype = pArrayProto = P.U.ex(Object.create(arrayProto), {
 
     if (action === 'change') {
       P.U.remove(listener, this.lengthListeners);
-      P.U.remove(listener, this.indexListeners);
+      this.__pro__.off('index', listener);
     } else if (action === 'lengthChange') {
       P.U.remove(listener, this.lengthListeners);
     } else if (action === 'indexChange') {
-      P.U.remove(listener, this.indexListeners);
+      this.__pro__.off('index', listener);
     }
   },
   addCaller: function (type) {
@@ -124,7 +109,7 @@ ProAct.Array.prototype = pArrayProto = P.U.ex(Object.create(arrayProto), {
         capType = type.charAt(0).toUpperCase() + type.slice(1),
         lastCallerField = 'last' + capType + 'Caller',
         lastCaller = this[lastCallerField],
-        listeners = this[type + 'Listeners'];
+        listeners = this.__pro__.listeners[type];
 
     if (caller && lastCaller !== caller && !P.U.contains(listeners, caller)) {
       this.on(type + 'Change', caller);
@@ -172,7 +157,8 @@ ProAct.Array.prototype = pArrayProto = P.U.ex(Object.create(arrayProto), {
                          P.Event.Types.array, op, ind, oldVal, newVal);
   },
   willUpdate: function (op, ind, oldVal, newVal) {
-    var listeners = pArrayOps.isIndexOp(op) ? this.indexListeners : this.lengthListeners;
+    var listeners = pArrayOps.isIndexOp(op) ? this.__pro__.listeners.index : this.lengthListeners;
+    listeners = listeners ? listeners : [];
 
     this.willUpdateListeners(listeners, op, ind, oldVal, newVal);
   },
@@ -194,11 +180,11 @@ ProAct.Array.prototype = pArrayProto = P.U.ex(Object.create(arrayProto), {
     }
 
     if (spliced.length === newItems.length) {
-      listeners = this.indexListeners;
+      listeners = this.__pro__.listeners.index;
     } else if (!newItems.length || !spliced.length) {
       listeners = this.lengthListeners;
     } else {
-      listeners = this.lengthListeners.concat(this.indexListeners);
+      listeners = this.lengthListeners.concat(this.__pro__.listeners.index);
     }
 
     this.willUpdateListeners(listeners, op, index, spliced, newItems);

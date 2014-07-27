@@ -1,6 +1,6 @@
 'use strict';
 
-describe('Pro.Array', function () {
+describe('ProAct.Array', function () {
   it('is array-like object', function () {
     var array = new Pro.Array(3, 4, 5, 4), ind,
         transformedArray, result;
@@ -43,7 +43,7 @@ describe('Pro.Array', function () {
     expect(transformedArray.indexOf(9)).toBe(0);
 
     // Terminate relations...
-    array.indexListeners.length = 0;
+    array.__pro__.listeners.index.length = 0;
     array.lengthListeners = [];
 
     ind = 1;

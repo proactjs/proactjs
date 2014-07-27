@@ -1,28 +1,15 @@
 ProAct.ObjectCore = function (object, meta) {
   P.C.call(this, object, meta); // Super!
-  this.properties = {};
 };
 
 ProAct.ObjectCore.prototype = P.U.ex(Object.create(P.C.prototype), {
   constructor: ProAct.ObjectCore,
   setup: function () {
-    var self = this, object = this.shell,
-        conf = P.Configuration,
-        keyprops = conf.keyprops,
-        keypropList = conf.keypropList;
+    var object = this.shell,
+        property;
 
     for (property in object) {
       this.makeProp(property, null, this.meta[property]);
-    }
-
-    if (keyprops && keypropList.indexOf('p') !== -1) {
-      P.U.defValProp(object, 'p', false, false, false, function (p) {
-        if (!p || p === '*') {
-          return self;
-        }
-
-        return self.properties[p];
-      });
     }
   },
   makeProp: function (property, listeners, meta) {

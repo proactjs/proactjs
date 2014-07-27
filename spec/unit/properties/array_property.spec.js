@@ -1,6 +1,6 @@
 'use strict';
 
-describe('Pro.ArrayProperty', function () {
+describe('ProAct.ArrayProperty', function () {
   var obj;
   beforeEach(function () {
     obj = {
@@ -17,7 +17,7 @@ describe('Pro.ArrayProperty', function () {
 
   it('is lazy', function () {
     var original = obj.a,
-        property = new Pro.ArrayProperty(obj, 'a');
+        property = new ProAct.ArrayProperty(obj, 'a');
 
     expect(Pro.Utils.isArray(property.val)).toBe(true);
     expect(Pro.Utils.isProArray(property.val)).toBe(false);
@@ -71,8 +71,8 @@ describe('Pro.ArrayProperty', function () {
   });
 
   it('when array value changed properties stop listening to changes to the old array value', function () {
-    var property = new Pro.ArrayProperty(obj, 'a'),
-        autoProperty = new Pro.AutoProperty(obj, 'ap'),
+    var property = new ProAct.ArrayProperty(obj, 'a'),
+        autoProperty = new ProAct.AutoProperty(obj, 'ap'),
         oldArray;
 
     expect(obj.ap).toEqual(obj.a[0] + obj.a[1]);

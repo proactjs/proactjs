@@ -3025,7 +3025,7 @@
 	P.DDS.prototype.t = P.DDS.prototype.trigger;
 	
 	ProAct.Array = P.A = pArray = function () {
-	  var self = this, getLength, setLength, i, oldLength, ln, arr;
+	  var self = this, getLength, setLength, i, oldLength, ln, arr, core;
 	
 	  if (arguments.length === 0) {
 	    arr = [];
@@ -3036,10 +3036,11 @@
 	  }
 	
 	  P.U.defValProp(this, '_array', false, false, true, arr);
-	  P.U.defValProp(this, 'indexListeners', false, false, true, []);
-	  P.U.defValProp(this, 'lastIndexCaller', false, false, true, null);
 	  P.U.defValProp(this, 'lengthListeners', false, false, true, []);
-	  P.U.defValProp(this, 'lastLengthCaller', false, false, true, null);
+	
+	  core = new P.AC(this);
+	  P.U.defValProp(this, '__pro__', false, false, false, core);
+	  core.prob();
 	
 	  getLength = function () {
 	    self.addCaller('length');
@@ -3067,22 +3068,6 @@
 	    set: setLength
 	  });
 	
-	  P.U.defValProp(this, '__pro__', false, false, false, {
-	    state: P.States.init
-	  });
-	
-	  try {
-	    ln = this._array.length;
-	
-	    for (i = 0; i < ln; i++) {
-	      this.defineIndexProp(i);
-	    }
-	
-	    this.__pro__.state = P.States.ready;
-	  } catch (e) {
-	    this.__pro__.state = P.States.error;
-	    throw e;
-	  }
 	};
 	
 	P.U.ex(P.A, {
@@ -3118,11 +3103,11 @@
 	
 	    if (action === 'change') {
 	      this.lengthListeners.push(listener);
-	      this.indexListeners.push(listener);
+	      this.__pro__.on('index', listener);
 	    } else if (action === 'lengthChange') {
 	      this.lengthListeners.push(listener);
 	    } else if (action === 'indexChange') {
-	      this.indexListeners.push(listener);
+	      this.__pro__.on('index', listener);
 	    }
 	  },
 	  off: function (action, listener) {
@@ -3133,11 +3118,11 @@
 	
 	    if (action === 'change') {
 	      P.U.remove(listener, this.lengthListeners);
-	      P.U.remove(listener, this.indexListeners);
+	      this.__pro__.off('index', listener);
 	    } else if (action === 'lengthChange') {
 	      P.U.remove(listener, this.lengthListeners);
 	    } else if (action === 'indexChange') {
-	      P.U.remove(listener, this.indexListeners);
+	      this.__pro__.off('index', listener);
 	    }
 	  },
 	  addCaller: function (type) {
@@ -3150,7 +3135,7 @@
 	        capType = type.charAt(0).toUpperCase() + type.slice(1),
 	        lastCallerField = 'last' + capType + 'Caller',
 	        lastCaller = this[lastCallerField],
-	        listeners = this[type + 'Listeners'];
+	        listeners = this.__pro__.listeners[type];
 	
 	    if (caller && lastCaller !== caller && !P.U.contains(listeners, caller)) {
 	      this.on(type + 'Change', caller);
@@ -3198,7 +3183,8 @@
 	                         P.Event.Types.array, op, ind, oldVal, newVal);
 	  },
 	  willUpdate: function (op, ind, oldVal, newVal) {
-	    var listeners = pArrayOps.isIndexOp(op) ? this.indexListeners : this.lengthListeners;
+	    var listeners = pArrayOps.isIndexOp(op) ? this.__pro__.listeners.index : this.lengthListeners;
+	    listeners = listeners ? listeners : [];
 	
 	    this.willUpdateListeners(listeners, op, ind, oldVal, newVal);
 	  },
@@ -3220,11 +3206,11 @@
 	    }
 	
 	    if (spliced.length === newItems.length) {
-	      listeners = this.indexListeners;
+	      listeners = this.__pro__.listeners.index;
 	    } else if (!newItems.length || !spliced.length) {
 	      listeners = this.lengthListeners;
 	    } else {
-	      listeners = this.lengthListeners.concat(this.indexListeners);
+	      listeners = this.lengthListeners.concat(this.__pro__.listeners.index);
 	    }
 	
 	    this.willUpdateListeners(listeners, op, index, spliced, newItems);
@@ -4347,9 +4333,9 @@
 	          if (_this.oldVal) {
 	            var i, listener,
 	                toRemove = [], toRemoveLength,
-	                oldIndListeners = _this.oldVal.indexListeners,
+	                oldIndListeners = _this.oldVal.__pro__.listeners.index,
 	                oldIndListenersLn = oldIndListeners.length,
-	                newIndListeners = _this.val.indexListeners,
+	                newIndListeners = _this.val.__pro__.listeners.index,
 	                oldLenListeners = _this.oldVal.lengthListeners,
 	                oldLenListenersLn = oldLenListeners.length,
 	                newLenListeners = _this.val.lengthListeners;
@@ -4405,6 +4391,7 @@
 	  this.shell = shell;
 	  this.state = P.States.init;
 	  this.meta = meta || {};
+	  this.properties = {};
 	
 	  P.Observable.call(this); // Super!
 	};
@@ -4412,8 +4399,24 @@
 	ProAct.Core.prototype = P.U.ex(Object.create(P.Observable.prototype), {
 	  constructor: ProAct.Core,
 	  prob: function () {
+	    var self = this,
+	        conf = P.Configuration,
+	        keyprops = conf.keyprops,
+	        keypropList = conf.keypropList;
+	
 	    try {
 	      this.setup();
+	
+	      if (keyprops && keypropList.indexOf('p') !== -1) {
+	        P.U.defValProp(this.shell, 'p', false, false, false, function (p) {
+	          if (!p || p === '*') {
+	            return self;
+	          }
+	
+	          return self.properties[p];
+	        });
+	      }
+	
 	      this.state = P.States.ready;
 	    } catch (e) {
 	      this.state = P.States.error;
@@ -4433,29 +4436,16 @@
 	
 	ProAct.ObjectCore = function (object, meta) {
 	  P.C.call(this, object, meta); // Super!
-	  this.properties = {};
 	};
 	
 	ProAct.ObjectCore.prototype = P.U.ex(Object.create(P.C.prototype), {
 	  constructor: ProAct.ObjectCore,
 	  setup: function () {
-	    var self = this, object = this.shell,
-	        conf = P.Configuration,
-	        keyprops = conf.keyprops,
-	        keypropList = conf.keypropList;
+	    var object = this.shell,
+	        property;
 	
 	    for (property in object) {
 	      this.makeProp(property, null, this.meta[property]);
-	    }
-	
-	    if (keyprops && keypropList.indexOf('p') !== -1) {
-	      P.U.defValProp(object, 'p', false, false, false, function (p) {
-	        if (!p || p === '*') {
-	          return self;
-	        }
-	
-	        return self.properties[p];
-	      });
 	    }
 	  },
 	  makeProp: function (property, listeners, meta) {
@@ -4516,11 +4506,21 @@
 	
 	ProAct.ArrayCore = P.AC = function (array, meta) {
 	  P.C.call(this, array, meta); // Super!
+	
+	  this.listeners.index = [];
+	  this.listeners.length = [];
 	};
 	
 	ProAct.ArrayCore.prototype = P.U.ex(Object.create(P.C.prototype), {
 	  constructor: ProAct.ArrayCore,
 	  setup: function () {
+	    var array = this.shell,
+	        ln = array._array.length,
+	        i;
+	
+	    for (i = 0; i < ln; i++) {
+	      array.defineIndexProp(i);
+	    }
 	  }
 	});
 	

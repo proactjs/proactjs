@@ -28,9 +28,9 @@ Pro.ArrayProperty = function (proObject, property) {
           if (_this.oldVal) {
             var i, listener,
                 toRemove = [], toRemoveLength,
-                oldIndListeners = _this.oldVal.indexListeners,
+                oldIndListeners = _this.oldVal.__pro__.listeners.index,
                 oldIndListenersLn = oldIndListeners.length,
-                newIndListeners = _this.val.indexListeners,
+                newIndListeners = _this.val.__pro__.listeners.index,
                 oldLenListeners = _this.oldVal.lengthListeners,
                 oldLenListenersLn = oldLenListeners.length,
                 newLenListeners = _this.val.lengthListeners;
