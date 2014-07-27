@@ -3025,8 +3025,11 @@
 	P.DDS.prototype.t = P.DDS.prototype.trigger;
 	
 	ProAct.Array = P.A = pArray = function () {
-	  var self = this, getLength, setLength, i, oldLength, ln, arr, core;
+	  var self = this,
+	      getLength, setLength, oldLength,
+	      arr, core;
 	
+	  // Setup _array:
 	  if (arguments.length === 0) {
 	    arr = [];
 	  } else if (arguments.length === 1 && P.U.isArray(arguments[0])) {
@@ -3037,12 +3040,13 @@
 	
 	  P.U.defValProp(this, '_array', false, false, true, arr);
 	
+	  // Setup core:
 	  core = new P.AC(this);
 	  P.U.defValProp(this, '__pro__', false, false, false, core);
 	  core.prob();
 	
 	  getLength = function () {
-	    self.addCaller('length');
+	    core.addCaller('length');
 	
 	    return self._array.length;
 	  };
@@ -3094,53 +3098,6 @@
 	
 	ProAct.Array.prototype = pArrayProto = P.U.ex(Object.create(arrayProto), {
 	  constructor: ProAct.Array,
-	  on: function (action, listener) {
-	    if (!P.U.isString(action)) {
-	      listener = action;
-	      action = 'change';
-	    }
-	
-	    if (action === 'change') {
-	      this.__pro__.on('length', listener);
-	      this.__pro__.on('index', listener);
-	    } else if (action === 'lengthChange') {
-	      this.__pro__.on('length', listener);
-	    } else if (action === 'indexChange') {
-	      this.__pro__.on('index', listener);
-	    }
-	  },
-	  off: function (action, listener) {
-	    if (!P.U.isString(action)) {
-	      listener = action;
-	      action = 'change';
-	    }
-	
-	    if (action === 'change') {
-	      this.__pro__.off('length', listener);
-	      this.__pro__.off('index', listener);
-	    } else if (action === 'lengthChange') {
-	      this.__pro__.off('length', listener);
-	    } else if (action === 'indexChange') {
-	      this.__pro__.off('index', listener);
-	    }
-	  },
-	  addCaller: function (type) {
-	    if (!type) {
-	      this.addCaller('index');
-	      this.addCaller('length');
-	      return;
-	    }
-	    var caller = P.currentCaller,
-	        capType = type.charAt(0).toUpperCase() + type.slice(1),
-	        lastCallerField = 'last' + capType + 'Caller',
-	        lastCaller = this[lastCallerField],
-	        listeners = this.__pro__.listeners[type];
-	
-	    if (caller && lastCaller !== caller && !P.U.contains(listeners, caller)) {
-	      this.on(type + 'Change', caller);
-	      this[lastCallerField] = caller;
-	    }
-	  },
 	  defineIndexProp: function (i) {
 	    var proArray = this,
 	        array = proArray._array,
@@ -3161,7 +3118,7 @@
 	      enumerable: true,
 	      configurable: true,
 	      get: function () {
-	        proArray.addCaller('index');
+	        proArray.__pro__.addCaller('index');
 	
 	        return array[i];
 	      },
@@ -3263,101 +3220,101 @@
 	
 	    res = new P.A(concat.apply(this._array, arguments));
 	    if (rightProArray) {
-	      this.on(pArrayLs.leftConcat(res, this, rightProArray));
-	      rightProArray.on(pArrayLs.rightConcat(res, this, rightProArray));
+	      this.__pro__.on(pArrayLs.leftConcat(res, this, rightProArray));
+	      rightProArray.__pro__.on(pArrayLs.rightConcat(res, this, rightProArray));
 	    } else {
-	      this.on(pArrayLs.leftConcat(res, this, slice.call(arguments, 0)));
+	      this.__pro__.on(pArrayLs.leftConcat(res, this, slice.call(arguments, 0)));
 	    }
 	
 	    return res;
 	  },
 	  every: function () {
-	    this.addCaller();
+	    this.__pro__.addCaller();
 	
 	    return every.apply(this._array, arguments);
 	  },
 	  pevery: function (fun, thisArg) {
 	    var val = new P.Val(every.apply(this._array, arguments));
 	
-	    this.on(pArrayLs.every(val, this, arguments));
+	    this.__pro__.on(pArrayLs.every(val, this, arguments));
 	
 	    return val;
 	  },
 	  some: function () {
-	    this.addCaller();
+	    this.__pro__.addCaller();
 	
 	    return some.apply(this._array, arguments);
 	  },
 	  psome: function (fun, thisArg) {
 	    var val = new P.Val(some.apply(this._array, arguments));
 	
-	    this.on(pArrayLs.some(val, this, arguments));
+	    this.__pro__.on(pArrayLs.some(val, this, arguments));
 	
 	    return val;
 	  },
 	  forEach: function (fun /*, thisArg */) {
-	    this.addCaller();
+	    this.__pro__.addCaller();
 	
 	    return forEach.apply(this._array, arguments);
 	  },
 	  filter: function (fun, thisArg) {
 	    var filtered = new P.A(filter.apply(this._array, arguments));
-	    this.on(pArrayLs.filter(filtered, this, arguments));
+	    this.__pro__.on(pArrayLs.filter(filtered, this, arguments));
 	
 	    return filtered;
 	  },
 	  map: function (fun, thisArg) {
 	    var mapped = new P.A(map.apply(this._array, arguments));
-	    this.on(pArrayLs.map(mapped, this, arguments));
+	    this.__pro__.on(pArrayLs.map(mapped, this, arguments));
 	
 	    return mapped;
 	  },
 	  reduce: function (fun /*, initialValue */) {
-	    this.addCaller();
+	    this.__pro__.addCaller();
 	
 	    return reduce.apply(this._array, arguments);
 	  },
 	  preduce: function (fun /*, initialValue */) {
 	    var val = new P.Val(reduce.apply(this._array, arguments));
-	    this.on(pArrayLs.reduce(val, this, arguments));
+	    this.__pro__.on(pArrayLs.reduce(val, this, arguments));
 	
 	    return val;
 	  },
 	  reduceRight: function (fun /*, initialValue */) {
-	    this.addCaller();
+	    this.__pro__.addCaller();
 	
 	    return reduceRight.apply(this._array, arguments);
 	  },
 	  preduceRight: function (fun /*, initialValue */) {
 	    var val = new P.Val(reduceRight.apply(this._array, arguments));
-	    this.on(pArrayLs.reduceRight(val, this, arguments));
+	    this.__pro__.on(pArrayLs.reduceRight(val, this, arguments));
 	
 	    return val;
 	  },
 	  indexOf: function () {
-	    this.addCaller();
+	    this.__pro__.addCaller();
 	
 	    return indexOf.apply(this._array, arguments);
 	  },
 	  pindexOf: function () {
 	    var val = new P.Val(indexOf.apply(this._array, arguments));
-	    this.on(pArrayLs.indexOf(val, this, arguments));
+	    this.__pro__.on(pArrayLs.indexOf(val, this, arguments));
 	
 	    return val;
 	  },
 	  lastIndexOf: function () {
-	    this.addCaller();
+	    this.__pro__.addCaller();
 	
 	    return lastIndexOf.apply(this._array, arguments);
 	  },
 	  plastindexOf: function () {
 	    var val = new P.Val(lastIndexOf.apply(this._array, arguments));
-	    this.on(pArrayLs.lastIndexOf(val, this, arguments));
+	    this.__pro__.on(pArrayLs.lastIndexOf(val, this, arguments));
 	
 	    return val;
 	  },
 	  join: function () {
-	    this.addCaller();
+	    this.__pro__.addCaller();
 	
 	    return join.apply(this._array, arguments);
 	  },
@@ -3373,12 +3330,12 @@
 	    return res;
 	  },
 	  toLocaleString: function () {
-	    this.addCaller();
+	    this.__pro__.addCaller();
 	
 	    return toLocaleString.apply(this._array, arguments);
 	  },
 	  toString: function () {
-	    this.addCaller();
+	    this.__pro__.addCaller();
 	
 	    return toString.apply(this._array, arguments);
 	  },
@@ -3387,7 +3344,7 @@
 	  },
 	  slice: function () {
 	    var sliced = new P.A(slice.apply(this._array, arguments));
-	    this.on(pArrayLs.slice(sliced, this, arguments));
+	    this.__pro__.on(pArrayLs.slice(sliced, this, arguments));
 	
 	    return sliced;
 	  },
@@ -4508,6 +4465,8 @@
 	
 	  this.listeners.index = [];
 	  this.listeners.length = [];
+	  this.lastIndexCaller = null;
+	  this.lastLengthCaller = null;
 	};
 	
 	ProAct.ArrayCore.prototype = P.U.ex(Object.create(P.C.prototype), {
@@ -4519,6 +4478,39 @@
 	
 	    for (i = 0; i < ln; i++) {
 	      array.defineIndexProp(i);
+	    }
+	  },
+	  on: function (action, listener) {
+	    if (!P.U.isString(action)) {
+	      this.on('index', action);
+	      this.on('length', action);
+	      return;
+	    }
+	    P.Observable.prototype.on.call(this, action, listener);
+	  },
+	  off: function (action, listener) {
+	    if (!P.U.isString(action)) {
+	      this.off('index', action);
+	      this.off('length', action);
+	      return;
+	    }
+	    P.Observable.prototype.off.call(this, action, listener);
+	  },
+	  addCaller: function (type) {
+	    if (!type) {
+	      this.addCaller('index');
+	      this.addCaller('length');
+	      return;
+	    }
+	
+	    var caller = P.currentCaller,
+	        capType = type.charAt(0).toUpperCase() + type.slice(1),
+	        lastCallerField = 'last' + capType + 'Caller',
+	        lastCaller = this[lastCallerField];
+	
+	    if (caller && lastCaller !== caller) {
+	      this.on(type, caller);
+	      this[lastCallerField] = caller;
 	    }
 	  }
 	});

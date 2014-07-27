@@ -108,16 +108,16 @@ describe('ProAct.Array', function () {
     expect(result.lastIndexOf(4)).toBe(1);
 
     expect(array instanceof Array).toBe(true);
-    expect(Pro.Utils.isArrayObject(array)).toBe(true);
-    expect(Pro.Utils.isProArray(array)).toBe(true);
-    expect(Pro.Utils.isArray(array)).toBe(false);
+    expect(ProAct.Utils.isArrayObject(array)).toBe(true);
+    expect(ProAct.Utils.isProArray(array)).toBe(true);
+    expect(ProAct.Utils.isArray(array)).toBe(false);
   });
 
   it('is observable by index', function () {
-    var array = new Pro.Array(1, 2, 3, 4, 5),
+    var array = new ProAct.Array(1, 2, 3, 4, 5),
         op, i, ov, nv;
 
-    array.on('indexChange', function (event) {
+    array.__pro__.on('index', function (event) {
       op = event.args[0];
       i = event.args[1];
       ov = event.args[2];
@@ -126,25 +126,25 @@ describe('ProAct.Array', function () {
 
     array[0] = 33;
     expect(array[0]).toBe(33);
-    expect(op).toBe(Pro.Array.Operations.set);
+    expect(op).toBe(ProAct.Array.Operations.set);
     expect(i).toBe(0);
     expect(ov).toBe(1);
     expect(nv).toBe(33);
 
     array[2] = 35;
     expect(array[2]).toBe(35);
-    expect(op).toBe(Pro.Array.Operations.set);
+    expect(op).toBe(ProAct.Array.Operations.set);
     expect(i).toBe(2);
     expect(ov).toBe(3);
     expect(nv).toBe(35);
   });
 
   it('it adds index listener on index get', function () {
-    var array = new Pro.Array(1, 2, 3, 4, 5),
+    var array = new ProAct.Array(1, 2, 3, 4, 5),
         op, i, ov, nv,
         callTimes = 0;
 
-    Pro.currentCaller = function (event) {
+    ProAct.currentCaller = function (event) {
       op = event.args[0];
       i = event.args[1];
       ov = event.args[2];
@@ -155,11 +155,11 @@ describe('ProAct.Array', function () {
     array[0];
     array[1];
     array[2];
-    Pro.currentCaller = null;
+    ProAct.currentCaller = null;
 
     array[0] = 33;
     expect(array[0]).toBe(33);
-    expect(op).toBe(Pro.Array.Operations.set);
+    expect(op).toBe(ProAct.Array.Operations.set);
     expect(i).toBe(0);
     expect(ov).toBe(1);
     expect(nv).toBe(33);
@@ -1424,19 +1424,19 @@ describe('ProAct.Array', function () {
   });
 
   it('#splice updates the right listeners depending on the splice action', function () {
-    var array = new Pro.Array(4, 1, 2, 3, 5),
+    var array = new ProAct.Array(4, 1, 2, 3, 5),
         i, ov, nv, stack = [];
 
-    array.on('indexChange', function (event) {
-      expect(event.args[0]).toBe(Pro.Array.Operations.splice);
+    array.p().on('index', function (event) {
+      expect(event.args[0]).toBe(ProAct.Array.Operations.splice);
       i = event.args[1];
       ov = event.args[2];
       nv = event.args[3];
       stack.push('index');
     });
 
-    array.on('lengthChange', function (event) {
-      expect(event.args[0]).toBe(Pro.Array.Operations.splice);
+    array.p().on('length', function (event) {
+      expect(event.args[0]).toBe(ProAct.Array.Operations.splice);
       i = event.args[1];
       ov = event.args[2];
       nv = event.args[3];
@@ -1477,10 +1477,10 @@ describe('ProAct.Array', function () {
   });
 
   it('#splice updates index propeties of the Pro.Array depending on removing and adding', function () {
-    var array = new Pro.Array(1, 2, 3, 4, 5),
+    var array = new ProAct.Array(1, 2, 3, 4, 5),
         o, i, ov, nv, stack = [];
 
-    array.on('indexChange', function (event) {
+    array.p().on('index', function (event) {
       o = event.args[0];
       i = event.args[1];
       ov = event.args[2];
@@ -1488,7 +1488,7 @@ describe('ProAct.Array', function () {
       stack.push('index');
     });
 
-    array.on('lengthChange', function (event) {
+    array.p().on('length', function (event) {
       o = event.args[0];
       i = event.args[1];
       ov = event.args[2];
@@ -1498,7 +1498,7 @@ describe('ProAct.Array', function () {
 
     // remove 2 elements
     array.splice(1, 2);
-    expect(o).toBe(Pro.Array.Operations.splice);
+    expect(o).toBe(ProAct.Array.Operations.splice);
     expect(i).toBe(1);
     expect(ov).toEqual([2, 3]);
     expect(nv).toEqual([]);
