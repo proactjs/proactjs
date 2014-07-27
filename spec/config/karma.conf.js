@@ -23,6 +23,7 @@ module.exports = function(karma) {
       'src/js/properties/auto_property.js',
       'src/js/properties/object_property.js',
       'src/js/properties/array_property.js',
+      'src/js/cores/core.js',
       'src/js/cores/object_core.js',
       'src/js/objects/pro_val.js',
       'src/js/objects/prob.js',
