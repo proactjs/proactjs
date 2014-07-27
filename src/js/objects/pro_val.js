@@ -1,4 +1,4 @@
-Pro.Val = function (val, meta) {
+ProAct.Val = P.V = function (val, meta) {
   this.v = val;
 
   if (meta && (P.U.isString(meta) || P.U.isArray(meta))) {
@@ -7,10 +7,11 @@ Pro.Val = function (val, meta) {
     };
   }
 
-  Pro.prob(this, meta);
+  P.prob(this, meta);
 };
 
-Pro.Val.prototype = Pro.U.ex(Object.create(Pro.Observable.prototype), {
+ProAct.Val.prototype = P.U.ex(Object.create(P.Observable.prototype), {
+  constructor: ProAct.Val,
   type: function () {
     return this.__pro__.properties.v.type();
   },

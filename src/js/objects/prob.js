@@ -3,20 +3,15 @@ ProAct.prob = function (object, meta) {
       isAr = P.U.isArray;
 
   if (object === null || (!P.U.isObject(object) && !isAr(object))) {
-    return new Pro.Val(object, meta);
+    return new P.Val(object, meta);
   }
 
-  if (isAr(object)) {
+  if (P.U.isArray(object)) {
     return new P.A(object);
   }
 
   core = new P.ObjectCore(object, meta);
-  Object.defineProperty(object, '__pro__', {
-    enumerable: false,
-    configurable: false,
-    writeble: false,
-    value: core
-  });
+  P.U.defValProp(object, '__pro__', false, false, false, core);
 
   core.prob();
 
