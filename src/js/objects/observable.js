@@ -556,34 +556,13 @@ P.Observable.prototype = {
    * @see {@link ProAct.flow}
    */
   update: function (source, actions) {
-    if (!actions) {
-      actions = ['change'];
-    }
-
-    if (P.U.isString(actions)) {
-      actions = [actions];
-    }
-
-    if (this.parent === null && actions.length === 0) {
-      return this;
-    }
-
-    var ln = actions.length, i, listeners = [];
-    for (i = 0; i < ln; i++) {
-      listeners = listeners.concat(this.listeners[actions[i]]);
-    }
-
-    if (listeners.length === 0 && this.parent === null) {
-      return this;
-    }
-
     var observable = this;
     if (!P.flow.isRunning()) {
       P.flow.run(function () {
-        observable.willUpdate(source, listeners);
+        observable.willUpdate(source, actions);
       });
     } else {
-      observable.willUpdate(source, listeners);
+      observable.willUpdate(source, actions);
     }
     return this;
   },
@@ -626,11 +605,33 @@ P.Observable.prototype = {
    * @see {@link ProAct.Observable#makeEvent}
    * @see {@link ProAct.flow}
    */
-  willUpdate: function (source, listeners) {
-    var i, listener,
-        listeners = P.U.isArray(listeners) ? listeners : this.listeners.change,
-        length = listeners.length,
+  willUpdate: function (source, actions) {
+    if (!actions) {
+      actions = ['change'];
+    }
+
+    if (P.U.isString(actions)) {
+      actions = [actions];
+    }
+
+    if (this.parent === null && actions.length === 0) {
+      return this;
+    }
+
+    var ln = actions.length, i,
+        listener,
+        listeners = [],
+        length,
         event = this.makeEvent(source);
+
+    for (i = 0; i < ln; i++) {
+      listeners = listeners.concat(this.listeners[actions[i]]);
+    }
+
+    if (listeners.length === 0 && this.parent === null) {
+      return this;
+    }
+    length = listeners.length;
 
     for (i = 0; i < length; i++) {
       listener = listeners[i];
