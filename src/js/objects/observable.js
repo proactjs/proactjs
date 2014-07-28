@@ -38,6 +38,7 @@ P.U.ex(P.Observable, {
   /**
    * A constant defining bad values or bad events.
    *
+   * @memberof ProAct.Observable
    * @type Object
    * @static
    * @constant

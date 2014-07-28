@@ -136,5 +136,16 @@ ProAct.ObjectProperty.prototype = P.U.ex(Object.create(P.P.prototype), {
   type: function () {
     return P.P.Types.object;
   },
+
+  /**
+   * Called automatically after initialization of this property.
+   * <p>
+   *  For ProAct.ObjectProperty it does nothing - the real initialization is lazy and is performed on the first read of <i>this</i>.
+   * </p>
+   *
+   * @memberof ProAct.ObjectProperty
+   * @instance
+   * @method afterInit
+   */
   afterInit: function () {}
 });

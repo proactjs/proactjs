@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Source: properties/object_property.js</title>
+    <title>JSDoc: Source: properties/array_property.js</title>
     
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
     
-    <h1 class="page-title">Source: properties/object_property.js</h1>
+    <h1 class="page-title">Source: properties/array_property.js</h1>
     
     
 
@@ -27,26 +27,26 @@
         <article>
             <pre class="prettyprint source"><code>/**
  * &lt;p>
- *  Constructs a ProAct.ObjectProperty. The properties are simple {@link ProAct.Observable}s with state. The object property
- *  has a state of a JavaScript object value.
+ *  Constructs a ProAct.ArrayProperty. The properties are simple {@link ProAct.Observable}s with state. The array property
+ *  has a state of a JavaScript array value.
  * &lt;/p>
  * &lt;p>
- *  The value of ProAct.ObjectProperty is object, turned to reactive ProAct.js object recursively.
+ *  The value of ProAct.ArrayProperty is array, turned to reactive ProAct.js array - {@link ProAct.Array}.
  * &lt;/p>
  * &lt;p>
- *  On changing the object value to another object the listeners for fields with the same name in the objects, are moved from the old value's fields to the new value's fields.
+ *  On changing the array value to another array the listeners for indices/length are moved from the old value to the new value.
  * &lt;/p>
  * &lt;p>
  *  If set to null or undefined, the property is re-defined, using {@link ProAct.Property.reProb}
  * &lt;/p>
  * &lt;p>
- *  ProAct.ObjectProperty is lazy - its object is made reactive on the first read of the property. Its state is set to {@link ProAct.States.ready} on the first read too.
+ *  ProAct.ArrayProperty is lazy - its object is made reactive on the first read of the property. Its state is set to {@link ProAct.States.ready} on the first read too.
  * &lt;/p>
  * &lt;p>
- *  ProAct.ObjectProperty is part of the properties module of ProAct.js.
+ *  ProAct.ArrayProperty is part of the properties module of ProAct.js.
  * &lt;/p>
  *
- * @class ProAct.ObjectProperty
+ * @class ProAct.ArrayProperty
  * @extends ProAct.Property
  * @param {Object} proObject
  *      A plain JavaScript object, holding a field, this property will represent.
@@ -56,18 +56,18 @@
  * @see {@link ProAct.States.init}
  * @see {@link ProAct.States.ready}
  */
-ProAct.ObjectProperty = OP = function (proObject, property) {
+ProAct.ArrayProperty = P.AP = function (proObject, property) {
   var self = this, getter;
 
   getter = function () {
     self.addCaller();
-    if (!self.val.__pro__) {
-      P.prob(self.val);
+    if (!P.U.isProArray(self.val)) {
+      self.val = new P.A(self.val);
     }
 
     var get = P.P.defaultGetter(self),
         set = function (newVal) {
-          if (self.val == newVal) {
+          if (self.val == newVal || self.val.valueOf() == newVal) {
             return;
           }
 
@@ -79,49 +79,45 @@ ProAct.ObjectProperty = OP = function (proObject, property) {
             return self;
           }
 
+          if (!P.U.isProArray(self.val)) {
+            self.val = new P.A(self.val);
+          }
+
           if (self.oldVal) {
-            if (!self.val.__pro__) {
-              P.prob(self.val);
-            }
+            var i, listener,
+                toRemove = [], toRemoveLength,
+                oldIndListeners = self.oldVal.__pro__.listeners.index,
+                oldIndListenersLn = oldIndListeners.length,
+                newIndListeners = self.val.__pro__.listeners.index,
+                oldLenListeners = self.oldVal.__pro__.listeners.length,
+                oldLenListenersLn = oldLenListeners.length,
+                newLenListeners = self.val.__pro__.listeners.length;
 
-            var oldProps = self.oldVal.__pro__.properties,
-                newProps = self.val.__pro__.properties,
-                oldPropName, oldProp, newProp, oldListeners, newListeners,
-                i, j, oldListenersLength, newListenersLength,
-                toAdd, toRemove = [], toRemoveLength;
-
-            for (oldPropName in oldProps) {
-              if (oldProps.hasOwnProperty(oldPropName)) {
-                newProp = newProps[oldPropName];
-                if (!newProp) {
-                  continue;
-                }
-                newListeners = newProp.listeners.change;
-
-                oldProp = oldProps[oldPropName];
-                oldListeners = oldProp.listeners.change;
-                oldListenersLength = oldListeners.length;
-
-                for (i = 0; i &lt; oldListenersLength; i++) {
-                  toAdd = true;
-                  for (j = 0; j &lt; newListenersLength; j++) {
-                    if (oldListeners[i] == newListeners[j]) {
-                      toAdd = false;
-                    }
-                  }
-                  if (toAdd) {
-                    newProp.on(oldListeners[i]);
-                    toRemove.push(i);
-                  }
-                }
-
-                toRemoveLength = toRemove.length;
-                for (i = 0; i &lt; toRemoveLength; i++) {
-                  oldListeners.splice[toRemove[i], 1];
-                }
-                toRemove = [];
+            for (i = 0; i &lt; oldIndListenersLn; i++) {
+              listener = oldIndListeners[i];
+              if (listener.property && listener.property.proObject === self.proObject) {
+                newIndListeners.push(listener);
+                toRemove.push(i);
               }
             }
+            toRemoveLength = toRemove.length;
+            for (i = 0; i &lt; toRemoveLength; i++) {
+              oldIndListeners.splice[toRemove[i], 1];
+            }
+            toRemove = [];
+
+            for (i = 0; i &lt; oldLenListenersLn; i++) {
+              listener = oldLenListeners[i];
+              if (listener.property && listener.property.proObject === self.proObject) {
+                newLenListeners.push(listener);
+                toRemove.push(i);
+              }
+            }
+            toRemoveLength = toRemove.length;
+            for (i = 0; i &lt; toRemoveLength; i++) {
+              oldLenListeners.splice[toRemove[i], 1];
+            }
+            toRemove = [];
           }
 
           self.update();
@@ -136,44 +132,20 @@ ProAct.ObjectProperty = OP = function (proObject, property) {
   P.P.call(this, proObject, property, getter, function () {});
 };
 
-ProAct.ObjectProperty.prototype = P.U.ex(Object.create(P.P.prototype), {
+ProAct.ArrayProperty.prototype = P.U.ex(Object.create(P.P.prototype), {
 
   /**
    * Reference to the constructor of this object.
    *
-   * @memberof ProAct.ObjectProperty
+   * @memberof ProAct.ArrayProperty
    * @instance
    * @constant
-   * @default ProAct.ObjectProperty
+   * @default ProAct.ArrayProperty
    */
-  constructor: ProAct.ObjectProperty,
-
-  /**
-   * Retrieves the {@link ProAct.Property.Types} value of &lt;i>this&lt;/i> property.
-   * &lt;p>
-   *  For ProAct.ObjectProperty this is {@link ProAct.Property.Types.object}
-   * &lt;/p>
-   *
-   * @memberof ProAct.ObjectProperty
-   * @instance
-   * @method type
-   * @return {Number}
-   *      The right type of the property.
-   */
+  constructor: ProAct.ArrayProperty,
   type: function () {
-    return P.P.Types.object;
+    return P.P.Types.array;
   },
-
-  /**
-   * Called automatically after initialization of this property.
-   * &lt;p>
-   *  For ProAct.ObjectProperty it does nothing - the real initialization is lazy and is performed on the first read of &lt;i>this&lt;/i>.
-   * &lt;/p>
-   *
-   * @memberof ProAct.ObjectProperty
-   * @instance
-   * @method afterInit
-   */
   afterInit: function () {}
 });
 </code></pre>
