@@ -17,8 +17,6 @@
  *  ProAct.Observable is part of the core module of ProAct.js.
  * </p>
  *
- * TODO listeners must be divided to types in one hash map.
- *
  * @class ProAct.Observable
  * @param {Array} transforms
  *      A list of transformation to be used on all incoming chages.
@@ -154,8 +152,6 @@ P.Observable.prototype = {
    * Attaches a new listener to this ProAct.Observable.
    * The listener may be function or object that defines a <i>call</i> method.
    *
-   * TODO The action is not used here, ProAct.Observable#listeners should be a set of collections. ~meddle@2014-07-12
-   *
    * @memberof ProAct.Observable
    * @instance
    * @method on
@@ -166,13 +162,10 @@ P.Observable.prototype = {
    *      </p>
    * @param {Object} listener
    *      The listener to attach. It must be instance of Function or object with a <i>call</i> method.
-   * @param {Array} listeners
-   *      By default the listener is attached to the ProAct.Observable#listeners collection.
-   *      This behavior can be changed by passing another collection here.
    * @return {ProAct.Observable}
    *      <b>this</b>
    */
-  on: function (action, listener, listeners) {
+  on: function (action, listener) {
     if (!P.U.isString(action)) {
       listener = action;
       action = 'change';
@@ -181,12 +174,7 @@ P.Observable.prototype = {
     if (!this.listeners[action]) {
       this.listeners[action] = [];
     }
-
-    if (P.U.isArray(listeners)) {
-      listeners.push(listener);
-    } else {
-      this.listeners[action].push(listener);
-    }
+    this.listeners[action].push(listener);
 
     return this;
   },
@@ -204,35 +192,23 @@ P.Observable.prototype = {
    *      </p>
    * @param {Object} listener
    *      The listener to detach. If it is skipped, null or undefined all the listeners are removed from this observable.
-   * @param {Array} listeners
-   *      By default the listener is detached from the ProAct.Observable#listeners collection.
-   *      This behavior can be changed by passing another collection here.
    * @return {ProAct.Observable}
    *      <b>this</b>
    * @see {@link ProAct.Observable#on}
    */
-  off: function (action, listener, listeners) {
+  off: function (action, listener) {
     if (!action && !listener) {
-      if (P.U.isArray(listeners)) {
-        listeners.length = 0;
-      } else {
-        this.listeners = {
-          change: [],
-          error: []
-        };
-      }
-      return;
+      this.listeners = {
+        change: [],
+        error: []
+      };
+      return this;
     }
     if (!P.U.isString(action)) {
       listener = action;
       action = 'change';
     }
-
-    if (P.U.isArray(listeners)) {
-      P.U.remove(listeners, listener);
-    } else {
-      P.U.remove(this.listeners[action], listener);
-    }
+    P.U.remove(this.listeners[action], listener);
 
     return this;
   },
