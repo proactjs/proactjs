@@ -1,37 +1,30 @@
-Pro.Property = function (proObject, property, getter, setter) {
-  var _this = this;
-
-  Object.defineProperty(this, 'proObject', {
-    enumerable: false,
-    configurable: true,
-    writeble: true,
-    value: proObject
-  });
+ProAct.Property = P.P = function (proObject, property, getter, setter) {
+  P.U.defValProp(this, 'proObject', false, false, true, proObject);
   this.property = property;
 
-  if (!this.proObject['__pro__']) {
-    this.proObject['__pro__'] = {};
+  if (!this.proObject.__pro__) {
+    P.U.defValProp(proObject, '__pro__', false, false, true, new ProAct.Core(proObject));
   }
-  this.proObject['__pro__'].properties = this.proObject['__pro__'].properties || {};
-  this.proObject['__pro__'].properties[property] = this;
 
-  this.get = getter || Pro.Property.DEFAULT_GETTER(this);
-  this.set = setter || Pro.Property.DEFAULT_SETTER(this);
+  this.proObject.__pro__.properties[property] = this;
+
+  this.get = getter || P.P.DEFAULT_GETTER(this);
+  this.set = setter || P.P.DEFAULT_SETTER(this);
 
   this.oldVal = null;
   this.val = proObject[property];
 
-  this.state = Pro.States.init;
+  this.state = P.States.init;
   this.g = this.get;
   this.s = this.set;
 
-  Pro.Observable.call(this); // Super!
+  P.Observable.call(this); // Super!
   this.parent = this.proObject.__pro__;
 
   this.init();
 };
 
-Pro.U.ex(Pro.Property, {
+P.U.ex(ProAct.Property, {
   Types: {
     simple: 0, // strings, booleans and numbers
     auto: 1, // functions - dependent
@@ -41,15 +34,15 @@ Pro.U.ex(Pro.Property, {
 
     type: function (value) {
       if (value === null) {
-        return Pro.Property.Types.nil;
-      } else if (Pro.U.isFunction(value)) {
-        return Pro.Property.Types.auto;
-      } else if (Pro.U.isArray(value)) {
-        return Pro.Property.Types.array;
-      } else if (Pro.U.isObject(value)) {
-        return Pro.Property.Types.object;
+        return P.P.Types.nil;
+      } else if (P.U.isFunction(value)) {
+        return P.P.Types.auto;
+      } else if (P.U.isArray(value)) {
+        return P.P.Types.array;
+      } else if (P.U.isObject(value)) {
+        return P.P.Types.object;
       } else {
-        return Pro.Property.Types.simple;
+        return P.P.Types.simple;
       }
     }
   },
@@ -70,11 +63,11 @@ Pro.U.ex(Pro.Property, {
       if (setter) {
         property.val = setter.call(property.proObject, newVal);
       } else {
-        property.val = Pro.Observable.transform(property, newVal);
+        property.val = P.Observable.transform(property, newVal);
       }
 
       if (property.val === null || property.val === undefined) {
-        Pro.Property.reProb(property).update();
+        P.P.reProb(property).update();
         return;
       }
 
@@ -99,26 +92,26 @@ Pro.U.ex(Pro.Property, {
   }
 });
 
-Pro.Property.prototype = Pro.U.ex(Object.create(Pro.Observable.prototype), {
-  constructor: Pro.Property,
+ProAct.Property.prototype = P.U.ex(Object.create(P.Observable.prototype), {
+  constructor: ProAct.Property,
   type: function () {
-    return Pro.Property.Types.simple;
+    return P.P.Types.simple;
   },
   makeEvent: function (source) {
-    return new Pro.Event(source, this.property, Pro.Event.Types.value, this.proObject, this.oldVal, this.val);
+    return new P.E(source, this.property, P.E.Types.value, this.proObject, this.oldVal, this.val);
   },
   makeListener: function () {
     if (!this.listener) {
-      var _this = this;
+      var self = this;
       this.listener = {
-        property: _this,
+        property: self,
         call: function (newVal) {
-          if (newVal && newVal.type !== undefined && newVal.type === Pro.Event.Types.value && newVal.args.length === 3 && newVal.target) {
+          if (newVal && newVal.type !== undefined && newVal.type === P.E.Types.value && newVal.args.length === 3 && newVal.target) {
             newVal = newVal.args[0][newVal.target];
           }
 
-          _this.oldVal = _this.val;
-          _this.val = Pro.Observable.transform(_this, newVal);
+          self.oldVal = self.val;
+          self.val = P.Observable.transform(self, newVal);
         }
       };
     }
@@ -126,44 +119,39 @@ Pro.Property.prototype = Pro.U.ex(Object.create(Pro.Observable.prototype), {
     return this.listener;
   },
   init: function () {
-    if (this.state !== Pro.States.init) {
+    if (this.state !== P.States.init) {
       return;
     }
 
-    Pro.Property.defineProp(this.proObject, this.property, this.get, this.set);
+    P.P.defineProp(this.proObject, this.property, this.get, this.set);
 
     this.afterInit();
   },
   afterInit: function () {
-    this.state = Pro.States.ready;
+    this.state = P.States.ready;
   },
   addCaller: function () {
-    var _this = this,
-        caller = Pro.currentCaller;
+    var caller = P.currentCaller;
 
     if (caller && caller.property !== this) {
       this.on(caller);
     }
   },
   destroy: function () {
-    if (this.state === Pro.States.destroyed) {
+    if (this.state === P.States.destroyed) {
       return;
     }
 
-    delete this.proObject['__pro__'].properties[this.property];
+    delete this.proObject.__pro__.properties[this.property];
     this.listeners = undefined;
     this.oldVal = undefined;
     this.parent = undefined;
 
-    Object.defineProperty(this.proObject, this.property, {
-      value: this.val,
-      enumerable: true,
-      configurable: true
-    });
+    P.U.defValProp(this.proObject, this.property, true, true, true, this.val);
     this.get = this.set = this.property = this.proObject = undefined;
     this.g = this.s = undefined;
     this.val = undefined;
-    this.state = Pro.States.destroyed;
+    this.state = P.States.destroyed;
   },
   toString: function () {
     return this.val;
