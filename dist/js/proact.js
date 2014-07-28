@@ -1990,24 +1990,24 @@
 	   *      <p>
 	   *        In the most cases {@link ProAct.Event} is the source.
 	   *      </p>
-	   * @param {Array} listeners
-	   *      An array of listeners to notify, in the most cases this is null or undefined.
-	   *      <p>
-	   *        When this parameter is null or undefined, the ProAct.Observable.listeners array is used.
-	   *      </p>
+	   * @param {Array|String} actions
+	   *      A list of actions or a single action to update the listeners that listen to it.
+	   * @param {Array} eventData
+	   *      Data to be passed to the event to be created.
 	   * @return {ProAct.Observable}
 	   *      <i>this</i>
 	   * @see {@link ProAct.Observable#willUpdate}
+	   * @see {@link ProAct.Observable#makeEvent}
 	   * @see {@link ProAct.flow}
 	   */
-	  update: function (source, actions) {
+	  update: function (source, actions, eventData) {
 	    var observable = this;
 	    if (!P.flow.isRunning()) {
 	      P.flow.run(function () {
-	        observable.willUpdate(source, actions);
+	        observable.willUpdate(source, actions, eventData);
 	      });
 	    } else {
-	      observable.willUpdate(source, actions);
+	      observable.willUpdate(source, actions, eventData);
 	    }
 	    return this;
 	  },
@@ -2039,44 +2039,49 @@
 	   *      <p>
 	   *        In the most cases {@link ProAct.Event} is the source.
 	   *      </p>
-	   * @param {Array} listeners
-	   *      An array of listeners to notify, in the most cases this is null or undefined.
-	   *      <p>
-	   *        When this parameter is null or undefined, the ProAct.Observable.listeners array is used.
-	   *      </p>
+	   * @param {Array|String} actions
+	   *      A list of actions or a single action to update the listeners that listen to it.
+	   * @param {Array} eventData
+	   *      Data to be passed to the event to be created.
 	   * @return {ProAct.Observable}
 	   *      <i>this</i>
 	   * @see {@link ProAct.Observable#defer}
 	   * @see {@link ProAct.Observable#makeEvent}
 	   * @see {@link ProAct.flow}
 	   */
-	  willUpdate: function (source, actions) {
+	  willUpdate: function (source, actions, eventData) {
 	    if (!actions) {
-	      actions = ['change'];
+	      actions = 'change';
 	    }
+	
+	    var ln, i,
+	        listener,
+	        listeners,
+	        length,
+	        event;
 	
 	    if (P.U.isString(actions)) {
-	      actions = [actions];
-	    }
+	      listeners = this.listeners[actions];
+	    } else {
+	      listeners = [];
+	      ln = actions.length;
 	
-	    if (this.parent === null && actions.length === 0) {
-	      return this;
-	    }
+	      if (this.parent === null && actions.length === 0) {
+	        return this;
+	      }
 	
-	    var ln = actions.length, i,
-	        listener,
-	        listeners = [],
-	        length,
-	        event = this.makeEvent(source);
 	
-	    for (i = 0; i < ln; i++) {
-	      listeners = listeners.concat(this.listeners[actions[i]]);
+	      for (i = 0; i < ln; i++) {
+	        listeners = listeners.concat(this.listeners[actions[i]]);
+	      }
 	    }
 	
 	    if (listeners.length === 0 && this.parent === null) {
 	      return this;
 	    }
+	
 	    length = listeners.length;
+	    event = this.makeEvent(source, eventData);
 	
 	    for (i = 0; i < length; i++) {
 	      listener = listeners[i];
