@@ -1546,6 +1546,21 @@
 	  },
 	
 	  /**
+	   * A list of actions or action to be used when no action is passed for the methods working with actions.
+	   *
+	   * @memberof ProAct.Observable
+	   * @instance
+	   * @method defaultActions
+	   * @default 'change'
+	   * @return {Array|String}
+	   *      The actions to be used if no actions are provided to action related methods,
+	   *      like {@link ProAct.Observable#on}, {@link ProAct.Observable#off}, {@link ProAct.Observable#update}, {@link ProAct.Observable#willUpdate}.
+	   */
+	  defaultActions: function () {
+	    return 'change';
+	  },
+	
+	  /**
 	   * Creates the <i>listener</i> of this observable.
 	   * Every observable should have one listener that should pass to other observables.
 	   * <p>
@@ -1614,57 +1629,91 @@
 	   * @memberof ProAct.Observable
 	   * @instance
 	   * @method on
-	   * @param {String} action
-	   *      The action to listen for. It is the default action if it is empty or skipped.
+	   * @param {Array|String} actions
+	   *      The action/actions to listen for. If this parameter is skipped or null/undefined, the actions from {@link ProAct.Observable#defaultActions} are used.
 	   *      <p>
-	   *        The action can be skipped and on its place as first parameter to be passed the <i>listener</i>.
+	   *        The actions can be skipped and on their place as first parameter to be passed the <i>listener</i>.
 	   *      </p>
 	   * @param {Object} listener
 	   *      The listener to attach. It must be instance of Function or object with a <i>call</i> method.
 	   * @return {ProAct.Observable}
 	   *      <b>this</b>
+	   * @see {@link ProAct.Observable#defaultActions}
 	   */
-	  on: function (action, listener) {
-	    if (!P.U.isString(action)) {
-	      listener = action;
-	      action = 'change';
+	  on: function (actions, listener) {
+	    if (!P.U.isString(actions) && !P.U.isArray(actions)) {
+	      listener = actions;
+	      actions = this.defaultActions();
+	    }
+	    if (!P.U.isArray(actions)) {
+	      actions = [actions];
 	    }
 	
-	    if (!this.listeners[action]) {
-	      this.listeners[action] = [];
+	    var ln = actions.length,
+	        action, i, listeners;
+	
+	    for (i = 0; i < ln; i ++) {
+	      action = actions[i];
+	      listeners = this.listeners[action];
+	
+	      if (!listeners) {
+	        listeners = this.listeners[action] = [];
+	      }
+	
+	      listeners.push(listener);
 	    }
-	    this.listeners[action].push(listener);
 	
 	    return this;
 	  },
 	
 	  /**
 	   * Removes a <i>listener</i> from the passed <i>action</i>.
+	   * <p>
+	   *  If this method is called without parameters, all the listeners for all the actions are removed.
+	   *  The listeners are reset using {@link ProAct.Observable#defaultListeners}.
+	   * </p>
 	   *
 	   * @memberof ProAct.Observable
 	   * @instance
 	   * @method off
-	   * @param {String} action
-	   *      The action to stop listening for. It is the default action if it is empty or skipped.
+	   * @param {Array|String} actions
+	   *      The action/actions to stop listening for. If this parameter is skipped or null/undefined, the actions from {@link ProAct.Observable#defaultActions} are used.
 	   *      <p>
-	   *        The action can be skipped and on its place as first parameter to be passed the <i>listener</i>.
+	   *        The actions can be skipped and on their place as first parameter to be passed the <i>listener</i>.
 	   *      </p>
 	   * @param {Object} listener
 	   *      The listener to detach. If it is skipped, null or undefined all the listeners are removed from this observable.
 	   * @return {ProAct.Observable}
 	   *      <b>this</b>
 	   * @see {@link ProAct.Observable#on}
+	   * @see {@link ProAct.Observable#defaultActions}
+	   * @see {@link ProAct.Observable#defaultListeners}
 	   */
-	  off: function (action, listener) {
-	    if (!action && !listener) {
+	  off: function (actions, listener) {
+	    if (!actions && !listener) {
 	      this.listeners = this.defaultListeners();
 	      return this;
 	    }
-	    if (!P.U.isString(action)) {
-	      listener = action;
-	      action = 'change';
+	
+	    if (!P.U.isString(actions) && !P.U.isArray(actions)) {
+	      listener = actions;
+	      actions = this.defaultActions();
 	    }
-	    P.U.remove(this.listeners[action], listener);
+	    if (!P.U.isArray(actions)) {
+	      actions = [actions];
+	    }
+	
+	    var ln = actions.length,
+	        action, i, listeners;
+	
+	    for (i = 0; i < ln; i ++) {
+	      action = actions[i];
+	      listeners = this.listeners[action];
+	
+	      if (listeners) {
+	        P.U.remove(listeners, listener);
+	      }
+	    }
 	
 	    return this;
 	  },
@@ -2028,17 +2077,19 @@
 	   *      </p>
 	   * @param {Array|String} actions
 	   *      A list of actions or a single action to update the listeners that listen to it.
+	   *      If there is no action provided, the actions from {@link ProAct.Observable#defaultActions} are used.
 	   * @param {Array} eventData
 	   *      Data to be passed to the event to be created.
 	   * @return {ProAct.Observable}
 	   *      <i>this</i>
 	   * @see {@link ProAct.Observable#defer}
 	   * @see {@link ProAct.Observable#makeEvent}
+	   * @see {@link ProAct.Observable#defaultActions}
 	   * @see {@link ProAct.flow}
 	   */
 	  willUpdate: function (source, actions, eventData) {
 	    if (!actions) {
-	      actions = 'change';
+	      actions = this.defaultActions();
 	    }
 	
 	    var ln, i,
@@ -2056,7 +2107,6 @@
 	      if (this.parent === null && actions.length === 0) {
 	        return this;
 	      }
-	
 	
 	      for (i = 0; i < ln; i++) {
 	        listeners = listeners.concat(this.listeners[actions[i]]);
@@ -3282,7 +3332,7 @@
 	    }
 	    var reversed = reverse.apply(this._array, arguments), _this = this;
 	
-	    this.core.update(null, null, [pArrayOps.reverse, -1, null, null]);
+	    this.core.update(null, 'index', [pArrayOps.reverse, -1, null, null]);
 	    return reversed;
 	  },
 	  sort: function () {
@@ -3292,7 +3342,7 @@
 	    var sorted = sort.apply(this._array, arguments), _this = this,
 	        args = arguments;
 	
-	    this.core.update(null, null, [pArrayOps.sort, -1, null, args]);
+	    this.core.update(null, 'index', [pArrayOps.sort, -1, null, args]);
 	    return sorted;
 	  },
 	  splice: function (index, howMany) {
@@ -3327,7 +3377,7 @@
 	        _this = this, index = this._array.length;
 	
 	    delete this[index];
-	    this.core.update(null, null, [pArrayOps.remove, _this._array.length, popped, null]);
+	    this.core.update(null, 'length', [pArrayOps.remove, _this._array.length, popped, null]);
 	
 	    return popped;
 	  },
@@ -3341,7 +3391,7 @@
 	      this.__pro__.defineIndexProp(index);
 	    }
 	
-	    this.core.update(null, null, [pArrayOps.add, _this._array.length - 1, null, slice.call(vals, 0)]);
+	    this.core.update(null, 'length', [pArrayOps.add, _this._array.length - 1, null, slice.call(vals, 0)]);
 	
 	    return this._array.length;
 	  },
@@ -3353,7 +3403,7 @@
 	        _this = this, index = this._array.length;
 	
 	    delete this[index];
-	    this.core.update(null, null, [pArrayOps.remove, 0, shifted, null]);
+	    this.core.update(null, 'length', [pArrayOps.remove, 0, shifted, null]);
 	
 	    return shifted;
 	  },
@@ -3366,7 +3416,7 @@
 	      this.__pro__.defineIndexProp(array.length - 1);
 	    }
 	
-	    this.core.update(null, null, [pArrayOps.add, 0, null, vals]);
+	    this.core.update(null, 'length', [pArrayOps.add, 0, null, vals]);
 	
 	    return array.length;
 	  },
@@ -4404,6 +4454,11 @@
 	      length: []
 	    };
 	  },
+	
+	  defaultActions: function () {
+	    return ['index', 'length'];
+	  },
+	
 	  makeEvent: function (source, eventData) {
 	    var op = eventData[0],
 	        ind = eventData[1],
@@ -4412,6 +4467,25 @@
 	
 	    return new P.E(source, this.shell, P.E.Types.array, op, ind, oldVal, newVal);
 	  },
+	
+	  addCaller: function (type) {
+	    if (!type) {
+	      this.addCaller('index');
+	      this.addCaller('length');
+	      return;
+	    }
+	
+	    var caller = P.currentCaller,
+	        capType = type.charAt(0).toUpperCase() + type.slice(1),
+	        lastCallerField = 'last' + capType + 'Caller',
+	        lastCaller = this[lastCallerField];
+	
+	    if (caller && lastCaller !== caller) {
+	      this.on(type, caller);
+	      this[lastCallerField] = caller;
+	    }
+	  },
+	
 	  setup: function () {
 	    var self = this,
 	        array = this.shell,
@@ -4436,7 +4510,7 @@
 	      oldLength = array._array.length;
 	      array._array.length = newLength;
 	
-	      self.update(null, null, [pArrayOps.setLength, -1, oldLength, newLength]);
+	      self.update(null, 'length', [pArrayOps.setLength, -1, oldLength, newLength]);
 	
 	      return newLength;
 	    };
@@ -4482,65 +4556,10 @@
 	        oldVal = array[i];
 	        array[i] = newVal;
 	
-	        self.update(null, null, [pArrayOps.set, i, oldVal, newVal]);
+	        self.update(null, 'index', [pArrayOps.set, i, oldVal, newVal]);
 	      }
 	    });
-	  },
-	
-	  on: function (action, listener) {
-	    if (!P.U.isString(action)) {
-	      this.on('index', action);
-	      this.on('length', action);
-	      return;
-	    }
-	    P.Observable.prototype.on.call(this, action, listener);
-	  },
-	  off: function (action, listener) {
-	    if (!P.U.isString(action)) {
-	      this.off('index', action);
-	      this.off('length', action);
-	      return;
-	    }
-	    P.Observable.prototype.off.call(this, action, listener);
-	  },
-	  addCaller: function (type) {
-	    if (!type) {
-	      this.addCaller('index');
-	      this.addCaller('length');
-	      return;
-	    }
-	
-	    var caller = P.currentCaller,
-	        capType = type.charAt(0).toUpperCase() + type.slice(1),
-	        lastCallerField = 'last' + capType + 'Caller',
-	        lastCaller = this[lastCallerField];
-	
-	    if (caller && lastCaller !== caller) {
-	      this.on(type, caller);
-	      this[lastCallerField] = caller;
-	    }
-	  },
-	  update: function (source, actions, eventData) {
-	    var self = this,
-	        op = eventData[0],
-	        ind = eventData[1],
-	        oldVal = eventData[2],
-	        newVal = eventData[3];
-	
-	    if (P.flow.isRunning()) {
-	      this.willUpdate(op, ind, oldVal, newVal);
-	    } else {
-	      P.flow.run(function () {
-	        self.willUpdate(op, ind, oldVal, newVal);
-	      });
-	    }
-	  },
-	  willUpdate: function (op, ind, oldVal, newVal) {
-	    var listeners = pArrayOps.isIndexOp(op) ? this.listeners.index : this.listeners.length;
-	    listeners = listeners ? listeners : [];
-	
-	    this.shell.willUpdateListeners(listeners, op, ind, oldVal, newVal);
-	  },
+	  }
 	});
 	
 	

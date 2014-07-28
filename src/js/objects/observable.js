@@ -101,6 +101,21 @@ P.Observable.prototype = {
   },
 
   /**
+   * A list of actions or action to be used when no action is passed for the methods working with actions.
+   *
+   * @memberof ProAct.Observable
+   * @instance
+   * @method defaultActions
+   * @default 'change'
+   * @return {Array|String}
+   *      The actions to be used if no actions are provided to action related methods,
+   *      like {@link ProAct.Observable#on}, {@link ProAct.Observable#off}, {@link ProAct.Observable#update}, {@link ProAct.Observable#willUpdate}.
+   */
+  defaultActions: function () {
+    return 'change';
+  },
+
+  /**
    * Creates the <i>listener</i> of this observable.
    * Every observable should have one listener that should pass to other observables.
    * <p>
@@ -169,57 +184,91 @@ P.Observable.prototype = {
    * @memberof ProAct.Observable
    * @instance
    * @method on
-   * @param {String} action
-   *      The action to listen for. It is the default action if it is empty or skipped.
+   * @param {Array|String} actions
+   *      The action/actions to listen for. If this parameter is skipped or null/undefined, the actions from {@link ProAct.Observable#defaultActions} are used.
    *      <p>
-   *        The action can be skipped and on its place as first parameter to be passed the <i>listener</i>.
+   *        The actions can be skipped and on their place as first parameter to be passed the <i>listener</i>.
    *      </p>
    * @param {Object} listener
    *      The listener to attach. It must be instance of Function or object with a <i>call</i> method.
    * @return {ProAct.Observable}
    *      <b>this</b>
+   * @see {@link ProAct.Observable#defaultActions}
    */
-  on: function (action, listener) {
-    if (!P.U.isString(action)) {
-      listener = action;
-      action = 'change';
+  on: function (actions, listener) {
+    if (!P.U.isString(actions) && !P.U.isArray(actions)) {
+      listener = actions;
+      actions = this.defaultActions();
+    }
+    if (!P.U.isArray(actions)) {
+      actions = [actions];
     }
 
-    if (!this.listeners[action]) {
-      this.listeners[action] = [];
+    var ln = actions.length,
+        action, i, listeners;
+
+    for (i = 0; i < ln; i ++) {
+      action = actions[i];
+      listeners = this.listeners[action];
+
+      if (!listeners) {
+        listeners = this.listeners[action] = [];
+      }
+
+      listeners.push(listener);
     }
-    this.listeners[action].push(listener);
 
     return this;
   },
 
   /**
    * Removes a <i>listener</i> from the passed <i>action</i>.
+   * <p>
+   *  If this method is called without parameters, all the listeners for all the actions are removed.
+   *  The listeners are reset using {@link ProAct.Observable#defaultListeners}.
+   * </p>
    *
    * @memberof ProAct.Observable
    * @instance
    * @method off
-   * @param {String} action
-   *      The action to stop listening for. It is the default action if it is empty or skipped.
+   * @param {Array|String} actions
+   *      The action/actions to stop listening for. If this parameter is skipped or null/undefined, the actions from {@link ProAct.Observable#defaultActions} are used.
    *      <p>
-   *        The action can be skipped and on its place as first parameter to be passed the <i>listener</i>.
+   *        The actions can be skipped and on their place as first parameter to be passed the <i>listener</i>.
    *      </p>
    * @param {Object} listener
    *      The listener to detach. If it is skipped, null or undefined all the listeners are removed from this observable.
    * @return {ProAct.Observable}
    *      <b>this</b>
    * @see {@link ProAct.Observable#on}
+   * @see {@link ProAct.Observable#defaultActions}
+   * @see {@link ProAct.Observable#defaultListeners}
    */
-  off: function (action, listener) {
-    if (!action && !listener) {
+  off: function (actions, listener) {
+    if (!actions && !listener) {
       this.listeners = this.defaultListeners();
       return this;
     }
-    if (!P.U.isString(action)) {
-      listener = action;
-      action = 'change';
+
+    if (!P.U.isString(actions) && !P.U.isArray(actions)) {
+      listener = actions;
+      actions = this.defaultActions();
     }
-    P.U.remove(this.listeners[action], listener);
+    if (!P.U.isArray(actions)) {
+      actions = [actions];
+    }
+
+    var ln = actions.length,
+        action, i, listeners;
+
+    for (i = 0; i < ln; i ++) {
+      action = actions[i];
+      listeners = this.listeners[action];
+
+      if (listeners) {
+        P.U.remove(listeners, listener);
+      }
+    }
 
     return this;
   },
@@ -583,17 +632,19 @@ P.Observable.prototype = {
    *      </p>
    * @param {Array|String} actions
    *      A list of actions or a single action to update the listeners that listen to it.
+   *      If there is no action provided, the actions from {@link ProAct.Observable#defaultActions} are used.
    * @param {Array} eventData
    *      Data to be passed to the event to be created.
    * @return {ProAct.Observable}
    *      <i>this</i>
    * @see {@link ProAct.Observable#defer}
    * @see {@link ProAct.Observable#makeEvent}
+   * @see {@link ProAct.Observable#defaultActions}
    * @see {@link ProAct.flow}
    */
   willUpdate: function (source, actions, eventData) {
     if (!actions) {
-      actions = 'change';
+      actions = this.defaultActions();
     }
 
     var ln, i,
@@ -611,7 +662,6 @@ P.Observable.prototype = {
       if (this.parent === null && actions.length === 0) {
         return this;
       }
-
 
       for (i = 0; i < ln; i++) {
         listeners = listeners.concat(this.listeners[actions[i]]);

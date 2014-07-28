@@ -246,7 +246,7 @@ ProAct.Array.prototype = pArrayProto = P.U.ex(Object.create(arrayProto), {
     }
     var reversed = reverse.apply(this._array, arguments), _this = this;
 
-    this.core.update(null, null, [pArrayOps.reverse, -1, null, null]);
+    this.core.update(null, 'index', [pArrayOps.reverse, -1, null, null]);
     return reversed;
   },
   sort: function () {
@@ -256,7 +256,7 @@ ProAct.Array.prototype = pArrayProto = P.U.ex(Object.create(arrayProto), {
     var sorted = sort.apply(this._array, arguments), _this = this,
         args = arguments;
 
-    this.core.update(null, null, [pArrayOps.sort, -1, null, args]);
+    this.core.update(null, 'index', [pArrayOps.sort, -1, null, args]);
     return sorted;
   },
   splice: function (index, howMany) {
@@ -291,7 +291,7 @@ ProAct.Array.prototype = pArrayProto = P.U.ex(Object.create(arrayProto), {
         _this = this, index = this._array.length;
 
     delete this[index];
-    this.core.update(null, null, [pArrayOps.remove, _this._array.length, popped, null]);
+    this.core.update(null, 'length', [pArrayOps.remove, _this._array.length, popped, null]);
 
     return popped;
   },
@@ -305,7 +305,7 @@ ProAct.Array.prototype = pArrayProto = P.U.ex(Object.create(arrayProto), {
       this.__pro__.defineIndexProp(index);
     }
 
-    this.core.update(null, null, [pArrayOps.add, _this._array.length - 1, null, slice.call(vals, 0)]);
+    this.core.update(null, 'length', [pArrayOps.add, _this._array.length - 1, null, slice.call(vals, 0)]);
 
     return this._array.length;
   },
@@ -317,7 +317,7 @@ ProAct.Array.prototype = pArrayProto = P.U.ex(Object.create(arrayProto), {
         _this = this, index = this._array.length;
 
     delete this[index];
-    this.core.update(null, null, [pArrayOps.remove, 0, shifted, null]);
+    this.core.update(null, 'length', [pArrayOps.remove, 0, shifted, null]);
 
     return shifted;
   },
@@ -330,7 +330,7 @@ ProAct.Array.prototype = pArrayProto = P.U.ex(Object.create(arrayProto), {
       this.__pro__.defineIndexProp(array.length - 1);
     }
 
-    this.core.update(null, null, [pArrayOps.add, 0, null, vals]);
+    this.core.update(null, 'length', [pArrayOps.add, 0, null, vals]);
 
     return array.length;
   },

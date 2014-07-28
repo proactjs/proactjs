@@ -14,6 +14,11 @@ ProAct.ArrayCore.prototype = P.U.ex(Object.create(P.C.prototype), {
       length: []
     };
   },
+
+  defaultActions: function () {
+    return ['index', 'length'];
+  },
+
   makeEvent: function (source, eventData) {
     var op = eventData[0],
         ind = eventData[1],
@@ -22,6 +27,25 @@ ProAct.ArrayCore.prototype = P.U.ex(Object.create(P.C.prototype), {
 
     return new P.E(source, this.shell, P.E.Types.array, op, ind, oldVal, newVal);
   },
+
+  addCaller: function (type) {
+    if (!type) {
+      this.addCaller('index');
+      this.addCaller('length');
+      return;
+    }
+
+    var caller = P.currentCaller,
+        capType = type.charAt(0).toUpperCase() + type.slice(1),
+        lastCallerField = 'last' + capType + 'Caller',
+        lastCaller = this[lastCallerField];
+
+    if (caller && lastCaller !== caller) {
+      this.on(type, caller);
+      this[lastCallerField] = caller;
+    }
+  },
+
   setup: function () {
     var self = this,
         array = this.shell,
@@ -46,7 +70,7 @@ ProAct.ArrayCore.prototype = P.U.ex(Object.create(P.C.prototype), {
       oldLength = array._array.length;
       array._array.length = newLength;
 
-      self.update(null, null, [pArrayOps.setLength, -1, oldLength, newLength]);
+      self.update(null, 'length', [pArrayOps.setLength, -1, oldLength, newLength]);
 
       return newLength;
     };
@@ -92,64 +116,9 @@ ProAct.ArrayCore.prototype = P.U.ex(Object.create(P.C.prototype), {
         oldVal = array[i];
         array[i] = newVal;
 
-        self.update(null, null, [pArrayOps.set, i, oldVal, newVal]);
+        self.update(null, 'index', [pArrayOps.set, i, oldVal, newVal]);
       }
     });
-  },
-
-  on: function (action, listener) {
-    if (!P.U.isString(action)) {
-      this.on('index', action);
-      this.on('length', action);
-      return;
-    }
-    P.Observable.prototype.on.call(this, action, listener);
-  },
-  off: function (action, listener) {
-    if (!P.U.isString(action)) {
-      this.off('index', action);
-      this.off('length', action);
-      return;
-    }
-    P.Observable.prototype.off.call(this, action, listener);
-  },
-  addCaller: function (type) {
-    if (!type) {
-      this.addCaller('index');
-      this.addCaller('length');
-      return;
-    }
-
-    var caller = P.currentCaller,
-        capType = type.charAt(0).toUpperCase() + type.slice(1),
-        lastCallerField = 'last' + capType + 'Caller',
-        lastCaller = this[lastCallerField];
-
-    if (caller && lastCaller !== caller) {
-      this.on(type, caller);
-      this[lastCallerField] = caller;
-    }
-  },
-  update: function (source, actions, eventData) {
-    var self = this,
-        op = eventData[0],
-        ind = eventData[1],
-        oldVal = eventData[2],
-        newVal = eventData[3];
-
-    if (P.flow.isRunning()) {
-      this.willUpdate(op, ind, oldVal, newVal);
-    } else {
-      P.flow.run(function () {
-        self.willUpdate(op, ind, oldVal, newVal);
-      });
-    }
-  },
-  willUpdate: function (op, ind, oldVal, newVal) {
-    var listeners = pArrayOps.isIndexOp(op) ? this.listeners.index : this.listeners.length;
-    listeners = listeners ? listeners : [];
-
-    this.shell.willUpdateListeners(listeners, op, ind, oldVal, newVal);
-  },
+  }
 });
 
