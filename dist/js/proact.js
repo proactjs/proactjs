@@ -1462,17 +1462,12 @@
 	 *  ProAct.Observable is part of the core module of ProAct.js.
 	 * </p>
 	 *
-	 * TODO listeners must be divided to types in one hash map.
-	 *
 	 * @class ProAct.Observable
 	 * @param {Array} transforms
 	 *      A list of transformation to be used on all incoming chages.
 	 */
 	ProAct.Observable = function (transforms) {
-	  P.U.defValProp(this, 'listeners', false, false, true, {
-	    change: [],
-	    error: []
-	  });
+	  P.U.defValProp(this, 'listeners', false, false, true, this.defaultListeners());
 	  this.sources = [];
 	
 	  this.listener = null;
@@ -1532,6 +1527,23 @@
 	   * @default ProAct.Observable
 	   */
 	  constructor: ProAct.Observable,
+	
+	  /**
+	   * Generates the initial listeners object. It can be overridden for alternative listeners collections.
+	   * It is used for resetting all the listeners too.
+	   *
+	   * @memberof ProAct.Observable
+	   * @instance
+	   * @method defaultListeners
+	   * @return {Object}
+	   *      A map containing the default listeners collections.
+	   */
+	  defaultListeners: function () {
+	    return {
+	      change: [],
+	      error: []
+	    };
+	  },
 	
 	  /**
 	   * Creates the <i>listener</i> of this observable.
@@ -1645,10 +1657,7 @@
 	   */
 	  off: function (action, listener) {
 	    if (!action && !listener) {
-	      this.listeners = {
-	        change: [],
-	        error: []
-	      };
+	      this.listeners = this.defaultListeners();
 	      return this;
 	    }
 	    if (!P.U.isString(action)) {
@@ -4401,14 +4410,20 @@
 	ProAct.ArrayCore = P.AC = function (array, meta) {
 	  P.C.call(this, array, meta); // Super!
 	
-	  this.listeners.index = [];
-	  this.listeners.length = [];
 	  this.lastIndexCaller = null;
 	  this.lastLengthCaller = null;
 	};
 	
 	ProAct.ArrayCore.prototype = P.U.ex(Object.create(P.C.prototype), {
 	  constructor: ProAct.ArrayCore,
+	
+	  defaultListeners: function () {
+	    return {
+	      index: [],
+	      length: []
+	    };
+	  },
+	
 	  setup: function () {
 	    var self = this,
 	        array = this.shell,

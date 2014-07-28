@@ -1,14 +1,20 @@
 ProAct.ArrayCore = P.AC = function (array, meta) {
   P.C.call(this, array, meta); // Super!
 
-  this.listeners.index = [];
-  this.listeners.length = [];
   this.lastIndexCaller = null;
   this.lastLengthCaller = null;
 };
 
 ProAct.ArrayCore.prototype = P.U.ex(Object.create(P.C.prototype), {
   constructor: ProAct.ArrayCore,
+
+  defaultListeners: function () {
+    return {
+      index: [],
+      length: []
+    };
+  },
+
   setup: function () {
     var self = this,
         array = this.shell,

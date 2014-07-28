@@ -22,10 +22,7 @@
  *      A list of transformation to be used on all incoming chages.
  */
 ProAct.Observable = function (transforms) {
-  P.U.defValProp(this, 'listeners', false, false, true, {
-    change: [],
-    error: []
-  });
+  P.U.defValProp(this, 'listeners', false, false, true, this.defaultListeners());
   this.sources = [];
 
   this.listener = null;
@@ -85,6 +82,23 @@ P.Observable.prototype = {
    * @default ProAct.Observable
    */
   constructor: ProAct.Observable,
+
+  /**
+   * Generates the initial listeners object. It can be overridden for alternative listeners collections.
+   * It is used for resetting all the listeners too.
+   *
+   * @memberof ProAct.Observable
+   * @instance
+   * @method defaultListeners
+   * @return {Object}
+   *      A map containing the default listeners collections.
+   */
+  defaultListeners: function () {
+    return {
+      change: [],
+      error: []
+    };
+  },
 
   /**
    * Creates the <i>listener</i> of this observable.
@@ -198,10 +212,7 @@ P.Observable.prototype = {
    */
   off: function (action, listener) {
     if (!action && !listener) {
-      this.listeners = {
-        change: [],
-        error: []
-      };
+      this.listeners = this.defaultListeners();
       return this;
     }
     if (!P.U.isString(action)) {
