@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Class: ThrottlingStream</title>
+    <title>JSDoc: Class: AutoProperty</title>
     
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
     
-    <h1 class="page-title">Class: ThrottlingStream</h1>
+    <h1 class="page-title">Class: AutoProperty</h1>
     
     
 
@@ -29,7 +29,7 @@
     <h2>
         <span class="ancestors"><a href="ProAct.html">ProAct</a>.</span>
     
-    ThrottlingStream
+    AutoProperty
     </h2>
     
 </header>  
@@ -41,7 +41,7 @@
     
         
 <dt>
-    <h4 class="name" id="ThrottlingStream"><span class="type-signature"></span>new ThrottlingStream<span class="signature">(source, transforms, delay)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="AutoProperty"><span class="type-signature"></span>new AutoProperty<span class="signature">(proObject, property)</span><span class="type-signature"></span></h4>
     
     
 </dt>
@@ -50,14 +50,59 @@
     
     <div class="description">
         <p>
- Constructs a ProAct.ThrottlingStream. This is special kind of <a href="ProAct.DelayedStream.html">ProAct.DelayedStream</a>.
+ Constructs a ProAct.AutoProperty. The properties are simple <a href="ProAct.Observable.html">ProAct.Observable</a>s with state. The auto-computed or functional property
+ has a state of a Function value.
 </p>
 <p>
- The main idea is the following : if <i>n</i> values/events are triggered to this stream before the time delay for
- flushing passes, only the last one, the <i>n</i>-th is emitted.
+ Auto-computed properties are functions which are turned to <a href="ProAct.Property.html">ProAct.Property</a>s by a ProAct.ObjectCore.
 </p>
 <p>
- ProAct.ThrottlingStream is part of the streams module of ProAct.js.
+ If these functions are reading another fields of ProAct.js objects, they authomatically become dependent on them.
+</p>
+<p>
+ For example:
+ <pre>
+   var obj = {
+     a: 1,
+     b: 2,
+     c: function () {
+       return this.a - this.b;
+     }
+   };
+ </pre>
+ If this object - <i>obj</i> is turned to a reactive ProAct.js object, it becomes a simple object with three fields:
+ <pre>
+   {
+     a: 1,
+     b: 2,
+     c: -1
+   }
+ </pre>
+ But now <i>c</i> is dependent on <i>a</i> and <i>b</i>, so if <i>a</i> is set to <b>4</b>, <i>obj</i> becomes:
+ <pre>
+   {
+     a: 1,
+     b: 2,
+     c: 2
+   }
+ </pre>
+</p>
+<p>
+ The logic is the following:
+ <ul>
+   <li>The property is initialized to be lazy, so its state is ProAct.States.init</li>
+   <li>On its first read, the <a href="ProAct.html#currentCaller">ProAct.currentCaller</a> is set to the listener of the property, so all the properties read in the function body became observed by it. The value of the property is computed using the original function of the field.</li>
+   <li>On this first read the state of the property is updated to ProAct.States.ready.</li>
+   <li>On its following reads it is a simple value, computed from the first read. No re-computations on get.</li>
+   <li>If a property, this auto-computed property depends changes, the value of <i>this</i> ProAct.AutoProperty is recomputed.</li>
+   <li>Setting the property can be implemented easy, because on set, the original function of the property is called with the new value.</li>
+ </ul>
+</p>
+<p>
+ ProAct.AutoProperty can be depend on another ProAct.AutoProperty.
+</p>
+<p>
+ ProAct.AutoProperty is part of the properties module of ProAct.js.
 </p>
     </div>
     
@@ -92,13 +137,13 @@
 	
         <tr>
             
-                <td class="name"><code>source</code></td>
+                <td class="name"><code>proObject</code></td>
             
             
             <td class="type">
             
                 
-<span class="param-type"><a href="ProAct.Observable.html">ProAct.Observable</a></span>
+<span class="param-type">Object</span>
 
 
             
@@ -108,23 +153,20 @@
             
             
             
-            <td class="description last">A default source of the stream, can be null.
-     <p>
-       If this is the only one passed argument and it is a number - it becomes the delay of the stream.
-     </p></td>
+            <td class="description last">A plain JavaScript object, holding a field, this property will represent.</td>
         </tr>
 	
 	
 	
         <tr>
             
-                <td class="name"><code>transforms</code></td>
+                <td class="name"><code>property</code></td>
             
             
             <td class="type">
             
                 
-<span class="param-type">Array</span>
+<span class="param-type">String</span>
 
 
             
@@ -134,33 +176,7 @@
             
             
             
-            <td class="description last">A list of transformation to be used on all incoming chages.
-     <p>
-       If the arguments passed are two and this is a number - it becomes the delay of the stream.
-     </p></td>
-        </tr>
-	
-	
-	
-        <tr>
-            
-                <td class="name"><code>delay</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">Number</span>
-
-
-            
-            </td>
-            
-            
-            
-            
-            
-            <td class="description last">The time delay to be used to flush the stream.</td>
+            <td class="description last">The name of the field of the object, this property should represent.</td>
         </tr>
 	
 	
@@ -191,12 +207,23 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="throttling_stream.js.html">streams/throttling_stream.js</a>, <a href="throttling_stream.js.html#line1">line 1</a>
+        <a href="auto_property.js.html">properties/auto_property.js</a>, <a href="auto_property.js.html#line1">line 1</a>
     </li></ul></dd>
     
     
     
     
+    
+    <dt class="tag-see">See:</dt>
+    <dd class="tag-see">
+        <ul>
+            <li>ProAct.ObjectCore</li>
+        
+            <li>ProAct.States.init</li>
+        
+            <li>ProAct.States.ready</li>
+        </ul>
+    </dd>
     
     
     
@@ -223,7 +250,7 @@
         <h3 class="subsection-title">Extends</h3>
         
         <ul>
-            <li><a href="ProAct.DelayedStream.html">ProAct.DelayedStream</a></li>
+            <li><a href="ProAct.Property.html">ProAct.Property</a></li>
         </ul>
     
     
@@ -241,7 +268,7 @@
         <dl>
             
 <dt>
-    <h4 class="name" id="constructor"><span class="type-signature">&lt;constant> </span>constructor<span class="type-signature"> :Object</span></h4>
+    <h4 class="name" id="constructor"><span class="type-signature">&lt;constant> </span>constructor<span class="type-signature"></span></h4>
     
     
 </dt>
@@ -252,16 +279,6 @@
     </div>
     
     
-    
-        <h5>Type:</h5>
-        <ul>
-            <li>
-                
-<span class="param-type">Object</span>
-
-
-            </li>
-        </ul>
     
 
     
@@ -285,14 +302,14 @@
     
     <dt class="tag-default">Default Value:</dt>
     <dd class="tag-default"><ul class="dummy">
-            <li>ProAct.ThrottlingStream</li>
+            <li>ProAct.AutoProperty</li>
         </ul></dd>
     
     
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="throttling_stream.js.html">streams/throttling_stream.js</a>, <a href="throttling_stream.js.html#line43">line 43</a>
+        <a href="auto_property.js.html">properties/auto_property.js</a>, <a href="auto_property.js.html#line114">line 114</a>
     </li></ul></dd>
     
     
@@ -316,7 +333,7 @@
         <dl>
             
 <dt>
-    <h4 class="name" id="accumulate"><span class="type-signature"></span>accumulate<span class="signature">(initVal, accumulationFunction)</span><span class="type-signature"> &rarr; {<a href="ProAct.Stream.html">ProAct.Stream</a>}</span></h4>
+    <h4 class="name" id="accumulate"><span class="type-signature">&lt;abstract> </span>accumulate<span class="signature">(initVal, accumulationFunction)</span><span class="type-signature"> &rarr; {<a href="ProAct.Observable.html">ProAct.Observable</a>}</span></h4>
     
     
 </dt>
@@ -324,8 +341,11 @@
     
     
     <div class="description">
-        Creates a new ProAct.Stream instance with source <i>this</i> and accumulation
+        Creates a new ProAct.Observable instance with source <i>this</i> and accumulation
 the passed <i>accumulation function</i>.
+<p>
+ Should be overridden with creating the right observable.
+</p>
     </div>
     
 
@@ -417,7 +437,7 @@ the passed <i>accumulation function</i>.
     
     <dt class="inherited-from">Inherited From:</dt>
     <dd class="inherited-from"><ul class="dummy"><li>
-        <a href="ProAct.Stream.html#accumulate">ProAct.Stream#accumulate</a>
+        <a href="ProAct.Observable.html#accumulate">ProAct.Observable#accumulate</a>
     </li></dd>
     
     
@@ -434,7 +454,7 @@ the passed <i>accumulation function</i>.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="stream.js.html">streams/stream.js</a>, <a href="stream.js.html#line278">line 278</a>
+        <a href="observable.js.html">objects/observable.js</a>, <a href="observable.js.html#line518">line 518</a>
     </li></ul></dd>
     
     
@@ -466,7 +486,7 @@ the passed <i>accumulation function</i>.
     
             
 <div class="param-desc">
-    A new ProAct.Stream instance with the <i>accumulation</i> applied.
+    A new ProAct.Observable instance with the <i>accumulation</i> applied.
 </div>
 
 
@@ -477,7 +497,7 @@ the passed <i>accumulation function</i>.
 	</dt>
 	<dd>
 		
-<span class="param-type"><a href="ProAct.Stream.html">ProAct.Stream</a></span>
+<span class="param-type"><a href="ProAct.Observable.html">ProAct.Observable</a></span>
 
 
 	</dd>
@@ -668,7 +688,7 @@ the passed <i>accumulation function</i>.
         
             
 <dt>
-    <h4 class="name" id="bufferit"><span class="type-signature"></span>bufferit<span class="signature">(size)</span><span class="type-signature"> &rarr; {<a href="ProAct.SizeBufferedStream.html">ProAct.SizeBufferedStream</a>}</span></h4>
+    <h4 class="name" id="addCaller"><span class="type-signature"></span>addCaller<span class="signature">()</span><span class="type-signature"></span></h4>
     
     
 </dt>
@@ -676,180 +696,9 @@ the passed <i>accumulation function</i>.
     
     
     <div class="description">
-        Creates a new <a href="ProAct.SizeBufferedStream.html">ProAct.SizeBufferedStream</a> instance having as source <i>this</i>.
-    </div>
-    
-
-    
-    
-    
-    
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-		
-		<th>Type</th>
-		
-		
-		
-		
-		
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-	
-	<tbody>
-	
-	
-        <tr>
-            
-                <td class="name"><code>size</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">Number</span>
-
-
-            
-            </td>
-            
-            
-            
-            
-            
-            <td class="description last">The size of the buffer of the new ProAct.SizeBufferedStream.</td>
-        </tr>
-	
-	
-	</tbody>
-</table>
-    
-    
-    
-<dl class="details">
-    
-        
-    
-    
-    
-
-    
-    <dt class="inherited-from">Inherited From:</dt>
-    <dd class="inherited-from"><ul class="dummy"><li>
-        <a href="ProAct.Stream.html#bufferit">ProAct.Stream#bufferit</a>
-    </li></dd>
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="size_buffered_stream.js.html">streams/size_buffered_stream.js</a>, <a href="size_buffered_stream.js.html#line87">line 87</a>
-    </li></ul></dd>
-    
-    
-    
-    
-    
-    
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    <h5>Throws:</h5>
-    
-            
-
-<dl>
-    <dt>
-        <div class="param-desc">
-        SizeBufferedStream must contain size, if there is no size passed to it.
-        </div>
-    </dt>
-    <dt>
-        <dl>
-            <dt>
-                Type
-            </dt>
-            <dd>
-                
-<span class="param-type">Error</span>
-
-
-            </dd>
-        </dl>
-    </dt>
-</dl>
-
-
-        
-    
-    
-    <h5>Returns:</h5>
-    
-            
-<div class="param-desc">
-    A <a href="ProAct.SizeBufferedStream.html">ProAct.SizeBufferedStream</a> instance.
-</div>
-
-
-
-<dl>
-	<dt>
-		Type
-	</dt>
-	<dd>
-		
-<span class="param-type"><a href="ProAct.SizeBufferedStream.html">ProAct.SizeBufferedStream</a></span>
-
-
-	</dd>
-</dl>
-
-        
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="cancelDelay"><span class="type-signature"></span>cancelDelay<span class="signature">()</span><span class="type-signature"> &rarr; {<a href="ProAct.DelayedStream.html">ProAct.DelayedStream</a>}</span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        <p>
- Cancels the delay interval flushes. If this method is called the stream will stop emitting incoming values/event,
- until the <a href="ProAct.DelayedStream.html#setDelay">ProAct.DelayedStream#setDelay</a> method is called.
+        Uses <a href="ProAct.html#currentCaller">ProAct.currentCaller</a> to automatically add a new listener to this property if the caller is set.
+<p>
+ This method is used by the default getter to make every reader of the property a listener to it.
 </p>
     </div>
     
@@ -871,7 +720,7 @@ the passed <i>accumulation function</i>.
     
     <dt class="inherited-from">Inherited From:</dt>
     <dd class="inherited-from"><ul class="dummy"><li>
-        <a href="ProAct.DelayedStream.html#cancelDelay">ProAct.DelayedStream#cancelDelay</a>
+        <a href="ProAct.Property.html#addCaller">ProAct.Property#addCaller</a>
     </li></dd>
     
     
@@ -888,20 +737,13 @@ the passed <i>accumulation function</i>.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="delayed_stream.js.html">streams/delayed_stream.js</a>, <a href="delayed_stream.js.html#line74">line 74</a>
+        <a href="property.js.html">properties/property.js</a>, <a href="property.js.html#line417">line 417</a>
     </li></ul></dd>
     
     
     
     
     
-    <dt class="tag-see">See:</dt>
-    <dd class="tag-see">
-        <ul>
-            <li><a href="ProAct.DelayedStream.html#setDelay">ProAct.DelayedStream#setDelay</a></li>
-        </ul>
-    </dd>
-    
     
     
 </dl>
@@ -916,28 +758,6 @@ the passed <i>accumulation function</i>.
     
     
     
-    <h5>Returns:</h5>
-    
-            
-<div class="param-desc">
-    <i>this</i>
-</div>
-
-
-
-<dl>
-	<dt>
-		Type
-	</dt>
-	<dd>
-		
-<span class="param-type"><a href="ProAct.DelayedStream.html">ProAct.DelayedStream</a></span>
-
-
-	</dd>
-</dl>
-
-        
     
     
 </dd>
@@ -945,7 +765,7 @@ the passed <i>accumulation function</i>.
         
             
 <dt>
-    <h4 class="name" id="debounce"><span class="type-signature"></span>debounce<span class="signature">(delay)</span><span class="type-signature"> &rarr; {<a href="ProAct.DebouncingStream.html">ProAct.DebouncingStream</a>}</span></h4>
+    <h4 class="name" id="afterInit"><span class="type-signature"></span>afterInit<span class="signature">()</span><span class="type-signature"></span></h4>
     
     
 </dt>
@@ -953,7 +773,10 @@ the passed <i>accumulation function</i>.
     
     
     <div class="description">
-        Creates a new <a href="ProAct.DebouncingStream.html">ProAct.DebouncingStream</a> instance having as source <i>this</i>.
+        Called automatically after initialization of this property.
+<p>
+ For ProAct.AutoProperty it does nothing - the real initialization is lazy and is performed on the first read of <i>this</i>.
+</p>
     </div>
     
 
@@ -961,54 +784,6 @@ the passed <i>accumulation function</i>.
     
     
     
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-		
-		<th>Type</th>
-		
-		
-		
-		
-		
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-	
-	<tbody>
-	
-	
-        <tr>
-            
-                <td class="name"><code>delay</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">Number</span>
-
-
-            
-            </td>
-            
-            
-            
-            
-            
-            <td class="description last">The time delay to be used for flushing the buffer of the new stream.</td>
-        </tr>
-	
-	
-	</tbody>
-</table>
     
     
     
@@ -1020,11 +795,6 @@ the passed <i>accumulation function</i>.
     
 
     
-    <dt class="inherited-from">Inherited From:</dt>
-    <dd class="inherited-from"><ul class="dummy"><li>
-        <a href="ProAct.Stream.html#debounce">ProAct.Stream#debounce</a>
-    </li></dd>
-    
     
     
     
@@ -1039,7 +809,7 @@ the passed <i>accumulation function</i>.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="debouncing_stream.js.html">streams/debouncing_stream.js</a>, <a href="debouncing_stream.js.html#line73">line 73</a>
+        <a href="auto_property.js.html">properties/auto_property.js</a>, <a href="auto_property.js.html#line170">line 170</a>
     </li></ul></dd>
     
     
@@ -1060,28 +830,6 @@ the passed <i>accumulation function</i>.
     
     
     
-    <h5>Returns:</h5>
-    
-            
-<div class="param-desc">
-    A <a href="ProAct.DebouncingStream.html">ProAct.DebouncingStream</a> instance.
-</div>
-
-
-
-<dl>
-	<dt>
-		Type
-	</dt>
-	<dd>
-		
-<span class="param-type"><a href="ProAct.DebouncingStream.html">ProAct.DebouncingStream</a></span>
-
-
-	</dd>
-</dl>
-
-        
     
     
 </dd>
@@ -1301,9 +1049,8 @@ It is used for resetting all the listeners too.
     <div class="description">
         Defers a ProAct.Observable listener.
 <p>
- For streams this means pushing it to active flow using <a href="ProAct.Flow.html#push">ProAct.Flow#push</a>.
- If the listener is object with 'property' field, it is done using <a href="ProAct.Observable.html#defer">ProAct.Observable#defer</a>.
- That way the reactive environment is updated only once, but the streams are not part of it.
+ By default this means that the listener is put into active <a href="ProAct.Flow.html">ProAct.Flow</a> using it's
+ <a href="ProAct.Flow.html#pushOnce">ProAct.Flow#pushOnce</a> method, but it can be overridden.
 </p>
     </div>
     
@@ -1396,7 +1143,7 @@ It is used for resetting all the listeners too.
     
     <dt class="inherited-from">Inherited From:</dt>
     <dd class="inherited-from"><ul class="dummy"><li>
-        <a href="ProAct.Stream.html#defer">ProAct.Stream#defer</a>
+        <a href="ProAct.Observable.html#defer">ProAct.Observable#defer</a>
     </li></dd>
     
     
@@ -1413,7 +1160,7 @@ It is used for resetting all the listeners too.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="stream.js.html">streams/stream.js</a>, <a href="stream.js.html#line113">line 113</a>
+        <a href="observable.js.html">objects/observable.js</a>, <a href="observable.js.html#line694">line 694</a>
     </li></ul></dd>
     
     
@@ -1474,7 +1221,7 @@ It is used for resetting all the listeners too.
         
             
 <dt>
-    <h4 class="name" id="delay"><span class="type-signature"></span>delay<span class="signature">(delay)</span><span class="type-signature"> &rarr; {<a href="ProAct.DelayedStream.html">ProAct.DelayedStream</a>}</span></h4>
+    <h4 class="name" id="destroy"><span class="type-signature"></span>destroy<span class="signature">()</span><span class="type-signature"></span></h4>
     
     
 </dt>
@@ -1482,7 +1229,10 @@ It is used for resetting all the listeners too.
     
     
     <div class="description">
-        Creates a new <a href="ProAct.DelayedStream.html">ProAct.DelayedStream</a> instance having as source <i>this</i>.
+        Destroys this ProAct.Property instance, by making the field it manages to a normal field.
+<p>
+ The state of <i>this</i> is set to ProAct.States.destroyed.
+</p>
     </div>
     
 
@@ -1490,54 +1240,6 @@ It is used for resetting all the listeners too.
     
     
     
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-		
-		<th>Type</th>
-		
-		
-		
-		
-		
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-	
-	<tbody>
-	
-	
-        <tr>
-            
-                <td class="name"><code>delay</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">Number</span>
-
-
-            
-            </td>
-            
-            
-            
-            
-            
-            <td class="description last">The time delay to be used for flushing the buffer of the new stream.</td>
-        </tr>
-	
-	
-	</tbody>
-</table>
     
     
     
@@ -1551,7 +1253,7 @@ It is used for resetting all the listeners too.
     
     <dt class="inherited-from">Inherited From:</dt>
     <dd class="inherited-from"><ul class="dummy"><li>
-        <a href="ProAct.Stream.html#delay">ProAct.Stream#delay</a>
+        <a href="ProAct.Property.html#destroy">ProAct.Property#destroy</a>
     </li></dd>
     
     
@@ -1568,7 +1270,7 @@ It is used for resetting all the listeners too.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="delayed_stream.js.html">streams/delayed_stream.js</a>, <a href="delayed_stream.js.html#line128">line 128</a>
+        <a href="property.js.html">properties/property.js</a>, <a href="property.js.html#line435">line 435</a>
     </li></ul></dd>
     
     
@@ -1589,28 +1291,6 @@ It is used for resetting all the listeners too.
     
     
     
-    <h5>Returns:</h5>
-    
-            
-<div class="param-desc">
-    A <a href="ProAct.DelayedStream.html">ProAct.DelayedStream</a> instance.
-</div>
-
-
-
-<dl>
-	<dt>
-		Type
-	</dt>
-	<dd>
-		
-<span class="param-type"><a href="ProAct.DelayedStream.html">ProAct.DelayedStream</a></span>
-
-
-	</dd>
-</dl>
-
-        
     
     
 </dd>
@@ -1618,7 +1298,7 @@ It is used for resetting all the listeners too.
         
             
 <dt>
-    <h4 class="name" id="filter"><span class="type-signature"></span>filter<span class="signature">(filteringFunction)</span><span class="type-signature"> &rarr; {<a href="ProAct.Stream.html">ProAct.Stream</a>}</span></h4>
+    <h4 class="name" id="filter"><span class="type-signature">&lt;abstract> </span>filter<span class="signature">(filteringFunction)</span><span class="type-signature"> &rarr; {<a href="ProAct.Observable.html">ProAct.Observable</a>}</span></h4>
     
     
 </dt>
@@ -1626,8 +1306,11 @@ It is used for resetting all the listeners too.
     
     
     <div class="description">
-        Creates a new ProAct.Stream instance with source <i>this</i> and filtering
+        Creates a new ProAct.Observable instance with source <i>this</i> and filtering
 the passed <i>filtering function</i>.
+<p>
+ Should be overridden with creating the right observable.
+</p>
     </div>
     
 
@@ -1696,7 +1379,7 @@ the passed <i>filtering function</i>.
     
     <dt class="inherited-from">Inherited From:</dt>
     <dd class="inherited-from"><ul class="dummy"><li>
-        <a href="ProAct.Stream.html#filter">ProAct.Stream#filter</a>
+        <a href="ProAct.Observable.html#filter">ProAct.Observable#filter</a>
     </li></dd>
     
     
@@ -1713,7 +1396,7 @@ the passed <i>filtering function</i>.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="stream.js.html">streams/stream.js</a>, <a href="stream.js.html#line261">line 261</a>
+        <a href="observable.js.html">objects/observable.js</a>, <a href="observable.js.html#line499">line 499</a>
     </li></ul></dd>
     
     
@@ -1745,7 +1428,7 @@ the passed <i>filtering function</i>.
     
             
 <div class="param-desc">
-    A new ProAct.Stream instance with the <i>filtering</i> applied.
+    A new ProAct.Observable instance with the <i>filtering</i> applied.
 </div>
 
 
@@ -1756,7 +1439,7 @@ the passed <i>filtering function</i>.
 	</dt>
 	<dd>
 		
-<span class="param-type"><a href="ProAct.Stream.html">ProAct.Stream</a></span>
+<span class="param-type"><a href="ProAct.Observable.html">ProAct.Observable</a></span>
 
 
 	</dd>
@@ -1925,7 +1608,7 @@ the passed <i>filtering function</i>.
         
             
 <dt>
-    <h4 class="name" id="flush"><span class="type-signature"></span>flush<span class="signature">()</span><span class="type-signature"> &rarr; {<a href="ProAct.BufferedStream.html">ProAct.BufferedStream</a>}</span></h4>
+    <h4 class="name" id="init"><span class="type-signature"></span>init<span class="signature">()</span><span class="type-signature"></span></h4>
     
     
 </dt>
@@ -1933,8 +1616,16 @@ the passed <i>filtering function</i>.
     
     
     <div class="description">
-        Flushes the stream by emitting all the events/values stored in its buffer.
-The buffer becomes empty.
+        Initializes this property.
+<p>
+ This method logic is run only if the current state of <i>this</i> is ProAct.States.init.
+</p>
+<p>
+ First the property is defined as a field in its object, using <a href="ProAct.Property.html#defineProp">ProAct.Property.defineProp</a>.
+</p>
+<p>
+ Then <a href="ProAct.Property.html#afterInit">ProAct.Property#afterInit</a> is called to finish the initialization.
+</p>
     </div>
     
 
@@ -1955,7 +1646,7 @@ The buffer becomes empty.
     
     <dt class="inherited-from">Inherited From:</dt>
     <dd class="inherited-from"><ul class="dummy"><li>
-        <a href="ProAct.BufferedStream.html#flush">ProAct.BufferedStream#flush</a>
+        <a href="ProAct.Property.html#init">ProAct.Property#init</a>
     </li></dd>
     
     
@@ -1972,13 +1663,20 @@ The buffer becomes empty.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="buffered_stream.js.html">streams/buffered_stream.js</a>, <a href="buffered_stream.js.html#line44">line 44</a>
+        <a href="property.js.html">properties/property.js</a>, <a href="property.js.html#line373">line 373</a>
     </li></ul></dd>
     
     
     
     
     
+    <dt class="tag-see">See:</dt>
+    <dd class="tag-see">
+        <ul>
+            <li><a href="ProAct.Property.html#afterInit">ProAct.Property#afterInit</a></li>
+        </ul>
+    </dd>
+    
     
     
 </dl>
@@ -1993,28 +1691,6 @@ The buffer becomes empty.
     
     
     
-    <h5>Returns:</h5>
-    
-            
-<div class="param-desc">
-    <i>this</i>
-</div>
-
-
-
-<dl>
-	<dt>
-		Type
-	</dt>
-	<dd>
-		
-<span class="param-type"><a href="ProAct.BufferedStream.html">ProAct.BufferedStream</a></span>
-
-
-	</dd>
-</dl>
-
-        
     
     
 </dd>
@@ -2190,7 +1866,7 @@ is listening for changes from the <i>sources</i>.
         
             
 <dt>
-    <h4 class="name" id="makeErrListener"><span class="type-signature"></span>makeErrListener<span class="signature">()</span><span class="type-signature"> &rarr; {Object}</span></h4>
+    <h4 class="name" id="makeErrListener"><span class="type-signature">&lt;abstract> </span>makeErrListener<span class="signature">()</span><span class="type-signature"> &rarr; {Object}</span></h4>
     
     
 </dt>
@@ -2198,9 +1874,13 @@ is listening for changes from the <i>sources</i>.
     
     
     <div class="description">
-        Creates the <i>error listener</i> of this stream.
+        Creates the <i>error listener</i> of this observable.
+Every observable should have one error listener that should pass to other observables.
 <p>
- The listener just calls <a href="ProAct.Stream.html#triggerErr">ProAct.Stream#triggerErr</a> of <i>this</i> with the incoming error.
+ This listener turns the observable in a observer for errors.
+</p>
+<p>
+ Should be overriden with specific listener, by default it returns null.
 </p>
     </div>
     
@@ -2222,7 +1902,7 @@ is listening for changes from the <i>sources</i>.
     
     <dt class="inherited-from">Inherited From:</dt>
     <dd class="inherited-from"><ul class="dummy"><li>
-        <a href="ProAct.Stream.html#makeErrListener">ProAct.Stream#makeErrListener</a>
+        <a href="ProAct.Observable.html#makeErrListener">ProAct.Observable#makeErrListener</a>
     </li></dd>
     
     
@@ -2235,11 +1915,16 @@ is listening for changes from the <i>sources</i>.
     
     
     
+    <dt class="tag-default">Default Value:</dt>
+    <dd class="tag-default"><ul class="dummy">
+            <li>null</li>
+        </ul></dd>
+    
     
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="stream.js.html">streams/stream.js</a>, <a href="stream.js.html#line90">line 90</a>
+        <a href="observable.js.html">objects/observable.js</a>, <a href="observable.js.html#line137">line 137</a>
     </li></ul></dd>
     
     
@@ -2264,7 +1949,7 @@ is listening for changes from the <i>sources</i>.
     
             
 <div class="param-desc">
-    The <i>error listener of this stream</i>.
+    The <i>error listener of this observer</i>.
 </div>
 
 
@@ -2297,9 +1982,17 @@ is listening for changes from the <i>sources</i>.
     
     
     <div class="description">
-        Creates the <i>event</i> to be send to the listeners on update.
+        Creates the <i>event</i> to be send to the listeners of this ProAct.Property on update.
 <p>
- Streams don't create new events by default, the event is the source.
+ The <i>event</i> should be an instance of <a href="ProAct.Event.html">ProAct.Event</a>.
+</p>
+<p>
+ By default this method returns <a href="ProAct.Event.Types.html#value">ProAct.Event.Types.value</a> event with target the property name and arguments:
+ <ul>
+   <li>The object this ProAct.Property manages a field for.</li>
+   <li>The old value of this property.</li>
+   <li>The new value of this property.</li>
+ </ul>
 </p>
     </div>
     
@@ -2369,7 +2062,7 @@ is listening for changes from the <i>sources</i>.
     
     <dt class="inherited-from">Inherited From:</dt>
     <dd class="inherited-from"><ul class="dummy"><li>
-        <a href="ProAct.Stream.html#makeEvent">ProAct.Stream#makeEvent</a>
+        <a href="ProAct.Property.html#makeEvent">ProAct.Property#makeEvent</a>
     </li></dd>
     
     
@@ -2382,11 +2075,16 @@ is listening for changes from the <i>sources</i>.
     
     
     
+    <dt class="tag-default">Default Value:</dt>
+    <dd class="tag-default"><ul class="dummy">
+            <li>{ProAct.Event} with type <a href="ProAct.Event.Types.html#value">ProAct.Event.Types.value</a></li>
+        </ul></dd>
+    
     
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="stream.js.html">streams/stream.js</a>, <a href="stream.js.html#line49">line 49</a>
+        <a href="property.js.html">properties/property.js</a>, <a href="property.js.html#line305">line 305</a>
     </li></ul></dd>
     
     
@@ -2411,7 +2109,7 @@ is listening for changes from the <i>sources</i>.
     
             
 <div class="param-desc">
-    The event.
+    The event, created.
 </div>
 
 
@@ -2444,9 +2142,19 @@ is listening for changes from the <i>sources</i>.
     
     
     <div class="description">
-        Creates the <i>listener</i> of this stream.
+        Creates the <i>listener</i> of this ProAct.AutoProperty.
 <p>
- The listener of the stream just calls the method <a href="ProAct.Stream.html#trigger">ProAct.Stream#trigger</a> with the incoming event/value.
+ This listener turns the observable in a observer.
+</p>
+<p>
+ The listener for ProAct.AutoProperty is an object defining the <i>call</i> method.
+</p>
+<p>
+ It has a <i>property</i> field set to <i>this</i>.
+</p>
+<p>
+ On value changes the <i><this</i> value is set to the value computed by the original function,
+ using the <a href="ProAct.Observable.html#transform">ProAct.Observable#transform</a> to transform it.
 </p>
     </div>
     
@@ -2466,11 +2174,6 @@ is listening for changes from the <i>sources</i>.
     
 
     
-    <dt class="inherited-from">Inherited From:</dt>
-    <dd class="inherited-from"><ul class="dummy"><li>
-        <a href="ProAct.Stream.html#makeListener">ProAct.Stream#makeListener</a>
-    </li></dd>
-    
     
     
     
@@ -2485,7 +2188,7 @@ is listening for changes from the <i>sources</i>.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="stream.js.html">streams/stream.js</a>, <a href="stream.js.html#line67">line 67</a>
+        <a href="auto_property.js.html">properties/auto_property.js</a>, <a href="auto_property.js.html#line132">line 132</a>
     </li></ul></dd>
     
     
@@ -2510,7 +2213,7 @@ is listening for changes from the <i>sources</i>.
     
             
 <div class="param-desc">
-    The <i>listener of this stream</i>.
+    The <i>listener of this ProAct.AutoProperty</i>.
 </div>
 
 
@@ -2535,7 +2238,7 @@ is listening for changes from the <i>sources</i>.
         
             
 <dt>
-    <h4 class="name" id="map"><span class="type-signature"></span>map<span class="signature">(mappingFunction)</span><span class="type-signature"> &rarr; {<a href="ProAct.Stream.html">ProAct.Stream</a>}</span></h4>
+    <h4 class="name" id="map"><span class="type-signature">&lt;abstract> </span>map<span class="signature">(mappingFunction)</span><span class="type-signature"> &rarr; {<a href="ProAct.Observable.html">ProAct.Observable</a>}</span></h4>
     
     
 </dt>
@@ -2543,8 +2246,11 @@ is listening for changes from the <i>sources</i>.
     
     
     <div class="description">
-        Creates a new ProAct.Stream instance with source <i>this</i> and mapping
+        Creates a new ProAct.Observable instance with source <i>this</i> and mapping
 the passed <i>mapping function</i>.
+<p>
+ Should be overridden with creating the right observable.
+</p>
     </div>
     
 
@@ -2613,7 +2319,7 @@ the passed <i>mapping function</i>.
     
     <dt class="inherited-from">Inherited From:</dt>
     <dd class="inherited-from"><ul class="dummy"><li>
-        <a href="ProAct.Stream.html#map">ProAct.Stream#map</a>
+        <a href="ProAct.Observable.html#map">ProAct.Observable#map</a>
     </li></dd>
     
     
@@ -2630,7 +2336,7 @@ the passed <i>mapping function</i>.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="stream.js.html">streams/stream.js</a>, <a href="stream.js.html#line244">line 244</a>
+        <a href="observable.js.html">objects/observable.js</a>, <a href="observable.js.html#line480">line 480</a>
     </li></ul></dd>
     
     
@@ -2662,7 +2368,7 @@ the passed <i>mapping function</i>.
     
             
 <div class="param-desc">
-    A new ProAct.Stream instance with the <i>mapping</i> applied.
+    A new ProAct.Observable instance with the <i>mapping</i> applied.
 </div>
 
 
@@ -2673,7 +2379,7 @@ the passed <i>mapping function</i>.
 	</dt>
 	<dd>
 		
-<span class="param-type"><a href="ProAct.Stream.html">ProAct.Stream</a></span>
+<span class="param-type"><a href="ProAct.Observable.html">ProAct.Observable</a></span>
 
 
 	</dd>
@@ -2830,158 +2536,6 @@ the passed <i>mapping function</i>.
 	<dd>
 		
 <span class="param-type"><a href="ProAct.Observable.html">ProAct.Observable</a></span>
-
-
-	</dd>
-</dl>
-
-        
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="merge"><span class="type-signature"></span>merge<span class="signature">()</span><span class="type-signature"> &rarr; {<a href="ProAct.Stream.html">ProAct.Stream</a>}</span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        Creates a new ProAct.Stream instance that merges this with other streams.
-The new instance will have new value on value from any of the source streams.
-    </div>
-    
-
-    
-    
-    
-    
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-		
-		<th>Type</th>
-		
-		
-		<th>Argument</th>
-		
-		
-		
-		
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-	
-	<tbody>
-	
-	
-        <tr>
-            
-                <td class="name"><code>...</code></td>
-            
-            
-            <td class="type">
-            
-            </td>
-            
-            
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-                    
-                
-                    
-                
-                </td>
-            
-            
-            
-            
-            <td class="description last">A list of streams to be set as sources.</td>
-        </tr>
-	
-	
-	</tbody>
-</table>
-    
-    
-    
-<dl class="details">
-    
-        
-    
-    
-    
-
-    
-    <dt class="inherited-from">Inherited From:</dt>
-    <dd class="inherited-from"><ul class="dummy"><li>
-        <a href="ProAct.Stream.html#merge">ProAct.Stream#merge</a>
-    </li></dd>
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="stream.js.html">streams/stream.js</a>, <a href="stream.js.html#line297">line 297</a>
-    </li></ul></dd>
-    
-    
-    
-    
-    
-    
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    <h5>Returns:</h5>
-    
-            
-<div class="param-desc">
-    A new ProAct.Stream instance with the sources this and all the passed streams.
-</div>
-
-
-
-<dl>
-	<dt>
-		Type
-	</dt>
-	<dd>
-		
-<span class="param-type"><a href="ProAct.Stream.html">ProAct.Stream</a></span>
 
 
 	</dd>
@@ -4149,7 +3703,7 @@ to the passed <i>destination</i> observable.
         
             
 <dt>
-    <h4 class="name" id="setDelay"><span class="type-signature"></span>setDelay<span class="signature">(delay)</span><span class="type-signature"> &rarr; {<a href="ProAct.DelayedStream.html">ProAct.DelayedStream</a>}</span></h4>
+    <h4 class="name" id="toString"><span class="type-signature"></span>toString<span class="signature">()</span><span class="type-signature"></span></h4>
     
     
 </dt>
@@ -4157,8 +3711,9 @@ to the passed <i>destination</i> observable.
     
     
     <div class="description">
-        <p>
- Modifies the delay of the stream. The current delay is canceled using the <a href="ProAct.DelayedStream.html#cancelDelay">ProAct.DelayedStream#cancelDelay</a> method.
+        The <b>toString()</b> method returns a string representing this ProAct.Property.
+<p>
+ The string representation is the value of <i>this</i> property.
 </p>
     </div>
     
@@ -4168,54 +3723,6 @@ to the passed <i>destination</i> observable.
     
     
     
-        <h5>Parameters:</h5>
-        
-
-<table class="params">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-		
-		<th>Type</th>
-		
-		
-		
-		
-		
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-	
-	<tbody>
-	
-	
-        <tr>
-            
-                <td class="name"><code>delay</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">Number</span>
-
-
-            
-            </td>
-            
-            
-            
-            
-            
-            <td class="description last">The new delay of the stream.</td>
-        </tr>
-	
-	
-	</tbody>
-</table>
-    
     
     
 <dl class="details">
@@ -4228,7 +3735,7 @@ to the passed <i>destination</i> observable.
     
     <dt class="inherited-from">Inherited From:</dt>
     <dd class="inherited-from"><ul class="dummy"><li>
-        <a href="ProAct.DelayedStream.html#setDelay">ProAct.DelayedStream#setDelay</a>
+        <a href="ProAct.Property.html#toString">ProAct.Property#toString</a>
     </li></dd>
     
     
@@ -4245,7 +3752,7 @@ to the passed <i>destination</i> observable.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="delayed_stream.js.html">streams/delayed_stream.js</a>, <a href="delayed_stream.js.html#line96">line 96</a>
+        <a href="property.js.html">properties/property.js</a>, <a href="property.js.html#line462">line 462</a>
     </li></ul></dd>
     
     
@@ -4266,172 +3773,6 @@ to the passed <i>destination</i> observable.
     
     
     
-    <h5>Returns:</h5>
-    
-            
-<div class="param-desc">
-    <i>this</i>
-</div>
-
-
-
-<dl>
-	<dt>
-		Type
-	</dt>
-	<dd>
-		
-<span class="param-type"><a href="ProAct.DelayedStream.html">ProAct.DelayedStream</a></span>
-
-
-	</dd>
-</dl>
-
-        
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="throttle"><span class="type-signature"></span>throttle<span class="signature">(delay)</span><span class="type-signature"> &rarr; {<a href="ProAct.ThrottlingStream.html">ProAct.ThrottlingStream</a>}</span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        Creates a new <a href="ProAct.ThrottlingStream.html">ProAct.ThrottlingStream</a> instance having as source <i>this</i>.
-    </div>
-    
-
-    
-    
-    
-    
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-		
-		<th>Type</th>
-		
-		
-		
-		
-		
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-	
-	<tbody>
-	
-	
-        <tr>
-            
-                <td class="name"><code>delay</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">Number</span>
-
-
-            
-            </td>
-            
-            
-            
-            
-            
-            <td class="description last">The time delay to be used for flushing the buffer of the new stream.</td>
-        </tr>
-	
-	
-	</tbody>
-</table>
-    
-    
-    
-<dl class="details">
-    
-        
-    
-    
-    
-
-    
-    <dt class="inherited-from">Inherited From:</dt>
-    <dd class="inherited-from"><ul class="dummy"><li>
-        <a href="ProAct.Stream.html#throttle">ProAct.Stream#throttle</a>
-    </li></dd>
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="throttling_stream.js.html">streams/throttling_stream.js</a>, <a href="throttling_stream.js.html#line75">line 75</a>
-    </li></ul></dd>
-    
-    
-    
-    
-    
-    
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    <h5>Returns:</h5>
-    
-            
-<div class="param-desc">
-    A <a href="ProAct.ThrottlingStream.html">ProAct.ThrottlingStream</a> instance.
-</div>
-
-
-
-<dl>
-	<dt>
-		Type
-	</dt>
-	<dd>
-		
-<span class="param-type"><a href="ProAct.ThrottlingStream.html">ProAct.ThrottlingStream</a></span>
-
-
-	</dd>
-</dl>
-
-        
     
     
 </dd>
@@ -4600,7 +3941,7 @@ of <i>this observable</i>.
         
             
 <dt>
-    <h4 class="name" id="trigger"><span class="type-signature"></span>trigger<span class="signature">(event, useTransformations)</span><span class="type-signature"> &rarr; {<a href="ProAct.ThrottlingStream.html">ProAct.ThrottlingStream</a>}</span></h4>
+    <h4 class="name" id="type"><span class="type-signature"></span>type<span class="signature">()</span><span class="type-signature"> &rarr; {Number}</span></h4>
     
     
 </dt>
@@ -4608,14 +3949,9 @@ of <i>this observable</i>.
     
     
     <div class="description">
-        <p>
- Triggers a new event/value to the stream. It is stored in the buffer of the stream and not emitted.
- But the buffer of ProAct.DebouncingStream can store only one value/event, so when the delay passes only
- the last value/event triggered into the stream by this method is emitted. On every call of this method the delay is reset.
- So for example if you have mouse move as source, it will emit only the last mouse move event, that was send <i>delay</i> milliseconds ago.
-</p>
+        Retrieves the <a href="ProAct.Property.Types.html">ProAct.Property.Types</a> value of <i>this</i> property.
 <p>
- ProAct.DebouncingStream.t is alias of this method.
+ For ProAct.AutoProperty this is <a href="ProAct.Property.Types.html#auto">ProAct.Property.Types.auto</a>
 </p>
     </div>
     
@@ -4624,77 +3960,6 @@ of <i>this observable</i>.
     
     
     
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-		
-		<th>Type</th>
-		
-		
-		
-		
-		
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-	
-	<tbody>
-	
-	
-        <tr>
-            
-                <td class="name"><code>event</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">Object</span>
-
-
-            
-            </td>
-            
-            
-            
-            
-            
-            <td class="description last">The event/value to pass to trigger.</td>
-        </tr>
-	
-	
-	
-        <tr>
-            
-                <td class="name"><code>useTransformations</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">Boolean</span>
-
-
-            
-            </td>
-            
-            
-            
-            
-            
-            <td class="description last">If the stream should transform the triggered value. By default it is true (if not passed)</td>
-        </tr>
-	
-	
-	</tbody>
-</table>
     
     
     
@@ -4720,7 +3985,7 @@ of <i>this observable</i>.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="debouncing_stream.js.html">streams/debouncing_stream.js</a>, <a href="debouncing_stream.js.html#line42">line 42</a>
+        <a href="auto_property.js.html">properties/auto_property.js</a>, <a href="auto_property.js.html#line116">line 116</a>
     </li></ul></dd>
     
     
@@ -4745,7 +4010,7 @@ of <i>this observable</i>.
     
             
 <div class="param-desc">
-    <i>this</i>
+    The right type of the property.
 </div>
 
 
@@ -4756,496 +4021,7 @@ of <i>this observable</i>.
 	</dt>
 	<dd>
 		
-<span class="param-type"><a href="ProAct.ThrottlingStream.html">ProAct.ThrottlingStream</a></span>
-
-
-	</dd>
-</dl>
-
-        
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="trigger"><span class="type-signature"></span>trigger<span class="signature">(event, useTransformations)</span><span class="type-signature"> &rarr; {<a href="ProAct.ThrottlingStream.html">ProAct.ThrottlingStream</a>}</span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        <p>
- Triggers a new event/value to the stream. It is stored in the buffer of the stream and not emitted.
- But the buffer of ProAct.ThrottlingStream can store only one value/event, so when the delay passes only
- the last value/event triggered into the stream by this method is emitted.
-</p>
-<p>
- ProAct.ThrottlingStream.t is alias of this method.
-</p>
-    </div>
-    
-
-    
-    
-    
-    
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-		
-		<th>Type</th>
-		
-		
-		
-		
-		
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-	
-	<tbody>
-	
-	
-        <tr>
-            
-                <td class="name"><code>event</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">Object</span>
-
-
-            
-            </td>
-            
-            
-            
-            
-            
-            <td class="description last">The event/value to pass to trigger.</td>
-        </tr>
-	
-	
-	
-        <tr>
-            
-                <td class="name"><code>useTransformations</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">Boolean</span>
-
-
-            
-            </td>
-            
-            
-            
-            
-            
-            <td class="description last">If the stream should transform the triggered value. By default it is true (if not passed)</td>
-        </tr>
-	
-	
-	</tbody>
-</table>
-    
-    
-    
-<dl class="details">
-    
-        
-    
-    
-    
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="throttling_stream.js.html">streams/throttling_stream.js</a>, <a href="throttling_stream.js.html#line45">line 45</a>
-    </li></ul></dd>
-    
-    
-    
-    
-    
-    
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    <h5>Returns:</h5>
-    
-            
-<div class="param-desc">
-    <i>this</i>
-</div>
-
-
-
-<dl>
-	<dt>
-		Type
-	</dt>
-	<dd>
-		
-<span class="param-type"><a href="ProAct.ThrottlingStream.html">ProAct.ThrottlingStream</a></span>
-
-
-	</dd>
-</dl>
-
-        
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="triggerErr"><span class="type-signature"></span>triggerErr<span class="signature">(err)</span><span class="type-signature"> &rarr; {<a href="ProAct.Observable.html">ProAct.Observable</a>}</span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        <p>
- Triggers a new error to the stream. Anything that is listening for errors from
- this stream will get updated.
-</p>
-<p>
- ProAct.Stream.te is alias of this method.
-</p>
-    </div>
-    
-
-    
-    
-    
-    
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-		
-		<th>Type</th>
-		
-		
-		
-		
-		
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-	
-	<tbody>
-	
-	
-        <tr>
-            
-                <td class="name"><code>err</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">Error</span>
-
-
-            
-            </td>
-            
-            
-            
-            
-            
-            <td class="description last">The error to trigger.</td>
-        </tr>
-	
-	
-	</tbody>
-</table>
-    
-    
-    
-<dl class="details">
-    
-        
-    
-    
-    
-
-    
-    <dt class="inherited-from">Inherited From:</dt>
-    <dd class="inherited-from"><ul class="dummy"><li>
-        <a href="ProAct.Stream.html#triggerErr">ProAct.Stream#triggerErr</a>
-    </li></dd>
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="stream.js.html">streams/stream.js</a>, <a href="stream.js.html#line202">line 202</a>
-    </li></ul></dd>
-    
-    
-    
-    
-    
-    <dt class="tag-see">See:</dt>
-    <dd class="tag-see">
-        <ul>
-            <li><a href="ProAct.Observable.html#update">ProAct.Observable#update</a></li>
-        </ul>
-    </dd>
-    
-    
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    <h5>Returns:</h5>
-    
-            
-<div class="param-desc">
-    <i>this</i>
-</div>
-
-
-
-<dl>
-	<dt>
-		Type
-	</dt>
-	<dd>
-		
-<span class="param-type"><a href="ProAct.Observable.html">ProAct.Observable</a></span>
-
-
-	</dd>
-</dl>
-
-        
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="triggerMany"><span class="type-signature"></span>triggerMany<span class="signature">()</span><span class="type-signature"> &rarr; {<a href="ProAct.Stream.html">ProAct.Stream</a>}</span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        <p>
- Triggers all the passed params, using transformations.
-</p>
-<p>
- ProAct.Stream.tt is alias of this method.
-</p>
-    </div>
-    
-
-    
-    
-    
-    
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-		
-		<th>Type</th>
-		
-		
-		<th>Argument</th>
-		
-		
-		
-		
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-	
-	<tbody>
-	
-	
-        <tr>
-            
-                <td class="name"><code>...</code></td>
-            
-            
-            <td class="type">
-            
-            </td>
-            
-            
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-                    
-                
-                    
-                
-                </td>
-            
-            
-            
-            
-            <td class="description last">A list of events/values to trigger</td>
-        </tr>
-	
-	
-	</tbody>
-</table>
-    
-    
-    
-<dl class="details">
-    
-        
-    
-    
-    
-
-    
-    <dt class="inherited-from">Inherited From:</dt>
-    <dd class="inherited-from"><ul class="dummy"><li>
-        <a href="ProAct.Stream.html#triggerMany">ProAct.Stream#triggerMany</a>
-    </li></dd>
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="stream.js.html">streams/stream.js</a>, <a href="stream.js.html#line175">line 175</a>
-    </li></ul></dd>
-    
-    
-    
-    
-    
-    <dt class="tag-see">See:</dt>
-    <dd class="tag-see">
-        <ul>
-            <li><a href="ProAct.Stream.html#trigger">ProAct.Stream#trigger</a></li>
-        </ul>
-    </dd>
-    
-    
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    <h5>Returns:</h5>
-    
-            
-<div class="param-desc">
-    <i>this</i>
-</div>
-
-
-
-<dl>
-	<dt>
-		Type
-	</dt>
-	<dd>
-		
-<span class="param-type"><a href="ProAct.Stream.html">ProAct.Stream</a></span>
+<span class="param-type">Number</span>
 
 
 	</dd>
@@ -5722,7 +4498,7 @@ of <i>this observable</i>.
 <br clear="both">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.2</a> on Mon Jul 28 2014 21:39:41 GMT+0300 (EEST)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.2</a> on Mon Jul 28 2014 21:39:35 GMT+0300 (EEST)
 </footer>
 
 <script> prettyPrint(); </script>

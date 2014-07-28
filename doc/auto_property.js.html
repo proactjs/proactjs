@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: properties/auto_property.js</title>
+    
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+    
+    <h1 class="page-title">Source: properties/auto_property.js</h1>
+    
+    
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source"><code>/**
+ * &lt;p>
+ *  Constructs a ProAct.AutoProperty. The properties are simple {@link ProAct.Observable}s with state. The auto-computed or functional property
+ *  has a state of a Function value.
+ * &lt;/p>
+ * &lt;p>
+ *  Auto-computed properties are functions which are turned to {@link ProAct.Property}s by a {@link ProAct.ObjectCore}.
+ * &lt;/p>
+ * &lt;p>
+ *  If these functions are reading another fields of ProAct.js objects, they authomatically become dependent on them.
+ * &lt;/p>
+ * &lt;p>
+ *  For example:
+ *  &lt;pre>
+ *    var obj = {
+ *      a: 1,
+ *      b: 2,
+ *      c: function () {
+ *        return this.a - this.b;
+ *      }
+ *    };
+ *  &lt;/pre>
+ *  If this object - &lt;i>obj&lt;/i> is turned to a reactive ProAct.js object, it becomes a simple object with three fields:
+ *  &lt;pre>
+ *    {
+ *      a: 1,
+ *      b: 2,
+ *      c: -1
+ *    }
+ *  &lt;/pre>
+ *  But now &lt;i>c&lt;/i> is dependent on &lt;i>a&lt;/i> and &lt;i>b&lt;/i>, so if &lt;i>a&lt;/i> is set to &lt;b>4&lt;/b>, &lt;i>obj&lt;/i> becomes:
+ *  &lt;pre>
+ *    {
+ *      a: 1,
+ *      b: 2,
+ *      c: 2
+ *    }
+ *  &lt;/pre>
+ * &lt;/p>
+ * &lt;p>
+ *  The logic is the following:
+ *  &lt;ul>
+ *    &lt;li>The property is initialized to be lazy, so its state is {@link ProAct.States.init}&lt;/li>
+ *    &lt;li>On its first read, the {@link ProAct.currentCaller} is set to the listener of the property, so all the properties read in the function body became observed by it. The value of the property is computed using the original function of the field.&lt;/li>
+ *    &lt;li>On this first read the state of the property is updated to {@link ProAct.States.ready}.&lt;/li>
+ *    &lt;li>On its following reads it is a simple value, computed from the first read. No re-computations on get.&lt;/li>
+ *    &lt;li>If a property, this auto-computed property depends changes, the value of &lt;i>this&lt;/i> ProAct.AutoProperty is recomputed.&lt;/li>
+ *    &lt;li>Setting the property can be implemented easy, because on set, the original function of the property is called with the new value.&lt;/li>
+ *  &lt;/ul>
+ * &lt;/p>
+ * &lt;p>
+ *  ProAct.AutoProperty can be depend on another ProAct.AutoProperty.
+ * &lt;/p>
+ * &lt;p>
+ *  ProAct.AutoProperty is part of the properties module of ProAct.js.
+ * &lt;/p>
+ *
+ * @class ProAct.AutoProperty
+ * @extends ProAct.Property
+ * @param {Object} proObject
+ *      A plain JavaScript object, holding a field, this property will represent.
+ * @param {String} property
+ *      The name of the field of the object, this property should represent.
+ * @see {@link ProAct.ObjectCore}
+ * @see {@link ProAct.States.init}
+ * @see {@link ProAct.States.ready}
+ */
+ProAct.AutoProperty = P.FP = function (proObject, property) {
+  this.func = proObject[property];
+
+  var self = this,
+      getter = function () {
+        self.addCaller();
+        var oldCaller = P.currentCaller,
+            get = P.P.defaultGetter(self),
+            set = P.P.defaultSetter(self, function (newVal) {
+              return self.func.call(self.proObject, newVal);
+            }),
+            args = arguments,
+            autoFunction;
+
+        P.currentCaller = self.makeListener();
+
+        autoFunction = function () {
+          self.val = self.func.apply(self.proObject, args);
+        };
+        P.flow.run(function () {
+          P.flow.pushOnce(autoFunction);
+        });
+
+        P.currentCaller = oldCaller;
+
+        P.P.defineProp(self.proObject, self.property, get, set);
+
+        self.state = P.States.ready;
+
+        self.val = P.Observable.transform(self, self.val);
+        return self.val;
+      };
+
+  P.P.call(this, proObject, property, getter, function () {});
+};
+
+ProAct.AutoProperty.prototype = P.U.ex(Object.create(P.P.prototype), {
+
+  /**
+   * Reference to the constructor of this object.
+   *
+   * @memberof ProAct.AutoProperty
+   * @instance
+   * @constant
+   * @default ProAct.AutoProperty
+   */
+  constructor: ProAct.AutoProperty,
+
+  /**
+   * Retrieves the {@link ProAct.Property.Types} value of &lt;i>this&lt;/i> property.
+   * &lt;p>
+   *  For ProAct.AutoProperty this is {@link ProAct.Property.Types.auto}
+   * &lt;/p>
+   *
+   * @memberof ProAct.AutoProperty
+   * @instance
+   * @method type
+   * @return {Number}
+   *      The right type of the property.
+   */
+  type: function () {
+    return P.P.Types.auto;
+  },
+
+  /**
+   * Creates the &lt;i>listener&lt;/i> of this ProAct.AutoProperty.
+   * &lt;p>
+   *  This listener turns the observable in a observer.
+   * &lt;/p>
+   * &lt;p>
+   *  The listener for ProAct.AutoProperty is an object defining the &lt;i>call&lt;/i> method.
+   * &lt;/p>
+   * &lt;p>
+   *  It has a &lt;i>property&lt;/i> field set to &lt;i>this&lt;/i>.
+   * &lt;/p>
+   * &lt;p>
+   *  On value changes the &lt;i>&lt;this&lt;/i> value is set to the value computed by the original function,
+   *  using the {@link ProAct.Observable#transform} to transform it.
+   * &lt;/p>
+   *
+   * @memberof ProAct.AutoProperty
+   * @instance
+   * @method makeListener
+   * @return {Object}
+   *      The &lt;i>listener of this ProAct.AutoProperty&lt;/i>.
+   */
+  makeListener: function () {
+    if (!this.listener) {
+      var self = this;
+
+      this.listener = {
+        property: self,
+        call: function () {
+          self.oldVal = self.val;
+          self.val = P.Observable.transform(self, self.func.call(self.proObject));
+        }
+      };
+    }
+
+    return this.listener;
+  },
+
+  /**
+   * Called automatically after initialization of this property.
+   * &lt;p>
+   *  For ProAct.AutoProperty it does nothing - the real initialization is lazy and is performed on the first read of &lt;i>this&lt;/i>.
+   * &lt;/p>
+   *
+   * @memberof ProAct.AutoProperty
+   * @instance
+   * @method afterInit
+   */
+  afterInit: function () {}
+});
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Index</a></h2><h3>Classes</h3><ul><li><a href="ProAct.AutoProperty.html">AutoProperty</a></li><li><a href="ProAct.BufferedStream.html">BufferedStream</a></li><li><a href="ProAct.DebouncingStream.html">DebouncingStream</a></li><li><a href="ProAct.DelayedStream.html">DelayedStream</a></li><li><a href="ProAct.Event.html">Event</a></li><li><a href="ProAct.Flow.html">Flow</a></li><li><a href="ProAct.NullProperty.html">NullProperty</a></li><li><a href="ProAct.ObjectProperty.html">ObjectProperty</a></li><li><a href="ProAct.Observable.html">Observable</a></li><li><a href="ProAct.Property.html">Property</a></li><li><a href="ProAct.Queue.html">Queue</a></li><li><a href="ProAct.Queues.html">Queues</a></li><li><a href="ProAct.SizeBufferedStream.html">SizeBufferedStream</a></li><li><a href="ProAct.Stream.html">Stream</a></li><li><a href="ProAct.ThrottlingStream.html">ThrottlingStream</a></li></ul><h3>Namespaces</h3><ul><li><a href="ProAct.html">ProAct</a></li><li><a href="ProAct.Configuration.html">Configuration</a></li><li><a href="ProAct.Event.Types.html">Types</a></li><li><a href="ProAct.Property.Types.html">Types</a></li><li><a href="ProAct.States.html">States</a></li><li><a href="ProAct.Utils.html">Utils</a></li></ul><h3>Global</h3><ul><li><a href="global.html#BadValue">BadValue</a></li></ul>
+</nav>
+
+<br clear="both">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.2</a> on Mon Jul 28 2014 21:39:34 GMT+0300 (EEST)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

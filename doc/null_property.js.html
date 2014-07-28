@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Source: streams/buffered_stream.js</title>
+    <title>JSDoc: Source: properties/null_property.js</title>
     
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
     
-    <h1 class="page-title">Source: streams/buffered_stream.js</h1>
+    <h1 class="page-title">Source: properties/null_property.js</h1>
     
     
 
@@ -27,68 +27,68 @@
         <article>
             <pre class="prettyprint source"><code>/**
  * &lt;p>
- *  Constructs a ProAct.BufferedStream. This is a {@link ProAct.Stream} with a buffer.
+ *  Constructs a ProAct.NullProperty. The properties are simple {@link ProAct.Observable}s with state. The null/nil property
+ *  has a state of a null or undefined value.
  * &lt;/p>
  * &lt;p>
- *  On new value/event the listeners are not updated, but the value/event is stored in the buffer.
+ *  Null properties are automatically re-defined if their value is set to actual object or data.
  * &lt;/p>
  * &lt;p>
- *  When the buffer is flushed every value/event is emitted to the listeners. In case with property listeners
- *  they are updated only once with the last event/value. Good for performance optimizations.
- * &lt;/p>
- * &lt;p>
- *  For example if it is set to stream mouse move events, we don't care for each of the event but for a portion of them.
- * &lt;/p>
- * &lt;p>
- *  ProAct.BufferedStream is part of the streams module of ProAct.js.
+ *  ProAct.NullProperty is part of the properties module of ProAct.js.
  * &lt;/p>
  *
- * @class ProAct.BufferedStream
- * @extends ProAct.Stream
- * @param {ProAct.Observable} source
- *      A default source of the stream, can be null.
- * @param {Array} transforms
- *      A list of transformation to be used on all incoming chages.
+ * @class ProAct.NullProperty
+ * @extends ProAct.Property
+ * @param {Object} proObject
+ *      A plain JavaScript object, holding a null/undefined field, this property should represent.
+ * @param {String} property
+ *      The name of the field of the object, this property should represent.
+ * @see {@link ProAct.ObjectCore}
  */
-ProAct.BufferedStream = P.BS = function (source, transforms) {
-  P.S.call(this, source, transforms);
-  this.buffer = [];
+ProAct.NullProperty = P.NP = function (proObject, property) {
+  var self = this,
+      set = P.P.defaultSetter(this),
+      setter = function (newVal) {
+        var result = set.call(self.proObject, newVal),
+            types = P.P.Types,
+            type = types.type(result);
+
+        if (type !== types.nil) {
+          P.P.reProb(self);
+        }
+
+        return result;
+      };
+
+  P.P.call(this, proObject, property, P.P.defaultGetter(this), setter);
 };
 
-ProAct.BufferedStream.prototype = Pro.U.ex(Object.create(P.S.prototype), {
+ProAct.NullProperty.prototype = P.U.ex(Object.create(P.P.prototype), {
 
   /**
    * Reference to the constructor of this object.
    *
-   * @memberof ProAct.BufferedStream
+   * @memberof ProAct.NullProperty
    * @instance
    * @constant
-   * @type {Object}
-   * @default ProAct.BufferedStream
+   * @default ProAct.NullProperty
    */
-  constructor: ProAct.BufferedStream,
+  constructor: ProAct.NullProperty,
 
   /**
-   * Flushes the stream by emitting all the events/values stored in its buffer.
-   * The buffer becomes empty.
+   * Retrieves the {@link ProAct.Property.Types} value of &lt;i>this&lt;/i> property.
+   * &lt;p>
+   *  For ProAct.NullProperty this is {@link ProAct.Property.Types.nil}
+   * &lt;/p>
    *
-   * @memberof ProAct.BufferedStream
+   * @memberof ProAct.NullProperty
    * @instance
-   * @method flush
-   * @return {ProAct.BufferedStream}
-   *      &lt;i>this&lt;/i>
+   * @method type
+   * @return {Number}
+   *      The right type of the property.
    */
-  flush: function () {
-    var self = this, i, b = this.buffer, ln = b.length;
-
-    P.flow.run(function () {
-      for (i = 0; i &lt; ln; i+= 2) {
-        self.go(b[i], b[i+1]);
-      }
-      self.buffer = [];
-    });
-
-    return this;
+  type: function () {
+    return P.P.Types.nil;
   }
 });
 </code></pre>

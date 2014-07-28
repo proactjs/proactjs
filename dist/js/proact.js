@@ -3559,16 +3559,36 @@
 	  }
 	});
 	
+	/**
+	 * <p>
+	 *  Constructs a ProAct.NullProperty. The properties are simple {@link ProAct.Observable}s with state. The null/nil property
+	 *  has a state of a null or undefined value.
+	 * </p>
+	 * <p>
+	 *  Null properties are automatically re-defined if their value is set to actual object or data.
+	 * </p>
+	 * <p>
+	 *  ProAct.NullProperty is part of the properties module of ProAct.js.
+	 * </p>
+	 *
+	 * @class ProAct.NullProperty
+	 * @extends ProAct.Property
+	 * @param {Object} proObject
+	 *      A plain JavaScript object, holding a null/undefined field, this property should represent.
+	 * @param {String} property
+	 *      The name of the field of the object, this property should represent.
+	 * @see {@link ProAct.ObjectCore}
+	 */
 	ProAct.NullProperty = P.NP = function (proObject, property) {
-	  var _this = this,
+	  var self = this,
 	      set = P.P.defaultSetter(this),
 	      setter = function (newVal) {
-	        var result = set.call(_this.proObject, newVal),
-	            types = Pro.Property.Types,
+	        var result = set.call(self.proObject, newVal),
+	            types = P.P.Types,
 	            type = types.type(result);
 	
 	        if (type !== types.nil) {
-	          P.P.reProb(_this);
+	          P.P.reProb(self);
 	        }
 	
 	        return result;
@@ -3578,101 +3598,277 @@
 	};
 	
 	ProAct.NullProperty.prototype = P.U.ex(Object.create(P.P.prototype), {
+	
+	  /**
+	   * Reference to the constructor of this object.
+	   *
+	   * @memberof ProAct.NullProperty
+	   * @instance
+	   * @constant
+	   * @default ProAct.NullProperty
+	   */
 	  constructor: ProAct.NullProperty,
 	
+	  /**
+	   * Retrieves the {@link ProAct.Property.Types} value of <i>this</i> property.
+	   * <p>
+	   *  For ProAct.NullProperty this is {@link ProAct.Property.Types.nil}
+	   * </p>
+	   *
+	   * @memberof ProAct.NullProperty
+	   * @instance
+	   * @method type
+	   * @return {Number}
+	   *      The right type of the property.
+	   */
 	  type: function () {
 	    return P.P.Types.nil;
 	  }
 	});
 	
-	Pro.AutoProperty = function (proObject, property) {
+	/**
+	 * <p>
+	 *  Constructs a ProAct.AutoProperty. The properties are simple {@link ProAct.Observable}s with state. The auto-computed or functional property
+	 *  has a state of a Function value.
+	 * </p>
+	 * <p>
+	 *  Auto-computed properties are functions which are turned to {@link ProAct.Property}s by a {@link ProAct.ObjectCore}.
+	 * </p>
+	 * <p>
+	 *  If these functions are reading another fields of ProAct.js objects, they authomatically become dependent on them.
+	 * </p>
+	 * <p>
+	 *  For example:
+	 *  <pre>
+	 *    var obj = {
+	 *      a: 1,
+	 *      b: 2,
+	 *      c: function () {
+	 *        return this.a - this.b;
+	 *      }
+	 *    };
+	 *  </pre>
+	 *  If this object - <i>obj</i> is turned to a reactive ProAct.js object, it becomes a simple object with three fields:
+	 *  <pre>
+	 *    {
+	 *      a: 1,
+	 *      b: 2,
+	 *      c: -1
+	 *    }
+	 *  </pre>
+	 *  But now <i>c</i> is dependent on <i>a</i> and <i>b</i>, so if <i>a</i> is set to <b>4</b>, <i>obj</i> becomes:
+	 *  <pre>
+	 *    {
+	 *      a: 1,
+	 *      b: 2,
+	 *      c: 2
+	 *    }
+	 *  </pre>
+	 * </p>
+	 * <p>
+	 *  The logic is the following:
+	 *  <ul>
+	 *    <li>The property is initialized to be lazy, so its state is {@link ProAct.States.init}</li>
+	 *    <li>On its first read, the {@link ProAct.currentCaller} is set to the listener of the property, so all the properties read in the function body became observed by it. The value of the property is computed using the original function of the field.</li>
+	 *    <li>On this first read the state of the property is updated to {@link ProAct.States.ready}.</li>
+	 *    <li>On its following reads it is a simple value, computed from the first read. No re-computations on get.</li>
+	 *    <li>If a property, this auto-computed property depends changes, the value of <i>this</i> ProAct.AutoProperty is recomputed.</li>
+	 *    <li>Setting the property can be implemented easy, because on set, the original function of the property is called with the new value.</li>
+	 *  </ul>
+	 * </p>
+	 * <p>
+	 *  ProAct.AutoProperty can be depend on another ProAct.AutoProperty.
+	 * </p>
+	 * <p>
+	 *  ProAct.AutoProperty is part of the properties module of ProAct.js.
+	 * </p>
+	 *
+	 * @class ProAct.AutoProperty
+	 * @extends ProAct.Property
+	 * @param {Object} proObject
+	 *      A plain JavaScript object, holding a field, this property will represent.
+	 * @param {String} property
+	 *      The name of the field of the object, this property should represent.
+	 * @see {@link ProAct.ObjectCore}
+	 * @see {@link ProAct.States.init}
+	 * @see {@link ProAct.States.ready}
+	 */
+	ProAct.AutoProperty = P.FP = function (proObject, property) {
 	  this.func = proObject[property];
 	
-	  var _this = this,
+	  var self = this,
 	      getter = function () {
-	        _this.addCaller();
-	        var oldCaller = Pro.currentCaller,
-	            get = Pro.Property.defaultGetter(_this),
-	            set = Pro.Property.defaultSetter(_this, function (newVal) {
-	              return _this.func.call(_this.proObject, newVal);
+	        self.addCaller();
+	        var oldCaller = P.currentCaller,
+	            get = P.P.defaultGetter(self),
+	            set = P.P.defaultSetter(self, function (newVal) {
+	              return self.func.call(self.proObject, newVal);
 	            }),
 	            args = arguments,
 	            autoFunction;
 	
-	        Pro.currentCaller = _this.makeListener();
+	        P.currentCaller = self.makeListener();
 	
 	        autoFunction = function () {
-	          _this.val = _this.func.apply(_this.proObject, args);
+	          self.val = self.func.apply(self.proObject, args);
 	        };
-	        Pro.flow.run(function () {
-	          Pro.flow.pushOnce(autoFunction);
+	        P.flow.run(function () {
+	          P.flow.pushOnce(autoFunction);
 	        });
 	
-	        Pro.currentCaller = oldCaller;
+	        P.currentCaller = oldCaller;
 	
-	        Pro.Property.defineProp(_this.proObject, _this.property, get, set);
+	        P.P.defineProp(self.proObject, self.property, get, set);
 	
-	        _this.state = Pro.States.ready;
+	        self.state = P.States.ready;
 	
-	        _this.val = Pro.Observable.transform(_this, _this.val);
-	        return _this.val;
+	        self.val = P.Observable.transform(self, self.val);
+	        return self.val;
 	      };
 	
-	  Pro.Property.call(this, proObject, property, getter, function () {});
+	  P.P.call(this, proObject, property, getter, function () {});
 	};
 	
-	Pro.AutoProperty.prototype = Pro.U.ex(Object.create(Pro.Property.prototype), {
-	  constructor: Pro.AutoProperty,
+	ProAct.AutoProperty.prototype = P.U.ex(Object.create(P.P.prototype), {
+	
+	  /**
+	   * Reference to the constructor of this object.
+	   *
+	   * @memberof ProAct.AutoProperty
+	   * @instance
+	   * @constant
+	   * @default ProAct.AutoProperty
+	   */
+	  constructor: ProAct.AutoProperty,
+	
+	  /**
+	   * Retrieves the {@link ProAct.Property.Types} value of <i>this</i> property.
+	   * <p>
+	   *  For ProAct.AutoProperty this is {@link ProAct.Property.Types.auto}
+	   * </p>
+	   *
+	   * @memberof ProAct.AutoProperty
+	   * @instance
+	   * @method type
+	   * @return {Number}
+	   *      The right type of the property.
+	   */
 	  type: function () {
-	    return Pro.Property.Types.auto;
+	    return P.P.Types.auto;
 	  },
+	
+	  /**
+	   * Creates the <i>listener</i> of this ProAct.AutoProperty.
+	   * <p>
+	   *  This listener turns the observable in a observer.
+	   * </p>
+	   * <p>
+	   *  The listener for ProAct.AutoProperty is an object defining the <i>call</i> method.
+	   * </p>
+	   * <p>
+	   *  It has a <i>property</i> field set to <i>this</i>.
+	   * </p>
+	   * <p>
+	   *  On value changes the <i><this</i> value is set to the value computed by the original function,
+	   *  using the {@link ProAct.Observable#transform} to transform it.
+	   * </p>
+	   *
+	   * @memberof ProAct.AutoProperty
+	   * @instance
+	   * @method makeListener
+	   * @return {Object}
+	   *      The <i>listener of this ProAct.AutoProperty</i>.
+	   */
 	  makeListener: function () {
 	    if (!this.listener) {
-	      var _this = this;
+	      var self = this;
+	
 	      this.listener = {
-	        property: _this,
+	        property: self,
 	        call: function () {
-	          _this.oldVal = _this.val;
-	          _this.val = Pro.Observable.transform(_this, _this.func.call(_this.proObject));
+	          self.oldVal = self.val;
+	          self.val = P.Observable.transform(self, self.func.call(self.proObject));
 	        }
 	      };
 	    }
 	
 	    return this.listener;
 	  },
+	
+	  /**
+	   * Called automatically after initialization of this property.
+	   * <p>
+	   *  For ProAct.AutoProperty it does nothing - the real initialization is lazy and is performed on the first read of <i>this</i>.
+	   * </p>
+	   *
+	   * @memberof ProAct.AutoProperty
+	   * @instance
+	   * @method afterInit
+	   */
 	  afterInit: function () {}
 	});
 	
-	Pro.ObjectProperty = function (proObject, property) {
-	  var _this = this, getter;
+	/**
+	 * <p>
+	 *  Constructs a ProAct.ObjectProperty. The properties are simple {@link ProAct.Observable}s with state. The object property
+	 *  has a state of a JavaScript object value.
+	 * </p>
+	 * <p>
+	 *  The value of ProAct.ObjectProperty is object, turned to reactive ProAct.js object recursively.
+	 * </p>
+	 * <p>
+	 *  On changing the object value to another object the listeners for fields with the same name in the objects, are moved from the old value's fields to the new value's fields.
+	 * </p>
+	 * <p>
+	 *  If set to null or undefined, the property is re-defined, using {@link ProAct.Property.reProb}
+	 * </p>
+	 * <p>
+	 *  ProAct.ObjectProperty is lazy - its object is made reactive on the first read of the property. Its state is set to {@link ProAct.States.ready} on the first read too.
+	 * </p>
+	 * <p>
+	 *  ProAct.ObjectProperty is part of the properties module of ProAct.js.
+	 * </p>
+	 *
+	 * @class ProAct.ObjectProperty
+	 * @extends ProAct.Property
+	 * @param {Object} proObject
+	 *      A plain JavaScript object, holding a field, this property will represent.
+	 * @param {String} property
+	 *      The name of the field of the object, this property should represent.
+	 * @see {@link ProAct.ObjectCore}
+	 * @see {@link ProAct.States.init}
+	 * @see {@link ProAct.States.ready}
+	 */
+	ProAct.ObjectProperty = OP = function (proObject, property) {
+	  var self = this, getter;
 	
 	  getter = function () {
-	    _this.addCaller();
-	    if (!_this.val.__pro__) {
-	      Pro.prob(_this.val);
+	    self.addCaller();
+	    if (!self.val.__pro__) {
+	      P.prob(self.val);
 	    }
 	
-	    var get = Pro.Property.defaultGetter(_this),
+	    var get = P.P.defaultGetter(self),
 	        set = function (newVal) {
-	          if (_this.val == newVal) {
+	          if (self.val == newVal) {
 	            return;
 	          }
 	
-	          _this.oldVal = _this.val;
-	          _this.val = newVal;
+	          self.oldVal = self.val;
+	          self.val = newVal;
 	
-	          if (_this.val === null || _this.val === undefined) {
-	            Pro.Property.reProb(_this).update();
-	            return _this;
+	          if (self.val === null || self.val === undefined) {
+	            P.P.reProb(self).update();
+	            return self;
 	          }
 	
-	          if (_this.oldVal) {
-	            if (!_this.val.__pro__) {
-	              Pro.prob(_this.val);
+	          if (self.oldVal) {
+	            if (!self.val.__pro__) {
+	              P.prob(self.val);
 	            }
 	
-	            var oldProps = _this.oldVal.__pro__.properties,
-	                newProps = _this.val.__pro__.properties,
+	            var oldProps = self.oldVal.__pro__.properties,
+	                newProps = self.val.__pro__.properties,
 	                oldPropName, oldProp, newProp, oldListeners, newListeners,
 	                i, j, oldListenersLength, newListenersLength,
 	                toAdd, toRemove = [], toRemoveLength;
@@ -3711,22 +3907,22 @@
 	            }
 	          }
 	
-	          _this.update();
+	          self.update();
 	        };
 	
-	    Pro.Property.defineProp(_this.proObject, _this.property, get, set);
+	    P.P.defineProp(self.proObject, self.property, get, set);
 	
-	    _this.state = Pro.States.ready;
-	    return _this.val;
+	    self.state = P.States.ready;
+	    return self.val;
 	  };
 	
-	  Pro.Property.call(this, proObject, property, getter, function () {});
+	  P.P.call(this, proObject, property, getter, function () {});
 	};
 	
-	Pro.ObjectProperty.prototype = Pro.U.ex(Object.create(Pro.Property.prototype), {
-	  constructor: Pro.ObjectProperty,
+	ProAct.ObjectProperty.prototype = P.U.ex(Object.create(P.P.prototype), {
+	  constructor: ProAct.ObjectProperty,
 	  type: function () {
-	    return Pro.Property.Types.object;
+	    return P.P.Types.object;
 	  },
 	  afterInit: function () {}
 	});

@@ -37,8 +37,29 @@ ProAct.NullProperty = P.NP = function (proObject, property) {
 };
 
 ProAct.NullProperty.prototype = P.U.ex(Object.create(P.P.prototype), {
+
+  /**
+   * Reference to the constructor of this object.
+   *
+   * @memberof ProAct.NullProperty
+   * @instance
+   * @constant
+   * @default ProAct.NullProperty
+   */
   constructor: ProAct.NullProperty,
 
+  /**
+   * Retrieves the {@link ProAct.Property.Types} value of <i>this</i> property.
+   * <p>
+   *  For ProAct.NullProperty this is {@link ProAct.Property.Types.nil}
+   * </p>
+   *
+   * @memberof ProAct.NullProperty
+   * @instance
+   * @method type
+   * @return {Number}
+   *      The right type of the property.
+   */
   type: function () {
     return P.P.Types.nil;
   }
