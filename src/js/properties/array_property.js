@@ -7,7 +7,7 @@ Pro.ArrayProperty = function (proObject, property) {
       _this.val = new Pro.Array(_this.val);
     }
 
-    var get = Pro.Property.DEFAULT_GETTER(_this),
+    var get = Pro.Property.defaultGetter(_this),
         set = function (newVal) {
           if (_this.val == newVal || _this.val.valueOf() == newVal) {
             return;

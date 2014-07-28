@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Class: BufferedStream</title>
+    <title>JSDoc: Class: ThrottlingStream</title>
     
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
     
-    <h1 class="page-title">Class: BufferedStream</h1>
+    <h1 class="page-title">Class: ThrottlingStream</h1>
     
     
 
@@ -29,7 +29,7 @@
     <h2>
         <span class="ancestors"><a href="ProAct.html">ProAct</a>.</span>
     
-    BufferedStream
+    ThrottlingStream
     </h2>
     
 </header>  
@@ -41,7 +41,7 @@
     
         
 <dt>
-    <h4 class="name" id="BufferedStream"><span class="type-signature"></span>new BufferedStream<span class="signature">(source, transforms)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="ThrottlingStream"><span class="type-signature"></span>new ThrottlingStream<span class="signature">(source, transforms, delay)</span><span class="type-signature"></span></h4>
     
     
 </dt>
@@ -50,20 +50,14 @@
     
     <div class="description">
         <p>
- Constructs a ProAct.BufferedStream. This is a <a href="ProAct.Stream.html">ProAct.Stream</a> with a buffer.
+ Constructs a ProAct.ThrottlingStream. This is special kind of <a href="ProAct.DelayedStream.html">ProAct.DelayedStream</a>.
 </p>
 <p>
- On new value/event the listeners are not updated, but the value/event is stored in the buffer.
+ The main idea is the following : if <i>n</i> values/events are triggered to this stream before the time delay for
+ flushing passes, only the last one, the <i>n</i>-th is emitted.
 </p>
 <p>
- When the buffer is flushed every value/event is emitted to the listeners. In case with property listeners
- they are updated only once with the last event/value. Good for performance optimizations.
-</p>
-<p>
- For example if it is set to stream mouse move events, we don't care for each of the event but for a portion of them.
-</p>
-<p>
- ProAct.BufferedStream is part of the streams module of ProAct.js.
+ ProAct.ThrottlingStream is part of the streams module of ProAct.js.
 </p>
     </div>
     
@@ -114,7 +108,10 @@
             
             
             
-            <td class="description last">A default source of the stream, can be null.</td>
+            <td class="description last">A default source of the stream, can be null.
+     <p>
+       If this is the only one passed argument and it is a number - it becomes the delay of the stream.
+     </p></td>
         </tr>
 	
 	
@@ -137,7 +134,33 @@
             
             
             
-            <td class="description last">A list of transformation to be used on all incoming chages.</td>
+            <td class="description last">A list of transformation to be used on all incoming chages.
+     <p>
+       If the arguments passed are two and this is a number - it becomes the delay of the stream.
+     </p></td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>delay</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">Number</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">The time delay to be used to flush the stream.</td>
         </tr>
 	
 	
@@ -168,7 +191,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="buffered_stream.js.html">streams/buffered_stream.js</a>, <a href="buffered_stream.js.html#line1">line 1</a>
+        <a href="throttling_stream.js.html">streams/throttling_stream.js</a>, <a href="throttling_stream.js.html#line1">line 1</a>
     </li></ul></dd>
     
     
@@ -200,7 +223,7 @@
         <h3 class="subsection-title">Extends</h3>
         
         <ul>
-            <li><a href="ProAct.Stream.html">ProAct.Stream</a></li>
+            <li><a href="ProAct.DelayedStream.html">ProAct.DelayedStream</a></li>
         </ul>
     
     
@@ -262,14 +285,14 @@
     
     <dt class="tag-default">Default Value:</dt>
     <dd class="tag-default"><ul class="dummy">
-            <li>ProAct.BufferedStream</li>
+            <li>ProAct.ThrottlingStream</li>
         </ul></dd>
     
     
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="buffered_stream.js.html">streams/buffered_stream.js</a>, <a href="buffered_stream.js.html#line42">line 42</a>
+        <a href="throttling_stream.js.html">streams/throttling_stream.js</a>, <a href="throttling_stream.js.html#line43">line 43</a>
     </li></ul></dd>
     
     
@@ -803,6 +826,112 @@ the passed <i>accumulation function</i>.
 	<dd>
 		
 <span class="param-type"><a href="ProAct.SizeBufferedStream.html">ProAct.SizeBufferedStream</a></span>
+
+
+	</dd>
+</dl>
+
+        
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="cancelDelay"><span class="type-signature"></span>cancelDelay<span class="signature">()</span><span class="type-signature"> &rarr; {<a href="ProAct.DelayedStream.html">ProAct.DelayedStream</a>}</span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>
+ Cancels the delay interval flushes. If this method is called the stream will stop emitting incoming values/event,
+ until the <a href="ProAct.DelayedStream.html#setDelay">ProAct.DelayedStream#setDelay</a> method is called.
+</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from"><ul class="dummy"><li>
+        <a href="ProAct.DelayedStream.html#cancelDelay">ProAct.DelayedStream#cancelDelay</a>
+    </li></dd>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="delayed_stream.js.html">streams/delayed_stream.js</a>, <a href="delayed_stream.js.html#line74">line 74</a>
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    <dt class="tag-see">See:</dt>
+    <dd class="tag-see">
+        <ul>
+            <li><a href="ProAct.DelayedStream.html#setDelay">ProAct.DelayedStream#setDelay</a></li>
+        </ul>
+    </dd>
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    <i>this</i>
+</div>
+
+
+
+<dl>
+	<dt>
+		Type
+	</dt>
+	<dd>
+		
+<span class="param-type"><a href="ProAct.DelayedStream.html">ProAct.DelayedStream</a></span>
 
 
 	</dd>
@@ -1823,6 +1952,11 @@ The buffer becomes empty.
     
     
 
+    
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from"><ul class="dummy"><li>
+        <a href="ProAct.BufferedStream.html#flush">ProAct.BufferedStream#flush</a>
+    </li></dd>
     
     
     
@@ -4015,6 +4149,152 @@ to the passed <i>destination</i> observable.
         
             
 <dt>
+    <h4 class="name" id="setDelay"><span class="type-signature"></span>setDelay<span class="signature">(delay)</span><span class="type-signature"> &rarr; {<a href="ProAct.DelayedStream.html">ProAct.DelayedStream</a>}</span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>
+ Modifies the delay of the stream. The current delay is canceled using the <a href="ProAct.DelayedStream.html#cancelDelay">ProAct.DelayedStream#cancelDelay</a> method.
+</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>delay</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">Number</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">The new delay of the stream.</td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from"><ul class="dummy"><li>
+        <a href="ProAct.DelayedStream.html#setDelay">ProAct.DelayedStream#setDelay</a>
+    </li></dd>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="delayed_stream.js.html">streams/delayed_stream.js</a>, <a href="delayed_stream.js.html#line96">line 96</a>
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    <i>this</i>
+</div>
+
+
+
+<dl>
+	<dt>
+		Type
+	</dt>
+	<dd>
+		
+<span class="param-type"><a href="ProAct.DelayedStream.html">ProAct.DelayedStream</a></span>
+
+
+	</dd>
+</dl>
+
+        
+    
+    
+</dd>
+
+        
+            
+<dt>
     <h4 class="name" id="throttle"><span class="type-signature"></span>throttle<span class="signature">(delay)</span><span class="type-signature"> &rarr; {<a href="ProAct.ThrottlingStream.html">ProAct.ThrottlingStream</a>}</span></h4>
     
     
@@ -4320,7 +4600,7 @@ of <i>this observable</i>.
         
             
 <dt>
-    <h4 class="name" id="trigger"><span class="type-signature"></span>trigger<span class="signature">(event, useTransformations)</span><span class="type-signature"> &rarr; {<a href="ProAct.Stream.html">ProAct.Stream</a>}</span></h4>
+    <h4 class="name" id="trigger"><span class="type-signature"></span>trigger<span class="signature">(event, useTransformations)</span><span class="type-signature"> &rarr; {<a href="ProAct.ThrottlingStream.html">ProAct.ThrottlingStream</a>}</span></h4>
     
     
 </dt>
@@ -4329,11 +4609,13 @@ of <i>this observable</i>.
     
     <div class="description">
         <p>
- Triggers a new event/value to the stream. Anything that is listening for events from
- this stream will get updated.
+ Triggers a new event/value to the stream. It is stored in the buffer of the stream and not emitted.
+ But the buffer of ProAct.DebouncingStream can store only one value/event, so when the delay passes only
+ the last value/event triggered into the stream by this method is emitted. On every call of this method the delay is reset.
+ So for example if you have mouse move as source, it will emit only the last mouse move event, that was send <i>delay</i> milliseconds ago.
 </p>
 <p>
- ProAct.Stream.t is alias of this method.
+ ProAct.DebouncingStream.t is alias of this method.
 </p>
     </div>
     
@@ -4424,11 +4706,6 @@ of <i>this observable</i>.
     
 
     
-    <dt class="inherited-from">Inherited From:</dt>
-    <dd class="inherited-from"><ul class="dummy"><li>
-        <a href="ProAct.Stream.html#trigger">ProAct.Stream#trigger</a>
-    </li></dd>
-    
     
     
     
@@ -4443,19 +4720,12 @@ of <i>this observable</i>.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="stream.js.html">streams/stream.js</a>, <a href="stream.js.html#line147">line 147</a>
+        <a href="debouncing_stream.js.html">streams/debouncing_stream.js</a>, <a href="debouncing_stream.js.html#line42">line 42</a>
     </li></ul></dd>
     
     
     
     
-    
-    <dt class="tag-see">See:</dt>
-    <dd class="tag-see">
-        <ul>
-            <li><a href="ProAct.Observable.html#update">ProAct.Observable#update</a></li>
-        </ul>
-    </dd>
     
     
     
@@ -4486,7 +4756,176 @@ of <i>this observable</i>.
 	</dt>
 	<dd>
 		
-<span class="param-type"><a href="ProAct.Stream.html">ProAct.Stream</a></span>
+<span class="param-type"><a href="ProAct.ThrottlingStream.html">ProAct.ThrottlingStream</a></span>
+
+
+	</dd>
+</dl>
+
+        
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="trigger"><span class="type-signature"></span>trigger<span class="signature">(event, useTransformations)</span><span class="type-signature"> &rarr; {<a href="ProAct.ThrottlingStream.html">ProAct.ThrottlingStream</a>}</span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>
+ Triggers a new event/value to the stream. It is stored in the buffer of the stream and not emitted.
+ But the buffer of ProAct.ThrottlingStream can store only one value/event, so when the delay passes only
+ the last value/event triggered into the stream by this method is emitted.
+</p>
+<p>
+ ProAct.ThrottlingStream.t is alias of this method.
+</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>event</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">The event/value to pass to trigger.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>useTransformations</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">Boolean</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">If the stream should transform the triggered value. By default it is true (if not passed)</td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="throttling_stream.js.html">streams/throttling_stream.js</a>, <a href="throttling_stream.js.html#line45">line 45</a>
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    <i>this</i>
+</div>
+
+
+
+<dl>
+	<dt>
+		Type
+	</dt>
+	<dd>
+		
+<span class="param-type"><a href="ProAct.ThrottlingStream.html">ProAct.ThrottlingStream</a></span>
 
 
 	</dd>
@@ -5283,7 +5722,7 @@ of <i>this observable</i>.
 <br clear="both">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.2</a> on Mon Jul 28 2014 20:59:36 GMT+0300 (EEST)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.2</a> on Mon Jul 28 2014 20:59:42 GMT+0300 (EEST)
 </footer>
 
 <script> prettyPrint(); </script>

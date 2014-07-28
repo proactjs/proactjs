@@ -7,7 +7,7 @@ Pro.ObjectProperty = function (proObject, property) {
       Pro.prob(_this.val);
     }
 
-    var get = Pro.Property.DEFAULT_GETTER(_this),
+    var get = Pro.Property.defaultGetter(_this),
         set = function (newVal) {
           if (_this.val == newVal) {
             return;

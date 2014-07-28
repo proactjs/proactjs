@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Source: streams/size_buffered_stream.js</title>
+    <title>JSDoc: Source: streams/delayed_stream.js</title>
     
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
     
-    <h1 class="page-title">Source: streams/size_buffered_stream.js</h1>
+    <h1 class="page-title">Source: streams/delayed_stream.js</h1>
     
     
 
@@ -27,84 +27,125 @@
         <article>
             <pre class="prettyprint source"><code>/**
  * &lt;p>
- *  Constructs a ProAct.SizeBufferedStream. When the buffer is full (has the same size as &lt;i>this&lt;/i> size), it is flushed.
+ *  Constructs a ProAct.DelayedStream. When a given time interval passes the buffer of the stream is flushed authomatically.
  * &lt;/p>
  * &lt;p>
- *  ProAct.SizeBufferedStream is part of the streams module of ProAct.js.
+ *  ProAct.DelayedStream is part of the streams module of ProAct.js.
  * &lt;/p>
  *
- * @class ProAct.SizeBufferedStream
+ * @class ProAct.DelayedStream
  * @extends ProAct.BufferedStream
  * @param {ProAct.Observable} source
  *      A default source of the stream, can be null.
  *      &lt;p>
- *        If this is the only one passed argument and it is a number - it becomes the size of the buffer.
+ *        If this is the only one passed argument and it is a number - it becomes the delay of the stream.
  *      &lt;/p>
  * @param {Array} transforms
  *      A list of transformation to be used on all incoming chages.
  *      &lt;p>
- *        If the arguments passed are two and this is a number - it becomes the size of the buffer.
+ *        If the arguments passed are two and this is a number - it becomes the delay of the stream.
  *      &lt;/p>
- * @param {Number} size
- *      The size of the buffer.
- * @throws {Error} SizeBufferedStream must contain size, if there is no size passed to it.
+ * @param {Number} delay
+ *      The time delay to be used to flush the stream.
  */
-ProAct.SizeBufferedStream = P.SBS = function (source, transforms, size) {
-  if (arguments.length === 1 && typeof source === 'number') {
-    size = source;
+ProAct.DelayedStream = P.DBS = function (source, transforms, delay) {
+  if (typeof source === 'number') {
+    delay = source;
     source = null;
-  } else if (arguments.length === 2 && typeof transforms === 'number') {
-    size = transforms;
+  } else if (P.U.isObject(source) && typeof transforms === 'number') {
+    delay = transforms;
     transforms = null;
   }
   P.BS.call(this, source, transforms);
 
-  if (!size) {
-    throw new Error('SizeBufferedStream must contain size!');
-  }
-
-  this.size = size;
+  this.delayId = null;
+  this.setDelay(delay);
 };
 
-ProAct.SizeBufferedStream.prototype = P.U.ex(Object.create(P.BS.prototype), {
+ProAct.DelayedStream.prototype = P.U.ex(Object.create(P.BS.prototype), {
 
   /**
    * Reference to the constructor of this object.
    *
-   * @memberof ProAct.SizeBufferedStream
+   * @memberof ProAct.DelayedStream
    * @instance
    * @constant
    * @type {Object}
-   * @default ProAct.SizeBufferedStream
+   * @default ProAct.DelayedStream
    */
-  constructor: ProAct.SizeBufferedStream,
+  constructor: ProAct.DelayedStream,
 
   /**
    * &lt;p>
-   *  Triggers a new event/value to the stream. If the buffer is full, anything that is listening for events from
-   *  this stream will get updated with all the values/events in the buffer.
+   *  Triggers a new event/value to the stream. It is stored in the buffer of the stream and not emitted.
    * &lt;/p>
    * &lt;p>
-   *  ProAct.Stream.t is alias of this method.
+   *  ProAct.DelayedStream.t is alias of this method.
    * &lt;/p>
    *
-   * @memberof ProAct.SizeBufferedStream
+   * @memberof ProAct.DelayedStream
    * @instance
    * @method trigger
    * @param {Object} event
    *      The event/value to pass to trigger.
    * @param {Boolean} useTransformations
    *      If the stream should transform the triggered value. By default it is true (if not passed)
-   * @return {ProAct.Stream}
+   * @return {ProAct.DelayedStream}
    *      &lt;i>this&lt;/i>
-   * @see {@link ProAct.BufferedStream#flush}
    */
   trigger: function (event, useTransformations) {
     this.buffer.push(event, useTransformations);
+    return this;
+  },
 
-    if (this.size !== null && (this.buffer.length / 2) === this.size) {
-      this.flush();
+  /**
+   * &lt;p>
+   *  Cancels the delay interval flushes. If this method is called the stream will stop emitting incoming values/event,
+   *  until the {@link ProAct.DelayedStream#setDelay} method is called.
+   * &lt;/p>
+   *
+   * @memberof ProAct.DelayedStream
+   * @instance
+   * @method cancelDelay
+   * @return {ProAct.DelayedStream}
+   *      &lt;i>this&lt;/i>
+   * @see {@link ProAct.DelayedStream#setDelay}
+   */
+  cancelDelay: function () {
+    if (this.delayId !== null){
+      clearInterval(this.delayId);
+      this.delayId = null;
     }
+
+    return this;
+  },
+
+  /**
+   * &lt;p>
+   *  Modifies the delay of the stream. The current delay is canceled using the {@link ProAct.DelayedStream#cancelDelay} method.
+   * &lt;/p>
+   *
+   * @memberof ProAct.DelayedStream
+   * @instance
+   * @method setDelay
+   * @param {Number} delay
+   *      The new delay of the stream.
+   * @return {ProAct.DelayedStream}
+   *      &lt;i>this&lt;/i>
+   */
+  setDelay: function (delay) {
+    this.delay = delay;
+    this.cancelDelay();
+
+    if (!this.delay) {
+      return;
+    }
+
+    var self = this;
+    this.delayId = setInterval(function () {
+      self.flush();
+    }, this.delay);
+
     return this;
   }
 });
@@ -112,23 +153,22 @@ ProAct.SizeBufferedStream.prototype = P.U.ex(Object.create(P.BS.prototype), {
 P.U.ex(P.S.prototype, {
 
   /**
-   * Creates a new {@link ProAct.SizeBufferedStream} instance having as source &lt;i>this&lt;/i>.
+   * Creates a new {@link ProAct.DelayedStream} instance having as source &lt;i>this&lt;/i>.
    *
    * @memberof ProAct.Stream
    * @instance
-   * @method bufferit
-   * @param {Number} size
-   *      The size of the buffer of the new ProAct.SizeBufferedStream.
-   * @return {ProAct.SizeBufferedStream}
-   *      A {@link ProAct.SizeBufferedStream} instance.
-   * @throws {Error} SizeBufferedStream must contain size, if there is no size passed to it.
+   * @method delay
+   * @param {Number} delay
+   *      The time delay to be used for flushing the buffer of the new stream.
+   * @return {ProAct.DelayedStream}
+   *      A {@link ProAct.DelayedStream} instance.
    */
-  bufferit: function (size) {
-    return new P.SBS(this, size);
+  delay: function (delay) {
+    return new P.DBS(this, delay);
   }
 });
 
-P.SBS.prototype.t = P.SBS.prototype.trigger;
+P.DBS.prototype.t = P.DBS.prototype.trigger;
 </code></pre>
         </article>
     </section>

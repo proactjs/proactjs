@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Source: streams/size_buffered_stream.js</title>
+    <title>JSDoc: Source: streams/throttling_stream.js</title>
     
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
     
-    <h1 class="page-title">Source: streams/size_buffered_stream.js</h1>
+    <h1 class="page-title">Source: streams/throttling_stream.js</h1>
     
     
 
@@ -27,108 +27,95 @@
         <article>
             <pre class="prettyprint source"><code>/**
  * &lt;p>
- *  Constructs a ProAct.SizeBufferedStream. When the buffer is full (has the same size as &lt;i>this&lt;/i> size), it is flushed.
+ *  Constructs a ProAct.ThrottlingStream. This is special kind of {@link ProAct.DelayedStream}.
  * &lt;/p>
  * &lt;p>
- *  ProAct.SizeBufferedStream is part of the streams module of ProAct.js.
+ *  The main idea is the following : if &lt;i>n&lt;/i> values/events are triggered to this stream before the time delay for
+ *  flushing passes, only the last one, the &lt;i>n&lt;/i>-th is emitted.
+ * &lt;/p>
+ * &lt;p>
+ *  ProAct.ThrottlingStream is part of the streams module of ProAct.js.
  * &lt;/p>
  *
- * @class ProAct.SizeBufferedStream
- * @extends ProAct.BufferedStream
+ * @class ProAct.ThrottlingStream
+ * @extends ProAct.DelayedStream
  * @param {ProAct.Observable} source
  *      A default source of the stream, can be null.
  *      &lt;p>
- *        If this is the only one passed argument and it is a number - it becomes the size of the buffer.
+ *        If this is the only one passed argument and it is a number - it becomes the delay of the stream.
  *      &lt;/p>
  * @param {Array} transforms
  *      A list of transformation to be used on all incoming chages.
  *      &lt;p>
- *        If the arguments passed are two and this is a number - it becomes the size of the buffer.
+ *        If the arguments passed are two and this is a number - it becomes the delay of the stream.
  *      &lt;/p>
- * @param {Number} size
- *      The size of the buffer.
- * @throws {Error} SizeBufferedStream must contain size, if there is no size passed to it.
+ * @param {Number} delay
+ *      The time delay to be used to flush the stream.
  */
-ProAct.SizeBufferedStream = P.SBS = function (source, transforms, size) {
-  if (arguments.length === 1 && typeof source === 'number') {
-    size = source;
-    source = null;
-  } else if (arguments.length === 2 && typeof transforms === 'number') {
-    size = transforms;
-    transforms = null;
-  }
-  P.BS.call(this, source, transforms);
-
-  if (!size) {
-    throw new Error('SizeBufferedStream must contain size!');
-  }
-
-  this.size = size;
+ProAct.ThrottlingStream = P.TDS = function (source, transforms, delay) {
+  P.DBS.call(this, source, transforms, delay);
 };
 
-ProAct.SizeBufferedStream.prototype = P.U.ex(Object.create(P.BS.prototype), {
+ProAct.ThrottlingStream.prototype = P.U.ex(Object.create(P.DBS.prototype), {
 
   /**
    * Reference to the constructor of this object.
    *
-   * @memberof ProAct.SizeBufferedStream
+   * @memberof ProAct.ThrottlingStream
    * @instance
    * @constant
    * @type {Object}
-   * @default ProAct.SizeBufferedStream
+   * @default ProAct.ThrottlingStream
    */
-  constructor: ProAct.SizeBufferedStream,
+  constructor: ProAct.ThrottlingStream,
 
   /**
    * &lt;p>
-   *  Triggers a new event/value to the stream. If the buffer is full, anything that is listening for events from
-   *  this stream will get updated with all the values/events in the buffer.
+   *  Triggers a new event/value to the stream. It is stored in the buffer of the stream and not emitted.
+   *  But the buffer of ProAct.ThrottlingStream can store only one value/event, so when the delay passes only
+   *  the last value/event triggered into the stream by this method is emitted.
    * &lt;/p>
    * &lt;p>
-   *  ProAct.Stream.t is alias of this method.
+   *  ProAct.ThrottlingStream.t is alias of this method.
    * &lt;/p>
    *
-   * @memberof ProAct.SizeBufferedStream
+   * @memberof ProAct.ThrottlingStream
    * @instance
    * @method trigger
    * @param {Object} event
    *      The event/value to pass to trigger.
    * @param {Boolean} useTransformations
    *      If the stream should transform the triggered value. By default it is true (if not passed)
-   * @return {ProAct.Stream}
+   * @return {ProAct.ThrottlingStream}
    *      &lt;i>this&lt;/i>
-   * @see {@link ProAct.BufferedStream#flush}
    */
   trigger: function (event, useTransformations) {
-    this.buffer.push(event, useTransformations);
+    this.buffer[0] = event;
+    this.buffer[1] = useTransformations;
 
-    if (this.size !== null && (this.buffer.length / 2) === this.size) {
-      this.flush();
-    }
     return this;
   }
 });
 
-P.U.ex(P.S.prototype, {
+P.U.ex(P.Stream.prototype, {
 
   /**
-   * Creates a new {@link ProAct.SizeBufferedStream} instance having as source &lt;i>this&lt;/i>.
+   * Creates a new {@link ProAct.ThrottlingStream} instance having as source &lt;i>this&lt;/i>.
    *
    * @memberof ProAct.Stream
    * @instance
-   * @method bufferit
-   * @param {Number} size
-   *      The size of the buffer of the new ProAct.SizeBufferedStream.
-   * @return {ProAct.SizeBufferedStream}
-   *      A {@link ProAct.SizeBufferedStream} instance.
-   * @throws {Error} SizeBufferedStream must contain size, if there is no size passed to it.
+   * @method throttle
+   * @param {Number} delay
+   *      The time delay to be used for flushing the buffer of the new stream.
+   * @return {ProAct.ThrottlingStream}
+   *      A {@link ProAct.ThrottlingStream} instance.
    */
-  bufferit: function (size) {
-    return new P.SBS(this, size);
+  throttle: function (delay) {
+    return new P.TDS(this, delay);
   }
 });
 
-P.SBS.prototype.t = P.SBS.prototype.trigger;
+P.TDS.prototype.t = P.TDS.prototype.trigger;
 </code></pre>
         </article>
     </section>

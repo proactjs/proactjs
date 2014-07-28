@@ -27,7 +27,7 @@
     
 <header>
     <h2>
-        <span class="ancestors"><a href="ProAct.html">ProAct</a><a href="ProAct.Event.html">.Event</a>.</span>
+        <span class="ancestors"><a href="ProAct.html">ProAct</a><a href="ProAct.Property.html">.Property</a>.</span>
     
     Types
     </h2>
@@ -40,7 +40,7 @@
     
     
         
-            <div class="description">Defines the possible types of the ProAct.Events.</div>
+            <div class="description">Defines the possible types of the ProAct.Property.</div>
         
         
         
@@ -66,7 +66,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="pro_event.js.html">events/pro_event.js</a>, <a href="pro_event.js.html#line26">line 26</a>
+        <a href="property.js.html">properties/property.js</a>, <a href="property.js.html#line72">line 72</a>
     </li></ul></dd>
     
     
@@ -98,30 +98,17 @@
         <dl>
             
 <dt>
-    <h4 class="name" id="array"><span class="type-signature">&lt;static, constant> </span>array<span class="type-signature"> :Number</span></h4>
+    <h4 class="name" id="array"><span class="type-signature">&lt;static, constant> </span>array<span class="type-signature"></span></h4>
     
     
 </dt>
 <dd>
     
     <div class="description">
-        Array type events. Events for changes in ProAct.Array.
-<p>
- The args should consist of operation, index, old values, new values.
-</p>
+        ProAct.Property for array types - fields containing arrays.
     </div>
     
     
-    
-        <h5>Type:</h5>
-        <ul>
-            <li>
-                
-<span class="param-type">Number</span>
-
-
-            </li>
-        </ul>
     
 
     
@@ -147,78 +134,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="pro_event.js.html">events/pro_event.js</a>, <a href="pro_event.js.html#line57">line 57</a>
-    </li></ul></dd>
-    
-    
-    
-    
-    
-    <dt class="tag-see">See:</dt>
-    <dd class="tag-see">
-        <ul>
-            <li>ProAct.Array.Operations</li>
-        </ul>
-    </dd>
-    
-    
-    
-</dl>
-
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="close"><span class="type-signature">&lt;static, constant> </span>close<span class="type-signature"> :Number</span></h4>
-    
-    
-</dt>
-<dd>
-    
-    <div class="description">
-        Close type events. Events for closing streams or destroying properties.
-    </div>
-    
-    
-    
-        <h5>Type:</h5>
-        <ul>
-            <li>
-                
-<span class="param-type">Number</span>
-
-
-            </li>
-        </ul>
-    
-
-    
-<dl class="details">
-    
-        
-    
-    
-    
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="pro_event.js.html">events/pro_event.js</a>, <a href="pro_event.js.html#line66">line 66</a>
+        <a href="property.js.html">properties/property.js</a>, <a href="property.js.html#line113">line 113</a>
     </li></ul></dd>
     
     
@@ -236,27 +152,17 @@
         
             
 <dt>
-    <h4 class="name" id="error"><span class="type-signature">&lt;static, constant> </span>error<span class="type-signature"> :Number</span></h4>
+    <h4 class="name" id="auto"><span class="type-signature">&lt;static, constant> </span>auto<span class="type-signature"></span></h4>
     
     
 </dt>
 <dd>
     
     <div class="description">
-        Error type events. Events for errors.
+        ProAct.Property for auto computed types - Functions.
     </div>
     
     
-    
-        <h5>Type:</h5>
-        <ul>
-            <li>
-                
-<span class="param-type">Number</span>
-
-
-            </li>
-        </ul>
     
 
     
@@ -282,7 +188,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="pro_event.js.html">events/pro_event.js</a>, <a href="pro_event.js.html#line75">line 75</a>
+        <a href="property.js.html">properties/property.js</a>, <a href="property.js.html#line95">line 95</a>
     </li></ul></dd>
     
     
@@ -300,31 +206,17 @@
         
             
 <dt>
-    <h4 class="name" id="value"><span class="type-signature">&lt;static, constant> </span>value<span class="type-signature"> :Number</span></h4>
+    <h4 class="name" id="nil"><span class="type-signature">&lt;static, constant> </span>nil<span class="type-signature"></span></h4>
     
     
 </dt>
 <dd>
     
     <div class="description">
-        Value type events. Events for changing a value.
-<p>
- For properties the args of the event contain the ProAct Object, the old value
- of the property and the new value.
-</p>
+        ProAct.Property for nil types - fields containing null or undefined.
     </div>
     
     
-    
-        <h5>Type:</h5>
-        <ul>
-            <li>
-                
-<span class="param-type">Number</span>
-
-
-            </li>
-        </ul>
     
 
     
@@ -350,7 +242,115 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="pro_event.js.html">events/pro_event.js</a>, <a href="pro_event.js.html#line44">line 44</a>
+        <a href="property.js.html">properties/property.js</a>, <a href="property.js.html#line122">line 122</a>
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="object"><span class="type-signature">&lt;static, constant> </span>object<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        ProAct.Property for object types - fields containing objects.
+    </div>
+    
+    
+    
+
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="property.js.html">properties/property.js</a>, <a href="property.js.html#line104">line 104</a>
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="simple"><span class="type-signature">&lt;static, constant> </span>simple<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        ProAct.Property for simple types - Numbers, Strings or Booleans.
+    </div>
+    
+    
+    
+
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="property.js.html">properties/property.js</a>, <a href="property.js.html#line86">line 86</a>
     </li></ul></dd>
     
     
@@ -368,6 +368,149 @@
         </dl>
     
     
+    
+        <h3 class="subsection-title">Methods</h3>
+        
+        <dl>
+            
+<dt>
+    <h4 class="name" id="type"><span class="type-signature">&lt;static> </span>type<span class="signature">(value)</span><span class="type-signature"> &rarr; {Number}</span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Retrieves the right ProAct.Property.Types value from a value.
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>value</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">The value to use to compute the ProAct.Property.Types member for.</td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="property.js.html">properties/property.js</a>, <a href="property.js.html#line134">line 134</a>
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    The type of the passed value.
+</div>
+
+
+
+<dl>
+	<dt>
+		Type
+	</dt>
+	<dd>
+		
+<span class="param-type">Number</span>
+
+
+	</dd>
+</dl>
+
+        
+    
+    
+</dd>
+
+        </dl>
     
     
     
@@ -389,7 +532,7 @@
 <br clear="both">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.2</a> on Mon Jul 28 2014 20:59:38 GMT+0300 (EEST)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.2</a> on Mon Jul 28 2014 20:59:40 GMT+0300 (EEST)
 </footer>
 
 <script> prettyPrint(); </script>

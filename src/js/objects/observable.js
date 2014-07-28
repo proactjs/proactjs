@@ -78,7 +78,6 @@ P.Observable.prototype = {
    * @memberof ProAct.Observable
    * @instance
    * @constant
-   * @type {Object}
    * @default ProAct.Observable
    */
   constructor: ProAct.Observable,

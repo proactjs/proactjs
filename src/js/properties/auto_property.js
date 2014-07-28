@@ -5,8 +5,8 @@ Pro.AutoProperty = function (proObject, property) {
       getter = function () {
         _this.addCaller();
         var oldCaller = Pro.currentCaller,
-            get = Pro.Property.DEFAULT_GETTER(_this),
-            set = Pro.Property.DEFAULT_SETTER(_this, function (newVal) {
+            get = Pro.Property.defaultGetter(_this),
+            set = Pro.Property.defaultSetter(_this, function (newVal) {
               return _this.func.call(_this.proObject, newVal);
             }),
             args = arguments,

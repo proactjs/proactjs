@@ -1,28 +1,55 @@
-/**
- * <p>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: properties/property.js</title>
+    
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+    
+    <h1 class="page-title">Source: properties/property.js</h1>
+    
+    
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source"><code>/**
+ * &lt;p>
  *  Constructs a ProAct.Property. The properties are simple {@link ProAct.Observable}s with state. The basic property
  *  has a state of a simple value - number/string/boolean.
- * </p>
- * <p>
+ * &lt;/p>
+ * &lt;p>
  *  Every property represents a field in a plain javascript object. It makes it reactive, on reading the property value,
  *  if {@link ProAct.currentCaller} is set, it is added as a listener to the property changes.
- * </p>
- * <p>
+ * &lt;/p>
+ * &lt;p>
  *  Every property has a type the default property has a type of a simple value.
- * </p>
- * <p>
+ * &lt;/p>
+ * &lt;p>
  *  All the properties of an object are managed by its {@link ProAct.ObjectCore}, which is set to a hidden field of the object - '__pro__'.
- * </p>
- * <p>
+ * &lt;/p>
+ * &lt;p>
  *  When created every property is in {@link ProAct.States.init} state, when it is functional, the state is changed to {@link ProAct.States.ready}.
  *  If the property is not in {@link ProAct.States.ready} state, it is not useable.
- * </p>
- * <p>
+ * &lt;/p>
+ * &lt;p>
  *  {@link ProAct.Property#init} is called by this constructor for the property initialization. It should initialize the property and set its state to {@link ProAct.States.ready}.
- * </p>
- * <p>
+ * &lt;/p>
+ * &lt;p>
  *  ProAct.Property is part of the properties module of ProAct.js.
- * </p>
+ * &lt;/p>
  *
  * @class ProAct.Property
  * @extends ProAct.Observable
@@ -31,9 +58,9 @@
  * @param {String} property
  *      The name of the field of the object, this property should represent.
  * @param {Function} getter
- *      An optional getter to be used when the property is read. If this parameter is empty, a new {@link ProAct.Property.defaultGetter} is build for <i>this</i>.
+ *      An optional getter to be used when the property is read. If this parameter is empty, a new {@link ProAct.Property.defaultGetter} is build for &lt;i>this&lt;/i>.
  * @param {Function} setter
- *      An optional setter to be used when the property is written. If this parameter is empty, a new {@link ProAct.Property.defaultSetter} is build for <i>this</i>.
+ *      An optional setter to be used when the property is written. If this parameter is empty, a new {@link ProAct.Property.defaultSetter} is build for &lt;i>this&lt;/i>.
  * @see {@link ProAct.ObjectCore}
  * @see {@link ProAct.Property.defaultGetter}
  * @see {@link ProAct.Property.defaultSetter}
@@ -148,14 +175,14 @@ P.U.ex(ProAct.Property, {
 
   /**
    * Generates a default getter function for a ProAct.Property instance.
-   * <p>
+   * &lt;p>
    *  Every ProAct.Property instance has a getter and a setter, they can be passed in the constructor, but if left blank,
    *  this method is used for creating the getter function.
-   * </p>
-   * <p>
+   * &lt;/p>
+   * &lt;p>
    *  The default getter function uses {@link ProAct.Property#addCaller} method to track the {@link ProAct.currentCaller} listener if set.
-   *  If it is set it is added as a listener to the passed <i>property</i>.
-   * </p>
+   *  If it is set it is added as a listener to the passed &lt;i>property&lt;/i>.
+   * &lt;/p>
    *
    * @memberof ProAct.Property
    * @static
@@ -174,24 +201,24 @@ P.U.ex(ProAct.Property, {
 
   /**
    * Generates a default setter function for a ProAct.Property instance.
-   * <p>
+   * &lt;p>
    *  Every ProAct.Property instance has a setter and a getter, they can be passed in the constructor, but if left blank,
    *  this method is used for creating the setter function.
-   * </p>
-   * <p>
-   *  The default setter function uses {@link ProAct.Property#update} method to update all the listeners for <i>change</i>s for the passed
-   *  <i>property</i>.
-   * </p>
-   * <p>
-   *  It updates the listeners only if the new value of the property is different from the old one (using <i>===</i> for the comparison).
-   * </p>
+   * &lt;/p>
+   * &lt;p>
+   *  The default setter function uses {@link ProAct.Property#update} method to update all the listeners for &lt;i>change&lt;/i>s for the passed
+   *  &lt;i>property&lt;/i>.
+   * &lt;/p>
+   * &lt;p>
+   *  It updates the listeners only if the new value of the property is different from the old one (using &lt;i>===&lt;/i> for the comparison).
+   * &lt;/p>
    *
    * @memberof ProAct.Property
    * @static
    * @param {ProAct.Property} property
    *      The ProAct.Property instance to generate a setter function for.
    * @param {Function} setter
-   *      A setter function for the way of setting the value. It can be skipped if the value should be set using <i>=</i>.
+   *      A setter function for the way of setting the value. It can be skipped if the value should be set using &lt;i>=&lt;/i>.
    * @return {Function}
    *      The generated setter function.
    */
@@ -218,10 +245,10 @@ P.U.ex(ProAct.Property, {
   },
 
   /**
-   * Used to define the managed by a ProAct.Property instance field of the passed <i>obj</i>.
-   * <p>
+   * Used to define the managed by a ProAct.Property instance field of the passed &lt;i>obj&lt;/i>.
+   * &lt;p>
    *  The field is writable, enumerable and configurable.
-   * </p>
+   * &lt;/p>
    *
    * @memberof ProAct.Property
    * @static
@@ -245,17 +272,17 @@ P.U.ex(ProAct.Property, {
 
   /**
    * Recreates a property, using its current value.
-   * <p>
+   * &lt;p>
    *  For example if the initial value of the field was null, the property can be set to be instance of {@link ProAct.NullProperty},
-   *  but if it changes to the number <i>3</i> it can be changed to {@link ProAct.Property} using this method.
-   * </p>
-   * <p>
-   *  The re-definition works by using {@link ProAct.Property#destroy} to destroy the passed <i>property</i> first, and then the
-   *  {@link ProAct.ObjectCore#makeProp} method is called of the {@link ProAct.ObjectCore} of the object the <i>property</i> belongs to.
-   * </p>
-   * <p>
+   *  but if it changes to the number &lt;i>3&lt;/i> it can be changed to {@link ProAct.Property} using this method.
+   * &lt;/p>
+   * &lt;p>
+   *  The re-definition works by using {@link ProAct.Property#destroy} to destroy the passed &lt;i>property&lt;/i> first, and then the
+   *  {@link ProAct.ObjectCore#makeProp} method is called of the {@link ProAct.ObjectCore} of the object the &lt;i>property&lt;/i> belongs to.
+   * &lt;/p>
+   * &lt;p>
    *  This way a new ProAct.Property instance is created to replace the passed one.
-   * </p>
+   * &lt;/p>
    *
    * @memberof ProAct.Property
    * @static
@@ -287,10 +314,10 @@ ProAct.Property.prototype = P.U.ex(Object.create(P.Observable.prototype), {
   constructor: ProAct.Property,
 
   /**
-   * Retrieves the {@link ProAct.Property.Types} value of <i>this</i> property.
-   * <p>
+   * Retrieves the {@link ProAct.Property.Types} value of &lt;i>this&lt;/i> property.
+   * &lt;p>
    *  For instances of the base class - ProAct.Property it is {@link ProAct.Property.Types.simple}.
-   * </p>
+   * &lt;/p>
    *
    * @memberof ProAct.Property
    * @instance
@@ -303,18 +330,18 @@ ProAct.Property.prototype = P.U.ex(Object.create(P.Observable.prototype), {
   },
 
   /**
-   * Creates the <i>event</i> to be send to the listeners of this ProAct.Property on update.
-   * <p>
-   *  The <i>event</i> should be an instance of {@link ProAct.Event}.
-   * </p>
-   * <p>
+   * Creates the &lt;i>event&lt;/i> to be send to the listeners of this ProAct.Property on update.
+   * &lt;p>
+   *  The &lt;i>event&lt;/i> should be an instance of {@link ProAct.Event}.
+   * &lt;/p>
+   * &lt;p>
    *  By default this method returns {@link ProAct.Event.Types.value} event with target the property name and arguments:
-   *  <ul>
-   *    <li>The object this ProAct.Property manages a field for.</li>
-   *    <li>The old value of this property.</li>
-   *    <li>The new value of this property.</li>
-   *  </ul>
-   * </p>
+   *  &lt;ul>
+   *    &lt;li>The object this ProAct.Property manages a field for.&lt;/li>
+   *    &lt;li>The old value of this property.&lt;/li>
+   *    &lt;li>The new value of this property.&lt;/li>
+   *  &lt;/ul>
+   * &lt;/p>
    *
    * @memberof ProAct.Property
    * @instance
@@ -330,25 +357,25 @@ ProAct.Property.prototype = P.U.ex(Object.create(P.Observable.prototype), {
   },
 
   /**
-   * Creates the <i>listener</i> of this ProAct.Property.
-   * <p>
+   * Creates the &lt;i>listener&lt;/i> of this ProAct.Property.
+   * &lt;p>
    *  This listener turns the observable in a observer.
-   * </p>
-   * <p>
-   *  The listener for ProAct.Property is an object defining the <i>call</i> method.
-   * </p>
-   * <p>
-   *  It has a <i>property</i> field set to <i>this</i>.
-   * </p>
-   * <p>
-   *  On value changes the <i><this</i> value is set to the new value using the {@link ProAct.Observable#transform} to transform it.
-   * </p>
+   * &lt;/p>
+   * &lt;p>
+   *  The listener for ProAct.Property is an object defining the &lt;i>call&lt;/i> method.
+   * &lt;/p>
+   * &lt;p>
+   *  It has a &lt;i>property&lt;/i> field set to &lt;i>this&lt;/i>.
+   * &lt;/p>
+   * &lt;p>
+   *  On value changes the &lt;i>&lt;this&lt;/i> value is set to the new value using the {@link ProAct.Observable#transform} to transform it.
+   * &lt;/p>
    *
    * @memberof ProAct.Property
    * @instance
    * @method makeListener
    * @return {Object}
-   *      The <i>listener of this ProAct.Property</i>.
+   *      The &lt;i>listener of this ProAct.Property&lt;/i>.
    */
   makeListener: function () {
     if (!this.listener) {
@@ -372,15 +399,15 @@ ProAct.Property.prototype = P.U.ex(Object.create(P.Observable.prototype), {
 
   /**
    * Initializes this property.
-   * <p>
-   *  This method logic is run only if the current state of <i>this</i> is {@link ProAct.States.init}.
-   * </p>
-   * <p>
+   * &lt;p>
+   *  This method logic is run only if the current state of &lt;i>this&lt;/i> is {@link ProAct.States.init}.
+   * &lt;/p>
+   * &lt;p>
    *  First the property is defined as a field in its object, using {@link ProAct.Property.defineProp}.
-   * </p>
-   * <p>
+   * &lt;/p>
+   * &lt;p>
    *  Then {@link ProAct.Property#afterInit} is called to finish the initialization.
-   * </p>
+   * &lt;/p>
    *
    * @memberof ProAct.Property
    * @instance
@@ -399,12 +426,12 @@ ProAct.Property.prototype = P.U.ex(Object.create(P.Observable.prototype), {
 
   /**
    * Called automatically after initialization of this property.
-   * <p>
-   *  By default it changes the state of <i>this</i> to {@link ProAct.States.ready}.
-   * </p>
-   * <p>
+   * &lt;p>
+   *  By default it changes the state of &lt;i>this&lt;/i> to {@link ProAct.States.ready}.
+   * &lt;/p>
+   * &lt;p>
    *  It can be overridden to define more complex initialization logic.
-   * </p>
+   * &lt;/p>
    *
    * @memberof ProAct.Property
    * @instance
@@ -416,9 +443,9 @@ ProAct.Property.prototype = P.U.ex(Object.create(P.Observable.prototype), {
 
   /**
    * Uses {@link ProAct.currentCaller} to automatically add a new listener to this property if the caller is set.
-   * <p>
+   * &lt;p>
    *  This method is used by the default getter to make every reader of the property a listener to it.
-   * </p>
+   * &lt;/p>
    *
    * @memberof ProAct.Property
    * @instance
@@ -434,9 +461,9 @@ ProAct.Property.prototype = P.U.ex(Object.create(P.Observable.prototype), {
 
   /**
    * Destroys this ProAct.Property instance, by making the field it manages to a normal field.
-   * <p>
-   *  The state of <i>this</i> is set to {@link ProAct.States.destroyed}.
-   * </p>
+   * &lt;p>
+   *  The state of &lt;i>this&lt;/i> is set to {@link ProAct.States.destroyed}.
+   * &lt;/p>
    *
    * @memberof ProAct.Property
    * @instance
@@ -460,10 +487,10 @@ ProAct.Property.prototype = P.U.ex(Object.create(P.Observable.prototype), {
   },
 
   /**
-   * The <b>toString()</b> method returns a string representing this ProAct.Property.
-   * <p>
-   *  The string representation is the value of <i>this</i> property.
-   * </p>
+   * The &lt;b>toString()&lt;/b> method returns a string representing this ProAct.Property.
+   * &lt;p>
+   *  The string representation is the value of &lt;i>this&lt;/i> property.
+   * &lt;/p>
    *
    * @memberof ProAct.Property
    * @instance
@@ -473,3 +500,26 @@ ProAct.Property.prototype = P.U.ex(Object.create(P.Observable.prototype), {
     return this.val;
   }
 });
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Index</a></h2><h3>Classes</h3><ul><li><a href="ProAct.BufferedStream.html">BufferedStream</a></li><li><a href="ProAct.DebouncingStream.html">DebouncingStream</a></li><li><a href="ProAct.DelayedStream.html">DelayedStream</a></li><li><a href="ProAct.Event.html">Event</a></li><li><a href="ProAct.Flow.html">Flow</a></li><li><a href="ProAct.Observable.html">Observable</a></li><li><a href="ProAct.Property.html">Property</a></li><li><a href="ProAct.Queue.html">Queue</a></li><li><a href="ProAct.Queues.html">Queues</a></li><li><a href="ProAct.SizeBufferedStream.html">SizeBufferedStream</a></li><li><a href="ProAct.Stream.html">Stream</a></li><li><a href="ProAct.ThrottlingStream.html">ThrottlingStream</a></li></ul><h3>Namespaces</h3><ul><li><a href="ProAct.html">ProAct</a></li><li><a href="ProAct.Configuration.html">Configuration</a></li><li><a href="ProAct.Event.Types.html">Types</a></li><li><a href="ProAct.Property.Types.html">Types</a></li><li><a href="ProAct.States.html">States</a></li><li><a href="ProAct.Utils.html">Utils</a></li></ul><h3>Global</h3><ul><li><a href="global.html#BadValue">BadValue</a></li></ul>
+</nav>
+
+<br clear="both">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.2</a> on Mon Jul 28 2014 20:59:35 GMT+0300 (EEST)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
