@@ -46,7 +46,7 @@ Pro.Array.Listeners = pArrayLs = Pro.Array.Listeners || {
         }
         transformed._array.length = 0;
         push.apply(transformed._array, concat.apply(original._array, toAdd));
-        transformed.updateByDiff(nvs);
+        transformed.core.updateByDiff(nvs);
       } else if (op === pArrayOps.splice) {
         pArrayProto.splice.apply(transformed, [ind, ov.length].concat(nv));
       }
@@ -81,7 +81,7 @@ Pro.Array.Listeners = pArrayLs = Pro.Array.Listeners || {
         nvs = transformed._array;
         transformed._array.length = 0;
         push.apply(transformed._array, concat.apply(original._array, right._array));
-        transformed.updateByDiff(nvs);
+        transformed.core.updateByDiff(nvs);
       } else if (op === pArrayOps.splice) {
         pArrayProto.splice.apply(transformed, [ind + oln, ov.length].concat(nv));
       }
@@ -445,7 +445,7 @@ Pro.Array.Listeners = pArrayLs = Pro.Array.Listeners || {
         osl = sliced._array;
         sliced._array.length = 0;
         push.apply(sliced._array, slice.apply(original._array, args));
-        sliced.updateByDiff(osl);
+        sliced.core.updateByDiff(osl);
       }
     };
   }

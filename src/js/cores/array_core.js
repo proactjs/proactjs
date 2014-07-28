@@ -16,7 +16,7 @@ ProAct.ArrayCore.prototype = P.U.ex(Object.create(P.C.prototype), {
   },
 
   defaultActions: function () {
-    return ['index', 'length'];
+    return ['length', 'index'];
   },
 
   makeEvent: function (source, eventData) {
@@ -43,6 +43,33 @@ ProAct.ArrayCore.prototype = P.U.ex(Object.create(P.C.prototype), {
     if (caller && lastCaller !== caller) {
       this.on(type, caller);
       this[lastCallerField] = caller;
+    }
+  },
+
+  updateSplice: function (index, spliced, newItems) {
+    var actions, op = pArrayOps.splice;
+
+    if (!spliced || !newItems || (spliced.length === 0 && newItems.length === 0)) {
+      return;
+    }
+
+    if (spliced.length === newItems.length) {
+      actions = 'index';
+    } else if (!newItems.length || !spliced.length) {
+      actions = 'length';
+    }
+
+    this.update(null, actions, [op, index, spliced, newItems]);
+  },
+
+  updateByDiff: function (array) {
+    var j, diff = P.U.diff(array, this.shell._array), cdiff;
+
+    for (j in diff) {
+      cdiff = diff[j];
+      if (cdiff) {
+        this.updateSplice(j, cdiff.o, cdiff.n);
+      }
     }
   },
 
@@ -121,4 +148,3 @@ ProAct.ArrayCore.prototype = P.U.ex(Object.create(P.C.prototype), {
     });
   }
 });
-

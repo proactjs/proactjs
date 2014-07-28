@@ -39,69 +39,13 @@ P.U.ex(P.A, {
     var oarr = filtered._array;
 
     filtered._array = filter.apply(original._array, filterArgs);
-    filtered.updateByDiff(oarr);
+    filtered.core.updateByDiff(oarr);
   }
 });
 pArrayOps = pArray.Operations;
 
 ProAct.Array.prototype = pArrayProto = P.U.ex(Object.create(arrayProto), {
   constructor: ProAct.Array,
-  willUpdateSplice: function (index, spliced, newItems) {
-    var listeners, op = pArrayOps.splice;
-
-    if (!spliced || !newItems || (spliced.length === 0 && newItems.length === 0)) {
-      return;
-    }
-
-    if (spliced.length === newItems.length) {
-      listeners = this.__pro__.listeners.index;
-    } else if (!newItems.length || !spliced.length) {
-      listeners = this.__pro__.listeners.length;
-    } else {
-      listeners = this.__pro__.listeners.length.concat(this.__pro__.listeners.index);
-    }
-
-    this.willUpdateListeners(listeners, op, index, spliced, newItems);
-  },
-  updateSplice: function (index, sliced, newItems) {
-    var _this = this;
-    if (P.flow.isRunning()) {
-      this.willUpdateSplice(index, sliced, newItems);
-    } else {
-      P.flow.run(function () {
-        _this.willUpdateSplice(index, sliced, newItems);
-      });
-    }
-  },
-  willUpdateListeners: function (listeners, op, ind, oldVal, newVal) {
-    var length = listeners.length, i, listener,
-        event = this.__pro__.makeEvent(null, [op, ind, oldVal, newVal]);
-
-    for (i = 0; i < length; i++) {
-      listener = listeners[i];
-
-      if (P.U.isFunction(listener)) {
-        P.flow.pushOnce(listener, [event]);
-      } else {
-        P.flow.pushOnce(listener, listener.call, [event]);
-      }
-
-      if (listener.property) {
-        listener.property.update(event);
-      }
-    }
-  },
-  updateByDiff: function (array) {
-    var _this = this,
-        j, diff = P.U.diff(array, this._array), cdiff;
-
-    for (j in diff) {
-      cdiff = diff[j];
-      if (cdiff) {
-        _this.updateSplice(j, cdiff.o, cdiff.n);
-      }
-    }
-  },
   concat: function () {
     var res, rightProArray;
 
@@ -112,101 +56,101 @@ ProAct.Array.prototype = pArrayProto = P.U.ex(Object.create(arrayProto), {
 
     res = new P.A(concat.apply(this._array, arguments));
     if (rightProArray) {
-      this.__pro__.on(pArrayLs.leftConcat(res, this, rightProArray));
-      rightProArray.__pro__.on(pArrayLs.rightConcat(res, this, rightProArray));
+      this.core.on(pArrayLs.leftConcat(res, this, rightProArray));
+      rightProArray.core.on(pArrayLs.rightConcat(res, this, rightProArray));
     } else {
-      this.__pro__.on(pArrayLs.leftConcat(res, this, slice.call(arguments, 0)));
+      this.core.on(pArrayLs.leftConcat(res, this, slice.call(arguments, 0)));
     }
 
     return res;
   },
   every: function () {
-    this.__pro__.addCaller();
+    this.core.addCaller();
 
     return every.apply(this._array, arguments);
   },
   pevery: function (fun, thisArg) {
     var val = new P.Val(every.apply(this._array, arguments));
 
-    this.__pro__.on(pArrayLs.every(val, this, arguments));
+    this.core.on(pArrayLs.every(val, this, arguments));
 
     return val;
   },
   some: function () {
-    this.__pro__.addCaller();
+    this.core.addCaller();
 
     return some.apply(this._array, arguments);
   },
   psome: function (fun, thisArg) {
     var val = new P.Val(some.apply(this._array, arguments));
 
-    this.__pro__.on(pArrayLs.some(val, this, arguments));
+    this.core.on(pArrayLs.some(val, this, arguments));
 
     return val;
   },
   forEach: function (fun /*, thisArg */) {
-    this.__pro__.addCaller();
+    this.core.addCaller();
 
     return forEach.apply(this._array, arguments);
   },
   filter: function (fun, thisArg) {
     var filtered = new P.A(filter.apply(this._array, arguments));
-    this.__pro__.on(pArrayLs.filter(filtered, this, arguments));
+    this.core.on(pArrayLs.filter(filtered, this, arguments));
 
     return filtered;
   },
   map: function (fun, thisArg) {
     var mapped = new P.A(map.apply(this._array, arguments));
-    this.__pro__.on(pArrayLs.map(mapped, this, arguments));
+    this.core.on(pArrayLs.map(mapped, this, arguments));
 
     return mapped;
   },
   reduce: function (fun /*, initialValue */) {
-    this.__pro__.addCaller();
+    this.core.addCaller();
 
     return reduce.apply(this._array, arguments);
   },
   preduce: function (fun /*, initialValue */) {
     var val = new P.Val(reduce.apply(this._array, arguments));
-    this.__pro__.on(pArrayLs.reduce(val, this, arguments));
+    this.core.on(pArrayLs.reduce(val, this, arguments));
 
     return val;
   },
   reduceRight: function (fun /*, initialValue */) {
-    this.__pro__.addCaller();
+    this.core.addCaller();
 
     return reduceRight.apply(this._array, arguments);
   },
   preduceRight: function (fun /*, initialValue */) {
     var val = new P.Val(reduceRight.apply(this._array, arguments));
-    this.__pro__.on(pArrayLs.reduceRight(val, this, arguments));
+    this.core.on(pArrayLs.reduceRight(val, this, arguments));
 
     return val;
   },
   indexOf: function () {
-    this.__pro__.addCaller();
+    this.core.addCaller();
 
     return indexOf.apply(this._array, arguments);
   },
   pindexOf: function () {
     var val = new P.Val(indexOf.apply(this._array, arguments));
-    this.__pro__.on(pArrayLs.indexOf(val, this, arguments));
+    this.core.on(pArrayLs.indexOf(val, this, arguments));
 
     return val;
   },
   lastIndexOf: function () {
-    this.__pro__.addCaller();
+    this.core.addCaller();
 
     return lastIndexOf.apply(this._array, arguments);
   },
   plastindexOf: function () {
     var val = new P.Val(lastIndexOf.apply(this._array, arguments));
-    this.__pro__.on(pArrayLs.lastIndexOf(val, this, arguments));
+    this.core.on(pArrayLs.lastIndexOf(val, this, arguments));
 
     return val;
   },
   join: function () {
-    this.__pro__.addCaller();
+    this.core.addCaller();
 
     return join.apply(this._array, arguments);
   },
@@ -222,12 +166,12 @@ ProAct.Array.prototype = pArrayProto = P.U.ex(Object.create(arrayProto), {
     return res;
   },
   toLocaleString: function () {
-    this.__pro__.addCaller();
+    this.core.addCaller();
 
     return toLocaleString.apply(this._array, arguments);
   },
   toString: function () {
-    this.__pro__.addCaller();
+    this.core.addCaller();
 
     return toString.apply(this._array, arguments);
   },
@@ -236,7 +180,7 @@ ProAct.Array.prototype = pArrayProto = P.U.ex(Object.create(arrayProto), {
   },
   slice: function () {
     var sliced = new P.A(slice.apply(this._array, arguments));
-    this.__pro__.on(pArrayLs.slice(sliced, this, arguments));
+    this.core.on(pArrayLs.slice(sliced, this, arguments));
 
     return sliced;
   },
@@ -244,7 +188,7 @@ ProAct.Array.prototype = pArrayProto = P.U.ex(Object.create(arrayProto), {
     if (this._array.length === 0) {
       return;
     }
-    var reversed = reverse.apply(this._array, arguments), _this = this;
+    var reversed = reverse.apply(this._array, arguments);
 
     this.core.update(null, 'index', [pArrayOps.reverse, -1, null, null]);
     return reversed;
@@ -253,7 +197,7 @@ ProAct.Array.prototype = pArrayProto = P.U.ex(Object.create(arrayProto), {
     if (this._array.length === 0) {
       return;
     }
-    var sorted = sort.apply(this._array, arguments), _this = this,
+    var sorted = sort.apply(this._array, arguments),
         args = arguments;
 
     this.core.update(null, 'index', [pArrayOps.sort, -1, null, args]);
@@ -263,7 +207,7 @@ ProAct.Array.prototype = pArrayProto = P.U.ex(Object.create(arrayProto), {
     var oldLn = this._array.length,
         spliced = splice.apply(this._array, arguments),
         ln = this._array.length, delta,
-        _this = this, newItems = slice.call(arguments, 2);
+        newItems = slice.call(arguments, 2);
 
     index = !~index ? ln - index : index
     howMany = (howMany == null ? ln - index : howMany) || 0;
@@ -271,7 +215,7 @@ ProAct.Array.prototype = pArrayProto = P.U.ex(Object.create(arrayProto), {
     if (newItems.length > howMany) {
       delta = newItems.length - howMany;
       while (delta--) {
-        this.__pro__.defineIndexProp(oldLn++);
+        this.core.defineIndexProp(oldLn++);
       }
     } else if (howMany > newItems.length) {
       delta = howMany - newItems.length;
@@ -280,7 +224,7 @@ ProAct.Array.prototype = pArrayProto = P.U.ex(Object.create(arrayProto), {
       }
     }
 
-    _this.updateSplice(index, spliced, newItems);
+    this.core.updateSplice(index, spliced, newItems);
     return new P.A(spliced);
   },
   pop: function () {
@@ -288,24 +232,23 @@ ProAct.Array.prototype = pArrayProto = P.U.ex(Object.create(arrayProto), {
       return;
     }
     var popped = pop.apply(this._array, arguments),
-        _this = this, index = this._array.length;
+        index = this._array.length;
 
     delete this[index];
-    this.core.update(null, 'length', [pArrayOps.remove, _this._array.length, popped, null]);
+    this.core.update(null, 'length', [pArrayOps.remove, this._array.length, popped, null]);
 
     return popped;
   },
   push: function () {
-    var vals = arguments, i, ln = arguments.length, index,
-        _this = this;
+    var vals = arguments, i, ln = arguments.length, index;
 
     for (i = 0; i < ln; i++) {
       index = this._array.length;
       push.call(this._array, arguments[i]);
-      this.__pro__.defineIndexProp(index);
+      this.core.defineIndexProp(index);
     }
 
-    this.core.update(null, 'length', [pArrayOps.add, _this._array.length - 1, null, slice.call(vals, 0)]);
+    this.core.update(null, 'length', [pArrayOps.add, this._array.length - 1, null, slice.call(vals, 0)]);
 
     return this._array.length;
   },
@@ -314,7 +257,7 @@ ProAct.Array.prototype = pArrayProto = P.U.ex(Object.create(arrayProto), {
       return;
     }
     var shifted = shift.apply(this._array, arguments),
-        _this = this, index = this._array.length;
+        index = this._array.length;
 
     delete this[index];
     this.core.update(null, 'length', [pArrayOps.remove, 0, shifted, null]);
@@ -323,11 +266,11 @@ ProAct.Array.prototype = pArrayProto = P.U.ex(Object.create(arrayProto), {
   },
   unshift: function () {
     var vals = slice.call(arguments, 0), i, ln = arguments.length,
-        array = this._array,
-        _this = this;
+        array = this._array;
+
     for (var i = 0; i < ln; i++) {
       array.splice(i, 0, arguments[i]);
-      this.__pro__.defineIndexProp(array.length - 1);
+      this.core.defineIndexProp(array.length - 1);
     }
 
     this.core.update(null, 'length', [pArrayOps.add, 0, null, vals]);
