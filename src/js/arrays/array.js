@@ -30,10 +30,6 @@ P.U.ex(P.A, {
     reverse: 4,
     sort: 5,
     splice: 6,
-
-    isIndexOp: function (op) {
-      return op === this.set || op === this.reverse || op === this.sort;
-    }
   },
   reFilter: function (original, filtered, filterArgs) {
     var oarr = filtered._array;

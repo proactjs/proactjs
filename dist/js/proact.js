@@ -3084,6 +3084,702 @@
 	
 	P.DDS.prototype.t = P.DDS.prototype.trigger;
 	
+	Pro.Property = function (proObject, property, getter, setter) {
+	  var _this = this;
+	
+	  Object.defineProperty(this, 'proObject', {
+	    enumerable: false,
+	    configurable: true,
+	    writeble: true,
+	    value: proObject
+	  });
+	  this.property = property;
+	
+	  if (!this.proObject['__pro__']) {
+	    this.proObject['__pro__'] = {};
+	  }
+	  this.proObject['__pro__'].properties = this.proObject['__pro__'].properties || {};
+	  this.proObject['__pro__'].properties[property] = this;
+	
+	  this.get = getter || Pro.Property.DEFAULT_GETTER(this);
+	  this.set = setter || Pro.Property.DEFAULT_SETTER(this);
+	
+	  this.oldVal = null;
+	  this.val = proObject[property];
+	
+	  this.state = Pro.States.init;
+	  this.g = this.get;
+	  this.s = this.set;
+	
+	  Pro.Observable.call(this); // Super!
+	  this.parent = this.proObject.__pro__;
+	
+	  this.init();
+	};
+	
+	Pro.U.ex(Pro.Property, {
+	  Types: {
+	    simple: 0, // strings, booleans and numbers
+	    auto: 1, // functions - dependent
+	    object: 2, // references Pro objects
+	    array: 3, // arrays
+	    nil: 4, // nulls
+	
+	    type: function (value) {
+	      if (value === null) {
+	        return Pro.Property.Types.nil;
+	      } else if (Pro.U.isFunction(value)) {
+	        return Pro.Property.Types.auto;
+	      } else if (Pro.U.isArray(value)) {
+	        return Pro.Property.Types.array;
+	      } else if (Pro.U.isObject(value)) {
+	        return Pro.Property.Types.object;
+	      } else {
+	        return Pro.Property.Types.simple;
+	      }
+	    }
+	  },
+	  DEFAULT_GETTER: function (property) {
+	    return function () {
+	      property.addCaller();
+	
+	      return property.val;
+	    };
+	  },
+	  DEFAULT_SETTER: function (property, setter) {
+	    return function (newVal) {
+	      if (property.val === newVal) {
+	        return;
+	      }
+	
+	      property.oldVal = property.val;
+	      if (setter) {
+	        property.val = setter.call(property.proObject, newVal);
+	      } else {
+	        property.val = Pro.Observable.transform(property, newVal);
+	      }
+	
+	      if (property.val === null || property.val === undefined) {
+	        Pro.Property.reProb(property).update();
+	        return;
+	      }
+	
+	      property.update();
+	    };
+	  },
+	  defineProp: function (obj, prop, get, set) {
+	    Object.defineProperty(obj, prop, {
+	      get: get,
+	      set: set,
+	      enumerable: true,
+	      configurable: true
+	    });
+	  },
+	  reProb: function (property) {
+	    var po = property.proObject,
+	        p = property.property,
+	        l = property.listeners.change;
+	
+	    property.destroy();
+	    return po.__pro__.makeProp(p, l);
+	  }
+	});
+	
+	Pro.Property.prototype = Pro.U.ex(Object.create(Pro.Observable.prototype), {
+	  constructor: Pro.Property,
+	  type: function () {
+	    return Pro.Property.Types.simple;
+	  },
+	  makeEvent: function (source) {
+	    return new Pro.Event(source, this.property, Pro.Event.Types.value, this.proObject, this.oldVal, this.val);
+	  },
+	  makeListener: function () {
+	    if (!this.listener) {
+	      var _this = this;
+	      this.listener = {
+	        property: _this,
+	        call: function (newVal) {
+	          if (newVal && newVal.type !== undefined && newVal.type === Pro.Event.Types.value && newVal.args.length === 3 && newVal.target) {
+	            newVal = newVal.args[0][newVal.target];
+	          }
+	
+	          _this.oldVal = _this.val;
+	          _this.val = Pro.Observable.transform(_this, newVal);
+	        }
+	      };
+	    }
+	
+	    return this.listener;
+	  },
+	  init: function () {
+	    if (this.state !== Pro.States.init) {
+	      return;
+	    }
+	
+	    Pro.Property.defineProp(this.proObject, this.property, this.get, this.set);
+	
+	    this.afterInit();
+	  },
+	  afterInit: function () {
+	    this.state = Pro.States.ready;
+	  },
+	  addCaller: function () {
+	    var _this = this,
+	        caller = Pro.currentCaller;
+	
+	    if (caller && caller.property !== this) {
+	      this.on(caller);
+	    }
+	  },
+	  destroy: function () {
+	    if (this.state === Pro.States.destroyed) {
+	      return;
+	    }
+	
+	    delete this.proObject['__pro__'].properties[this.property];
+	    this.listeners = undefined;
+	    this.oldVal = undefined;
+	    this.parent = undefined;
+	
+	    Object.defineProperty(this.proObject, this.property, {
+	      value: this.val,
+	      enumerable: true,
+	      configurable: true
+	    });
+	    this.get = this.set = this.property = this.proObject = undefined;
+	    this.g = this.s = undefined;
+	    this.val = undefined;
+	    this.state = Pro.States.destroyed;
+	  },
+	  toString: function () {
+	    return this.val;
+	  }
+	});
+	
+	Pro.NullProperty = function (proObject, property) {
+	  var _this = this,
+	      set = Pro.Property.DEFAULT_SETTER(this),
+	      setter = function (newVal) {
+	        var result = set.call(_this.proObject, newVal),
+	            types = Pro.Property.Types,
+	            type = types.type(result);
+	
+	        if (type !== types.nil) {
+	          Pro.Property.reProb(_this);
+	        }
+	
+	        return result;
+	      };
+	
+	  Pro.Property.call(this, proObject, property, Pro.Property.DEFAULT_GETTER(this), setter);
+	};
+	
+	Pro.NullProperty.prototype = Pro.U.ex(Object.create(Pro.Property.prototype), {
+	  constructor: Pro.NullProperty,
+	
+	  type: function () {
+	    return Pro.Property.Types.nil;
+	  }
+	});
+	
+	Pro.AutoProperty = function (proObject, property) {
+	  this.func = proObject[property];
+	
+	  var _this = this,
+	      getter = function () {
+	        _this.addCaller();
+	        var oldCaller = Pro.currentCaller,
+	            get = Pro.Property.DEFAULT_GETTER(_this),
+	            set = Pro.Property.DEFAULT_SETTER(_this, function (newVal) {
+	              return _this.func.call(_this.proObject, newVal);
+	            }),
+	            args = arguments,
+	            autoFunction;
+	
+	        Pro.currentCaller = _this.makeListener();
+	
+	        autoFunction = function () {
+	          _this.val = _this.func.apply(_this.proObject, args);
+	        };
+	        Pro.flow.run(function () {
+	          Pro.flow.pushOnce(autoFunction);
+	        });
+	
+	        Pro.currentCaller = oldCaller;
+	
+	        Pro.Property.defineProp(_this.proObject, _this.property, get, set);
+	
+	        _this.state = Pro.States.ready;
+	
+	        _this.val = Pro.Observable.transform(_this, _this.val);
+	        return _this.val;
+	      };
+	
+	  Pro.Property.call(this, proObject, property, getter, function () {});
+	};
+	
+	Pro.AutoProperty.prototype = Pro.U.ex(Object.create(Pro.Property.prototype), {
+	  constructor: Pro.AutoProperty,
+	  type: function () {
+	    return Pro.Property.Types.auto;
+	  },
+	  makeListener: function () {
+	    if (!this.listener) {
+	      var _this = this;
+	      this.listener = {
+	        property: _this,
+	        call: function () {
+	          _this.oldVal = _this.val;
+	          _this.val = Pro.Observable.transform(_this, _this.func.call(_this.proObject));
+	        }
+	      };
+	    }
+	
+	    return this.listener;
+	  },
+	  afterInit: function () {}
+	});
+	
+	Pro.ObjectProperty = function (proObject, property) {
+	  var _this = this, getter;
+	
+	  getter = function () {
+	    _this.addCaller();
+	    if (!_this.val.__pro__) {
+	      Pro.prob(_this.val);
+	    }
+	
+	    var get = Pro.Property.DEFAULT_GETTER(_this),
+	        set = function (newVal) {
+	          if (_this.val == newVal) {
+	            return;
+	          }
+	
+	          _this.oldVal = _this.val;
+	          _this.val = newVal;
+	
+	          if (_this.val === null || _this.val === undefined) {
+	            Pro.Property.reProb(_this).update();
+	            return _this;
+	          }
+	
+	          if (_this.oldVal) {
+	            if (!_this.val.__pro__) {
+	              Pro.prob(_this.val);
+	            }
+	
+	            var oldProps = _this.oldVal.__pro__.properties,
+	                newProps = _this.val.__pro__.properties,
+	                oldPropName, oldProp, newProp, oldListeners, newListeners,
+	                i, j, oldListenersLength, newListenersLength,
+	                toAdd, toRemove = [], toRemoveLength;
+	
+	            for (oldPropName in oldProps) {
+	              if (oldProps.hasOwnProperty(oldPropName)) {
+	                newProp = newProps[oldPropName];
+	                if (!newProp) {
+	                  continue;
+	                }
+	                newListeners = newProp.listeners.change;
+	
+	                oldProp = oldProps[oldPropName];
+	                oldListeners = oldProp.listeners.change;
+	                oldListenersLength = oldListeners.length;
+	
+	                for (i = 0; i < oldListenersLength; i++) {
+	                  toAdd = true;
+	                  for (j = 0; j < newListenersLength; j++) {
+	                    if (oldListeners[i] == newListeners[j]) {
+	                      toAdd = false;
+	                    }
+	                  }
+	                  if (toAdd) {
+	                    newProp.on(oldListeners[i]);
+	                    toRemove.push(i);
+	                  }
+	                }
+	
+	                toRemoveLength = toRemove.length;
+	                for (i = 0; i < toRemoveLength; i++) {
+	                  oldListeners.splice[toRemove[i], 1];
+	                }
+	                toRemove = [];
+	              }
+	            }
+	          }
+	
+	          _this.update();
+	        };
+	
+	    Pro.Property.defineProp(_this.proObject, _this.property, get, set);
+	
+	    _this.state = Pro.States.ready;
+	    return _this.val;
+	  };
+	
+	  Pro.Property.call(this, proObject, property, getter, function () {});
+	};
+	
+	Pro.ObjectProperty.prototype = Pro.U.ex(Object.create(Pro.Property.prototype), {
+	  constructor: Pro.ObjectProperty,
+	  type: function () {
+	    return Pro.Property.Types.object;
+	  },
+	  afterInit: function () {}
+	});
+	
+	Pro.ArrayProperty = function (proObject, property) {
+	  var _this = this, getter;
+	
+	  getter = function () {
+	    _this.addCaller();
+	    if (!Pro.Utils.isProArray(_this.val)) {
+	      _this.val = new Pro.Array(_this.val);
+	    }
+	
+	    var get = Pro.Property.DEFAULT_GETTER(_this),
+	        set = function (newVal) {
+	          if (_this.val == newVal || _this.val.valueOf() == newVal) {
+	            return;
+	          }
+	
+	          _this.oldVal = _this.val;
+	          _this.val = newVal;
+	
+	          if (_this.val === null || _this.val === undefined) {
+	            Pro.Property.reProb(_this).update();
+	            return _this;
+	          }
+	
+	          if (!Pro.Utils.isProArray(_this.val)) {
+	            _this.val = new Pro.Array(_this.val);
+	          }
+	
+	          if (_this.oldVal) {
+	            var i, listener,
+	                toRemove = [], toRemoveLength,
+	                oldIndListeners = _this.oldVal.__pro__.listeners.index,
+	                oldIndListenersLn = oldIndListeners.length,
+	                newIndListeners = _this.val.__pro__.listeners.index,
+	                oldLenListeners = _this.oldVal.__pro__.listeners.length,
+	                oldLenListenersLn = oldLenListeners.length,
+	                newLenListeners = _this.val.__pro__.listeners.length;
+	
+	            for (i = 0; i < oldIndListenersLn; i++) {
+	              listener = oldIndListeners[i];
+	              if (listener.property && listener.property.proObject === _this.proObject) {
+	                newIndListeners.push(listener);
+	                toRemove.push(i);
+	              }
+	            }
+	            toRemoveLength = toRemove.length;
+	            for (i = 0; i < toRemoveLength; i++) {
+	              oldIndListeners.splice[toRemove[i], 1];
+	            }
+	            toRemove = [];
+	
+	            for (i = 0; i < oldLenListenersLn; i++) {
+	              listener = oldLenListeners[i];
+	              if (listener.property && listener.property.proObject === _this.proObject) {
+	                newLenListeners.push(listener);
+	                toRemove.push(i);
+	              }
+	            }
+	            toRemoveLength = toRemove.length;
+	            for (i = 0; i < toRemoveLength; i++) {
+	              oldLenListeners.splice[toRemove[i], 1];
+	            }
+	            toRemove = [];
+	          }
+	
+	          _this.update();
+	        };
+	
+	    Pro.Property.defineProp(_this.proObject, _this.property, get, set);
+	
+	    _this.state = Pro.States.ready;
+	    return _this.val;
+	  };
+	
+	  Pro.Property.call(this, proObject, property, getter, function () {});
+	};
+	
+	Pro.ArrayProperty.prototype = Pro.U.ex(Object.create(Pro.Property.prototype), {
+	  constructor: Pro.ArrayProperty,
+	  type: function () {
+	    return Pro.Property.Types.array;
+	  },
+	  afterInit: function () {}
+	});
+	
+	ProAct.Core = P.C = function (shell, meta) {
+	  this.shell = shell;
+	  this.state = P.States.init;
+	  this.meta = meta || {};
+	  this.properties = {};
+	
+	  P.Observable.call(this); // Super!
+	};
+	
+	ProAct.Core.prototype = P.U.ex(Object.create(P.Observable.prototype), {
+	  constructor: ProAct.Core,
+	  prob: function () {
+	    var self = this,
+	        conf = P.Configuration,
+	        keyprops = conf.keyprops,
+	        keypropList = conf.keypropList;
+	
+	    try {
+	      this.setup();
+	
+	      if (keyprops && keypropList.indexOf('p') !== -1) {
+	        P.U.defValProp(this.shell, 'p', false, false, false, function (p) {
+	          if (!p || p === '*') {
+	            return self;
+	          }
+	
+	          return self.properties[p];
+	        });
+	      }
+	
+	      this.state = P.States.ready;
+	    } catch (e) {
+	      this.state = P.States.error;
+	      throw e;
+	    }
+	
+	    return this;
+	  },
+	  setup: function () {
+	    throw Error('Abstract, implement!');
+	  },
+	  call: function (event) {
+	    this.update(event);
+	  }
+	});
+	
+	
+	ProAct.ObjectCore = function (object, meta) {
+	  P.C.call(this, object, meta); // Super!
+	};
+	
+	ProAct.ObjectCore.prototype = P.U.ex(Object.create(P.C.prototype), {
+	  constructor: ProAct.ObjectCore,
+	  setup: function () {
+	    var object = this.shell,
+	        property;
+	
+	    for (property in object) {
+	      this.makeProp(property, null, this.meta[property]);
+	    }
+	  },
+	  makeProp: function (property, listeners, meta) {
+	    var object = this.shell,
+	        conf = P.Configuration,
+	        keyprops = conf.keyprops,
+	        keypropList = conf.keypropList,
+	        isF = P.U.isFunction,
+	        isA = P.U.isArrayObject,
+	        isO = P.U.isObject, result;
+	
+	    if (meta && (meta === 'noprop' || (meta.indexOf && meta.indexOf('noprop') >= 0))) {
+	      return;
+	    }
+	
+	    if (keyprops && keypropList.indexOf(property) !== -1) {
+	      throw Error('The property name ' + property + ' is a key word for pro objects! Objects passed to Pro.prob can not contain properties named as keyword properties.');
+	      return;
+	    }
+	
+	    if (object.hasOwnProperty(property) && (object[property] === null || object[property] === undefined)) {
+	      result = new P.NullProperty(object, property);
+	    } else if (object.hasOwnProperty(property) && !isF(object[property]) && !isA(object[property]) && !isO(object[property])) {
+	      result = new P.Property(object, property);
+	    } else if (object.hasOwnProperty(property) && isF(object[property])) {
+	      result = new P.AutoProperty(object, property);
+	    } else if (object.hasOwnProperty(property) && isA(object[property])) {
+	      result = new P.ArrayProperty(object, property);
+	    } else if (object.hasOwnProperty(property) && isO(object[property])) {
+	      result = new P.ObjectProperty(object, property);
+	    }
+	
+	    if (listeners) {
+	      this.properties[property].listeners.change = this.properties[property].listeners.change.concat(listeners);
+	    }
+	
+	    if (meta && P.registry) {
+	      if (!P.U.isArray(meta)) {
+	        meta = [meta];
+	      }
+	
+	      P.registry.setup.apply(P.registry, [result].concat(meta));
+	    }
+	
+	    return result;
+	  },
+	  set: function (property, value) {
+	    var object = this.shell;
+	
+	    object[property] = value;
+	    if (this.properties[property]) {
+	      return;
+	    }
+	
+	    this.makeProp(property);
+	  }
+	});
+	
+	ProAct.ArrayCore = P.AC = function (array, meta) {
+	  P.C.call(this, array, meta); // Super!
+	
+	  this.lastIndexCaller = null;
+	  this.lastLengthCaller = null;
+	};
+	
+	ProAct.ArrayCore.prototype = P.U.ex(Object.create(P.C.prototype), {
+	  constructor: ProAct.ArrayCore,
+	
+	  defaultListeners: function () {
+	    return {
+	      index: [],
+	      length: []
+	    };
+	  },
+	
+	  defaultActions: function () {
+	    return ['length', 'index'];
+	  },
+	
+	  makeEvent: function (source, eventData) {
+	    var op = eventData[0],
+	        ind = eventData[1],
+	        oldVal = eventData[2],
+	        newVal = eventData[3];
+	
+	    return new P.E(source, this.shell, P.E.Types.array, op, ind, oldVal, newVal);
+	  },
+	
+	  addCaller: function (type) {
+	    if (!type) {
+	      this.addCaller('index');
+	      this.addCaller('length');
+	      return;
+	    }
+	
+	    var caller = P.currentCaller,
+	        capType = type.charAt(0).toUpperCase() + type.slice(1),
+	        lastCallerField = 'last' + capType + 'Caller',
+	        lastCaller = this[lastCallerField];
+	
+	    if (caller && lastCaller !== caller) {
+	      this.on(type, caller);
+	      this[lastCallerField] = caller;
+	    }
+	  },
+	
+	  updateSplice: function (index, spliced, newItems) {
+	    var actions, op = pArrayOps.splice;
+	
+	    if (!spliced || !newItems || (spliced.length === 0 && newItems.length === 0)) {
+	      return;
+	    }
+	
+	    if (spliced.length === newItems.length) {
+	      actions = 'index';
+	    } else if (!newItems.length || !spliced.length) {
+	      actions = 'length';
+	    }
+	
+	    this.update(null, actions, [op, index, spliced, newItems]);
+	  },
+	
+	  updateByDiff: function (array) {
+	    var j, diff = P.U.diff(array, this.shell._array), cdiff;
+	
+	    for (j in diff) {
+	      cdiff = diff[j];
+	      if (cdiff) {
+	        this.updateSplice(j, cdiff.o, cdiff.n);
+	      }
+	    }
+	  },
+	
+	  setup: function () {
+	    var self = this,
+	        array = this.shell,
+	        ln = array._array.length,
+	        getLength, setLength, oldLength, i;
+	
+	    for (i = 0; i < ln; i++) {
+	      this.defineIndexProp(i);
+	    }
+	
+	    getLength = function () {
+	      self.addCaller('length');
+	
+	      return array._array.length;
+	    };
+	
+	    setLength = function (newLength) {
+	      if (array._array.length === newLength) {
+	        return;
+	      }
+	
+	      oldLength = array._array.length;
+	      array._array.length = newLength;
+	
+	      self.update(null, 'length', [pArrayOps.setLength, -1, oldLength, newLength]);
+	
+	      return newLength;
+	    };
+	
+	    Object.defineProperty(array, 'length', {
+	      configurable: false,
+	      enumerable: true,
+	      get: getLength,
+	      set: setLength
+	    });
+	  },
+	
+	  defineIndexProp: function (i) {
+	    var self = this,
+	        proArray = this.shell,
+	        array = proArray._array,
+	        oldVal,
+	        isA = P.U.isArray,
+	        isO = P.U.isObject,
+	        isF = P.U.isFunction;
+	
+	    if (isA(array[i])) {
+	      new P.ArrayProperty(array, i);
+	    } else if (isF(array[i])) {
+	    } else if (array[i] === null) {
+	    } else if (isO(array[i])) {
+	      new P.ObjectProperty(array, i);
+	    }
+	
+	    Object.defineProperty(proArray, i, {
+	      enumerable: true,
+	      configurable: true,
+	      get: function () {
+	        self.addCaller('index');
+	
+	        return array[i];
+	      },
+	      set: function (newVal) {
+	        if (array[i] === newVal) {
+	          return;
+	        }
+	
+	        oldVal = array[i];
+	        array[i] = newVal;
+	
+	        self.update(null, 'index', [pArrayOps.set, i, oldVal, newVal]);
+	      }
+	    });
+	  }
+	});
+	
 	ProAct.Array = P.A = pArray = function () {
 	  var self = this,
 	      getLength, setLength, oldLength,
@@ -3116,10 +3812,6 @@
 	    reverse: 4,
 	    sort: 5,
 	    splice: 6,
-	
-	    isIndexOp: function (op) {
-	      return op === this.set || op === this.reverse || op === this.sort;
-	    }
 	  },
 	  reFilter: function (original, filtered, filterArgs) {
 	    var oarr = filtered._array;
@@ -3835,702 +4527,6 @@
 	    };
 	  }
 	};
-	
-	Pro.Property = function (proObject, property, getter, setter) {
-	  var _this = this;
-	
-	  Object.defineProperty(this, 'proObject', {
-	    enumerable: false,
-	    configurable: true,
-	    writeble: true,
-	    value: proObject
-	  });
-	  this.property = property;
-	
-	  if (!this.proObject['__pro__']) {
-	    this.proObject['__pro__'] = {};
-	  }
-	  this.proObject['__pro__'].properties = this.proObject['__pro__'].properties || {};
-	  this.proObject['__pro__'].properties[property] = this;
-	
-	  this.get = getter || Pro.Property.DEFAULT_GETTER(this);
-	  this.set = setter || Pro.Property.DEFAULT_SETTER(this);
-	
-	  this.oldVal = null;
-	  this.val = proObject[property];
-	
-	  this.state = Pro.States.init;
-	  this.g = this.get;
-	  this.s = this.set;
-	
-	  Pro.Observable.call(this); // Super!
-	  this.parent = this.proObject.__pro__;
-	
-	  this.init();
-	};
-	
-	Pro.U.ex(Pro.Property, {
-	  Types: {
-	    simple: 0, // strings, booleans and numbers
-	    auto: 1, // functions - dependent
-	    object: 2, // references Pro objects
-	    array: 3, // arrays
-	    nil: 4, // nulls
-	
-	    type: function (value) {
-	      if (value === null) {
-	        return Pro.Property.Types.nil;
-	      } else if (Pro.U.isFunction(value)) {
-	        return Pro.Property.Types.auto;
-	      } else if (Pro.U.isArray(value)) {
-	        return Pro.Property.Types.array;
-	      } else if (Pro.U.isObject(value)) {
-	        return Pro.Property.Types.object;
-	      } else {
-	        return Pro.Property.Types.simple;
-	      }
-	    }
-	  },
-	  DEFAULT_GETTER: function (property) {
-	    return function () {
-	      property.addCaller();
-	
-	      return property.val;
-	    };
-	  },
-	  DEFAULT_SETTER: function (property, setter) {
-	    return function (newVal) {
-	      if (property.val === newVal) {
-	        return;
-	      }
-	
-	      property.oldVal = property.val;
-	      if (setter) {
-	        property.val = setter.call(property.proObject, newVal);
-	      } else {
-	        property.val = Pro.Observable.transform(property, newVal);
-	      }
-	
-	      if (property.val === null || property.val === undefined) {
-	        Pro.Property.reProb(property).update();
-	        return;
-	      }
-	
-	      property.update();
-	    };
-	  },
-	  defineProp: function (obj, prop, get, set) {
-	    Object.defineProperty(obj, prop, {
-	      get: get,
-	      set: set,
-	      enumerable: true,
-	      configurable: true
-	    });
-	  },
-	  reProb: function (property) {
-	    var po = property.proObject,
-	        p = property.property,
-	        l = property.listeners.change;
-	
-	    property.destroy();
-	    return po.__pro__.makeProp(p, l);
-	  }
-	});
-	
-	Pro.Property.prototype = Pro.U.ex(Object.create(Pro.Observable.prototype), {
-	  constructor: Pro.Property,
-	  type: function () {
-	    return Pro.Property.Types.simple;
-	  },
-	  makeEvent: function (source) {
-	    return new Pro.Event(source, this.property, Pro.Event.Types.value, this.proObject, this.oldVal, this.val);
-	  },
-	  makeListener: function () {
-	    if (!this.listener) {
-	      var _this = this;
-	      this.listener = {
-	        property: _this,
-	        call: function (newVal) {
-	          if (newVal && newVal.type !== undefined && newVal.type === Pro.Event.Types.value && newVal.args.length === 3 && newVal.target) {
-	            newVal = newVal.args[0][newVal.target];
-	          }
-	
-	          _this.oldVal = _this.val;
-	          _this.val = Pro.Observable.transform(_this, newVal);
-	        }
-	      };
-	    }
-	
-	    return this.listener;
-	  },
-	  init: function () {
-	    if (this.state !== Pro.States.init) {
-	      return;
-	    }
-	
-	    Pro.Property.defineProp(this.proObject, this.property, this.get, this.set);
-	
-	    this.afterInit();
-	  },
-	  afterInit: function () {
-	    this.state = Pro.States.ready;
-	  },
-	  addCaller: function () {
-	    var _this = this,
-	        caller = Pro.currentCaller;
-	
-	    if (caller && caller.property !== this) {
-	      this.on(caller);
-	    }
-	  },
-	  destroy: function () {
-	    if (this.state === Pro.States.destroyed) {
-	      return;
-	    }
-	
-	    delete this.proObject['__pro__'].properties[this.property];
-	    this.listeners = undefined;
-	    this.oldVal = undefined;
-	    this.parent = undefined;
-	
-	    Object.defineProperty(this.proObject, this.property, {
-	      value: this.val,
-	      enumerable: true,
-	      configurable: true
-	    });
-	    this.get = this.set = this.property = this.proObject = undefined;
-	    this.g = this.s = undefined;
-	    this.val = undefined;
-	    this.state = Pro.States.destroyed;
-	  },
-	  toString: function () {
-	    return this.val;
-	  }
-	});
-	
-	Pro.NullProperty = function (proObject, property) {
-	  var _this = this,
-	      set = Pro.Property.DEFAULT_SETTER(this),
-	      setter = function (newVal) {
-	        var result = set.call(_this.proObject, newVal),
-	            types = Pro.Property.Types,
-	            type = types.type(result);
-	
-	        if (type !== types.nil) {
-	          Pro.Property.reProb(_this);
-	        }
-	
-	        return result;
-	      };
-	
-	  Pro.Property.call(this, proObject, property, Pro.Property.DEFAULT_GETTER(this), setter);
-	};
-	
-	Pro.NullProperty.prototype = Pro.U.ex(Object.create(Pro.Property.prototype), {
-	  constructor: Pro.NullProperty,
-	
-	  type: function () {
-	    return Pro.Property.Types.nil;
-	  }
-	});
-	
-	Pro.AutoProperty = function (proObject, property) {
-	  this.func = proObject[property];
-	
-	  var _this = this,
-	      getter = function () {
-	        _this.addCaller();
-	        var oldCaller = Pro.currentCaller,
-	            get = Pro.Property.DEFAULT_GETTER(_this),
-	            set = Pro.Property.DEFAULT_SETTER(_this, function (newVal) {
-	              return _this.func.call(_this.proObject, newVal);
-	            }),
-	            args = arguments,
-	            autoFunction;
-	
-	        Pro.currentCaller = _this.makeListener();
-	
-	        autoFunction = function () {
-	          _this.val = _this.func.apply(_this.proObject, args);
-	        };
-	        Pro.flow.run(function () {
-	          Pro.flow.pushOnce(autoFunction);
-	        });
-	
-	        Pro.currentCaller = oldCaller;
-	
-	        Pro.Property.defineProp(_this.proObject, _this.property, get, set);
-	
-	        _this.state = Pro.States.ready;
-	
-	        _this.val = Pro.Observable.transform(_this, _this.val);
-	        return _this.val;
-	      };
-	
-	  Pro.Property.call(this, proObject, property, getter, function () {});
-	};
-	
-	Pro.AutoProperty.prototype = Pro.U.ex(Object.create(Pro.Property.prototype), {
-	  constructor: Pro.AutoProperty,
-	  type: function () {
-	    return Pro.Property.Types.auto;
-	  },
-	  makeListener: function () {
-	    if (!this.listener) {
-	      var _this = this;
-	      this.listener = {
-	        property: _this,
-	        call: function () {
-	          _this.oldVal = _this.val;
-	          _this.val = Pro.Observable.transform(_this, _this.func.call(_this.proObject));
-	        }
-	      };
-	    }
-	
-	    return this.listener;
-	  },
-	  afterInit: function () {}
-	});
-	
-	Pro.ObjectProperty = function (proObject, property) {
-	  var _this = this, getter;
-	
-	  getter = function () {
-	    _this.addCaller();
-	    if (!_this.val.__pro__) {
-	      Pro.prob(_this.val);
-	    }
-	
-	    var get = Pro.Property.DEFAULT_GETTER(_this),
-	        set = function (newVal) {
-	          if (_this.val == newVal) {
-	            return;
-	          }
-	
-	          _this.oldVal = _this.val;
-	          _this.val = newVal;
-	
-	          if (_this.val === null || _this.val === undefined) {
-	            Pro.Property.reProb(_this).update();
-	            return _this;
-	          }
-	
-	          if (_this.oldVal) {
-	            if (!_this.val.__pro__) {
-	              Pro.prob(_this.val);
-	            }
-	
-	            var oldProps = _this.oldVal.__pro__.properties,
-	                newProps = _this.val.__pro__.properties,
-	                oldPropName, oldProp, newProp, oldListeners, newListeners,
-	                i, j, oldListenersLength, newListenersLength,
-	                toAdd, toRemove = [], toRemoveLength;
-	
-	            for (oldPropName in oldProps) {
-	              if (oldProps.hasOwnProperty(oldPropName)) {
-	                newProp = newProps[oldPropName];
-	                if (!newProp) {
-	                  continue;
-	                }
-	                newListeners = newProp.listeners.change;
-	
-	                oldProp = oldProps[oldPropName];
-	                oldListeners = oldProp.listeners.change;
-	                oldListenersLength = oldListeners.length;
-	
-	                for (i = 0; i < oldListenersLength; i++) {
-	                  toAdd = true;
-	                  for (j = 0; j < newListenersLength; j++) {
-	                    if (oldListeners[i] == newListeners[j]) {
-	                      toAdd = false;
-	                    }
-	                  }
-	                  if (toAdd) {
-	                    newProp.on(oldListeners[i]);
-	                    toRemove.push(i);
-	                  }
-	                }
-	
-	                toRemoveLength = toRemove.length;
-	                for (i = 0; i < toRemoveLength; i++) {
-	                  oldListeners.splice[toRemove[i], 1];
-	                }
-	                toRemove = [];
-	              }
-	            }
-	          }
-	
-	          _this.update();
-	        };
-	
-	    Pro.Property.defineProp(_this.proObject, _this.property, get, set);
-	
-	    _this.state = Pro.States.ready;
-	    return _this.val;
-	  };
-	
-	  Pro.Property.call(this, proObject, property, getter, function () {});
-	};
-	
-	Pro.ObjectProperty.prototype = Pro.U.ex(Object.create(Pro.Property.prototype), {
-	  constructor: Pro.ObjectProperty,
-	  type: function () {
-	    return Pro.Property.Types.object;
-	  },
-	  afterInit: function () {}
-	});
-	
-	Pro.ArrayProperty = function (proObject, property) {
-	  var _this = this, getter;
-	
-	  getter = function () {
-	    _this.addCaller();
-	    if (!Pro.Utils.isProArray(_this.val)) {
-	      _this.val = new Pro.Array(_this.val);
-	    }
-	
-	    var get = Pro.Property.DEFAULT_GETTER(_this),
-	        set = function (newVal) {
-	          if (_this.val == newVal || _this.val.valueOf() == newVal) {
-	            return;
-	          }
-	
-	          _this.oldVal = _this.val;
-	          _this.val = newVal;
-	
-	          if (_this.val === null || _this.val === undefined) {
-	            Pro.Property.reProb(_this).update();
-	            return _this;
-	          }
-	
-	          if (!Pro.Utils.isProArray(_this.val)) {
-	            _this.val = new Pro.Array(_this.val);
-	          }
-	
-	          if (_this.oldVal) {
-	            var i, listener,
-	                toRemove = [], toRemoveLength,
-	                oldIndListeners = _this.oldVal.__pro__.listeners.index,
-	                oldIndListenersLn = oldIndListeners.length,
-	                newIndListeners = _this.val.__pro__.listeners.index,
-	                oldLenListeners = _this.oldVal.__pro__.listeners.length,
-	                oldLenListenersLn = oldLenListeners.length,
-	                newLenListeners = _this.val.__pro__.listeners.length;
-	
-	            for (i = 0; i < oldIndListenersLn; i++) {
-	              listener = oldIndListeners[i];
-	              if (listener.property && listener.property.proObject === _this.proObject) {
-	                newIndListeners.push(listener);
-	                toRemove.push(i);
-	              }
-	            }
-	            toRemoveLength = toRemove.length;
-	            for (i = 0; i < toRemoveLength; i++) {
-	              oldIndListeners.splice[toRemove[i], 1];
-	            }
-	            toRemove = [];
-	
-	            for (i = 0; i < oldLenListenersLn; i++) {
-	              listener = oldLenListeners[i];
-	              if (listener.property && listener.property.proObject === _this.proObject) {
-	                newLenListeners.push(listener);
-	                toRemove.push(i);
-	              }
-	            }
-	            toRemoveLength = toRemove.length;
-	            for (i = 0; i < toRemoveLength; i++) {
-	              oldLenListeners.splice[toRemove[i], 1];
-	            }
-	            toRemove = [];
-	          }
-	
-	          _this.update();
-	        };
-	
-	    Pro.Property.defineProp(_this.proObject, _this.property, get, set);
-	
-	    _this.state = Pro.States.ready;
-	    return _this.val;
-	  };
-	
-	  Pro.Property.call(this, proObject, property, getter, function () {});
-	};
-	
-	Pro.ArrayProperty.prototype = Pro.U.ex(Object.create(Pro.Property.prototype), {
-	  constructor: Pro.ArrayProperty,
-	  type: function () {
-	    return Pro.Property.Types.array;
-	  },
-	  afterInit: function () {}
-	});
-	
-	ProAct.Core = P.C = function (shell, meta) {
-	  this.shell = shell;
-	  this.state = P.States.init;
-	  this.meta = meta || {};
-	  this.properties = {};
-	
-	  P.Observable.call(this); // Super!
-	};
-	
-	ProAct.Core.prototype = P.U.ex(Object.create(P.Observable.prototype), {
-	  constructor: ProAct.Core,
-	  prob: function () {
-	    var self = this,
-	        conf = P.Configuration,
-	        keyprops = conf.keyprops,
-	        keypropList = conf.keypropList;
-	
-	    try {
-	      this.setup();
-	
-	      if (keyprops && keypropList.indexOf('p') !== -1) {
-	        P.U.defValProp(this.shell, 'p', false, false, false, function (p) {
-	          if (!p || p === '*') {
-	            return self;
-	          }
-	
-	          return self.properties[p];
-	        });
-	      }
-	
-	      this.state = P.States.ready;
-	    } catch (e) {
-	      this.state = P.States.error;
-	      throw e;
-	    }
-	
-	    return this;
-	  },
-	  setup: function () {
-	    throw Error('Abstract, implement!');
-	  },
-	  call: function (event) {
-	    this.update(event);
-	  }
-	});
-	
-	
-	ProAct.ObjectCore = function (object, meta) {
-	  P.C.call(this, object, meta); // Super!
-	};
-	
-	ProAct.ObjectCore.prototype = P.U.ex(Object.create(P.C.prototype), {
-	  constructor: ProAct.ObjectCore,
-	  setup: function () {
-	    var object = this.shell,
-	        property;
-	
-	    for (property in object) {
-	      this.makeProp(property, null, this.meta[property]);
-	    }
-	  },
-	  makeProp: function (property, listeners, meta) {
-	    var object = this.shell,
-	        conf = P.Configuration,
-	        keyprops = conf.keyprops,
-	        keypropList = conf.keypropList,
-	        isF = P.U.isFunction,
-	        isA = P.U.isArrayObject,
-	        isO = P.U.isObject, result;
-	
-	    if (meta && (meta === 'noprop' || (meta.indexOf && meta.indexOf('noprop') >= 0))) {
-	      return;
-	    }
-	
-	    if (keyprops && keypropList.indexOf(property) !== -1) {
-	      throw Error('The property name ' + property + ' is a key word for pro objects! Objects passed to Pro.prob can not contain properties named as keyword properties.');
-	      return;
-	    }
-	
-	    if (object.hasOwnProperty(property) && (object[property] === null || object[property] === undefined)) {
-	      result = new P.NullProperty(object, property);
-	    } else if (object.hasOwnProperty(property) && !isF(object[property]) && !isA(object[property]) && !isO(object[property])) {
-	      result = new P.Property(object, property);
-	    } else if (object.hasOwnProperty(property) && isF(object[property])) {
-	      result = new P.AutoProperty(object, property);
-	    } else if (object.hasOwnProperty(property) && isA(object[property])) {
-	      result = new P.ArrayProperty(object, property);
-	    } else if (object.hasOwnProperty(property) && isO(object[property])) {
-	      result = new P.ObjectProperty(object, property);
-	    }
-	
-	    if (listeners) {
-	      this.properties[property].listeners.change = this.properties[property].listeners.change.concat(listeners);
-	    }
-	
-	    if (meta && P.registry) {
-	      if (!P.U.isArray(meta)) {
-	        meta = [meta];
-	      }
-	
-	      P.registry.setup.apply(P.registry, [result].concat(meta));
-	    }
-	
-	    return result;
-	  },
-	  set: function (property, value) {
-	    var object = this.shell;
-	
-	    object[property] = value;
-	    if (this.properties[property]) {
-	      return;
-	    }
-	
-	    this.makeProp(property);
-	  }
-	});
-	
-	ProAct.ArrayCore = P.AC = function (array, meta) {
-	  P.C.call(this, array, meta); // Super!
-	
-	  this.lastIndexCaller = null;
-	  this.lastLengthCaller = null;
-	};
-	
-	ProAct.ArrayCore.prototype = P.U.ex(Object.create(P.C.prototype), {
-	  constructor: ProAct.ArrayCore,
-	
-	  defaultListeners: function () {
-	    return {
-	      index: [],
-	      length: []
-	    };
-	  },
-	
-	  defaultActions: function () {
-	    return ['length', 'index'];
-	  },
-	
-	  makeEvent: function (source, eventData) {
-	    var op = eventData[0],
-	        ind = eventData[1],
-	        oldVal = eventData[2],
-	        newVal = eventData[3];
-	
-	    return new P.E(source, this.shell, P.E.Types.array, op, ind, oldVal, newVal);
-	  },
-	
-	  addCaller: function (type) {
-	    if (!type) {
-	      this.addCaller('index');
-	      this.addCaller('length');
-	      return;
-	    }
-	
-	    var caller = P.currentCaller,
-	        capType = type.charAt(0).toUpperCase() + type.slice(1),
-	        lastCallerField = 'last' + capType + 'Caller',
-	        lastCaller = this[lastCallerField];
-	
-	    if (caller && lastCaller !== caller) {
-	      this.on(type, caller);
-	      this[lastCallerField] = caller;
-	    }
-	  },
-	
-	  updateSplice: function (index, spliced, newItems) {
-	    var actions, op = pArrayOps.splice;
-	
-	    if (!spliced || !newItems || (spliced.length === 0 && newItems.length === 0)) {
-	      return;
-	    }
-	
-	    if (spliced.length === newItems.length) {
-	      actions = 'index';
-	    } else if (!newItems.length || !spliced.length) {
-	      actions = 'length';
-	    }
-	
-	    this.update(null, actions, [op, index, spliced, newItems]);
-	  },
-	
-	  updateByDiff: function (array) {
-	    var j, diff = P.U.diff(array, this.shell._array), cdiff;
-	
-	    for (j in diff) {
-	      cdiff = diff[j];
-	      if (cdiff) {
-	        this.updateSplice(j, cdiff.o, cdiff.n);
-	      }
-	    }
-	  },
-	
-	  setup: function () {
-	    var self = this,
-	        array = this.shell,
-	        ln = array._array.length,
-	        getLength, setLength, oldLength, i;
-	
-	    for (i = 0; i < ln; i++) {
-	      this.defineIndexProp(i);
-	    }
-	
-	    getLength = function () {
-	      self.addCaller('length');
-	
-	      return array._array.length;
-	    };
-	
-	    setLength = function (newLength) {
-	      if (array._array.length === newLength) {
-	        return;
-	      }
-	
-	      oldLength = array._array.length;
-	      array._array.length = newLength;
-	
-	      self.update(null, 'length', [pArrayOps.setLength, -1, oldLength, newLength]);
-	
-	      return newLength;
-	    };
-	
-	    Object.defineProperty(array, 'length', {
-	      configurable: false,
-	      enumerable: true,
-	      get: getLength,
-	      set: setLength
-	    });
-	  },
-	
-	  defineIndexProp: function (i) {
-	    var self = this,
-	        proArray = this.shell,
-	        array = proArray._array,
-	        oldVal,
-	        isA = P.U.isArray,
-	        isO = P.U.isObject,
-	        isF = P.U.isFunction;
-	
-	    if (isA(array[i])) {
-	      new P.ArrayProperty(array, i);
-	    } else if (isF(array[i])) {
-	    } else if (array[i] === null) {
-	    } else if (isO(array[i])) {
-	      new P.ObjectProperty(array, i);
-	    }
-	
-	    Object.defineProperty(proArray, i, {
-	      enumerable: true,
-	      configurable: true,
-	      get: function () {
-	        self.addCaller('index');
-	
-	        return array[i];
-	      },
-	      set: function (newVal) {
-	        if (array[i] === newVal) {
-	          return;
-	        }
-	
-	        oldVal = array[i];
-	        array[i] = newVal;
-	
-	        self.update(null, 'index', [pArrayOps.set, i, oldVal, newVal]);
-	      }
-	    });
-	  }
-	});
 	
 	ProAct.Val = P.V = function (val, meta) {
 	  this.v = val;
