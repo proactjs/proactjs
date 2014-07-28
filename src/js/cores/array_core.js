@@ -44,7 +44,6 @@ ProAct.ArrayCore.prototype = P.U.ex(Object.create(P.C.prototype), {
       get: getLength,
       set: setLength
     });
-
   },
 
   defineIndexProp: function (i) {

@@ -2000,8 +2000,25 @@
 	   * @see {@link ProAct.Observable#willUpdate}
 	   * @see {@link ProAct.flow}
 	   */
-	  update: function (source, listeners) {
-	    if (this.listeners.change.length === 0 && this.listeners.error.length === 0 && this.parent === null) {
+	  update: function (source, actions) {
+	    if (!actions) {
+	      actions = ['change'];
+	    }
+	
+	    if (P.U.isString(actions)) {
+	      actions = [actions];
+	    }
+	
+	    if (this.parent === null && actions.length === 0) {
+	      return this;
+	    }
+	
+	    var ln = actions.length, i, listeners = [];
+	    for (i = 0; i < ln; i++) {
+	      listeners = listeners.concat(this.listeners[actions[i]]);
+	    }
+	
+	    if (listeners.length === 0 && this.parent === null) {
 	      return this;
 	    }
 	
@@ -2404,7 +2421,7 @@
 	   * @see {@link ProAct.Observable#update}
 	   */
 	  triggerErr: function (err) {
-	    return this.update(err, this.listeners.error);
+	    return this.update(err, 'error');
 	  },
 	
 	  // private
@@ -4443,7 +4460,6 @@
 	      get: getLength,
 	      set: setLength
 	    });
-	
 	  },
 	
 	  defineIndexProp: function (i) {
