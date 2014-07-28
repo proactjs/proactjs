@@ -2135,7 +2135,7 @@
 	 * @param [...] args
 	 *      Arguments of the event, for example for value event, these are the old value and the new value.
 	 */
-	ProAct.Event = function (source, target, type) {
+	ProAct.Event = P.E = function (source, target, type) {
 	  this.source = source;
 	  this.target = target;
 	  this.type = type;
@@ -3053,6 +3053,7 @@
 	  // Setup core:
 	  core = new P.AC(this);
 	  P.U.defValProp(this, '__pro__', false, false, false, core);
+	  P.U.defValProp(this, 'core', false, false, false, core);
 	  core.prob();
 	};
 	
@@ -3081,26 +3082,6 @@
 	
 	ProAct.Array.prototype = pArrayProto = P.U.ex(Object.create(arrayProto), {
 	  constructor: ProAct.Array,
-	  makeEvent: function (op, ind, oldVal, newVal, source) {
-	    return new P.Event(source, this,
-	                         P.Event.Types.array, op, ind, oldVal, newVal);
-	  },
-	  willUpdate: function (op, ind, oldVal, newVal) {
-	    var listeners = pArrayOps.isIndexOp(op) ? this.__pro__.listeners.index : this.__pro__.listeners.length;
-	    listeners = listeners ? listeners : [];
-	
-	    this.willUpdateListeners(listeners, op, ind, oldVal, newVal);
-	  },
-	  update: function (op, ind, oldVal, newVal) {
-	    var _this = this;
-	    if (P.flow.isRunning()) {
-	      this.willUpdate(op, ind, oldVal, newVal);
-	    } else {
-	      P.flow.run(function () {
-	        _this.willUpdate(op, ind, oldVal, newVal);
-	      });
-	    }
-	  },
 	  willUpdateSplice: function (index, spliced, newItems) {
 	    var listeners, op = pArrayOps.splice;
 	
@@ -3130,7 +3111,7 @@
 	  },
 	  willUpdateListeners: function (listeners, op, ind, oldVal, newVal) {
 	    var length = listeners.length, i, listener,
-	        event = this.makeEvent(op, ind, oldVal, newVal);
+	        event = this.__pro__.makeEvent(null, [op, ind, oldVal, newVal]);
 	
 	    for (i = 0; i < length; i++) {
 	      listener = listeners[i];
@@ -3301,7 +3282,7 @@
 	    }
 	    var reversed = reverse.apply(this._array, arguments), _this = this;
 	
-	    _this.update(pArrayOps.reverse, -1, null, null);
+	    this.core.update(null, null, [pArrayOps.reverse, -1, null, null]);
 	    return reversed;
 	  },
 	  sort: function () {
@@ -3311,7 +3292,7 @@
 	    var sorted = sort.apply(this._array, arguments), _this = this,
 	        args = arguments;
 	
-	    _this.update(pArrayOps.sort, -1, null, args);
+	    this.core.update(null, null, [pArrayOps.sort, -1, null, args]);
 	    return sorted;
 	  },
 	  splice: function (index, howMany) {
@@ -3346,7 +3327,7 @@
 	        _this = this, index = this._array.length;
 	
 	    delete this[index];
-	    _this.update(pArrayOps.remove, _this._array.length, popped, null);
+	    this.core.update(null, null, [pArrayOps.remove, _this._array.length, popped, null]);
 	
 	    return popped;
 	  },
@@ -3360,7 +3341,7 @@
 	      this.__pro__.defineIndexProp(index);
 	    }
 	
-	    _this.update(pArrayOps.add, _this._array.length - 1, null, slice.call(vals, 0));
+	    this.core.update(null, null, [pArrayOps.add, _this._array.length - 1, null, slice.call(vals, 0)]);
 	
 	    return this._array.length;
 	  },
@@ -3372,7 +3353,7 @@
 	        _this = this, index = this._array.length;
 	
 	    delete this[index];
-	    _this.update(pArrayOps.remove, 0, shifted, null);
+	    this.core.update(null, null, [pArrayOps.remove, 0, shifted, null]);
 	
 	    return shifted;
 	  },
@@ -3385,7 +3366,7 @@
 	      this.__pro__.defineIndexProp(array.length - 1);
 	    }
 	
-	    _this.update(pArrayOps.add, 0, null, vals);
+	    this.core.update(null, null, [pArrayOps.add, 0, null, vals]);
 	
 	    return array.length;
 	  },
@@ -4423,7 +4404,14 @@
 	      length: []
 	    };
 	  },
+	  makeEvent: function (source, eventData) {
+	    var op = eventData[0],
+	        ind = eventData[1],
+	        oldVal = eventData[2],
+	        newVal = eventData[3];
 	
+	    return new P.E(source, this.shell, P.E.Types.array, op, ind, oldVal, newVal);
+	  },
 	  setup: function () {
 	    var self = this,
 	        array = this.shell,
@@ -4448,7 +4436,7 @@
 	      oldLength = array._array.length;
 	      array._array.length = newLength;
 	
-	      array.update(pArrayOps.setLength, -1, oldLength, newLength);
+	      self.update(null, null, [pArrayOps.setLength, -1, oldLength, newLength]);
 	
 	      return newLength;
 	    };
@@ -4494,7 +4482,7 @@
 	        oldVal = array[i];
 	        array[i] = newVal;
 	
-	        proArray.update(pArrayOps.set, i, oldVal, newVal);
+	        self.update(null, null, [pArrayOps.set, i, oldVal, newVal]);
 	      }
 	    });
 	  },
@@ -4531,7 +4519,28 @@
 	      this.on(type, caller);
 	      this[lastCallerField] = caller;
 	    }
-	  }
+	  },
+	  update: function (source, actions, eventData) {
+	    var self = this,
+	        op = eventData[0],
+	        ind = eventData[1],
+	        oldVal = eventData[2],
+	        newVal = eventData[3];
+	
+	    if (P.flow.isRunning()) {
+	      this.willUpdate(op, ind, oldVal, newVal);
+	    } else {
+	      P.flow.run(function () {
+	        self.willUpdate(op, ind, oldVal, newVal);
+	      });
+	    }
+	  },
+	  willUpdate: function (op, ind, oldVal, newVal) {
+	    var listeners = pArrayOps.isIndexOp(op) ? this.listeners.index : this.listeners.length;
+	    listeners = listeners ? listeners : [];
+	
+	    this.shell.willUpdateListeners(listeners, op, ind, oldVal, newVal);
+	  },
 	});
 	
 	

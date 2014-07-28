@@ -14,7 +14,14 @@ ProAct.ArrayCore.prototype = P.U.ex(Object.create(P.C.prototype), {
       length: []
     };
   },
+  makeEvent: function (source, eventData) {
+    var op = eventData[0],
+        ind = eventData[1],
+        oldVal = eventData[2],
+        newVal = eventData[3];
 
+    return new P.E(source, this.shell, P.E.Types.array, op, ind, oldVal, newVal);
+  },
   setup: function () {
     var self = this,
         array = this.shell,
@@ -39,7 +46,7 @@ ProAct.ArrayCore.prototype = P.U.ex(Object.create(P.C.prototype), {
       oldLength = array._array.length;
       array._array.length = newLength;
 
-      array.update(pArrayOps.setLength, -1, oldLength, newLength);
+      self.update(null, null, [pArrayOps.setLength, -1, oldLength, newLength]);
 
       return newLength;
     };
@@ -85,7 +92,7 @@ ProAct.ArrayCore.prototype = P.U.ex(Object.create(P.C.prototype), {
         oldVal = array[i];
         array[i] = newVal;
 
-        proArray.update(pArrayOps.set, i, oldVal, newVal);
+        self.update(null, null, [pArrayOps.set, i, oldVal, newVal]);
       }
     });
   },
@@ -122,6 +129,27 @@ ProAct.ArrayCore.prototype = P.U.ex(Object.create(P.C.prototype), {
       this.on(type, caller);
       this[lastCallerField] = caller;
     }
-  }
+  },
+  update: function (source, actions, eventData) {
+    var self = this,
+        op = eventData[0],
+        ind = eventData[1],
+        oldVal = eventData[2],
+        newVal = eventData[3];
+
+    if (P.flow.isRunning()) {
+      this.willUpdate(op, ind, oldVal, newVal);
+    } else {
+      P.flow.run(function () {
+        self.willUpdate(op, ind, oldVal, newVal);
+      });
+    }
+  },
+  willUpdate: function (op, ind, oldVal, newVal) {
+    var listeners = pArrayOps.isIndexOp(op) ? this.listeners.index : this.listeners.length;
+    listeners = listeners ? listeners : [];
+
+    this.shell.willUpdateListeners(listeners, op, ind, oldVal, newVal);
+  },
 });
 
