@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Class: Property</title>
+    <title>JSDoc: Class: Core</title>
     
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
     
-    <h1 class="page-title">Class: Property</h1>
+    <h1 class="page-title">Class: Core</h1>
     
     
 
@@ -29,7 +29,7 @@
     <h2>
         <span class="ancestors"><a href="ProAct.html">ProAct</a>.</span>
     
-    Property
+    Core
     </h2>
     
 </header>  
@@ -41,7 +41,7 @@
     
         
 <dt>
-    <h4 class="name" id="Property"><span class="type-signature"></span>new Property<span class="signature">(proObject, property, getter, setter)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="Core"><span class="type-signature"></span>new Core<span class="signature">(shell, meta)</span><span class="type-signature"></span></h4>
     
     
 </dt>
@@ -50,28 +50,22 @@
     
     <div class="description">
         <p>
- Constructs a ProAct.Property. The properties are simple <a href="ProAct.Observable.html">ProAct.Observable</a>s with state. The basic property
- has a state of a simple value - number/string/boolean.
+ Constructs a ProAct.Core. The core is an ProAct.Observable which can be used to manage other <a href="ProAct.Observable.html">ProAct.Observable</a> objects or shells arround ProAct.Observable objects.
 </p>
 <p>
- Every property represents a field in a plain javascript object. It makes it reactive, on reading the property value,
- if <a href="ProAct.html#currentCaller">ProAct.currentCaller</a> is set, it is added as a listener to the property changes.
+ For example a shell can be a plain old JavaScript object; The core will be in charge of creating <a href="ProAct.Property.html">ProAct.Property</a> for every field of the shell.
 </p>
 <p>
- Every property has a type the default property has a type of a simple value.
+ The idea of the core is to inject observer-observable capabilities in normal objects.
 </p>
 <p>
- All the properties of an object are managed by its <a href="ProAct.ObjectCore.html">ProAct.ObjectCore</a>, which is set to a hidden field of the object - '__pro__'.
+ ProAct.Core is an abstract class, that has a <a href="ProAct.States.html">ProAct.States</a> state. Its initializing logic should be implemented in an extender.
 </p>
 <p>
- When created every property is in ProAct.States.init state, when it is functional, the state is changed to ProAct.States.ready.
- If the property is not in ProAct.States.ready state, it is not useable.
+ ProAct.Core is used as a parent for the <a href="ProAct.Observable.html">ProAct.Observable</a>s it manages, so it can be passed as a listener object - defines a <i>call method</i>.
 </p>
 <p>
- <a href="ProAct.Property.html#init">ProAct.Property#init</a> is called by this constructor for the property initialization. It should initialize the property and set its state to ProAct.States.ready.
-</p>
-<p>
- ProAct.Property is part of the properties module of ProAct.js.
+ ProAct.Core is part of the core module of ProAct.js.
 </p>
     </div>
     
@@ -106,7 +100,7 @@
 	
         <tr>
             
-                <td class="name"><code>proObject</code></td>
+                <td class="name"><code>shell</code></td>
             
             
             <td class="type">
@@ -122,20 +116,20 @@
             
             
             
-            <td class="description last">A plain JavaScript object, holding a field, this property will represent.</td>
+            <td class="description last">The shell arrounf this core. This ProAct.Core manages observer-observable behavior for this <i>shell</i> object.</td>
         </tr>
 	
 	
 	
         <tr>
             
-                <td class="name"><code>property</code></td>
+                <td class="name"><code>meta</code></td>
             
             
             <td class="type">
             
                 
-<span class="param-type">String</span>
+<span class="param-type">Object</span>
 
 
             
@@ -145,53 +139,7 @@
             
             
             
-            <td class="description last">The name of the field of the object, this property should represent.</td>
-        </tr>
-	
-	
-	
-        <tr>
-            
-                <td class="name"><code>getter</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">function</span>
-
-
-            
-            </td>
-            
-            
-            
-            
-            
-            <td class="description last">An optional getter to be used when the property is read. If this parameter is empty, a new <a href="ProAct.Property.html#defaultGetter">ProAct.Property.defaultGetter</a> is build for <i>this</i>.</td>
-        </tr>
-	
-	
-	
-        <tr>
-            
-                <td class="name"><code>setter</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">function</span>
-
-
-            
-            </td>
-            
-            
-            
-            
-            
-            <td class="description last">An optional setter to be used when the property is written. If this parameter is empty, a new <a href="ProAct.Property.html#defaultSetter">ProAct.Property.defaultSetter</a> is build for <i>this</i>.</td>
+            <td class="description last">Optional meta data to be used to define the observer-observable behavior of the <i>shell</i>.</td>
         </tr>
 	
 	
@@ -222,7 +170,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="property.js.html">properties/property.js</a>, <a href="property.js.html#line1">line 1</a>
+        <a href="core.js.html">cores/core.js</a>, <a href="core.js.html#line1">line 1</a>
     </li></ul></dd>
     
     
@@ -232,17 +180,7 @@
     <dt class="tag-see">See:</dt>
     <dd class="tag-see">
         <ul>
-            <li><a href="ProAct.ObjectCore.html">ProAct.ObjectCore</a></li>
-        
-            <li><a href="ProAct.Property.html#defaultGetter">ProAct.Property.defaultGetter</a></li>
-        
-            <li><a href="ProAct.Property.html#defaultSetter">ProAct.Property.defaultSetter</a></li>
-        
-            <li><a href="ProAct.Property.html#init">ProAct.Property#init</a></li>
-        
-            <li>ProAct.States.init</li>
-        
-            <li>ProAct.States.ready</li>
+            <li><a href="ProAct.States.html">ProAct.States</a></li>
         </ul>
     </dd>
     
@@ -281,13 +219,6 @@
     
     
     
-    
-        <h3 class="subsection-title">Namespaces</h3>
-        
-        <dl>
-            <dt><a href="namespaces.html#ProAct.Property.Types"><a href="ProAct.Property.Types.html">Types</a></a></dt>
-            <dd></dd>
-        </dl>
     
     
     
@@ -330,14 +261,14 @@
     
     <dt class="tag-default">Default Value:</dt>
     <dd class="tag-default"><ul class="dummy">
-            <li>ProAct.Property</li>
+            <li>ProAct.Core</li>
         </ul></dd>
     
     
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="property.js.html">properties/property.js</a>, <a href="property.js.html#line287">line 287</a>
+        <a href="core.js.html">cores/core.js</a>, <a href="core.js.html#line47">line 47</a>
     </li></ul></dd>
     
     
@@ -359,665 +290,6 @@
         <h3 class="subsection-title">Methods</h3>
         
         <dl>
-            
-<dt>
-    <h4 class="name" id="defaultGetter"><span class="type-signature">&lt;static> </span>defaultGetter<span class="signature">(property)</span><span class="type-signature"> &rarr; {function}</span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        Generates a default getter function for a ProAct.Property instance.
-<p>
- Every ProAct.Property instance has a getter and a setter, they can be passed in the constructor, but if left blank,
- this method is used for creating the getter function.
-</p>
-<p>
- The default getter function uses <a href="ProAct.Property.html#addCaller">ProAct.Property#addCaller</a> method to track the <a href="ProAct.html#currentCaller">ProAct.currentCaller</a> listener if set.
- If it is set it is added as a listener to the passed <i>property</i>.
-</p>
-    </div>
-    
-
-    
-    
-    
-    
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-		
-		<th>Type</th>
-		
-		
-		
-		
-		
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-	
-	<tbody>
-	
-	
-        <tr>
-            
-                <td class="name"><code>property</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type"><a href="ProAct.Property.html">ProAct.Property</a></span>
-
-
-            
-            </td>
-            
-            
-            
-            
-            
-            <td class="description last">The ProAct.Property instance to generate a getter function for.</td>
-        </tr>
-	
-	
-	</tbody>
-</table>
-    
-    
-    
-<dl class="details">
-    
-        
-    
-    
-    
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="property.js.html">properties/property.js</a>, <a href="property.js.html#line167">line 167</a>
-    </li></ul></dd>
-    
-    
-    
-    
-    
-    
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    <h5>Returns:</h5>
-    
-            
-<div class="param-desc">
-    The generated getter function.
-</div>
-
-
-
-<dl>
-	<dt>
-		Type
-	</dt>
-	<dd>
-		
-<span class="param-type">function</span>
-
-
-	</dd>
-</dl>
-
-        
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="defaultSetter"><span class="type-signature">&lt;static> </span>defaultSetter<span class="signature">(property, setter)</span><span class="type-signature"> &rarr; {function}</span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        Generates a default setter function for a ProAct.Property instance.
-<p>
- Every ProAct.Property instance has a setter and a getter, they can be passed in the constructor, but if left blank,
- this method is used for creating the setter function.
-</p>
-<p>
- The default setter function uses <a href="ProAct.Property.html#update">ProAct.Property#update</a> method to update all the listeners for <i>change</i>s for the passed
- <i>property</i>.
-</p>
-<p>
- It updates the listeners only if the new value of the property is different from the old one (using <i>===</i> for the comparison).
-</p>
-    </div>
-    
-
-    
-    
-    
-    
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-		
-		<th>Type</th>
-		
-		
-		
-		
-		
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-	
-	<tbody>
-	
-	
-        <tr>
-            
-                <td class="name"><code>property</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type"><a href="ProAct.Property.html">ProAct.Property</a></span>
-
-
-            
-            </td>
-            
-            
-            
-            
-            
-            <td class="description last">The ProAct.Property instance to generate a setter function for.</td>
-        </tr>
-	
-	
-	
-        <tr>
-            
-                <td class="name"><code>setter</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">function</span>
-
-
-            
-            </td>
-            
-            
-            
-            
-            
-            <td class="description last">A setter function for the way of setting the value. It can be skipped if the value should be set using <i>=</i>.</td>
-        </tr>
-	
-	
-	</tbody>
-</table>
-    
-    
-    
-<dl class="details">
-    
-        
-    
-    
-    
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="property.js.html">properties/property.js</a>, <a href="property.js.html#line198">line 198</a>
-    </li></ul></dd>
-    
-    
-    
-    
-    
-    
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    <h5>Returns:</h5>
-    
-            
-<div class="param-desc">
-    The generated setter function.
-</div>
-
-
-
-<dl>
-	<dt>
-		Type
-	</dt>
-	<dd>
-		
-<span class="param-type">function</span>
-
-
-	</dd>
-</dl>
-
-        
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="defineProp"><span class="type-signature">&lt;static> </span>defineProp<span class="signature">(obj, prop, get, set)</span><span class="type-signature"></span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        Used to define the managed by a ProAct.Property instance field of the passed <i>obj</i>.
-<p>
- The field is writable, enumerable and configurable.
-</p>
-    </div>
-    
-
-    
-    
-    
-    
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-		
-		<th>Type</th>
-		
-		
-		
-		
-		
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-	
-	<tbody>
-	
-	
-        <tr>
-            
-                <td class="name"><code>obj</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">Object</span>
-
-
-            
-            </td>
-            
-            
-            
-            
-            
-            <td class="description last">The object which field should be defined as a property.</td>
-        </tr>
-	
-	
-	
-        <tr>
-            
-                <td class="name"><code>prop</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">String</span>
-
-
-            
-            </td>
-            
-            
-            
-            
-            
-            <td class="description last">The name of the property field to define.</td>
-        </tr>
-	
-	
-	
-        <tr>
-            
-                <td class="name"><code>get</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">function</span>
-
-
-            
-            </td>
-            
-            
-            
-            
-            
-            <td class="description last">The getter that should be used to read the new property to be defined.</td>
-        </tr>
-	
-	
-	
-        <tr>
-            
-                <td class="name"><code>set</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">function</span>
-
-
-            
-            </td>
-            
-            
-            
-            
-            
-            <td class="description last">The setter that should be used to update the new property to be defined.</td>
-        </tr>
-	
-	
-	</tbody>
-</table>
-    
-    
-    
-<dl class="details">
-    
-        
-    
-    
-    
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="property.js.html">properties/property.js</a>, <a href="property.js.html#line237">line 237</a>
-    </li></ul></dd>
-    
-    
-    
-    
-    
-    
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="reProb"><span class="type-signature">&lt;static> </span>reProb<span class="signature">(property)</span><span class="type-signature"> &rarr; {<a href="ProAct.Property.html">ProAct.Property</a>}</span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        Recreates a property, using its current value.
-<p>
- For example if the initial value of the field was null, the property can be set to be instance of <a href="ProAct.NullProperty.html">ProAct.NullProperty</a>,
- but if it changes to the number <i>3</i> it can be changed to <a href="ProAct.Property.html">ProAct.Property</a> using this method.
-</p>
-<p>
- The re-definition works by using <a href="ProAct.Property.html#destroy">ProAct.Property#destroy</a> to destroy the passed <i>property</i> first, and then the
- ProAct.ObjectCore#makeProp method is called of the <a href="ProAct.ObjectCore.html">ProAct.ObjectCore</a> of the object the <i>property</i> belongs to.
-</p>
-<p>
- This way a new ProAct.Property instance is created to replace the passed one.
-</p>
-    </div>
-    
-
-    
-    
-    
-    
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-		
-		<th>Type</th>
-		
-		
-		
-		
-		
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-	
-	<tbody>
-	
-	
-        <tr>
-            
-                <td class="name"><code>property</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type"><a href="ProAct.Property.html">ProAct.Property</a></span>
-
-
-            
-            </td>
-            
-            
-            
-            
-            
-            <td class="description last">The ProAct.Property instance to re-define.</td>
-        </tr>
-	
-	
-	</tbody>
-</table>
-    
-    
-    
-<dl class="details">
-    
-        
-    
-    
-    
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="property.js.html">properties/property.js</a>, <a href="property.js.html#line267">line 267</a>
-    </li></ul></dd>
-    
-    
-    
-    
-    
-    
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    <h5>Returns:</h5>
-    
-            
-<div class="param-desc">
-    The new re-defined property.
-</div>
-
-
-
-<dl>
-	<dt>
-		Type
-	</dt>
-	<dd>
-		
-<span class="param-type"><a href="ProAct.Property.html">ProAct.Property</a></span>
-
-
-	</dd>
-</dl>
-
-        
-    
-    
-</dd>
-
-        
             
 <dt>
     <h4 class="name" id="accumulate"><span class="type-signature">&lt;abstract> </span>accumulate<span class="signature">(initVal, accumulationFunction)</span><span class="type-signature"> &rarr; {<a href="ProAct.Observable.html">ProAct.Observable</a>}</span></h4>
@@ -1375,7 +647,7 @@ the passed <i>accumulation function</i>.
         
             
 <dt>
-    <h4 class="name" id="addCaller"><span class="type-signature"></span>addCaller<span class="signature">()</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="call"><span class="type-signature"></span>call<span class="signature">(event)</span><span class="type-signature"></span></h4>
     
     
 </dt>
@@ -1383,9 +655,9 @@ the passed <i>accumulation function</i>.
     
     
     <div class="description">
-        Uses <a href="ProAct.html#currentCaller">ProAct.currentCaller</a> to automatically add a new listener to this property if the caller is set.
+        ProAct.Core can be used as a parent listener for other <a href="ProAct.Observable.html">ProAct.Observable</a>s, so it defines the <i>call</i> method.
 <p>
- This method is used by the default getter to make every reader of the property a listener to it.
+ By default this method calls <a href="ProAct.Observable.html#update">ProAct.Observable#update</a> of <i>this</i> with the passed <i>event</i>.
 </p>
     </div>
     
@@ -1395,80 +667,53 @@ the passed <i>accumulation function</i>.
     
     
     
-    
-    
-<dl class="details">
-    
+        <h5>Parameters:</h5>
         
-    
-    
-    
 
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="property.js.html">properties/property.js</a>, <a href="property.js.html#line417">line 417</a>
-    </li></ul></dd>
-    
-    
-    
-    
-    
-    
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    
-    
-</dd>
-
-        
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
             
-<dt>
-    <h4 class="name" id="afterInit"><span class="type-signature"></span>afterInit<span class="signature">()</span><span class="type-signature"></span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        Called automatically after initialization of this property.
-<p>
- By default it changes the state of <i>this</i> to ProAct.States.ready.
-</p>
-<p>
- It can be overridden to define more complex initialization logic.
-</p>
-    </div>
-    
+                <td class="name"><code>event</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
 
-    
-    
-    
-    
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">The value/event that this listener is notified for.</td>
+        </tr>
+	
+	
+	</tbody>
+</table>
     
     
     
@@ -1494,12 +739,19 @@ the passed <i>accumulation function</i>.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="property.js.html">properties/property.js</a>, <a href="property.js.html#line400">line 400</a>
+        <a href="core.js.html">cores/core.js</a>, <a href="core.js.html#line121">line 121</a>
     </li></ul></dd>
     
     
     
     
+    
+    <dt class="tag-see">See:</dt>
+    <dd class="tag-see">
+        <ul>
+            <li><a href="ProAct.Observable.html#update">ProAct.Observable#update</a></li>
+        </ul>
+    </dd>
     
     
     
@@ -1906,78 +1158,6 @@ It is used for resetting all the listeners too.
         
             
 <dt>
-    <h4 class="name" id="destroy"><span class="type-signature"></span>destroy<span class="signature">()</span><span class="type-signature"></span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        Destroys this ProAct.Property instance, by making the field it manages to a normal field.
-<p>
- The state of <i>this</i> is set to ProAct.States.destroyed.
-</p>
-    </div>
-    
-
-    
-    
-    
-    
-    
-    
-    
-<dl class="details">
-    
-        
-    
-    
-    
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="property.js.html">properties/property.js</a>, <a href="property.js.html#line435">line 435</a>
-    </li></ul></dd>
-    
-    
-    
-    
-    
-    
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    
-    
-</dd>
-
-        
-            
-<dt>
     <h4 class="name" id="filter"><span class="type-signature">&lt;abstract> </span>filter<span class="signature">(filteringFunction)</span><span class="type-signature"> &rarr; {<a href="ProAct.Observable.html">ProAct.Observable</a>}</span></h4>
     
     
@@ -2288,91 +1468,6 @@ the passed <i>filtering function</i>.
         
             
 <dt>
-    <h4 class="name" id="init"><span class="type-signature"></span>init<span class="signature">()</span><span class="type-signature"></span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        Initializes this property.
-<p>
- This method logic is run only if the current state of <i>this</i> is ProAct.States.init.
-</p>
-<p>
- First the property is defined as a field in its object, using <a href="ProAct.Property.html#defineProp">ProAct.Property.defineProp</a>.
-</p>
-<p>
- Then <a href="ProAct.Property.html#afterInit">ProAct.Property#afterInit</a> is called to finish the initialization.
-</p>
-    </div>
-    
-
-    
-    
-    
-    
-    
-    
-    
-<dl class="details">
-    
-        
-    
-    
-    
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="property.js.html">properties/property.js</a>, <a href="property.js.html#line373">line 373</a>
-    </li></ul></dd>
-    
-    
-    
-    
-    
-    <dt class="tag-see">See:</dt>
-    <dd class="tag-see">
-        <ul>
-            <li><a href="ProAct.Property.html#afterInit">ProAct.Property#afterInit</a></li>
-        </ul>
-    </dd>
-    
-    
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    
-    
-</dd>
-
-        
-            
-<dt>
     <h4 class="name" id="into"><span class="type-signature"></span>into<span class="signature">()</span><span class="type-signature"> &rarr; {<a href="ProAct.Observable.html">ProAct.Observable</a>}</span></h4>
     
     
@@ -2657,17 +1752,12 @@ Every observable should have one error listener that should pass to other observ
     
     
     <div class="description">
-        Creates the <i>event</i> to be send to the listeners of this ProAct.Property on update.
+        Creates the <i>event</i> to be send to the listeners on update.
 <p>
  The <i>event</i> should be an instance of <a href="ProAct.Event.html">ProAct.Event</a>.
 </p>
 <p>
- By default this method returns <a href="ProAct.Event.Types.html#value">ProAct.Event.Types.value</a> event with target the property name and arguments:
- <ul>
-   <li>The object this ProAct.Property manages a field for.</li>
-   <li>The old value of this property.</li>
-   <li>The new value of this property.</li>
- </ul>
+ By default this method returns <a href="ProAct.Event.Types.html#value">ProAct.Event.Types.value</a> event.
 </p>
     </div>
     
@@ -2735,6 +1825,11 @@ Every observable should have one error listener that should pass to other observ
     
 
     
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from"><ul class="dummy"><li>
+        <a href="ProAct.Observable.html#makeEvent">ProAct.Observable#makeEvent</a>
+    </li></dd>
+    
     
     
     
@@ -2754,7 +1849,7 @@ Every observable should have one error listener that should pass to other observ
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="property.js.html">properties/property.js</a>, <a href="property.js.html#line305">line 305</a>
+        <a href="observable.js.html">objects/observable.js</a>, <a href="observable.js.html#line158">line 158</a>
     </li></ul></dd>
     
     
@@ -2779,7 +1874,7 @@ Every observable should have one error listener that should pass to other observ
     
             
 <div class="param-desc">
-    The event, created.
+    The event.
 </div>
 
 
@@ -2804,7 +1899,7 @@ Every observable should have one error listener that should pass to other observ
         
             
 <dt>
-    <h4 class="name" id="makeListener"><span class="type-signature"></span>makeListener<span class="signature">()</span><span class="type-signature"> &rarr; {Object}</span></h4>
+    <h4 class="name" id="makeListener"><span class="type-signature">&lt;abstract> </span>makeListener<span class="signature">()</span><span class="type-signature"> &rarr; {Object}</span></h4>
     
     
 </dt>
@@ -2812,18 +1907,13 @@ Every observable should have one error listener that should pass to other observ
     
     
     <div class="description">
-        Creates the <i>listener</i> of this ProAct.Property.
+        Creates the <i>listener</i> of this observable.
+Every observable should have one listener that should pass to other observables.
 <p>
  This listener turns the observable in a observer.
 </p>
 <p>
- The listener for ProAct.Property is an object defining the <i>call</i> method.
-</p>
-<p>
- It has a <i>property</i> field set to <i>this</i>.
-</p>
-<p>
- On value changes the <i><this</i> value is set to the new value using the <a href="ProAct.Observable.html#transform">ProAct.Observable#transform</a> to transform it.
+ Should be overriden with specific listener, by default it returns null.
 </p>
     </div>
     
@@ -2843,6 +1933,10 @@ Every observable should have one error listener that should pass to other observ
     
 
     
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from"><ul class="dummy"><li>
+        <a href="ProAct.Observable.html#makeListener">ProAct.Observable#makeListener</a>
+    </li></dd>
     
     
     
@@ -2852,12 +1946,18 @@ Every observable should have one error listener that should pass to other observ
     
     
     
+    
+    
+    <dt class="tag-default">Default Value:</dt>
+    <dd class="tag-default"><ul class="dummy">
+            <li>null</li>
+        </ul></dd>
     
     
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="property.js.html">properties/property.js</a>, <a href="property.js.html#line332">line 332</a>
+        <a href="observable.js.html">objects/observable.js</a>, <a href="observable.js.html#line118">line 118</a>
     </li></ul></dd>
     
     
@@ -2882,7 +1982,7 @@ Every observable should have one error listener that should pass to other observ
     
             
 <div class="param-desc">
-    The <i>listener of this ProAct.Property</i>.
+    The <i>listener of this observer</i>.
 </div>
 
 
@@ -4193,6 +3293,114 @@ to the passed <i>destination</i> observable.
         
             
 <dt>
+    <h4 class="name" id="prob"><span class="type-signature"></span>prob<span class="signature">()</span><span class="type-signature"> &rarr; {<a href="ProAct.Core.html">ProAct.Core</a>}</span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Initializes <i>this</i> ProAct.Core. This method should be called when the core should become active.
+<p>
+ The main idea of the method is to change the <a href="ProAct.States.html">ProAct.States</a> state of <i>this</i> to ProAct.States.ready, by
+ settuping everything needed by the shell to has observer-observable logic.
+</p>
+<p>
+ The abstract <a href="ProAct.Core.html#setup">ProAct.Core#setup</a> method is called for the actual setup. If it throws an error, <i>this</i> state
+ is set to ProAct.States.error and the core stays inactive.
+</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="core.js.html">cores/core.js</a>, <a href="core.js.html#line67">line 67</a>
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    <dt class="tag-see">See:</dt>
+    <dd class="tag-see">
+        <ul>
+            <li><a href="ProAct.Core.html#setup">ProAct.Core#setup</a></li>
+        
+            <li><a href="ProAct.States.html">ProAct.States</a></li>
+        </ul>
+    </dd>
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    <i>this</i>
+</div>
+
+
+
+<dl>
+	<dt>
+		Type
+	</dt>
+	<dd>
+		
+<span class="param-type"><a href="ProAct.Core.html">ProAct.Core</a></span>
+
+
+	</dd>
+</dl>
+
+        
+    
+    
+</dd>
+
+        
+            
+<dt>
     <h4 class="name" id="reduce"><span class="type-signature"></span>reduce<span class="signature">(initVal, accumulationFunction)</span><span class="type-signature"> &rarr; {ProAct.Val}</span></h4>
     
     
@@ -4372,7 +3580,7 @@ to the passed <i>destination</i> observable.
         
             
 <dt>
-    <h4 class="name" id="toString"><span class="type-signature"></span>toString<span class="signature">()</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="setup"><span class="type-signature">&lt;abstract> </span>setup<span class="signature">()</span><span class="type-signature"></span></h4>
     
     
 </dt>
@@ -4380,10 +3588,7 @@ to the passed <i>destination</i> observable.
     
     
     <div class="description">
-        The <b>toString()</b> method returns a string representing this ProAct.Property.
-<p>
- The string representation is the value of <i>this</i> property.
-</p>
+        Abstract method called by <a href="ProAct.Core.html#prob">ProAct.Core#prob</a> for the actual initialization of <i>this</i> core.
     </div>
     
 
@@ -4416,12 +3621,19 @@ to the passed <i>destination</i> observable.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="property.js.html">properties/property.js</a>, <a href="property.js.html#line462">line 462</a>
+        <a href="core.js.html">cores/core.js</a>, <a href="core.js.html#line108">line 108</a>
     </li></ul></dd>
     
     
     
     
+    
+    <dt class="tag-see">See:</dt>
+    <dd class="tag-see">
+        <ul>
+            <li><a href="ProAct.Core.html#prob">ProAct.Core#prob</a></li>
+        </ul>
+    </dd>
     
     
     
@@ -4592,100 +3804,6 @@ of <i>this observable</i>.
 	<dd>
 		
 <span class="param-type"><a href="ProAct.Observable.html">ProAct.Observable</a></span>
-
-
-	</dd>
-</dl>
-
-        
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="type"><span class="type-signature"></span>type<span class="signature">()</span><span class="type-signature"> &rarr; {Number}</span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        Retrieves the <a href="ProAct.Property.Types.html">ProAct.Property.Types</a> value of <i>this</i> property.
-<p>
- For instances of the base class - ProAct.Property it is <a href="ProAct.Property.Types.html#simple">ProAct.Property.Types.simple</a>.
-</p>
-    </div>
-    
-
-    
-    
-    
-    
-    
-    
-    
-<dl class="details">
-    
-        
-    
-    
-    
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="property.js.html">properties/property.js</a>, <a href="property.js.html#line289">line 289</a>
-    </li></ul></dd>
-    
-    
-    
-    
-    
-    
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    <h5>Returns:</h5>
-    
-            
-<div class="param-desc">
-    The right type of the property.
-</div>
-
-
-
-<dl>
-	<dt>
-		Type
-	</dt>
-	<dd>
-		
-<span class="param-type">Number</span>
 
 
 	</dd>
@@ -4904,6 +4022,106 @@ of <i>this observable</i>.
 	<dd>
 		
 <span class="param-type"><a href="ProAct.Observable.html">ProAct.Observable</a></span>
+
+
+	</dd>
+</dl>
+
+        
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="value"><span class="type-signature"></span>value<span class="signature">()</span><span class="type-signature"> &rarr; {Object}</span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        A function to be set to the <i>shell</i> object's <b>p</b> field (if it is configured in @{link ProAct.Configuration}).
+<p>
+ This function is the link to the this ProAct.Core of the <i>shell</i>. It can be overridden to return different aspects of
+ the core depending on parameters passed.
+</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-default">Default Value:</dt>
+    <dd class="tag-default"><ul class="dummy">
+            <li>{this}</li>
+        </ul></dd>
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="core.js.html">cores/core.js</a>, <a href="core.js.html#line49">line 49</a>
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    Some aspects of <i>this</i> ProAct.Core.
+</div>
+
+
+
+<dl>
+	<dt>
+		Type
+	</dt>
+	<dd>
+		
+<span class="param-type">Object</span>
 
 
 	</dd>
@@ -5162,7 +4380,7 @@ of <i>this observable</i>.
 <br clear="both">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.2</a> on Tue Jul 29 2014 06:04:02 GMT+0300 (EEST)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.2</a> on Tue Jul 29 2014 06:04:00 GMT+0300 (EEST)
 </footer>
 
 <script> prettyPrint(); </script>

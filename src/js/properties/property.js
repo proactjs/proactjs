@@ -46,7 +46,7 @@ ProAct.Property = P.P = function (proObject, property, getter, setter) {
   this.property = property;
 
   if (!this.proObject.__pro__) {
-    P.U.defValProp(proObject, '__pro__', false, false, true, new ProAct.Core(proObject));
+    P.U.defValProp(proObject, '__pro__', false, false, true, new ProAct.ObjectCore(proObject));
   }
 
   this.proObject.__pro__.properties[property] = this;

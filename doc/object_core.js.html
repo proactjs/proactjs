@@ -1,20 +1,47 @@
-/**
- * <p>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: cores/object_core.js</title>
+    
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+    
+    <h1 class="page-title">Source: cores/object_core.js</h1>
+    
+    
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source"><code>/**
+ * &lt;p>
  *  Constructs a ProAct.ObjectCore. ProAct.ObjectCore is a {@link ProAct.Core} that manages all the {@link ProAct.Property} instances for a reactive ProAct.js object.
- * </p>
- * <p>
+ * &lt;/p>
+ * &lt;p>
  *  It is responsible for all the {@link ProAct.Property} instances as well initializing them and deciding which type of property corresponds to which field.
- * </p>
- * <p>
+ * &lt;/p>
+ * &lt;p>
  *  ProAct.ObjectCore is part of the properties module of ProAct.js.
- * </p>
+ * &lt;/p>
  *
  * @class ProAct.ObjectCore
  * @extends ProAct.Core
  * @param {Object} object
  *      The shell objec arrounf this core. This should be plain JavaScript object.
  * @param {Object} meta
- *      Optional meta data to be used to define the observer-observable behavior of the <i>object</i>. For example transformations for its properties.
+ *      Optional meta data to be used to define the observer-observable behavior of the &lt;i>object&lt;/i>. For example transformations for its properties.
  * @see {@link ProAct.Property}
  */
 ProAct.ObjectCore = P.OC = function (object, meta) {
@@ -24,55 +51,7 @@ ProAct.ObjectCore = P.OC = function (object, meta) {
 };
 
 ProAct.ObjectCore.prototype = P.U.ex(Object.create(P.C.prototype), {
-
-  /**
-   * Reference to the constructor of this object.
-   *
-   * @memberof ProAct.ObjectCore
-   * @instance
-   * @constant
-   * @default ProAct.ObjectCore
-   */
   constructor: ProAct.ObjectCore,
-
-  /**
-   * A function to be set to the <i>shell</i> object's <b>p</b> field (if it is configured in @{link ProAct.Configuration}).
-   * <p>
-   *  It uses its <i>p</i> argument if it is string to return the right {@link ProAct.Property} for passed field name.
-   * </p>
-   * <p>
-   *  If the <i>p</i> argument is <b>*</b> or empty <i>this</i> ProAct.ObjectCore instance is returned.
-   * </p>
-   *
-   * @memberof ProAct.ObjectCore
-   * @instance
-   * @method value
-   * @param {String} p
-   *      The name of the managed {@link ProAct.Property} to retrieve. It can be set to <b>*</b> or skipped for <i>this</i> itself to be retrieved.
-   * @return {Object}
-   *      Managed {@link ProAct.Property} instance with field name equal to the passed <i>p</i> parameter or <i>this</i>.
-   * @see {@link ProAct.Property}
-   */
-  value: function (p) {
-    if (!p || p === '*') {
-      return this;
-    }
-
-    return this.properties[p];
-  },
-
-  /**
-   * Initializes all the {@link ProAct.Property} instances for the <i>shell</i>of <i>this</i> ProAct.ObjectCore.
-   * <p>
-   *  Using the types of the fields of the <i>shell</i> object the right {@link ProAct.Property} instances are created and stored
-   *  in <i>this</i> using {@link ProAct.ObjectCore#makeProp}.
-   * </p>
-   *
-   * @memberof ProAct.ObjectCore
-   * @instance
-   * @method setup
-   * @see {@link ProAct.ObjectCore#makeProp}
-   */
   setup: function () {
     var object = this.shell,
         property;
@@ -80,6 +59,13 @@ ProAct.ObjectCore.prototype = P.U.ex(Object.create(P.C.prototype), {
     for (property in object) {
       this.makeProp(property, null, this.meta[property]);
     }
+  },
+  value: function (p) {
+    if (!p || p === '*') {
+      return this;
+    }
+
+    return this.properties[p];
   },
   makeProp: function (property, listeners, meta) {
     var object = this.shell,
@@ -136,3 +122,26 @@ ProAct.ObjectCore.prototype = P.U.ex(Object.create(P.C.prototype), {
     this.makeProp(property);
   }
 });
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Index</a></h2><h3>Classes</h3><ul><li><a href="ProAct.ArrayProperty.html">ArrayProperty</a></li><li><a href="ProAct.AutoProperty.html">AutoProperty</a></li><li><a href="ProAct.BufferedStream.html">BufferedStream</a></li><li><a href="ProAct.Core.html">Core</a></li><li><a href="ProAct.DebouncingStream.html">DebouncingStream</a></li><li><a href="ProAct.DelayedStream.html">DelayedStream</a></li><li><a href="ProAct.Event.html">Event</a></li><li><a href="ProAct.Flow.html">Flow</a></li><li><a href="ProAct.NullProperty.html">NullProperty</a></li><li><a href="ProAct.ObjectCore.html">ObjectCore</a></li><li><a href="ProAct.ObjectProperty.html">ObjectProperty</a></li><li><a href="ProAct.Observable.html">Observable</a></li><li><a href="ProAct.Property.html">Property</a></li><li><a href="ProAct.Queue.html">Queue</a></li><li><a href="ProAct.Queues.html">Queues</a></li><li><a href="ProAct.SizeBufferedStream.html">SizeBufferedStream</a></li><li><a href="ProAct.Stream.html">Stream</a></li><li><a href="ProAct.ThrottlingStream.html">ThrottlingStream</a></li></ul><h3>Namespaces</h3><ul><li><a href="ProAct.html">ProAct</a></li><li><a href="ProAct.Configuration.html">Configuration</a></li><li><a href="ProAct.Event.Types.html">Types</a></li><li><a href="ProAct.Property.Types.html">Types</a></li><li><a href="ProAct.States.html">States</a></li><li><a href="ProAct.Utils.html">Utils</a></li></ul>
+</nav>
+
+<br clear="both">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.2</a> on Tue Jul 29 2014 06:03:59 GMT+0300 (EEST)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

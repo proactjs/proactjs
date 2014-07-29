@@ -29,7 +29,7 @@
  * @see {@link ProAct.States.init}
  * @see {@link ProAct.States.ready}
  */
-ProAct.ObjectProperty = OP = function (proObject, property) {
+ProAct.ObjectProperty = P.OP = function (proObject, property) {
   var self = this, getter;
 
   getter = function () {

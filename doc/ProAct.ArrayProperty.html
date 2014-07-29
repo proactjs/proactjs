@@ -181,7 +181,7 @@
     <dt class="tag-see">See:</dt>
     <dd class="tag-see">
         <ul>
-            <li>ProAct.ObjectCore</li>
+            <li><a href="ProAct.ObjectCore.html">ProAct.ObjectCore</a></li>
         
             <li>ProAct.States.init</li>
         
@@ -739,10 +739,7 @@ the passed <i>accumulation function</i>.
     <div class="description">
         Called automatically after initialization of this property.
 <p>
- By default it changes the state of <i>this</i> to ProAct.States.ready.
-</p>
-<p>
- It can be overridden to define more complex initialization logic.
+ For ProAct.ArrayProperty it does nothing - the real initialization is lazy and is performed on the first read of <i>this</i>.
 </p>
     </div>
     
@@ -762,11 +759,6 @@ the passed <i>accumulation function</i>.
     
 
     
-    <dt class="inherited-from">Inherited From:</dt>
-    <dd class="inherited-from"><ul class="dummy"><li>
-        <a href="ProAct.Property.html#afterInit">ProAct.Property#afterInit</a>
-    </li></dd>
-    
     
     
     
@@ -781,7 +773,7 @@ the passed <i>accumulation function</i>.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="property.js.html">properties/property.js</a>, <a href="property.js.html#line400">line 400</a>
+        <a href="array_property.js.html">properties/array_property.js</a>, <a href="array_property.js.html#line136">line 136</a>
     </li></ul></dd>
     
     
@@ -3927,7 +3919,7 @@ of <i>this observable</i>.
     <div class="description">
         Retrieves the <a href="ProAct.Property.Types.html">ProAct.Property.Types</a> value of <i>this</i> property.
 <p>
- For instances of the base class - ProAct.Property it is <a href="ProAct.Property.Types.html#simple">ProAct.Property.Types.simple</a>.
+ For ProAct.ArrayProperty this is <a href="ProAct.Property.Types.html#array">ProAct.Property.Types.array</a>
 </p>
     </div>
     
@@ -3947,11 +3939,6 @@ of <i>this observable</i>.
     
 
     
-    <dt class="inherited-from">Inherited From:</dt>
-    <dd class="inherited-from"><ul class="dummy"><li>
-        <a href="ProAct.Property.html#type">ProAct.Property#type</a>
-    </li></dd>
-    
     
     
     
@@ -3966,7 +3953,7 @@ of <i>this observable</i>.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="property.js.html">properties/property.js</a>, <a href="property.js.html#line289">line 289</a>
+        <a href="array_property.js.html">properties/array_property.js</a>, <a href="array_property.js.html#line120">line 120</a>
     </li></ul></dd>
     
     
@@ -4473,13 +4460,13 @@ of <i>this observable</i>.
 </div>
 
 <nav>
-    <h2><a href="index.html">Index</a></h2><h3>Classes</h3><ul><li><a href="ProAct.ArrayProperty.html">ArrayProperty</a></li><li><a href="ProAct.AutoProperty.html">AutoProperty</a></li><li><a href="ProAct.BufferedStream.html">BufferedStream</a></li><li><a href="ProAct.DebouncingStream.html">DebouncingStream</a></li><li><a href="ProAct.DelayedStream.html">DelayedStream</a></li><li><a href="ProAct.Event.html">Event</a></li><li><a href="ProAct.Flow.html">Flow</a></li><li><a href="ProAct.NullProperty.html">NullProperty</a></li><li><a href="ProAct.ObjectProperty.html">ObjectProperty</a></li><li><a href="ProAct.Observable.html">Observable</a></li><li><a href="ProAct.Property.html">Property</a></li><li><a href="ProAct.Queue.html">Queue</a></li><li><a href="ProAct.Queues.html">Queues</a></li><li><a href="ProAct.SizeBufferedStream.html">SizeBufferedStream</a></li><li><a href="ProAct.Stream.html">Stream</a></li><li><a href="ProAct.ThrottlingStream.html">ThrottlingStream</a></li></ul><h3>Namespaces</h3><ul><li><a href="ProAct.html">ProAct</a></li><li><a href="ProAct.Configuration.html">Configuration</a></li><li><a href="ProAct.Event.Types.html">Types</a></li><li><a href="ProAct.Property.Types.html">Types</a></li><li><a href="ProAct.States.html">States</a></li><li><a href="ProAct.Utils.html">Utils</a></li></ul>
+    <h2><a href="index.html">Index</a></h2><h3>Classes</h3><ul><li><a href="ProAct.ArrayProperty.html">ArrayProperty</a></li><li><a href="ProAct.AutoProperty.html">AutoProperty</a></li><li><a href="ProAct.BufferedStream.html">BufferedStream</a></li><li><a href="ProAct.Core.html">Core</a></li><li><a href="ProAct.DebouncingStream.html">DebouncingStream</a></li><li><a href="ProAct.DelayedStream.html">DelayedStream</a></li><li><a href="ProAct.Event.html">Event</a></li><li><a href="ProAct.Flow.html">Flow</a></li><li><a href="ProAct.NullProperty.html">NullProperty</a></li><li><a href="ProAct.ObjectCore.html">ObjectCore</a></li><li><a href="ProAct.ObjectProperty.html">ObjectProperty</a></li><li><a href="ProAct.Observable.html">Observable</a></li><li><a href="ProAct.Property.html">Property</a></li><li><a href="ProAct.Queue.html">Queue</a></li><li><a href="ProAct.Queues.html">Queues</a></li><li><a href="ProAct.SizeBufferedStream.html">SizeBufferedStream</a></li><li><a href="ProAct.Stream.html">Stream</a></li><li><a href="ProAct.ThrottlingStream.html">ThrottlingStream</a></li></ul><h3>Namespaces</h3><ul><li><a href="ProAct.html">ProAct</a></li><li><a href="ProAct.Configuration.html">Configuration</a></li><li><a href="ProAct.Event.Types.html">Types</a></li><li><a href="ProAct.Property.Types.html">Types</a></li><li><a href="ProAct.States.html">States</a></li><li><a href="ProAct.Utils.html">Utils</a></li></ul>
 </nav>
 
 <br clear="both">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.2</a> on Mon Jul 28 2014 21:48:03 GMT+0300 (EEST)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.2</a> on Tue Jul 29 2014 06:04:00 GMT+0300 (EEST)
 </footer>
 
 <script> prettyPrint(); </script>

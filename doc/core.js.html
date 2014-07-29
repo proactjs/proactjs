@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: cores/core.js</title>
+    
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+    
+    <h1 class="page-title">Source: cores/core.js</h1>
+    
+    
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source"><code>/**
+ * &lt;p>
+ *  Constructs a ProAct.Core. The core is an ProAct.Observable which can be used to manage other {@link ProAct.Observable} objects or shells arround ProAct.Observable objects.
+ * &lt;/p>
+ * &lt;p>
+ *  For example a shell can be a plain old JavaScript object; The core will be in charge of creating {@link ProAct.Property} for every field of the shell.
+ * &lt;/p>
+ * &lt;p>
+ *  The idea of the core is to inject observer-observable capabilities in normal objects.
+ * &lt;/p>
+ * &lt;p>
+ *  ProAct.Core is an abstract class, that has a {@link ProAct.States} state. Its initializing logic should be implemented in an extender.
+ * &lt;/p>
+ * &lt;p>
+ *  ProAct.Core is used as a parent for the {@link ProAct.Observable}s it manages, so it can be passed as a listener object - defines a &lt;i>call method&lt;/i>.
+ * &lt;/p>
+ * &lt;p>
+ *  ProAct.Core is part of the core module of ProAct.js.
+ * &lt;/p>
+ *
+ * @class ProAct.Core
+ * @extends ProAct.Observable
+ * @param {Object} shell
+ *      The shell arrounf this core. This ProAct.Core manages observer-observable behavior for this &lt;i>shell&lt;/i> object.
+ * @param {Object} meta
+ *      Optional meta data to be used to define the observer-observable behavior of the &lt;i>shell&lt;/i>.
+ * @see {@link ProAct.States}
+ */
+ProAct.Core = P.C = function (shell, meta) {
+  this.shell = shell;
+  this.state = P.States.init;
+  this.meta = meta || {};
+
+  P.Observable.call(this); // Super!
+};
+
+ProAct.Core.prototype = P.U.ex(Object.create(P.Observable.prototype), {
+
+  /**
+   * Reference to the constructor of this object.
+   *
+   * @memberof ProAct.Core
+   * @instance
+   * @constant
+   * @default ProAct.Core
+   */
+  constructor: ProAct.Core,
+
+  /**
+   * A function to be set to the &lt;i>shell&lt;/i> object's &lt;b>p&lt;/b> field (if it is configured in @{link ProAct.Configuration}).
+   * &lt;p>
+   *  This function is the link to the this ProAct.Core of the &lt;i>shell&lt;/i>. It can be overridden to return different aspects of
+   *  the core depending on parameters passed.
+   * &lt;/p>
+   *
+   * @memberof ProAct.Core
+   * @instance
+   * @method value
+   * @default {this}
+   * @return {Object}
+   *      Some aspects of &lt;i>this&lt;/i> ProAct.Core.
+   */
+  value: function () {
+    return this;
+  },
+
+  /**
+   * Initializes &lt;i>this&lt;/i> ProAct.Core. This method should be called when the core should become active.
+   * &lt;p>
+   *  The main idea of the method is to change the {@link ProAct.States} state of &lt;i>this&lt;/i> to {@link ProAct.States.ready}, by
+   *  settuping everything needed by the shell to has observer-observable logic.
+   * &lt;/p>
+   * &lt;p>
+   *  The abstract {@link ProAct.Core#setup} method is called for the actual setup. If it throws an error, &lt;i>this&lt;/i> state
+   *  is set to {@link ProAct.States.error} and the core stays inactive.
+   * &lt;/p>
+   *
+   * @memberof ProAct.Core
+   * @instance
+   * @method prob
+   * @return {ProAct.Core}
+   *      &lt;i>this&lt;/i>
+   * @see {@link ProAct.Core#setup}
+   * @see {@link ProAct.States}
+   */
+  prob: function () {
+    var self = this,
+        conf = P.Configuration,
+        keyprops = conf.keyprops,
+        keypropList = conf.keypropList;
+
+    try {
+      this.setup();
+
+      if (keyprops && keypropList.indexOf('p') !== -1) {
+        P.U.defValProp(this.shell, 'p', false, false, false, P.U.bind(this, this.value));
+      }
+
+      this.state = P.States.ready;
+    } catch (e) {
+      this.state = P.States.error;
+      throw e;
+    }
+
+    return this;
+  },
+
+  /**
+   * Abstract method called by {@link ProAct.Core#prob} for the actual initialization of &lt;i>this&lt;/i> core.
+   *
+   * @memberof ProAct.Core
+   * @instance
+   * @abstract
+   * @method setup
+   * @see {@link ProAct.Core#prob}
+   */
+  setup: function () {
+    throw Error('Abstract, implement!');
+  },
+
+  /**
+   * ProAct.Core can be used as a parent listener for other {@link ProAct.Observable}s, so it defines the &lt;i>call&lt;/i> method.
+   * &lt;p>
+   *  By default this method calls {@link ProAct.Observable#update} of &lt;i>this&lt;/i> with the passed &lt;i>event&lt;/i>.
+   * &lt;/p>
+   *
+   * @memberof ProAct.Core
+   * @instance
+   * @method call
+   * @param {Object} event
+   *      The value/event that this listener is notified for.
+   * @see {@link ProAct.Observable#update}
+   */
+  call: function (event) {
+    this.update(event);
+  }
+});
+
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Index</a></h2><h3>Classes</h3><ul><li><a href="ProAct.ArrayProperty.html">ArrayProperty</a></li><li><a href="ProAct.AutoProperty.html">AutoProperty</a></li><li><a href="ProAct.BufferedStream.html">BufferedStream</a></li><li><a href="ProAct.Core.html">Core</a></li><li><a href="ProAct.DebouncingStream.html">DebouncingStream</a></li><li><a href="ProAct.DelayedStream.html">DelayedStream</a></li><li><a href="ProAct.Event.html">Event</a></li><li><a href="ProAct.Flow.html">Flow</a></li><li><a href="ProAct.NullProperty.html">NullProperty</a></li><li><a href="ProAct.ObjectCore.html">ObjectCore</a></li><li><a href="ProAct.ObjectProperty.html">ObjectProperty</a></li><li><a href="ProAct.Observable.html">Observable</a></li><li><a href="ProAct.Property.html">Property</a></li><li><a href="ProAct.Queue.html">Queue</a></li><li><a href="ProAct.Queues.html">Queues</a></li><li><a href="ProAct.SizeBufferedStream.html">SizeBufferedStream</a></li><li><a href="ProAct.Stream.html">Stream</a></li><li><a href="ProAct.ThrottlingStream.html">ThrottlingStream</a></li></ul><h3>Namespaces</h3><ul><li><a href="ProAct.html">ProAct</a></li><li><a href="ProAct.Configuration.html">Configuration</a></li><li><a href="ProAct.Event.Types.html">Types</a></li><li><a href="ProAct.Property.Types.html">Types</a></li><li><a href="ProAct.States.html">States</a></li><li><a href="ProAct.Utils.html">Utils</a></li></ul>
+</nav>
+
+<br clear="both">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.2</a> on Tue Jul 29 2014 06:03:59 GMT+0300 (EEST)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
