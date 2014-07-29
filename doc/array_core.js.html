@@ -1,20 +1,47 @@
-/**
- * <p>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: cores/array_core.js</title>
+    
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+    
+    <h1 class="page-title">Source: cores/array_core.js</h1>
+    
+    
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source"><code>/**
+ * &lt;p>
  *  Constructs a ProAct.ArrayCore. ProAct.ArrayCore is a {@link ProAct.Core} that manages all the updates/listeners for an ProAct.Array.
- * </p>
- * <p>
+ * &lt;/p>
+ * &lt;p>
  *  It is responsible for updating length or index listeners and adding the right ones on read.
- * </p>
- * <p>
+ * &lt;/p>
+ * &lt;p>
  *  ProAct.ArrayCore is part of the arrays module of ProAct.js.
- * </p>
+ * &lt;/p>
  *
  * @class ProAct.ArrayCore
  * @extends ProAct.Core
  * @param {Object} array
  *      The shell {@link ProAct.Array} arround this core.
  * @param {Object} meta
- *      Optional meta data to be used to define the observer-observable behavior of the <i>array</i>.
+ *      Optional meta data to be used to define the observer-observable behavior of the &lt;i>array&lt;/i>.
  * @see {@link ProAct.Array}
  */
 ProAct.ArrayCore = P.AC = function (array, meta) {
@@ -36,25 +63,6 @@ ProAct.ArrayCore.prototype = P.U.ex(Object.create(P.C.prototype), {
    */
   constructor: ProAct.ArrayCore,
 
-  /**
-   * Generates the initial listeners object.
-   * It is used for resetting all the listeners too.
-   * <p>
-   *  For ProAct.ArrayCore the default listeners object is
-   *  <pre>
-   *    {
-   *      index: [],
-   *      length: []
-   *    }
-   *  </pre>
-   * </p>
-   *
-   * @memberof ProAct.ArrayCore
-   * @instance
-   * @method defaultListeners
-   * @return {Object}
-   *      A map containing the default listeners collections (index and length type of listeners).
-   */
   defaultListeners: function () {
     return {
       index: [],
@@ -62,47 +70,10 @@ ProAct.ArrayCore.prototype = P.U.ex(Object.create(P.C.prototype), {
     };
   },
 
-  /**
-   * A list of actions or action to be used when no action is passed for the methods working with actions.
-   * <p>
-   *  For ProAct.ArrayCore these are both 'length' and 'index' actions.
-   * </p>
-   *
-   * @memberof ProAct.ArrayCore
-   * @instance
-   * @method defaultActions
-   * @default ['length', 'index']
-   * @return {Array}
-   *      The actions to be used if no actions are provided to action related methods,
-   *      like {@link ProAct.Observable#on}, {@link ProAct.Observable#off}, {@link ProAct.Observable#update}, {@link ProAct.Observable#willUpdate}.
-   */
   defaultActions: function () {
     return ['length', 'index'];
   },
 
-  /**
-   * Creates the <i>event</i> to be send to the listeners on update.
-   * <p>
-   *  By default this method returns {@link ProAct.Event.Types.array} event.
-   * </p>
-   *
-   * @memberof ProAct.ArrayCore
-   * @instance
-   * @method makeEvent
-   * @default {ProAct.Event} with type {@link ProAct.Event.Types.array}
-   * @param {ProAct.Event} source
-   *      The source event of the event. It can be null
-   * @param {Array} eventData
-   *      An array of four elements describing the changes:
-   *      <ol>
-   *        <li>{@link ProAct.Array.Operations} member defining the changing operation - for example {@link ProAct.Array.Operations.add}</li>
-   *        <li>The index on which the chage occures.</li>
-   *        <li>The old values beginning from the index.</li>
-   *        <li>The new values beginning from the index.</li>
-   *      </ol>
-   * @return {ProAct.Event}
-   *      The event.
-   */
   makeEvent: function (source, eventData) {
     var op = eventData[0],
         ind = eventData[1],
@@ -163,7 +134,7 @@ ProAct.ArrayCore.prototype = P.U.ex(Object.create(P.C.prototype), {
         ln = array._array.length,
         getLength, setLength, oldLength, i;
 
-    for (i = 0; i < ln; i++) {
+    for (i = 0; i &lt; ln; i++) {
       this.defineIndexProp(i);
     }
 
@@ -232,3 +203,26 @@ ProAct.ArrayCore.prototype = P.U.ex(Object.create(P.C.prototype), {
     });
   }
 });
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Index</a></h2><h3>Classes</h3><ul><li><a href="ProAct.ArrayCore.html">ArrayCore</a></li><li><a href="ProAct.ArrayProperty.html">ArrayProperty</a></li><li><a href="ProAct.AutoProperty.html">AutoProperty</a></li><li><a href="ProAct.BufferedStream.html">BufferedStream</a></li><li><a href="ProAct.Core.html">Core</a></li><li><a href="ProAct.DebouncingStream.html">DebouncingStream</a></li><li><a href="ProAct.DelayedStream.html">DelayedStream</a></li><li><a href="ProAct.Event.html">Event</a></li><li><a href="ProAct.Flow.html">Flow</a></li><li><a href="ProAct.NullProperty.html">NullProperty</a></li><li><a href="ProAct.ObjectCore.html">ObjectCore</a></li><li><a href="ProAct.ObjectProperty.html">ObjectProperty</a></li><li><a href="ProAct.Observable.html">Observable</a></li><li><a href="ProAct.Property.html">Property</a></li><li><a href="ProAct.Queue.html">Queue</a></li><li><a href="ProAct.Queues.html">Queues</a></li><li><a href="ProAct.SizeBufferedStream.html">SizeBufferedStream</a></li><li><a href="ProAct.Stream.html">Stream</a></li><li><a href="ProAct.ThrottlingStream.html">ThrottlingStream</a></li></ul><h3>Namespaces</h3><ul><li><a href="ProAct.html">ProAct</a></li><li><a href="ProAct.Configuration.html">Configuration</a></li><li><a href="ProAct.Event.Types.html">Types</a></li><li><a href="ProAct.Property.Types.html">Types</a></li><li><a href="ProAct.States.html">States</a></li><li><a href="ProAct.Utils.html">Utils</a></li></ul>
+</nav>
+
+<br clear="both">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.2</a> on Tue Jul 29 2014 10:29:36 GMT+0300 (EEST)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

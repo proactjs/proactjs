@@ -1,4 +1,4 @@
-Pro.OpStore = {
+ProAct.OpStore = {
   all: {
     simpleOp: function(name, sym) {
       return {
@@ -69,7 +69,7 @@ Pro.OpStore = {
 };
 opStoreAll = Pro.OpStore.all;
 
-Pro.DSL = {
+ProAct.DSL = {
   separator: '|',
   ops: {
     into: opStoreAll.simpleOp('into', '<<'),
