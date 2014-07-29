@@ -1,14 +1,41 @@
-/**
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: arrays/array.js</title>
+    
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+    
+    <h1 class="page-title">Source: arrays/array.js</h1>
+    
+    
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source"><code>/**
  * Creates a wrapper around a plain JavaScript array that is capable of tracking changes on the array and notifying listeners.
- * <p>
+ * &lt;p>
  *  It has a {@link ProAct.ArrayCore} which it uses to observe the array for changes or to update the array on changes.
- * </p>
- * <p>
+ * &lt;/p>
+ * &lt;p>
  *  ProAct.Array is array-like object, it has all the methods defined in the JavaScript Array class, length property and indices.
- * </p>
- * <p>
+ * &lt;/p>
+ * &lt;p>
  *  ProAct.Array is part of the arrays module of ProAct.js.
- * </p>
+ * &lt;/p>
  *
  * @class ProAct.Array
  * @extends Array
@@ -52,9 +79,9 @@ P.U.ex(P.A, {
 
     /**
      * Represents setting a value to an index of an array.
-     * <pre>
+     * &lt;pre>
      *  array[3] = 12;
-     * </pre>
+     * &lt;/pre>
      *
      * @memberof ProAct.Array.Operations
      * @static
@@ -64,10 +91,10 @@ P.U.ex(P.A, {
 
     /**
      * Represents adding values to array.
-     * <pre>
+     * &lt;pre>
      *  array.push(12);
      *  array.unshift(12);
-     * </pre>
+     * &lt;/pre>
      *
      * @memberof ProAct.Array.Operations
      * @static
@@ -77,10 +104,10 @@ P.U.ex(P.A, {
 
     /**
      * Represents removing values from array.
-     * <pre>
+     * &lt;pre>
      *  array.pop();
      *  array.shift();
-     * </pre>
+     * &lt;/pre>
      *
      * @memberof ProAct.Array.Operations
      * @static
@@ -90,9 +117,9 @@ P.U.ex(P.A, {
 
     /**
      * Represents setting the length of an array.
-     * <pre>
+     * &lt;pre>
      *  array.length = 5;
-     * </pre>
+     * &lt;/pre>
      *
      * @memberof ProAct.Array.Operations
      * @static
@@ -102,9 +129,9 @@ P.U.ex(P.A, {
 
     /**
      * Represents reversing the element order in an array.
-     * <pre>
+     * &lt;pre>
      *  array.reverse();
-     * </pre>
+     * &lt;/pre>
      *
      * @memberof ProAct.Array.Operations
      * @static
@@ -114,9 +141,9 @@ P.U.ex(P.A, {
 
     /**
      * Represents sorting the elements in an array.
-     * <pre>
+     * &lt;pre>
      *  array.sort();
-     * </pre>
+     * &lt;/pre>
      *
      * @memberof ProAct.Array.Operations
      * @static
@@ -125,10 +152,10 @@ P.U.ex(P.A, {
     sort: 5,
 
     /**
-     * Represents the powerful <i>splice</i> operation.
-     * <pre>
+     * Represents the powerful &lt;i>splice&lt;/i> operation.
+     * &lt;pre>
      *  array.splice(2, 3, 4, 15, 6);
-     * </pre>
+     * &lt;/pre>
      *
      * @memberof ProAct.Array.Operations
      * @static
@@ -139,11 +166,11 @@ P.U.ex(P.A, {
 
   /**
    * A helper method for filtering an array and notifying the right listeners of the filtered result.
-   * <p>
+   * &lt;p>
    *  This is used if there is an ProAct.Array created by filtering another ProAct.Array. If the original is
    *  changed, the filtered array should be changed in some cases. So refilter does this - changes the dependent filtered array, using
    *  {@link ProAct.ArrayCore#updateByDiff}.
-   * </p>
+   * &lt;/p>
    *
    * @memberof ProAct.Array
    * @static
@@ -177,13 +204,13 @@ ProAct.Array.prototype = pArrayProto = P.U.ex(Object.create(arrayProto), {
   constructor: ProAct.Array,
 
   /**
-   * The <b>concat()</b> method returns a new array comprised of this array joined with other array(s) and/or value(s).
-   * <p>
-   *  The result ProAct.Array is dependent on <i>this</i>, so if <i>this</i> changes, the concatenation resut will be updated.
-   * </p>
-   * <p>
+   * The &lt;b>concat()&lt;/b> method returns a new array comprised of this array joined with other array(s) and/or value(s).
+   * &lt;p>
+   *  The result ProAct.Array is dependent on &lt;i>this&lt;/i>, so if &lt;i>this&lt;/i> changes, the concatenation resut will be updated.
+   * &lt;/p>
+   * &lt;p>
    *  If the argument passed is another ProAct.Array the result array is dependent on it too.
-   * </p>
+   * &lt;/p>
    *
    * @memberof ProAct.Array
    * @instance
@@ -191,7 +218,7 @@ ProAct.Array.prototype = pArrayProto = P.U.ex(Object.create(arrayProto), {
    * @param [...]
    *      Arrays and/or values to concatenate to the resulting array.
    * @return {ProAct.Array}
-   *      A new ProAct.Array consisting of the elements in the <i>this</i> object on which it is called, followed in order by,
+   *      A new ProAct.Array consisting of the elements in the &lt;i>this&lt;/i> object on which it is called, followed in order by,
    *      for each argument, the elements of that argument (if the argument is an array) or the argument itself (if the argument is not an array).
    * @see {@link ProAct.Array.Listeners.leftConcat}
    * @see {@link ProAct.Array.Listeners.rightConcat}
@@ -216,10 +243,10 @@ ProAct.Array.prototype = pArrayProto = P.U.ex(Object.create(arrayProto), {
   },
 
   /**
-   * The <b>every()</b> method tests whether all elements in the ProAct.Array pass the test implemented by the provided function.
-   * <p>
+   * The &lt;b>every()&lt;/b> method tests whether all elements in the ProAct.Array pass the test implemented by the provided function.
+   * &lt;p>
    *  This method adds the {@link ProAct.currentCaller} as a listener to both 'index' type and 'length' type of changes.
-   * </p>
+   * &lt;/p>
    *
    * @memberof ProAct.Array
    * @instance
@@ -227,9 +254,9 @@ ProAct.Array.prototype = pArrayProto = P.U.ex(Object.create(arrayProto), {
    * @param {Function} callback
    *      Function to test for each element.
    * @param {Object} thisArg
-   *      Value to use as this when executing <i>callback</i>.
+   *      Value to use as this when executing &lt;i>callback&lt;/i>.
    * @return {Boolean}
-   *      True if all the elements in the <i>this</i> ProAct.Array pass the test implemented by the <i>callback</i>, false otherwise.
+   *      True if all the elements in the &lt;i>this&lt;/i> ProAct.Array pass the test implemented by the &lt;i>callback&lt;/i>, false otherwise.
    * @see {@link ProAct.ArrayCore#addCaller}
    */
   every: function () {
@@ -247,9 +274,9 @@ ProAct.Array.prototype = pArrayProto = P.U.ex(Object.create(arrayProto), {
    * @param {Function} fun
    *      Function to test for each element.
    * @param {Object} thisArg
-   *      Value to use as this when executing <i>callback</i>.
+   *      Value to use as this when executing &lt;i>callback&lt;/i>.
    * @return {ProAct.Val}
-   *      {@link ProAct.Val} with value of true if all the elements in <i>this</i> ProAct.Array pass the test implemented by the <i>fun</i>, false otherwise.
+   *      {@link ProAct.Val} with value of true if all the elements in &lt;i>this&lt;/i> ProAct.Array pass the test implemented by the &lt;i>fun&lt;/i>, false otherwise.
    * @see {@link ProAct.ArrayCore#addCaller}
    * @see {@link ProAct.Val}
    * @see {@link ProAct.Array.Listeners.every}
@@ -263,10 +290,10 @@ ProAct.Array.prototype = pArrayProto = P.U.ex(Object.create(arrayProto), {
   },
 
   /**
-   * The <b>some()</b> method tests whether some element in the array passes the test implemented by the provided function.
-   * <p>
+   * The &lt;b>some()&lt;/b> method tests whether some element in the array passes the test implemented by the provided function.
+   * &lt;p>
    *  This method adds the {@link ProAct.currentCaller} as a listener to both 'index' type and 'length' type of changes.
-   * </p>
+   * &lt;/p>
    *
    * @memberof ProAct.Array
    * @instance
@@ -274,9 +301,9 @@ ProAct.Array.prototype = pArrayProto = P.U.ex(Object.create(arrayProto), {
    * @param {Function} callback
    *      Function to test for each element.
    * @param {Object} thisArg
-   *      Value to use as this when executing <i>callback</i>.
+   *      Value to use as this when executing &lt;i>callback&lt;/i>.
    * @return {Boolean}
-   *      True if one or more of the elements in <i>this</i> ProAct.Array pass the test implemented by the <i>callback</i>, false otherwise.
+   *      True if one or more of the elements in &lt;i>this&lt;/i> ProAct.Array pass the test implemented by the &lt;i>callback&lt;/i>, false otherwise.
    * @see {@link ProAct.ArrayCore#addCaller}
    */
   some: function () {
@@ -294,9 +321,9 @@ ProAct.Array.prototype = pArrayProto = P.U.ex(Object.create(arrayProto), {
    * @param {Function} fun
    *      Function to test for each element.
    * @param {Object} thisArg
-   *      Value to use as this when executing <i>callback</i>.
+   *      Value to use as this when executing &lt;i>callback&lt;/i>.
    * @return {ProAct.Val}
-   *      {@link ProAct.Val} with value of true if one or more of the elements in <i>this</i> ProAct.Array pass the test implemented by the <i>fun</i>, false otherwise.
+   *      {@link ProAct.Val} with value of true if one or more of the elements in &lt;i>this&lt;/i> ProAct.Array pass the test implemented by the &lt;i>fun&lt;/i>, false otherwise.
    * @see {@link ProAct.ArrayCore#addCaller}
    * @see {@link ProAct.Val}
    * @see {@link ProAct.Array.Listeners.some}
@@ -310,10 +337,10 @@ ProAct.Array.prototype = pArrayProto = P.U.ex(Object.create(arrayProto), {
   },
 
   /**
-   * The <b>forEach()</b> method executes a provided function once per array element.
-   * <p>
+   * The &lt;b>forEach()&lt;/b> method executes a provided function once per array element.
+   * &lt;p>
    *  This method adds the {@link ProAct.currentCaller} as a listener to both 'index' type and 'length' type of changes.
-   * </p>
+   * &lt;/p>
    *
    * @memberof ProAct.Array
    * @instance
@@ -321,7 +348,7 @@ ProAct.Array.prototype = pArrayProto = P.U.ex(Object.create(arrayProto), {
    * @param {Function} fun
    *      Function to execute for each element.
    * @param {Object} thisArg
-   *      Value to use as <i>this</i> when executing <i>callback</i>.
+   *      Value to use as &lt;i>this&lt;/i> when executing &lt;i>callback&lt;/i>.
    * @see {@link ProAct.ArrayCore#addCaller}
    */
   forEach: function (fun /*, thisArg */) {
@@ -331,10 +358,10 @@ ProAct.Array.prototype = pArrayProto = P.U.ex(Object.create(arrayProto), {
   },
 
   /**
-   * The <b>filter()</b> method creates a new ProAct.Array with all elements that pass the test implemented by the provided function.
-   * <p>
-   *  The result ProAct.Array is dependent on <i>this</i>, so if <i>this</i> changes, the filtered resut will be updated.
-   * </p>
+   * The &lt;b>filter()&lt;/b> method creates a new ProAct.Array with all elements that pass the test implemented by the provided function.
+   * &lt;p>
+   *  The result ProAct.Array is dependent on &lt;i>this&lt;/i>, so if &lt;i>this&lt;/i> changes, the filtered resut will be updated.
+   * &lt;/p>
    *
    * @memberof ProAct.Array
    * @instance
@@ -342,9 +369,9 @@ ProAct.Array.prototype = pArrayProto = P.U.ex(Object.create(arrayProto), {
    * @param {Function} fun
    *      Function to test for each element.
    * @param {Object} thisArg
-   *      Value to use as this when executing <i>fun</i>.
+   *      Value to use as this when executing &lt;i>fun&lt;/i>.
    * @return {ProAct.Array}
-   *      A new ProAct.Array consisting of the elements in <i>this</i> ProAct.Array that pass the test implemented by <i>fun</i>.
+   *      A new ProAct.Array consisting of the elements in &lt;i>this&lt;/i> ProAct.Array that pass the test implemented by &lt;i>fun&lt;/i>.
    * @see {@link ProAct.Array.Listeners.filter}
    * @see {@link ProAct.Array.reFilter}
    */
@@ -356,25 +383,25 @@ ProAct.Array.prototype = pArrayProto = P.U.ex(Object.create(arrayProto), {
   },
 
   /**
-   * The <b>map()</b> method creates a new ProAct with the results of calling a provided function on every element in <i>this</i> ProAct.Array.
-   * <p>
-   *  The result ProAct.Array is dependent on <i>this</i>, so if <i>this</i> changes, the mapped resut will be updated.
-   * </p>
+   * The &lt;b>map()&lt;/b> method creates a new ProAct with the results of calling a provided function on every element in &lt;i>this&lt;/i> ProAct.Array.
+   * &lt;p>
+   *  The result ProAct.Array is dependent on &lt;i>this&lt;/i>, so if &lt;i>this&lt;/i> changes, the mapped resut will be updated.
+   * &lt;/p>
    *
    * @memberof ProAct.Array
    * @instance
    * @method map
    * @param {Function} fun
    *      Function that produces an element of the new ProAct.Array, taking three arguments:
-   *      <ol>
-   *        <li><b>currentValue</b> : The current element being processed in the array.</li>
-   *        <li><b>index</b> : The index of the current element being processed in the array.</li>
-   *        <li><b>array</b> : The array map was called upon.</li>
-   *      </ol>
+   *      &lt;ol>
+   *        &lt;li>&lt;b>currentValue&lt;/b> : The current element being processed in the array.&lt;/li>
+   *        &lt;li>&lt;b>index&lt;/b> : The index of the current element being processed in the array.&lt;/li>
+   *        &lt;li>&lt;b>array&lt;/b> : The array map was called upon.&lt;/li>
+   *      &lt;/ol>
    * @param {Object} thisArg
-   *      Value to use as this when executing <i>fun</i>.
+   *      Value to use as this when executing &lt;i>fun&lt;/i>.
    * @return {ProAct.Array}
-   *      A new ProAct.Array consisting of the elements in <i>this</i> ProAct.Array transformed by <i>fun</i>.
+   *      A new ProAct.Array consisting of the elements in &lt;i>this&lt;/i> ProAct.Array transformed by &lt;i>fun&lt;/i>.
    * @see {@link ProAct.Array.Listeners.map}
    */
   map: function (fun, thisArg) {
@@ -385,26 +412,26 @@ ProAct.Array.prototype = pArrayProto = P.U.ex(Object.create(arrayProto), {
   },
 
   /**
-   * The <b>reduce()</b> method applies a function against an accumulator and each value of the ProAct.Array (from left-to-right) has to reduce it to a single value.
-   * <p>
+   * The &lt;b>reduce()&lt;/b> method applies a function against an accumulator and each value of the ProAct.Array (from left-to-right) has to reduce it to a single value.
+   * &lt;p>
    *  This method adds the {@link ProAct.currentCaller} as a listener to both 'index' type and 'length' type of changes.
-   * </p>
+   * &lt;/p>
    *
    * @memberof ProAct.Array
    * @instance
    * @method reduce
    * @param {Function} fun
    *      Function to execute on each value in the array, taking four arguments:
-   *      <ol>
-   *        <li><b>previousValue</b> : The value previously returned in the last invocation of the <i>fun</i>, or <i>initialValue</i>, if supplied.</li>
-   *        <li><b>currentValue</b> : The current element being processed in the ProAct.Array.</li>
-   *        <li><b>index</b> : The index of the current element being processed in the ProAct.Array.</li>
-   *        <li><b>array</b> : The array reduce was called upon.</li>
-   *      </ol>
+   *      &lt;ol>
+   *        &lt;li>&lt;b>previousValue&lt;/b> : The value previously returned in the last invocation of the &lt;i>fun&lt;/i>, or &lt;i>initialValue&lt;/i>, if supplied.&lt;/li>
+   *        &lt;li>&lt;b>currentValue&lt;/b> : The current element being processed in the ProAct.Array.&lt;/li>
+   *        &lt;li>&lt;b>index&lt;/b> : The index of the current element being processed in the ProAct.Array.&lt;/li>
+   *        &lt;li>&lt;b>array&lt;/b> : The array reduce was called upon.&lt;/li>
+   *      &lt;/ol>
    * @param {Object} initialValue
-   *      Object to use as the first argument to the first call of the <i>fun</i> .
+   *      Object to use as the first argument to the first call of the &lt;i>fun&lt;/i> .
    * @return {Object}
-   *      The value of the last <i>fun</i> invocation.
+   *      The value of the last &lt;i>fun&lt;/i> invocation.
    * @see {@link ProAct.ArrayCore#addCaller}
    */
   reduce: function (fun /*, initialValue */) {
@@ -412,155 +439,28 @@ ProAct.Array.prototype = pArrayProto = P.U.ex(Object.create(arrayProto), {
 
     return reduce.apply(this._array, arguments);
   },
-
-  /**
-   * Does the same as the {@link ProAct.Array#reduce} method, but the result is a {@link ProAct.Val} depending on changes on <i>this</i> ProAct.Array.
-   *
-   * @memberof ProAct.Array
-   * @instance
-   * @method preduce
-   * @param {Function} fun
-   *      Function to execute on each value in the array, taking four arguments:
-   *      <ol>
-   *        <li><b>previousValue</b> : The value previously returned in the last invocation of the <i>fun</i>, or <i>initialValue</i>, if supplied.</li>
-   *        <li><b>currentValue</b> : The current element being processed in the ProAct.Array.</li>
-   *        <li><b>index</b> : The index of the current element being processed in the ProAct.Array.</li>
-   *        <li><b>array</b> : The array reduce was called upon.</li>
-   *      </ol>
-   * @param {Object} initialValue
-   *      Object to use as the first argument to the first call of the <i>fun</i> .
-   * @return {ProAct.Val}
-   *      {@link ProAct.Val} with value of the last <i>fun</i> invocation.
-   * @see {@link ProAct.ArrayCore#addCaller}
-   * @see {@link ProAct.Val}
-   * @see {@link ProAct.Array.Listeners.reduce}
-   */
   preduce: function (fun /*, initialValue */) {
     var val = new P.Val(reduce.apply(this._array, arguments));
     this.core.on(pArrayLs.reduce(val, this, arguments));
 
     return val;
   },
-
-  /**
-   * The <b>reduceRight()</b> method applies a function against an accumulator and each value of the ProAct.Array (from right-to-left) as to reduce it to a single value.
-   * <p>
-   *  This method adds the {@link ProAct.currentCaller} as a listener to both 'index' type and 'length' type of changes.
-   * </p>
-   *
-   * @memberof ProAct.Array
-   * @instance
-   * @method reduceRight
-   * @param {Function} fun
-   *      Function to execute on each value in the array, taking four arguments:
-   *      <ol>
-   *        <li><b>previousValue</b> : The value previously returned in the last invocation of the <i>fun</i>, or <i>initialValue</i>, if supplied.</li>
-   *        <li><b>currentValue</b> : The current element being processed in the ProAct.Array.</li>
-   *        <li><b>index</b> : The index of the current element being processed in the ProAct.Array.</li>
-   *        <li><b>array</b> : The array reduce was called upon.</li>
-   *      </ol>
-   * @param {Object} initialValue
-   *      Object to use as the first argument to the first call of the <i>fun</i> .
-   * @return {Object}
-   *      The value of the last <i>fun</i> invocation.
-   * @see {@link ProAct.ArrayCore#addCaller}
-   */
   reduceRight: function (fun /*, initialValue */) {
     this.core.addCaller();
 
     return reduceRight.apply(this._array, arguments);
   },
-
-  /**
-   * Does the same as the {@link ProAct.Array#reduceRight} method, but the result is a {@link ProAct.Val} depending on changes on <i>this</i> ProAct.Array.
-   *
-   * @memberof ProAct.Array
-   * @instance
-   * @method preduceRight
-   * @param {Function} fun
-   *      Function to execute on each value in the array, taking four arguments:
-   *      <ol>
-   *        <li><b>previousValue</b> : The value previously returned in the last invocation of the <i>fun</i>, or <i>initialValue</i>, if supplied.</li>
-   *        <li><b>currentValue</b> : The current element being processed in the ProAct.Array.</li>
-   *        <li><b>index</b> : The index of the current element being processed in the ProAct.Array.</li>
-   *        <li><b>array</b> : The array reduce was called upon.</li>
-   *      </ol>
-   * @param {Object} initialValue
-   *      Object to use as the first argument to the first call of the <i>fun</i> .
-   * @return {ProAct.Val}
-   *      {@link ProAct.Val} with value of the last <i>fun</i> invocation.
-   * @see {@link ProAct.ArrayCore#addCaller}
-   * @see {@link ProAct.Val}
-   * @see {@link ProAct.Array.Listeners.reduceRight}
-   */
   preduceRight: function (fun /*, initialValue */) {
     var val = new P.Val(reduceRight.apply(this._array, arguments));
     this.core.on(pArrayLs.reduceRight(val, this, arguments));
 
     return val;
   },
-
-  /**
-   * The <b>indexOf()</b> method returns the first index at which a given element can be found in the ProAct.Array, or -1 if it is not present.
-   * <p>
-   *  This method adds the {@link ProAct.currentCaller} as a listener to both 'index' type and 'length' type of changes.
-   * </p>
-   *
-   * @memberof ProAct.Array
-   * @instance
-   * @method indexOf
-   * @param {Object} searchElement
-   *      Element to locate in the ProAct.Array.
-   * @param {Number} fromIndex
-   *      Default: 0 (Entire array is searched)
-   *      <p>
-   *        The index to start the search at.
-   *        If the index is greater than or equal to the ProAct.Array's length, -1 is returned,
-   *        which means the array will not be searched.
-   *        If the provided index value is a negative number,
-   *        it is taken as the offset from the end of the ProAct.Array.
-   *      </p>
-   *      <p>
-   *        Note: if the provided index is negative, the ProAct.Array is still searched from front to back.
-   *        If the calculated index is less than 0, then the whole ProAct.Array will be searched.
-   *      </p>
-   * @return {Number}
-   *      The index of the searched element or '-1' if it is not found in <i>this</i> ProAct.Array.
-   * @see {@link ProAct.ArrayCore#addCaller}
-   */
   indexOf: function () {
     this.core.addCaller();
 
     return indexOf.apply(this._array, arguments);
   },
-
-  /**
-   * Does the same as the {@link ProAct.Array#indexOf} method, but the result is a {@link ProAct.Val} depending on changes on <i>this</i> ProAct.Array.
-   *
-   * @memberof ProAct.Array
-   * @instance
-   * @method pindexOf
-   * @param {Object} searchElement
-   *      Element to locate in the ProAct.Array.
-   * @param {Number} fromIndex
-   *      Default: 0 (Entire array is searched)
-   *      <p>
-   *        The index to start the search at.
-   *        If the index is greater than or equal to the ProAct.Array's length, -1 is returned,
-   *        which means the array will not be searched.
-   *        If the provided index value is a negative number,
-   *        it is taken as the offset from the end of the ProAct.Array.
-   *      </p>
-   *      <p>
-   *        Note: if the provided index is negative, the ProAct.Array is still searched from front to back.
-   *        If the calculated index is less than 0, then the whole ProAct.Array will be searched.
-   *      </p>
-   * @return {ProAct.Val}
-   *      A {@link ProAct.Val} instance with value, the index of the searched element or '-1' if it is not found in <i>this</i> ProAct.Array.
-   * @see {@link ProAct.ArrayCore#addCaller}
-   * @see {@link ProAct.Val}
-   * @see {@link ProAct.Array.Listeners.indexOf}
-   */
   pindexOf: function () {
     var val = new P.Val(indexOf.apply(this._array, arguments));
     this.core.on(pArrayLs.indexOf(val, this, arguments));
@@ -671,7 +571,7 @@ ProAct.Array.prototype = pArrayProto = P.U.ex(Object.create(arrayProto), {
   push: function () {
     var vals = arguments, i, ln = arguments.length, index;
 
-    for (i = 0; i < ln; i++) {
+    for (i = 0; i &lt; ln; i++) {
       index = this._array.length;
       push.call(this._array, arguments[i]);
       this.core.defineIndexProp(index);
@@ -697,7 +597,7 @@ ProAct.Array.prototype = pArrayProto = P.U.ex(Object.create(arrayProto), {
     var vals = slice.call(arguments, 0), i, ln = arguments.length,
         array = this._array;
 
-    for (var i = 0; i < ln; i++) {
+    for (var i = 0; i &lt; ln; i++) {
       array.splice(i, 0, arguments[i]);
       this.core.defineIndexProp(array.length - 1);
     }
@@ -710,7 +610,7 @@ ProAct.Array.prototype = pArrayProto = P.U.ex(Object.create(arrayProto), {
     var result = [], i, ar = this._array, ln = ar.length, el,
         isPA = P.U.isProArray;
 
-    for (i = 0; i < ln; i++) {
+    for (i = 0; i &lt; ln; i++) {
       el = ar[i];
       if (isPA(el)) {
         el = el.toArray();
@@ -725,3 +625,26 @@ ProAct.Array.prototype = pArrayProto = P.U.ex(Object.create(arrayProto), {
     return JSON.stringify(this._array);
   }
 });
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Index</a></h2><h3>Classes</h3><ul><li><a href="ProAct.Array.html">Array</a></li><li><a href="ProAct.ArrayCore.html">ArrayCore</a></li><li><a href="ProAct.ArrayProperty.html">ArrayProperty</a></li><li><a href="ProAct.AutoProperty.html">AutoProperty</a></li><li><a href="ProAct.BufferedStream.html">BufferedStream</a></li><li><a href="ProAct.Core.html">Core</a></li><li><a href="ProAct.DebouncingStream.html">DebouncingStream</a></li><li><a href="ProAct.DelayedStream.html">DelayedStream</a></li><li><a href="ProAct.Event.html">Event</a></li><li><a href="ProAct.Flow.html">Flow</a></li><li><a href="ProAct.NullProperty.html">NullProperty</a></li><li><a href="ProAct.ObjectCore.html">ObjectCore</a></li><li><a href="ProAct.ObjectProperty.html">ObjectProperty</a></li><li><a href="ProAct.Observable.html">Observable</a></li><li><a href="ProAct.Property.html">Property</a></li><li><a href="ProAct.Queue.html">Queue</a></li><li><a href="ProAct.Queues.html">Queues</a></li><li><a href="ProAct.SizeBufferedStream.html">SizeBufferedStream</a></li><li><a href="ProAct.Stream.html">Stream</a></li><li><a href="ProAct.ThrottlingStream.html">ThrottlingStream</a></li></ul><h3>Namespaces</h3><ul><li><a href="ProAct.html">ProAct</a></li><li><a href="ProAct.Array.Operations.html">Operations</a></li><li><a href="ProAct.Configuration.html">Configuration</a></li><li><a href="ProAct.Event.Types.html">Types</a></li><li><a href="ProAct.Property.Types.html">Types</a></li><li><a href="ProAct.States.html">States</a></li><li><a href="ProAct.Utils.html">Utils</a></li></ul>
+</nav>
+
+<br clear="both">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.2</a> on Tue Jul 29 2014 19:32:21 GMT+0300 (EEST)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

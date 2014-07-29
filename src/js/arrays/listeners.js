@@ -1,4 +1,4 @@
-Pro.Array.Listeners = pArrayLs = Pro.Array.Listeners || {
+ProAct.Array.Listeners = pArrayLs = Pro.Array.Listeners || {
   check: function(event) {
     if (event.type !== Pro.Event.Types.array) {
       throw Error('Not implemented for non array events');

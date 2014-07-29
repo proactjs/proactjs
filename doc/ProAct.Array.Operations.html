@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Namespace: Types</title>
+    <title>JSDoc: Namespace: Operations</title>
     
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
     
-    <h1 class="page-title">Namespace: Types</h1>
+    <h1 class="page-title">Namespace: Operations</h1>
     
     
 
@@ -27,9 +27,9 @@
     
 <header>
     <h2>
-        <span class="ancestors"><a href="ProAct.html">ProAct</a><a href="ProAct.Event.html">.Event</a>.</span>
+        <span class="ancestors"><a href="ProAct.html">ProAct</a><a href="ProAct.Array.html">.Array</a>.</span>
     
-    Types
+    Operations
     </h2>
     
 </header>  
@@ -40,7 +40,7 @@
     
     
         
-            <div class="description">Defines the possible types of the ProAct.Events.</div>
+            <div class="description">Defines a set of the possible operations over an array.</div>
         
         
         
@@ -66,7 +66,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="pro_event.js.html">events/pro_event.js</a>, <a href="pro_event.js.html#line26">line 26</a>
+        <a href="array.js.html">arrays/array.js</a>, <a href="array.js.html#line46">line 46</a>
     </li></ul></dd>
     
     
@@ -98,30 +98,21 @@
         <dl>
             
 <dt>
-    <h4 class="name" id="array"><span class="type-signature">&lt;static, constant> </span>array<span class="type-signature"> :Number</span></h4>
+    <h4 class="name" id="add"><span class="type-signature">&lt;static, constant> </span>add<span class="type-signature"></span></h4>
     
     
 </dt>
 <dd>
     
     <div class="description">
-        Array type events. Events for changes in <a href="ProAct.Array.html">ProAct.Array</a>.
-<p>
- The args should consist of operation, index, old values, new values.
-</p>
+        Represents adding values to array.
+<pre>
+ array.push(12);
+ array.unshift(12);
+</pre>
     </div>
     
     
-    
-        <h5>Type:</h5>
-        <ul>
-            <li>
-                
-<span class="param-type">Number</span>
-
-
-            </li>
-        </ul>
     
 
     
@@ -147,78 +138,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="pro_event.js.html">events/pro_event.js</a>, <a href="pro_event.js.html#line57">line 57</a>
-    </li></ul></dd>
-    
-    
-    
-    
-    
-    <dt class="tag-see">See:</dt>
-    <dd class="tag-see">
-        <ul>
-            <li><a href="ProAct.Array.Operations.html">ProAct.Array.Operations</a></li>
-        </ul>
-    </dd>
-    
-    
-    
-</dl>
-
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="close"><span class="type-signature">&lt;static, constant> </span>close<span class="type-signature"> :Number</span></h4>
-    
-    
-</dt>
-<dd>
-    
-    <div class="description">
-        Close type events. Events for closing streams or destroying properties.
-    </div>
-    
-    
-    
-        <h5>Type:</h5>
-        <ul>
-            <li>
-                
-<span class="param-type">Number</span>
-
-
-            </li>
-        </ul>
-    
-
-    
-<dl class="details">
-    
-        
-    
-    
-    
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="pro_event.js.html">events/pro_event.js</a>, <a href="pro_event.js.html#line66">line 66</a>
+        <a href="array.js.html">arrays/array.js</a>, <a href="array.js.html#line76">line 76</a>
     </li></ul></dd>
     
     
@@ -236,27 +156,21 @@
         
             
 <dt>
-    <h4 class="name" id="error"><span class="type-signature">&lt;static, constant> </span>error<span class="type-signature"> :Number</span></h4>
+    <h4 class="name" id="remove"><span class="type-signature">&lt;static, constant> </span>remove<span class="type-signature"></span></h4>
     
     
 </dt>
 <dd>
     
     <div class="description">
-        Error type events. Events for errors.
+        Represents removing values from array.
+<pre>
+ array.pop();
+ array.shift();
+</pre>
     </div>
     
     
-    
-        <h5>Type:</h5>
-        <ul>
-            <li>
-                
-<span class="param-type">Number</span>
-
-
-            </li>
-        </ul>
     
 
     
@@ -282,7 +196,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="pro_event.js.html">events/pro_event.js</a>, <a href="pro_event.js.html#line75">line 75</a>
+        <a href="array.js.html">arrays/array.js</a>, <a href="array.js.html#line89">line 89</a>
     </li></ul></dd>
     
     
@@ -300,31 +214,20 @@
         
             
 <dt>
-    <h4 class="name" id="value"><span class="type-signature">&lt;static, constant> </span>value<span class="type-signature"> :Number</span></h4>
+    <h4 class="name" id="reverse"><span class="type-signature">&lt;static, constant> </span>reverse<span class="type-signature"></span></h4>
     
     
 </dt>
 <dd>
     
     <div class="description">
-        Value type events. Events for changing a value.
-<p>
- For properties the args of the event contain the ProAct Object, the old value
- of the property and the new value.
-</p>
+        Represents reversing the element order in an array.
+<pre>
+ array.reverse();
+</pre>
     </div>
     
     
-    
-        <h5>Type:</h5>
-        <ul>
-            <li>
-                
-<span class="param-type">Number</span>
-
-
-            </li>
-        </ul>
     
 
     
@@ -350,7 +253,235 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="pro_event.js.html">events/pro_event.js</a>, <a href="pro_event.js.html#line44">line 44</a>
+        <a href="array.js.html">arrays/array.js</a>, <a href="array.js.html#line113">line 113</a>
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="set"><span class="type-signature">&lt;static, constant> </span>set<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        Represents setting a value to an index of an array.
+<pre>
+ array[3] = 12;
+</pre>
+    </div>
+    
+    
+    
+
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="array.js.html">arrays/array.js</a>, <a href="array.js.html#line63">line 63</a>
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="setLength"><span class="type-signature">&lt;static, constant> </span>setLength<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        Represents setting the length of an array.
+<pre>
+ array.length = 5;
+</pre>
+    </div>
+    
+    
+    
+
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="array.js.html">arrays/array.js</a>, <a href="array.js.html#line101">line 101</a>
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="sort"><span class="type-signature">&lt;static, constant> </span>sort<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        Represents sorting the elements in an array.
+<pre>
+ array.sort();
+</pre>
+    </div>
+    
+    
+    
+
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="array.js.html">arrays/array.js</a>, <a href="array.js.html#line125">line 125</a>
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="splice"><span class="type-signature">&lt;static, constant> </span>splice<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        Represents the powerful <i>splice</i> operation.
+<pre>
+ array.splice(2, 3, 4, 15, 6);
+</pre>
+    </div>
+    
+    
+    
+
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="array.js.html">arrays/array.js</a>, <a href="array.js.html#line137">line 137</a>
     </li></ul></dd>
     
     
@@ -389,7 +520,7 @@
 <br clear="both">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.2</a> on Tue Jul 29 2014 19:32:29 GMT+0300 (EEST)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.2</a> on Tue Jul 29 2014 19:32:23 GMT+0300 (EEST)
 </footer>
 
 <script> prettyPrint(); </script>
