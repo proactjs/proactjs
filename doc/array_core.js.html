@@ -63,6 +63,25 @@ ProAct.ArrayCore.prototype = P.U.ex(Object.create(P.C.prototype), {
    */
   constructor: ProAct.ArrayCore,
 
+  /**
+   * Generates the initial listeners object.
+   * It is used for resetting all the listeners too.
+   * &lt;p>
+   *  For ProAct.ArrayCore the default listeners object is
+   *  &lt;pre>
+   *    {
+   *      index: [],
+   *      length: []
+   *    }
+   *  &lt;/pre>
+   * &lt;/p>
+   *
+   * @memberof ProAct.ArrayCore
+   * @instance
+   * @method defaultListeners
+   * @return {Object}
+   *      A map containing the default listeners collections (index and length type of listeners).
+   */
   defaultListeners: function () {
     return {
       index: [],
@@ -70,10 +89,47 @@ ProAct.ArrayCore.prototype = P.U.ex(Object.create(P.C.prototype), {
     };
   },
 
+  /**
+   * A list of actions or action to be used when no action is passed for the methods working with actions.
+   * &lt;p>
+   *  For ProAct.ArrayCore these are both 'length' and 'index' actions.
+   * &lt;/p>
+   *
+   * @memberof ProAct.ArrayCore
+   * @instance
+   * @method defaultActions
+   * @default ['length', 'index']
+   * @return {Array}
+   *      The actions to be used if no actions are provided to action related methods,
+   *      like {@link ProAct.Observable#on}, {@link ProAct.Observable#off}, {@link ProAct.Observable#update}, {@link ProAct.Observable#willUpdate}.
+   */
   defaultActions: function () {
     return ['length', 'index'];
   },
 
+  /**
+   * Creates the &lt;i>event&lt;/i> to be send to the listeners on update.
+   * &lt;p>
+   *  By default this method returns {@link ProAct.Event.Types.array} event.
+   * &lt;/p>
+   *
+   * @memberof ProAct.ArrayCore
+   * @instance
+   * @method makeEvent
+   * @default {ProAct.Event} with type {@link ProAct.Event.Types.array}
+   * @param {ProAct.Event} source
+   *      The source event of the event. It can be null
+   * @param {Array} eventData
+   *      An array of four elements describing the changes:
+   *      &lt;ol>
+   *        &lt;li>{@link ProAct.Array.Operations} member defining the changing operation - for example {@link ProAct.Array.Operations.add}&lt;/li>
+   *        &lt;li>The index on which the chage occures.&lt;/li>
+   *        &lt;li>The old values beginning from the index.&lt;/li>
+   *        &lt;li>The new values beginning from the index.&lt;/li>
+   *      &lt;/ol>
+   * @return {ProAct.Event}
+   *      The event.
+   */
   makeEvent: function (source, eventData) {
     var op = eventData[0],
         ind = eventData[1],
@@ -83,6 +139,18 @@ ProAct.ArrayCore.prototype = P.U.ex(Object.create(P.C.prototype), {
     return new P.E(source, this.shell, P.E.Types.array, op, ind, oldVal, newVal);
   },
 
+  /**
+   * Uses {@link ProAct.currentCaller} to automatically add a new listener to this property if the caller is set.
+   * &lt;p>
+   *  This method is used by the index getters or the length getter to make every reader of the length/index a listener to it.
+   * &lt;/p>
+   *
+   * @memberof ProAct.ArrayCore
+   * @instance
+   * @method addCaller
+   * @param {String} type
+   *      If the caller should be added as an 'index' listener or a 'length' listener. If skipped or null it is added as both.
+   */
   addCaller: function (type) {
     if (!type) {
       this.addCaller('index');
@@ -101,6 +169,26 @@ ProAct.ArrayCore.prototype = P.U.ex(Object.create(P.C.prototype), {
     }
   },
 
+  /**
+   * Special update method for updating listeners after a {@link ProAct.Array#splice} call.
+   * &lt;p>
+   *  Depending on the changes the index listeners, the length listeners or both can be notified.
+   * &lt;/p>
+   *
+   * @memberof ProAct.ArrayCore
+   * @instance
+   * @method updateSplice
+   * @param {Number} index
+   *      The index of the splice operation.
+   * @param {Array} spliced
+   *      A list of the deleted items. Can be empty.
+   * @param {Array} newItems
+   *      A list of the newly added items. Can be empty.
+   * @return {ProAct.ArrayCore}
+   *      &lt;i>this&lt;/i>
+   * @see {@link ProAct.Observable#update}
+   * @see {@link ProAct.Array#splice}
+   */
   updateSplice: function (index, spliced, newItems) {
     var actions, op = pArrayOps.splice;
 
@@ -114,9 +202,25 @@ ProAct.ArrayCore.prototype = P.U.ex(Object.create(P.C.prototype), {
       actions = 'length';
     }
 
-    this.update(null, actions, [op, index, spliced, newItems]);
+    return this.update(null, actions, [op, index, spliced, newItems]);
   },
 
+  /**
+   * Special update method for updating listeners by comparrison to another array.
+   * &lt;p>
+   *  For every difference between &lt;i>this shell&lt;/i>'s array and the passed one, there will be listeners notification.
+   * &lt;/p>
+   *
+   * @memberof ProAct.ArrayCore
+   * @instance
+   * @method updateByDiff
+   * @param {Array} array
+   *      The array to compare to.
+   * @return {ProAct.ArrayCore}
+   *      &lt;i>this&lt;/i>
+   * @see {@link ProAct.Observable#update}
+   * @see {@link ProAct.Utils.diff}
+   */
   updateByDiff: function (array) {
     var j, diff = P.U.diff(array, this.shell._array), cdiff;
 
@@ -126,8 +230,33 @@ ProAct.ArrayCore.prototype = P.U.ex(Object.create(P.C.prototype), {
         this.updateSplice(j, cdiff.o, cdiff.n);
       }
     }
+
+    return this;
   },
 
+  /**
+   * Initializes all the index accessors and the length accessor for &lt;i>this's shell array&lt;/i>.
+   * &lt;p>
+   *  For the length on every read, the {@link ProAct.currentCaller} is added as a 'length' listener.
+   * &lt;/p>
+   * &lt;p>
+   *  For every index on every read, the {@link ProAct.currentCaller} is added as an 'index' listener.
+   *  Listener accessors are defined using {@link ProAct.ArrayCore#defineIndexProp}.
+   * &lt;/p>
+   * &lt;p>
+   *  {@link ProAct.ArrayCore#addCaller} is used to retrieve the current caller and add it as the right listener.
+   * &lt;/p>
+   * &lt;p>
+   *  Setting values for an index or the length updates the right listeners.
+   * &lt;/p>
+   *
+   * @memberof ProAct.ArrayCore
+   * @instance
+   * @method setup
+   * @see {@link ProAct.ArrayCore#addCaller}
+   * @see {@link ProAct.ArrayCore#defineIndexProp}
+   * @see {@link ProAct.currentCaller}
+   */
   setup: function () {
     var self = this,
         array = this.shell,
@@ -165,6 +294,29 @@ ProAct.ArrayCore.prototype = P.U.ex(Object.create(P.C.prototype), {
     });
   },
 
+  /**
+   * Defines accessors for index of &lt;i>this' shell array&lt;/i>.
+   * &lt;p>
+   *  For an index on every read, the {@link ProAct.currentCaller} is added as an 'index' listener.
+   * &lt;/p>
+   * &lt;p>
+   *  {@link ProAct.ArrayCore#addCaller} is used to retrieve the current caller and add it as the right listener.
+   * &lt;/p>
+   * &lt;p>
+   *  Setting values for an index updates the 'index' listeners.
+   * &lt;/p>
+   * &lt;p>
+   *  If on the index is reciding an array or an object, it is turned to reactive object/array.
+   * &lt;/p>
+   *
+   * @memberof ProAct.ArrayCore
+   * @instance
+   * @method defineIndexProp
+   * @param {Number} i
+   *      The index to define accessor for.
+   * @see {@link ProAct.ArrayCore#addCaller}
+   * @see {@link ProAct.currentCaller}
+   */
   defineIndexProp: function (i) {
     var self = this,
         proArray = this.shell,
@@ -219,7 +371,7 @@ ProAct.ArrayCore.prototype = P.U.ex(Object.create(P.C.prototype), {
 <br clear="both">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.2</a> on Tue Jul 29 2014 10:29:36 GMT+0300 (EEST)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.2</a> on Tue Jul 29 2014 13:31:35 GMT+0300 (EEST)
 </footer>
 
 <script> prettyPrint(); </script>
