@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Source: properties/null_property.js</title>
+    <title>JSDoc: Source: objects/prob.js</title>
     
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
     
-    <h1 class="page-title">Source: properties/null_property.js</h1>
+    <h1 class="page-title">Source: objects/prob.js</h1>
     
     
 
@@ -26,71 +26,49 @@
     <section>
         <article>
             <pre class="prettyprint source"><code>/**
+ * The {@link ProAct.prob} method is the entry point for creating reactive values in ProAct.js
  * &lt;p>
- *  Constructs a ProAct.NullProperty. The properties are simple {@link ProAct.Observable}s with state. The null/nil property
- *  has a state of a null or undefined value.
+ *  If the value is Number/String/Boolean/null/undefined or Function a new {@link ProAct.Val} is created woth value, set
+ *  to the passed &lt;i>object&lt;/i> value. The &lt;i>meta&lt;/i>-data passed is used in the creation process.
  * &lt;/p>
  * &lt;p>
- *  Null properties are automatically re-defined if their value is set to actual object or data.
+ *  If the passed &lt;i>object&lt;/i> is an array, the result of this method is a new {@link ProAct.Array} with content,
+ *  the passed array &lt;i>object&lt;/i>
  * &lt;/p>
  * &lt;p>
- *  ProAct.NullProperty is part of the properties module of ProAct.js.
+ *  If the &lt;i>object&lt;/i> passed is a plain JavaScript object the result of this function is reactive version of the
+ *  &lt;i>object&lt;/i> with {@link ProAct.ObjectCore} holding its {@link ProAct.Property}s.
  * &lt;/p>
  *
- * @class ProAct.NullProperty
- * @extends ProAct.Property
- * @param {Object} proObject
- *      A plain JavaScript object, holding a null/undefined field, this property should represent.
- * @param {String} property
- *      The name of the field of the object, this property should represent.
- * @see {@link ProAct.ObjectCore}
+ * @method prob
+ * @memberof ProAct
+ * @static
+ * @param {Object} object
+ *      The object/value to make reactive.
+ * @param {Object|String} meta
+ *      Meta-data used to help in the reactive object creation.
+ * @return {Object}
+ *      Reactive representation of the passed &lt;i>object&lt;/i>.
  */
-ProAct.NullProperty = P.NP = function (proObject, property) {
-  var self = this,
-      set = P.P.defaultSetter(this),
-      setter = function (newVal) {
-        var result = set.call(self.proObject, newVal),
-            types = P.P.Types,
-            type = types.type(result);
+ProAct.prob = function (object, meta) {
+  var core, property,
+      isAr = P.U.isArray;
 
-        if (type !== types.nil) {
-          P.P.reProb(self);
-        }
-
-        return result;
-      };
-
-  P.P.call(this, proObject, property, P.P.defaultGetter(this), setter);
-};
-
-ProAct.NullProperty.prototype = P.U.ex(Object.create(P.P.prototype), {
-
-  /**
-   * Reference to the constructor of this object.
-   *
-   * @memberof ProAct.NullProperty
-   * @instance
-   * @constant
-   * @default ProAct.NullProperty
-   */
-  constructor: ProAct.NullProperty,
-
-  /**
-   * Retrieves the {@link ProAct.Property.Types} value of &lt;i>this&lt;/i> property.
-   * &lt;p>
-   *  For ProAct.NullProperty this is {@link ProAct.Property.Types.nil}
-   * &lt;/p>
-   *
-   * @memberof ProAct.NullProperty
-   * @instance
-   * @method type
-   * @return {Number}
-   *      The right type of the property.
-   */
-  type: function () {
-    return P.P.Types.nil;
+  if (object === null || (!P.U.isObject(object) && !isAr(object))) {
+    return new P.V(object, meta);
   }
-});
+
+  if (P.U.isArray(object)) {
+    return new P.A(object);
+  }
+
+  core = new P.OC(object, meta);
+  P.U.defValProp(object, '__pro__', false, false, false, core);
+
+  core.prob();
+
+  return object;
+};
 </code></pre>
         </article>
     </section>

@@ -1,9 +1,9 @@
-Pro.Registry = Pro.R = function () {
+ProAct.Registry = P.R = function () {
   this.providers = {};
 };
 
-Pro.Registry.prototype = rProto = {
-  constructor: Pro.Registry,
+ProAct.Registry.prototype = rProto = {
+  constructor: ProAct.Registry,
   register: function (namespace, provider) {
     if (this.providers[namespace]) {
       throw new Error(namespace + 'is already registered in this registry.');
@@ -51,16 +51,16 @@ Pro.Registry.prototype = rProto = {
     return [this.providers[parts[0]], parts[1], parts.slice(2)];
   },
   toObjectArray: function (array) {
-    var _this = this;
-    if (!Pro.U.isArray(array)) {
+    var self = this;
+    if (!P.U.isArray(array)) {
       return this.toObject(array);
     }
     return map.call(array, function (el) {
-      return _this.toObject(el);
+      return self.toObject(el);
     });
   },
   toObject: function (data) {
-    if (Pro.U.isString(data)) {
+    if (P.U.isString(data)) {
       var result = this.get(data);
       return result ? result : data;
     }
