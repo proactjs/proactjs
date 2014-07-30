@@ -34,7 +34,7 @@ ProAct.OpStore = {
               } else if (predefined && predefined[arg]) {
                 arg = predefined[arg];
 
-                if (Pro.U.isArray(arg)) {
+                if (P.U.isArray(arg)) {
                   opArguments = opArguments.concat(arg);
                   arg = undefined;
                 }
@@ -57,7 +57,7 @@ ProAct.OpStore = {
           }
 
           var args = actionObject[name];
-          if (!Pro.U.isArray(args)) {
+          if (!P.U.isArray(args)) {
             args = [args];
           }
 
@@ -67,7 +67,7 @@ ProAct.OpStore = {
     }
   }
 };
-opStoreAll = Pro.OpStore.all;
+opStoreAll = P.OpStore.all;
 
 ProAct.DSL = {
   separator: '|',
@@ -90,7 +90,7 @@ ProAct.DSL = {
           var p = el[arg];
           if (!p) {
             return el;
-          } else if (Pro.U.isFunction(p)) {
+          } else if (P.U.isFunction(p)) {
             return p.call(el);
           } else {
             return p;
@@ -115,11 +115,11 @@ ProAct.DSL = {
   },
   optionsFromArray: function (optionArray) {
     var result = {}, i, ln = optionArray.length,
-        ops = Pro.R.ops, op, opType;
+        ops = P.R.ops, op, opType;
     for (i = 0; i < ln; i++) {
       op = optionArray[i];
-      for (opType in Pro.DSL.ops) {
-        opType = Pro.DSL.ops[opType];
+      for (opType in P.DSL.ops) {
+        opType = P.DSL.ops[opType];
         if (opType.match(op)) {
           opType.toOptions.apply(opType, [result, op].concat(slice.call(arguments, 1)));
           break;
@@ -129,7 +129,7 @@ ProAct.DSL = {
     return result;
   },
   run: function (observable, options, registry) {
-    var isS = Pro.U.isString,
+    var isS = P.U.isString,
         args = slice.call(arguments, 3),
         option, i, ln, opType;
 
@@ -137,7 +137,7 @@ ProAct.DSL = {
       options = dsl.optionsFromString.apply(null, [options].concat(args));
     }
 
-    if (options && options instanceof Pro.Observable) {
+    if (options && options instanceof P.Observable) {
       options = {into: options};
     }
 
@@ -168,5 +168,5 @@ ProAct.DSL = {
   }
 };
 
-dsl = Pro.DSL;
+dsl = P.DSL;
 dslOps = dsl.ops;

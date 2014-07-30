@@ -1,10 +1,37 @@
-/**
- * <p>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: registry/registry.js</title>
+    
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+    
+    <h1 class="page-title">Source: registry/registry.js</h1>
+    
+    
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source"><code>/**
+ * &lt;p>
  *  Constructs a ProAct.Registry. It is used to store/create objects that can be referenced or configured using the {@link ProAct.DSL}.
- * </p>
- * <p>
+ * &lt;/p>
+ * &lt;p>
  *  ProAct.Registry is part og the DSL module of ProAct.js.
- * </p>
+ * &lt;/p>
  *
  * @class ProAct.Registry
  */
@@ -25,19 +52,19 @@ ProAct.Registry.prototype = rProto = {
   constructor: ProAct.Registry,
 
   /**
-   * Registers a {@link ProAct.Registry.Provider} for the passed <i>namespace</i> in the registry.
+   * Registers a {@link ProAct.Registry.Provider} for the passed &lt;i>namespace&lt;/i> in the registry.
    *
    * @memberof ProAct.Registry
    * @instance
    * @method register
    * @param {String} namespace
-   *      The namespace to register the <i>provider</i> in.
+   *      The namespace to register the &lt;i>provider&lt;/i> in.
    * @param {ProAct.Registry.Provider} provider
    *      The {@link ProAct.Registry.Provider} to register.
    * @return {ProAct.Registers}
-   *      <i>this</i>
+   *      &lt;i>this&lt;/i>
    * @throws {Error}
-   *      If a {@link ProAct.Registry.Provider} is already registered for the passed <i>namespace</i>.
+   *      If a {@link ProAct.Registry.Provider} is already registered for the passed &lt;i>namespace&lt;/i>.
    * @see {@link ProAct.Registry.Provider}
    */
   register: function (namespace, provider) {
@@ -52,29 +79,29 @@ ProAct.Registry.prototype = rProto = {
   },
 
   /**
-   * Retrieves the right {@link ProAct.Registry.Provider} using the <i>name</i> of stored
-   * in <i>this</i> ProAct.Registry object, or the <i>name</i> of an object to be stored
+   * Retrieves the right {@link ProAct.Registry.Provider} using the &lt;i>name&lt;/i> of stored
+   * in &lt;i>this&lt;/i> ProAct.Registry object, or the &lt;i>name&lt;/i> of an object to be stored
    *
    * @memberof ProAct.Registry
    * @instance
    * @method getProviderByName
    * @param {String} name
    *      The name of storable object.
-   *      <p>
+   *      &lt;p>
    *        It must be in the format '{namespace}:{key}'.
-   *      </p>
-   *      <p>
+   *      &lt;/p>
+   *      &lt;p>
    *        Here the namespace is the namespace the {@link ProAct.Registry.Provider} manages.
-   *      </p>
+   *      &lt;/p>
    * @return {Array}
    *      The first element in the result is the {@link ProAct.Registry.Provider} or undefined if not found.
-   *      <p>
-   *        The second one is the <b>key</b> at which an object is stored or will be stored in the provider.
-   *      </p>
-   *      <p>
+   *      &lt;p>
+   *        The second one is the &lt;b>key&lt;/b> at which an object is stored or will be stored in the provider.
+   *      &lt;/p>
+   *      &lt;p>
    *        The third element is an array with options for storing/creating an object passed to the provider using
-   *        the <i>name</i> string.
-   *      </p>
+   *        the &lt;i>name&lt;/i> string.
+   *      &lt;/p>
    * @see {@link ProAct.Registry.Provider}
    */
   getProviderByName: function (name) {
@@ -84,38 +111,38 @@ ProAct.Registry.prototype = rProto = {
   },
 
   /**
-   * Configures an object to be stored using {@link ProAct.DSL} passed through <i>options</i> and DSL arguments.
-   * <p>
+   * Configures an object to be stored using {@link ProAct.DSL} passed through &lt;i>options&lt;/i> and DSL arguments.
+   * &lt;p>
    *  Example usage:
-   * </p>
-   * <p>
+   * &lt;/p>
+   * &lt;p>
    *  A {@link ProAct.Stream} is passed to the registry for setup with DSL data.
-   * </p>
-   * <p>
-   *  The data passed through the <i>options</i> parameter is
-   *  <pre>
-   *    '<<(s:foo)|map(-)|filter($1)'
-   *  </pre>
-   * </p>
-   * <p>
-   *  And the arguments for the DSL machine passed through the <i>args</i> parameter are
-   *  <pre>
+   * &lt;/p>
+   * &lt;p>
+   *  The data passed through the &lt;i>options&lt;/i> parameter is
+   *  &lt;pre>
+   *    '&lt;&lt;(s:foo)|map(-)|filter($1)'
+   *  &lt;/pre>
+   * &lt;/p>
+   * &lt;p>
+   *  And the arguments for the DSL machine passed through the &lt;i>args&lt;/i> parameter are
+   *  &lt;pre>
    *    [function (v) {
    *      return v % 2 === 0;
    *    }]
-   *  </pre>
-   * </p>
-   * <p>
-   *  This means that a {@link ProAct.Stream} stored in <i>this</i> registry by the key 'foo' should be set
-   *  as a source to the passed as the <i>object</i> parameter simple {@link ProAct.Stream}.
-   * </p>
-   * <p>
-   *  It also means that for every value comming in the <i>object</i> parameter's stream there should be mapping of negativity and
+   *  &lt;/pre>
+   * &lt;/p>
+   * &lt;p>
+   *  This means that a {@link ProAct.Stream} stored in &lt;i>this&lt;/i> registry by the key 'foo' should be set
+   *  as a source to the passed as the &lt;i>object&lt;/i> parameter simple {@link ProAct.Stream}.
+   * &lt;/p>
+   * &lt;p>
+   *  It also means that for every value comming in the &lt;i>object&lt;/i> parameter's stream there should be mapping of negativity and
    *  only even values should be passed to it.
-   * </p>
-   * <p>
-   *  So if we trigger in the 'foo' stream the value of <b>4</b> in our stream we will get <b>-4</b>, and if we trigger 5, we won't get anything.
-   * </p>
+   * &lt;/p>
+   * &lt;p>
+   *  So if we trigger in the 'foo' stream the value of &lt;b>4&lt;/b> in our stream we will get &lt;b>-4&lt;/b>, and if we trigger 5, we won't get anything.
+   * &lt;/p>
    *
    * @memberof ProAct.Registry
    * @instance
@@ -125,7 +152,7 @@ ProAct.Registry.prototype = rProto = {
    * @param {String|Object} options
    *      A {@link ProAct.DSL} data object or string used to setup the object.
    * @param {Array} args
-   *      Arguments to be used by the {@link ProAct.DSL#run} method while configuring the passed <i>object</i>.
+   *      Arguments to be used by the {@link ProAct.DSL#run} method while configuring the passed &lt;i>object&lt;/i>.
    * @return {Object}
    *      Ready to strore object.
    * @see {@link ProAct.DSL}
@@ -136,30 +163,30 @@ ProAct.Registry.prototype = rProto = {
   },
 
   /**
-   * Creates a new object and stores it in <i>this</i> registry, using the right provider for the creation
-   * and configuring it using the DSL passed through the <i>options</i> parameter.
-   * <p>
+   * Creates a new object and stores it in &lt;i>this&lt;/i> registry, using the right provider for the creation
+   * and configuring it using the DSL passed through the &lt;i>options&lt;/i> parameter.
+   * &lt;p>
    *  {@link ProAct.Registry#getProviderByName} is used to locate the right provider to create the object with.
-   * </p>
-   * <p>
+   * &lt;/p>
+   * &lt;p>
    *  {@link ProAct.Registry#setup} is used to setup the newly created object using the {@link ProAct.DSL}
-   * </p>
-   * <p>
+   * &lt;/p>
+   * &lt;p>
    *  The idea of this method is to create and configure {@link ProAct.Observable} objects.
-   * </p>
+   * &lt;/p>
    *
    * @memberof ProAct.Registry
    * @instance
    * @method make
    * @param {String} name
    *      Name of the object to create and store.
-   *      <p>
+   *      &lt;p>
    *        It must be in the format '{namespace}:{key}'
-   *      </p>
+   *      &lt;/p>
    * @param {String|Object} options
    *      A {@link ProAct.DSL} data object or string used to setup the object to be created.
    * @param [...]
-   *      <b>Arguments</b> to be used by the {@link ProAct.DSL#run} method while configuring the newly created <i>object</i>.
+   *      &lt;b>Arguments&lt;/b> to be used by the {@link ProAct.DSL#run} method while configuring the newly created &lt;i>object&lt;/i>.
    * @return {Object}
    *      The newly created, stored and configured object, or null if there was no {@link ProAct.Registry.Provider} register for its type.
    * @see {@link ProAct.DSL}
@@ -180,25 +207,25 @@ ProAct.Registry.prototype = rProto = {
   },
 
   /**
-   * Stores an object  in <i>this</i> registry, using the right provider to configure it using the DSL passed through the <i>options</i> parameter.
-   * <p>
+   * Stores an object  in &lt;i>this&lt;/i> registry, using the right provider to configure it using the DSL passed through the &lt;i>options&lt;/i> parameter.
+   * &lt;p>
    *  {@link ProAct.Registry#getProviderByName} is used to locate the right provider to store the object to.
-   * </p>
+   * &lt;/p>
    *
    * @memberof ProAct.Registry
    * @instance
    * @method store
    * @param {String} name
    *      Name of the object to store.
-   *      <p>
+   *      &lt;p>
    *        It must be in the format '{namespace}:{key}'
-   *      </p>
+   *      &lt;/p>
    * @param {Object} object
    *      The object to store.
    * @param {String|Object} options
    *      A {@link ProAct.DSL} data object or string used to setup the object to be stored (optional).
    * @param [...]
-   *      <b>Arguments</b> to be used by the {@link ProAct.DSL#run} method while configuring the <i>object</i>.
+   *      &lt;b>Arguments&lt;/b> to be used by the {@link ProAct.DSL#run} method while configuring the &lt;i>object&lt;/i>.
    * @return {Object}
    *      The stored and configured object, or null if there was no {@link ProAct.Registry.Provider} register for its type.
    * @see {@link ProAct.DSL}
@@ -215,21 +242,21 @@ ProAct.Registry.prototype = rProto = {
   },
 
   /**
-   * Retrieves an object, stored <i>this</i> registry.
-   * <p>
+   * Retrieves an object, stored &lt;i>this&lt;/i> registry.
+   * &lt;p>
    *  {@link ProAct.Registry#getProviderByName} is used to locate the right provider to retrieve the object from.
-   * </p>
+   * &lt;/p>
    *
    * @memberof ProAct.Registry
    * @instance
    * @method get
    * @param {String} name
    *      Name of the object to find.
-   *      <p>
+   *      &lt;p>
    *        It must be in the format '{namespace}:{key}'
-   *      </p>
+   *      &lt;/p>
    * @return {Object}
-   *      The stored object, or null if there was no {@link ProAct.Registry.Provider} register for its type or no object registered for the passed <i>name</i>.
+   *      The stored object, or null if there was no {@link ProAct.Registry.Provider} register for its type or no object registered for the passed &lt;i>name&lt;/i>.
    * @see {@link ProAct.Registry#getProviderByName}
    */
   get: function (name) {
@@ -242,19 +269,19 @@ ProAct.Registry.prototype = rProto = {
   },
 
   /**
-   * Helper method for transforming an array of keys of stored items in <i>this</i> ProAct.Registry to an array of the actual items.
-   * <p>
+   * Helper method for transforming an array of keys of stored items in &lt;i>this&lt;/i> ProAct.Registry to an array of the actual items.
+   * &lt;p>
    *  Mainly used by the {@link ProAct.DSL} logic.
-   * </p>
+   * &lt;/p>
    *
    * @memberof ProAct.Registry
    * @instance
    * @method toObjectArray
    * @param {Array} array
-   *      Array of string keys to objects stored in <i>this</i> registry to be retrieved using {@link ProAct.Registry#toObject}.
-   *      <p>
+   *      Array of string keys to objects stored in &lt;i>this&lt;/i> registry to be retrieved using {@link ProAct.Registry#toObject}.
+   *      &lt;p>
    *        If object is not stored on some key, the key itself is returned in the same possition in the result array.
-   *      </p>
+   *      &lt;/p>
    * @return {Array}
    *      Of the retrieved objects, in the same order as the keys.
    * @see {@link ProAct.Registry#toObject}
@@ -271,22 +298,22 @@ ProAct.Registry.prototype = rProto = {
   },
 
   /**
-   * Helper method for transforming a key of stored item in <i>this</i> ProAct.Registry to the actual item or returning the key, if
+   * Helper method for transforming a key of stored item in &lt;i>this&lt;/i> ProAct.Registry to the actual item or returning the key, if
    * the item is not found in the ProAct.Registry.
-   * <p>
+   * &lt;p>
    *  Mainly used by the {@link ProAct.DSL} logic.
-   * </p>
+   * &lt;/p>
    *
    * @memberof ProAct.Registry
    * @instance
    * @method toObject
    * @param {String|Object} data
    *      Key of strored object or something else. If the key is valid and there is something stored on it, the stored object is retrieved.
-   *      <p>
-   *        If there is nothing stored for this <i>data</i>, the <i>data</i> itself is returned.
-   *      </p>
+   *      &lt;p>
+   *        If there is nothing stored for this &lt;i>data&lt;/i>, the &lt;i>data&lt;/i> itself is returned.
+   *      &lt;/p>
    * @return {Object}
-   *      Stored object, if found using the passed <i>data</i> or the <i>data</i> itself.
+   *      Stored object, if found using the passed &lt;i>data&lt;/i> or the &lt;i>data&lt;/i> itself.
    * @see {@link ProAct.DSL}
    * @see {@link ProAct.Registry#get}
    */
@@ -299,3 +326,26 @@ ProAct.Registry.prototype = rProto = {
     return data;
   }
 };
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Index</a></h2><h3>Classes</h3><ul><li><a href="ProAct.Array.html">Array</a></li><li><a href="ProAct.ArrayCore.html">ArrayCore</a></li><li><a href="ProAct.ArrayProperty.html">ArrayProperty</a></li><li><a href="ProAct.AutoProperty.html">AutoProperty</a></li><li><a href="ProAct.BufferedStream.html">BufferedStream</a></li><li><a href="ProAct.Core.html">Core</a></li><li><a href="ProAct.DebouncingStream.html">DebouncingStream</a></li><li><a href="ProAct.DelayedStream.html">DelayedStream</a></li><li><a href="ProAct.Event.html">Event</a></li><li><a href="ProAct.Flow.html">Flow</a></li><li><a href="ProAct.NullProperty.html">NullProperty</a></li><li><a href="ProAct.ObjectCore.html">ObjectCore</a></li><li><a href="ProAct.ObjectProperty.html">ObjectProperty</a></li><li><a href="ProAct.Observable.html">Observable</a></li><li><a href="ProAct.Property.html">Property</a></li><li><a href="ProAct.Queue.html">Queue</a></li><li><a href="ProAct.Queues.html">Queues</a></li><li><a href="ProAct.Registry.html">Registry</a></li><li><a href="ProAct.SizeBufferedStream.html">SizeBufferedStream</a></li><li><a href="ProAct.Stream.html">Stream</a></li><li><a href="ProAct.ThrottlingStream.html">ThrottlingStream</a></li><li><a href="ProAct.Val.html">Val</a></li></ul><h3>Namespaces</h3><ul><li><a href="ProAct.html">ProAct</a></li><li><a href="ProAct.Array.Listeners.html">Listeners</a></li><li><a href="ProAct.Array.Operations.html">Operations</a></li><li><a href="ProAct.Configuration.html">Configuration</a></li><li><a href="ProAct.Event.Types.html">Types</a></li><li><a href="ProAct.Property.Types.html">Types</a></li><li><a href="ProAct.States.html">States</a></li><li><a href="ProAct.Utils.html">Utils</a></li></ul>
+</nav>
+
+<br clear="both">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.2</a> on Wed Jul 30 2014 18:16:47 GMT+0300 (EEST)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

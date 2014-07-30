@@ -1,9 +1,9 @@
-Pro.U.ex(Pro.Registry, {
+P.U.ex(ProAct.Registry, {
   Provider: function () {
     this.stored = {};
   },
   StreamProvider: function () {
-    Pro.Registry.Provider.call(this);
+    P.R.Provider.call(this);
   },
   FunctionProvider: function () {
     Pro.Registry.Provider.call(this);
