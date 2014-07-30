@@ -1,4 +1,31 @@
-/**
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: arrays/listeners.js</title>
+    
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+    
+    <h1 class="page-title">Source: arrays/listeners.js</h1>
+    
+    
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source"><code>/**
  * Defines a set of special listeners used to trak {@link ProAct.Array} changes and updating dependent {@link ProAct.Array}s in an optimal way.
  *
  * @namespace ProAct.Array.Listeners
@@ -25,39 +52,39 @@ ProAct.Array.Listeners = P.A.L = pArrayLs = Pro.Array.Listeners || {
   /**
    * Generates a listener that can be attached to an {@link ProAct.Array} on which
    * the method {@link ProAct.Array#concat} is invoked.
-   * <p>
-   *  The result of the {@link ProAct.Array#concat} method is another {@link ProAct.Array}, dependent on the <i>original</i> one.
-   * </p>
-   * <p>
+   * &lt;p>
+   *  The result of the {@link ProAct.Array#concat} method is another {@link ProAct.Array}, dependent on the &lt;i>original&lt;/i> one.
+   * &lt;/p>
+   * &lt;p>
    *  For example if the original was:
-   *  <pre>
+   *  &lt;pre>
    *    var a = new ProAct.Array([1, 3, 5]);
-   *  </pre>
+   *  &lt;/pre>
    *  and we invoked {@link ProAct.Array#concat} on it like this:
-   *  <pre>
+   *  &lt;pre>
    *    var b = a.concat(7, 9); // b is [1, 3, 5, 7, 9]
-   *  </pre>
-   *  The new array - <b>b</b> is dependent on <b>a</b>, so if for example we push something to <b>a</b>, <b>b</b> should be updated:
-   *  <pre>
+   *  &lt;/pre>
+   *  The new array - &lt;b>b&lt;/b> is dependent on &lt;b>a&lt;/b>, so if for example we push something to &lt;b>a&lt;/b>, &lt;b>b&lt;/b> should be updated:
+   *  &lt;pre>
    *    a.push(11); // b authomatically should become [1, 3, 5, 11, 7, 9]
-   *  </pre>
-   * </p>
-   * <p>
-   *  The generated listener by this method does this - updates the <i>transformed</i> {@link ProAct.Array}, when the <i>original</i> changes
+   *  &lt;/pre>
+   * &lt;/p>
+   * &lt;p>
+   *  The generated listener by this method does this - updates the &lt;i>transformed&lt;/i> {@link ProAct.Array}, when the &lt;i>original&lt;/i> changes
    *  and it does it in an optimal way.
-   * </p>
+   * &lt;/p>
    *
    * @memberof ProAct.Array.Listeners
    * @static
    * @constant
    * @param {ProAct.Array} transformed
-   *      The array created as a result of invoking {@link ProAct.Array#concat} on the <i>original</i> {@link ProAct.Array}.
+   *      The array created as a result of invoking {@link ProAct.Array#concat} on the &lt;i>original&lt;/i> {@link ProAct.Array}.
    * @param {ProAct.Array} original
    *      The {@link ProAct.Array} on which {@link ProAct.Array#concat} was invoked.
    * @param {Array} args
-   *      The arguments passed to {@link ProAct.Array#concat}, when it was invoked on the <i>original</i> {@link ProAct.Array}
+   *      The arguments passed to {@link ProAct.Array#concat}, when it was invoked on the &lt;i>original&lt;/i> {@link ProAct.Array}
    * @return {Function}
-   *      A listener for events from the <i>original</i> {@link ProAct.Array}, updating the <i>transformed</i> {@link ProAct.Array} on
+   *      A listener for events from the &lt;i>original&lt;/i> {@link ProAct.Array}, updating the &lt;i>transformed&lt;/i> {@link ProAct.Array} on
    *      every new event, if it is necessary.
    */
   leftConcat: function (transformed, original, args) {
@@ -112,41 +139,41 @@ ProAct.Array.Listeners = P.A.L = pArrayLs = Pro.Array.Listeners || {
   /**
    * Generates a listener that can be attached to an {@link ProAct.Array} on which
    * the method {@link ProAct.Array#concat} is invoked with argument, another {@link ProAct.Array}.
-   * <p>
+   * &lt;p>
    *  The result of the {@link ProAct.Array#concat} method is another {@link ProAct.Array},
-   *  dependent on both the <i>original</i> and the passed as an argument one.
-   * </p>
-   * <p>
+   *  dependent on both the &lt;i>original&lt;/i> and the passed as an argument one.
+   * &lt;/p>
+   * &lt;p>
    *  For example if the original was:
-   *  <pre>
+   *  &lt;pre>
    *    var a = new ProAct.Array([1, 3, 5]);
-   *  </pre>
+   *  &lt;/pre>
    *  and we invoked {@link ProAct.Array#concat} on it like this:
-   *  <pre>
+   *  &lt;pre>
    *    var x = new ProAct.Array(7, 9);
    *    var b = a.concat(x); // b is [1, 3, 5, 7, 9]
-   *  </pre>
-   *  The new array - <b>b</b> is dependent on <b>x</b>, so if for example we push something to <b>x</b>, <b>b</b> should be updated:
-   *  <pre>
+   *  &lt;/pre>
+   *  The new array - &lt;b>b&lt;/b> is dependent on &lt;b>x&lt;/b>, so if for example we push something to &lt;b>x&lt;/b>, &lt;b>b&lt;/b> should be updated:
+   *  &lt;pre>
    *    x.push(13); // b authomatically should become [1, 3, 5, 7, 9, 13]
-   *  </pre>
-   * </p>
-   * <p>
-   *  The generated listener by this method does this - updates the <i>transformed</i> {@link ProAct.Array}, when the <i>original</i> changes
+   *  &lt;/pre>
+   * &lt;/p>
+   * &lt;p>
+   *  The generated listener by this method does this - updates the &lt;i>transformed&lt;/i> {@link ProAct.Array}, when the &lt;i>original&lt;/i> changes
    *  and it does it in an optimal way.
-   * </p>
+   * &lt;/p>
    *
    * @memberof ProAct.Array.Listeners
    * @static
    * @constant
    * @param {ProAct.Array} transformed
-   *      The array created as a result of invoking {@link ProAct.Array#concat} on the <i>original</i> {@link ProAct.Array}.
+   *      The array created as a result of invoking {@link ProAct.Array#concat} on the &lt;i>original&lt;/i> {@link ProAct.Array}.
    * @param {ProAct.Array} original
    *      The {@link ProAct.Array} on which {@link ProAct.Array#concat} was invoked.
    * @param {ProAct.Array} right
    *      The {@link ProAct.Array} passed as an argument to {@link ProAct.Array#concat}.
    * @return {Function}
-   *      A listener for events from the <i>right</i> {@link ProAct.Array}, updating the <i>transformed</i> {@link ProAct.Array} on
+   *      A listener for events from the &lt;i>right&lt;/i> {@link ProAct.Array}, updating the &lt;i>transformed&lt;/i> {@link ProAct.Array} on
    *      every new event, if it is necessary.
    */
   rightConcat: function (transformed, original, right) {
@@ -188,41 +215,41 @@ ProAct.Array.Listeners = P.A.L = pArrayLs = Pro.Array.Listeners || {
   /**
    * Generates a listener that can be attached to an {@link ProAct.Array} on which
    * the method {@link ProAct.Array#pevery} is invoked.
-   * <p>
-   *  The result of the {@link ProAct.Array#pevery} method is a {@link ProAct.Val}, dependent on the <i>original</i> array.
-   * </p>
-   * <p>
+   * &lt;p>
+   *  The result of the {@link ProAct.Array#pevery} method is a {@link ProAct.Val}, dependent on the &lt;i>original&lt;/i> array.
+   * &lt;/p>
+   * &lt;p>
    *  For example if the original was:
-   *  <pre>
+   *  &lt;pre>
    *    var a = new ProAct.Array([1, 3, 5]);
-   *  </pre>
+   *  &lt;/pre>
    *  and we invoked {@link ProAct.Array#pevery} on it like this:
-   *  <pre>
+   *  &lt;pre>
    *    var val = a.pevery(function (el) {
    *      return el % 2 === 1;
    *    }); // val.v is true.
-   *  </pre>
-   *  The new value - <b>val</b> is dependent on <b>a</b>, so if for example we push something to <b>a</b>, <b>val</b> should be updated:
-   *  <pre>
+   *  &lt;/pre>
+   *  The new value - &lt;b>val&lt;/b> is dependent on &lt;b>a&lt;/b>, so if for example we push something to &lt;b>a&lt;/b>, &lt;b>val&lt;/b> should be updated:
+   *  &lt;pre>
    *    a.push(2); // val.v authomatically should become false.
-   *  </pre>
-   * </p>
-   * <p>
-   *  The generated listener by this method does this - updates the <i>val</i> {@link ProAct.Val}, when the <i>original</i> array changes
+   *  &lt;/pre>
+   * &lt;/p>
+   * &lt;p>
+   *  The generated listener by this method does this - updates the &lt;i>val&lt;/i> {@link ProAct.Val}, when the &lt;i>original&lt;/i> array changes
    *  and it does it in an optimal way.
-   * </p>
+   * &lt;/p>
    *
    * @memberof ProAct.Array.Listeners
    * @static
    * @constant
    * @param {ProAct.Val} val
-   *      The result of invoking {@link ProAct.Array#pevery} on the <i>original</i> {@link ProAct.Array}.
+   *      The result of invoking {@link ProAct.Array#pevery} on the &lt;i>original&lt;/i> {@link ProAct.Array}.
    * @param {ProAct.Array} original
    *      The {@link ProAct.Array} on which {@link ProAct.Array#pevery} was invoked.
    * @param {Array} args
-   *      The arguments passed to {@link ProAct.Array#pevery}, when it was invoked on the <i>original</i> {@link ProAct.Array}
+   *      The arguments passed to {@link ProAct.Array#pevery}, when it was invoked on the &lt;i>original&lt;/i> {@link ProAct.Array}
    * @return {Function}
-   *      A listener for events from the <i>original</i> {@link ProAct.Array}, updating the <i>val</i> {@link ProAct.Val} on
+   *      A listener for events from the &lt;i>original&lt;/i> {@link ProAct.Array}, updating the &lt;i>val&lt;/i> {@link ProAct.Val} on
    *      every new event, if it is necessary.
    */
   every: function (val, original, args) {
@@ -266,41 +293,41 @@ ProAct.Array.Listeners = P.A.L = pArrayLs = Pro.Array.Listeners || {
   /**
    * Generates a listener that can be attached to an {@link ProAct.Array} on which
    * the method {@link ProAct.Array#psome} is invoked.
-   * <p>
-   *  The result of the {@link ProAct.Array#psome} method is a {@link ProAct.Val}, dependent on the <i>original</i> array.
-   * </p>
-   * <p>
+   * &lt;p>
+   *  The result of the {@link ProAct.Array#psome} method is a {@link ProAct.Val}, dependent on the &lt;i>original&lt;/i> array.
+   * &lt;/p>
+   * &lt;p>
    *  For example if the original was:
-   *  <pre>
+   *  &lt;pre>
    *    var a = new ProAct.Array([1, 3, 5]);
-   *  </pre>
+   *  &lt;/pre>
    *  and we invoked {@link ProAct.Array#psome} on it like this:
-   *  <pre>
+   *  &lt;pre>
    *    var val = a.psome(function (el) {
    *      return el % 2 === 0;
    *    }); // val.v is false.
-   *  </pre>
-   *  The new value - <b>val</b> is dependent on <b>a</b>, so if for example we push something to <b>a</b>, <b>val</b> should be updated:
-   *  <pre>
+   *  &lt;/pre>
+   *  The new value - &lt;b>val&lt;/b> is dependent on &lt;b>a&lt;/b>, so if for example we push something to &lt;b>a&lt;/b>, &lt;b>val&lt;/b> should be updated:
+   *  &lt;pre>
    *    a.push(2); // val.v authomatically should become true
-   *  </pre>
-   * </p>
-   * <p>
-   *  The generated listener by this method does this - updates the <i>val</i> {@link ProAct.Val}, when the <i>original</i> array changes
+   *  &lt;/pre>
+   * &lt;/p>
+   * &lt;p>
+   *  The generated listener by this method does this - updates the &lt;i>val&lt;/i> {@link ProAct.Val}, when the &lt;i>original&lt;/i> array changes
    *  and it does it in an optimal way.
-   * </p>
+   * &lt;/p>
    *
    * @memberof ProAct.Array.Listeners
    * @static
    * @constant
    * @param {ProAct.Val} val
-   *      The result of invoking {@link ProAct.Array#psome} on the <i>original</i> {@link ProAct.Array}.
+   *      The result of invoking {@link ProAct.Array#psome} on the &lt;i>original&lt;/i> {@link ProAct.Array}.
    * @param {ProAct.Array} original
    *      The {@link ProAct.Array} on which {@link ProAct.Array#psome} was invoked.
    * @param {Array} args
-   *      The arguments passed to {@link ProAct.Array#psome}, when it was invoked on the <i>original</i> {@link ProAct.Array}
+   *      The arguments passed to {@link ProAct.Array#psome}, when it was invoked on the &lt;i>original&lt;/i> {@link ProAct.Array}
    * @return {Function}
-   *      A listener for events from the <i>original</i> {@link ProAct.Array}, updating the <i>val</i> {@link ProAct.Val} on
+   *      A listener for events from the &lt;i>original&lt;/i> {@link ProAct.Array}, updating the &lt;i>val&lt;/i> {@link ProAct.Val} on
    *      every new event, if it is necessary.
    */
   some: function (val, original, args) {
@@ -344,41 +371,41 @@ ProAct.Array.Listeners = P.A.L = pArrayLs = Pro.Array.Listeners || {
   /**
    * Generates a listener that can be attached to an {@link ProAct.Array} on which
    * the method {@link ProAct.Array#filter} is invoked.
-   * <p>
-   *  The result of the {@link ProAct.Array#filter} method is another {@link ProAct.Array}, dependent on the <i>original</i> one.
-   * </p>
-   * <p>
+   * &lt;p>
+   *  The result of the {@link ProAct.Array#filter} method is another {@link ProAct.Array}, dependent on the &lt;i>original&lt;/i> one.
+   * &lt;/p>
+   * &lt;p>
    *  For example if the original was:
-   *  <pre>
+   *  &lt;pre>
    *    var a = new ProAct.Array([1, 3, 5]);
-   *  </pre>
+   *  &lt;/pre>
    *  and we invoked {@link ProAct.Array#filter} on it like this:
-   *  <pre>
+   *  &lt;pre>
    *    var b = a.filter(function (el) {
    *      return el % 2 === 0;
    *    }); // b is []
-   *  </pre>
-   *  The new array - <b>b</b> is dependent on <b>a</b>, so if for example we unshift something to <b>a</b>, <b>b</b> should be updated:
-   *  <pre>
+   *  &lt;/pre>
+   *  The new array - &lt;b>b&lt;/b> is dependent on &lt;b>a&lt;/b>, so if for example we unshift something to &lt;b>a&lt;/b>, &lt;b>b&lt;/b> should be updated:
+   *  &lt;pre>
    *    a.unshift(4); // b authomatically should become [4]
-   *  </pre>
-   * </p>
-   * <p>
-   *  The generated listener by this method does this - updates the <i>filtered</i> {@link ProAct.Array}, when the <i>original</i> changes
+   *  &lt;/pre>
+   * &lt;/p>
+   * &lt;p>
+   *  The generated listener by this method does this - updates the &lt;i>filtered&lt;/i> {@link ProAct.Array}, when the &lt;i>original&lt;/i> changes
    *  and it does it in an optimal way.
-   * </p>
+   * &lt;/p>
    *
    * @memberof ProAct.Array.Listeners
    * @static
    * @constant
    * @param {ProAct.Array} filtered
-   *      The array created as a result of invoking {@link ProAct.Array#filter} on the <i>original</i> {@link ProAct.Array}.
+   *      The array created as a result of invoking {@link ProAct.Array#filter} on the &lt;i>original&lt;/i> {@link ProAct.Array}.
    * @param {ProAct.Array} original
    *      The {@link ProAct.Array} on which {@link ProAct.Array#filter} was invoked.
    * @param {Array} args
-   *      The arguments passed to {@link ProAct.Array#filter}, when it was invoked on the <i>original</i> {@link ProAct.Array}
+   *      The arguments passed to {@link ProAct.Array#filter}, when it was invoked on the &lt;i>original&lt;/i> {@link ProAct.Array}
    * @return {Function}
-   *      A listener for events from the <i>original</i> {@link ProAct.Array}, updating the <i>filtered</i> {@link ProAct.Array} on
+   *      A listener for events from the &lt;i>original&lt;/i> {@link ProAct.Array}, updating the &lt;i>filtered&lt;/i> {@link ProAct.Array} on
    *      every new event, if it is necessary.
    */
   filter: function (filtered, original, args) {
@@ -417,7 +444,7 @@ ProAct.Array.Listeners = P.A.L = pArrayLs = Pro.Array.Listeners || {
           }
         } else {
           j = 0;
-          while(j < ln) {
+          while(j &lt; ln) {
             if (fun.apply(thisArg, [nvs[j], original._array.length - (ln - j), original._array])) {
               fnvs.push(nvs[j]);
             }
@@ -451,41 +478,41 @@ ProAct.Array.Listeners = P.A.L = pArrayLs = Pro.Array.Listeners || {
   /**
    * Generates a listener that can be attached to an {@link ProAct.Array} on which
    * the method {@link ProAct.Array#map} is invoked.
-   * <p>
-   *  The result of the {@link ProAct.Array#map} method is another {@link ProAct.Array}, dependent on the <i>original</i> one.
-   * </p>
-   * <p>
+   * &lt;p>
+   *  The result of the {@link ProAct.Array#map} method is another {@link ProAct.Array}, dependent on the &lt;i>original&lt;/i> one.
+   * &lt;/p>
+   * &lt;p>
    *  For example if the original was:
-   *  <pre>
+   *  &lt;pre>
    *    var a = new ProAct.Array([1, 3, 5]);
-   *  </pre>
+   *  &lt;/pre>
    *  and we invoked {@link ProAct.Array#map} on it like this:
-   *  <pre>
+   *  &lt;pre>
    *    var b = a.map(function (el) {
    *      return el * el;
    *    }); // b is [1, 9, 25]
-   *  </pre>
-   *  The new array - <b>b</b> is dependent on <b>a</b>, so if for example we pop from <b>a</b>, <b>b</b> should be updated:
-   *  <pre>
+   *  &lt;/pre>
+   *  The new array - &lt;b>b&lt;/b> is dependent on &lt;b>a&lt;/b>, so if for example we pop from &lt;b>a&lt;/b>, &lt;b>b&lt;/b> should be updated:
+   *  &lt;pre>
    *    a.pop(); // b authomatically should become [1, 9]
-   *  </pre>
-   * </p>
-   * <p>
-   *  The generated listener by this method does this - updates the <i>mapped</i> {@link ProAct.Array}, when the <i>original</i> changes
+   *  &lt;/pre>
+   * &lt;/p>
+   * &lt;p>
+   *  The generated listener by this method does this - updates the &lt;i>mapped&lt;/i> {@link ProAct.Array}, when the &lt;i>original&lt;/i> changes
    *  and it does it in an optimal way.
-   * </p>
+   * &lt;/p>
    *
    * @memberof ProAct.Array.Listeners
    * @static
    * @constant
    * @param {ProAct.Array} mapped
-   *      The array created as a result of invoking {@link ProAct.Array#map} on the <i>original</i> {@link ProAct.Array}.
+   *      The array created as a result of invoking {@link ProAct.Array#map} on the &lt;i>original&lt;/i> {@link ProAct.Array}.
    * @param {ProAct.Array} original
    *      The {@link ProAct.Array} on which {@link ProAct.Array#map} was invoked.
    * @param {Array} args
-   *      The arguments passed to {@link ProAct.Array#map}, when it was invoked on the <i>original</i> {@link ProAct.Array}
+   *      The arguments passed to {@link ProAct.Array#map}, when it was invoked on the &lt;i>original&lt;/i> {@link ProAct.Array}
    * @return {Function}
-   *      A listener for events from the <i>original</i> {@link ProAct.Array}, updating the <i>mapped</i> {@link ProAct.Array} on
+   *      A listener for events from the &lt;i>original&lt;/i> {@link ProAct.Array}, updating the &lt;i>mapped&lt;/i> {@link ProAct.Array} on
    *      every new event, if it is necessary.
    */
   map: function (mapped, original, args) {
@@ -513,7 +540,7 @@ ProAct.Array.Listeners = P.A.L = pArrayLs = Pro.Array.Listeners || {
           pArrayProto.unshift.apply(mapped, mnvs);
         } else {
           j = 0;
-          while(j < ln) {
+          while(j &lt; ln) {
             mnvs[j] = fun.apply(thisArg, [nvs[j], original._array.length - (ln - j), original._array]);
             j++;
           }
@@ -535,7 +562,7 @@ ProAct.Array.Listeners = P.A.L = pArrayLs = Pro.Array.Listeners || {
       } else if (op === pArrayOps.splice) {
         mnvs = [];
         j = 0;
-        while (j < nv.length) {
+        while (j &lt; nv.length) {
           mnvs[j] = fun.apply(thisArg, [nv[j], (j + ind), original._array]);
           j++;
         }
@@ -551,41 +578,41 @@ ProAct.Array.Listeners = P.A.L = pArrayLs = Pro.Array.Listeners || {
   /**
    * Generates a listener that can be attached to an {@link ProAct.Array} on which
    * the method {@link ProAct.Array#preduce} is invoked.
-   * <p>
-   *  The result of the {@link ProAct.Array#preduce} method is a {@link ProAct.Val}, dependent on the <i>original</i> array.
-   * </p>
-   * <p>
+   * &lt;p>
+   *  The result of the {@link ProAct.Array#preduce} method is a {@link ProAct.Val}, dependent on the &lt;i>original&lt;/i> array.
+   * &lt;/p>
+   * &lt;p>
    *  For example if the original was:
-   *  <pre>
+   *  &lt;pre>
    *    var a = new ProAct.Array([1, 3, 5]);
-   *  </pre>
+   *  &lt;/pre>
    *  and we invoked {@link ProAct.Array#preduce} on it like this:
-   *  <pre>
+   *  &lt;pre>
    *    var val = a.preduce(function (pel, el) {
    *      return pel + el;
    *    }, 0); // val.v is 0 + 1 + 3 + 5 = 9.
-   *  </pre>
-   *  The new value - <b>val</b> is dependent on <b>a</b>, so if for example we shift from <b>a</b>, <b>val</b> should be updated:
-   *  <pre>
+   *  &lt;/pre>
+   *  The new value - &lt;b>val&lt;/b> is dependent on &lt;b>a&lt;/b>, so if for example we shift from &lt;b>a&lt;/b>, &lt;b>val&lt;/b> should be updated:
+   *  &lt;pre>
    *    a.shift(); // val.v authomatically should become 0 + 3 + 5 = 8.
-   *  </pre>
-   * </p>
-   * <p>
-   *  The generated listener by this method does this - updates the <i>val</i> {@link ProAct.Val}, when the <i>original</i> array changes
+   *  &lt;/pre>
+   * &lt;/p>
+   * &lt;p>
+   *  The generated listener by this method does this - updates the &lt;i>val&lt;/i> {@link ProAct.Val}, when the &lt;i>original&lt;/i> array changes
    *  and it does it in an optimal way.
-   * </p>
+   * &lt;/p>
    *
    * @memberof ProAct.Array.Listeners
    * @static
    * @constant
    * @param {ProAct.Val} val
-   *      The result of invoking {@link ProAct.Array#preduce} on the <i>original</i> {@link ProAct.Array}.
+   *      The result of invoking {@link ProAct.Array#preduce} on the &lt;i>original&lt;/i> {@link ProAct.Array}.
    * @param {ProAct.Array} original
    *      The {@link ProAct.Array} on which {@link ProAct.Array#preduce} was invoked.
    * @param {Array} args
-   *      The arguments passed to {@link ProAct.Array#preduce}, when it was invoked on the <i>original</i> {@link ProAct.Array}
+   *      The arguments passed to {@link ProAct.Array#preduce}, when it was invoked on the &lt;i>original&lt;/i> {@link ProAct.Array}
    * @return {Function}
-   *      A listener for events from the <i>original</i> {@link ProAct.Array}, updating the <i>val</i> {@link ProAct.Val} on
+   *      A listener for events from the &lt;i>original&lt;/i> {@link ProAct.Array}, updating the &lt;i>val&lt;/i> {@link ProAct.Val} on
    *      every new event, if it is necessary.
    */
   reduce: function (val, original, args) {
@@ -609,41 +636,41 @@ ProAct.Array.Listeners = P.A.L = pArrayLs = Pro.Array.Listeners || {
   /**
    * Generates a listener that can be attached to an {@link ProAct.Array} on which
    * the method {@link ProAct.Array#preduceRight} is invoked.
-   * <p>
-   *  The result of the {@link ProAct.Array#preduceRight} method is a {@link ProAct.Val}, dependent on the <i>original</i> array.
-   * </p>
-   * <p>
+   * &lt;p>
+   *  The result of the {@link ProAct.Array#preduceRight} method is a {@link ProAct.Val}, dependent on the &lt;i>original&lt;/i> array.
+   * &lt;/p>
+   * &lt;p>
    *  For example if the original was:
-   *  <pre>
+   *  &lt;pre>
    *    var a = new ProAct.Array([1, 3, 5]);
-   *  </pre>
+   *  &lt;/pre>
    *  and we invoked {@link ProAct.Array#preduceRight} on it like this:
-   *  <pre>
+   *  &lt;pre>
    *    var val = a.preduceRight(function (pel, el) {
    *      return pel + el;
    *    }, 0); // val.v is 0 + 5 + 3 + 1 = 9.
-   *  </pre>
-   *  The new value - <b>val</b> is dependent on <b>a</b>, so if for example we splice <b>a</b>, <b>val</b> should be updated:
-   *  <pre>
+   *  &lt;/pre>
+   *  The new value - &lt;b>val&lt;/b> is dependent on &lt;b>a&lt;/b>, so if for example we splice &lt;b>a&lt;/b>, &lt;b>val&lt;/b> should be updated:
+   *  &lt;pre>
    *    a.splice(1, 2, 4, 5); // val.v authomatically should become 0 + 5 + 4 + 1 = 10.
-   *  </pre>
-   * </p>
-   * <p>
-   *  The generated listener by this method does this - updates the <i>val</i> {@link ProAct.Val}, when the <i>original</i> array changes
+   *  &lt;/pre>
+   * &lt;/p>
+   * &lt;p>
+   *  The generated listener by this method does this - updates the &lt;i>val&lt;/i> {@link ProAct.Val}, when the &lt;i>original&lt;/i> array changes
    *  and it does it in an optimal way.
-   * </p>
+   * &lt;/p>
    *
    * @memberof ProAct.Array.Listeners
    * @static
    * @constant
    * @param {ProAct.Val} val
-   *      The result of invoking {@link ProAct.Array#preduceRight} on the <i>original</i> {@link ProAct.Array}.
+   *      The result of invoking {@link ProAct.Array#preduceRight} on the &lt;i>original&lt;/i> {@link ProAct.Array}.
    * @param {ProAct.Array} original
    *      The {@link ProAct.Array} on which {@link ProAct.Array#preduceRight} was invoked.
    * @param {Array} args
-   *      The arguments passed to {@link ProAct.Array#preduceRight}, when it was invoked on the <i>original</i> {@link ProAct.Array}
+   *      The arguments passed to {@link ProAct.Array#preduceRight}, when it was invoked on the &lt;i>original&lt;/i> {@link ProAct.Array}
    * @return {Function}
-   *      A listener for events from the <i>original</i> {@link ProAct.Array}, updating the <i>val</i> {@link ProAct.Val} on
+   *      A listener for events from the &lt;i>original&lt;/i> {@link ProAct.Array}, updating the &lt;i>val&lt;/i> {@link ProAct.Val} on
    *      every new event, if it is necessary.
    */
   reduceRight: function (val, original, args) {
@@ -666,39 +693,39 @@ ProAct.Array.Listeners = P.A.L = pArrayLs = Pro.Array.Listeners || {
   /**
    * Generates a listener that can be attached to an {@link ProAct.Array} on which
    * the method {@link ProAct.Array#pindexOf} is invoked.
-   * <p>
-   *  The result of the {@link ProAct.Array#pindexOf} method is a {@link ProAct.Val}, dependent on the <i>original</i> array.
-   * </p>
-   * <p>
+   * &lt;p>
+   *  The result of the {@link ProAct.Array#pindexOf} method is a {@link ProAct.Val}, dependent on the &lt;i>original&lt;/i> array.
+   * &lt;/p>
+   * &lt;p>
    *  For example if the original was:
-   *  <pre>
+   *  &lt;pre>
    *    var a = new ProAct.Array([1, 3, 5]);
-   *  </pre>
+   *  &lt;/pre>
    *  and we invoked {@link ProAct.Array#pindexOf} on it like this:
-   *  <pre>
+   *  &lt;pre>
    *    var val = a.pindexOf(5); // val.v is 2.
-   *  </pre>
-   *  The new value - <b>val</b> is dependent on <b>a</b>, so if for example we reverse <b>a</b>, <b>val</b> should be updated:
-   *  <pre>
+   *  &lt;/pre>
+   *  The new value - &lt;b>val&lt;/b> is dependent on &lt;b>a&lt;/b>, so if for example we reverse &lt;b>a&lt;/b>, &lt;b>val&lt;/b> should be updated:
+   *  &lt;pre>
    *    a.reverse(); // val.v authomatically should become 0.
-   *  </pre>
-   * </p>
-   * <p>
-   *  The generated listener by this method does this - updates the <i>val</i> {@link ProAct.Val}, when the <i>original</i> array changes
+   *  &lt;/pre>
+   * &lt;/p>
+   * &lt;p>
+   *  The generated listener by this method does this - updates the &lt;i>val&lt;/i> {@link ProAct.Val}, when the &lt;i>original&lt;/i> array changes
    *  and it does it in an optimal way.
-   * </p>
+   * &lt;/p>
    *
    * @memberof ProAct.Array.Listeners
    * @static
    * @constant
    * @param {ProAct.Val} val
-   *      The result of invoking {@link ProAct.Array#pindexOf} on the <i>original</i> {@link ProAct.Array}.
+   *      The result of invoking {@link ProAct.Array#pindexOf} on the &lt;i>original&lt;/i> {@link ProAct.Array}.
    * @param {ProAct.Array} original
    *      The {@link ProAct.Array} on which {@link ProAct.Array#pindexOf} was invoked.
    * @param {Array} args
-   *      The arguments passed to {@link ProAct.Array#pindexOf}, when it was invoked on the <i>original</i> {@link ProAct.Array}
+   *      The arguments passed to {@link ProAct.Array#pindexOf}, when it was invoked on the &lt;i>original&lt;/i> {@link ProAct.Array}
    * @return {Function}
-   *      A listener for events from the <i>original</i> {@link ProAct.Array}, updating the <i>val</i> {@link ProAct.Val} on
+   *      A listener for events from the &lt;i>original&lt;/i> {@link ProAct.Array}, updating the &lt;i>val&lt;/i> {@link ProAct.Val} on
    *      every new event, if it is necessary.
    */
   indexOf: function (val, original, args) {
@@ -715,7 +742,7 @@ ProAct.Array.Listeners = P.A.L = pArrayLs = Pro.Array.Listeners || {
       if (op === pArrayOps.set) {
         if (ov === what) {
           val.v = indexOf.apply(original._array, args);
-        } else if (nv === what && (ind < v || v === -1) && (!hasFrom || ind >= fromIndex)) {
+        } else if (nv === what && (ind &lt; v || v === -1) && (!hasFrom || ind >= fromIndex)) {
           val.v = ind;
         }
       } else if (op === pArrayOps.add) {
@@ -743,15 +770,15 @@ ProAct.Array.Listeners = P.A.L = pArrayLs = Pro.Array.Listeners || {
             val.v = -1;
           }
         }
-      } else if (op === pArrayOps.setLength && nv <= v) {
+      } else if (op === pArrayOps.setLength && nv &lt;= v) {
         val.v = -1;
       } else if (op === pArrayOps.reverse || op === pArrayOps.sort) {
         val.v = indexOf.apply(original._array, args);
       } else if (op === pArrayOps.splice) {
         nvi = nv.indexOf(what);
         i = nvi + ind;
-        if (ind <= v) {
-          if (nvi !== -1 && i < v && (!hasFrom || fromIndex <= i)) {
+        if (ind &lt;= v) {
+          if (nvi !== -1 && i &lt; v && (!hasFrom || fromIndex &lt;= i)) {
             val.v = i;
           } else if (nv.length !== ov.length && ov.indexOf(what) === -1) {
             v = v + (nv.length - ov.length);
@@ -773,39 +800,39 @@ ProAct.Array.Listeners = P.A.L = pArrayLs = Pro.Array.Listeners || {
   /**
    * Generates a listener that can be attached to an {@link ProAct.Array} on which
    * the method {@link ProAct.Array#plastIndexOf} is invoked.
-   * <p>
-   *  The result of the {@link ProAct.Array#plastIndexOf} method is a {@link ProAct.Val}, dependent on the <i>original</i> array.
-   * </p>
-   * <p>
+   * &lt;p>
+   *  The result of the {@link ProAct.Array#plastIndexOf} method is a {@link ProAct.Val}, dependent on the &lt;i>original&lt;/i> array.
+   * &lt;/p>
+   * &lt;p>
    *  For example if the original was:
-   *  <pre>
+   *  &lt;pre>
    *    var a = new ProAct.Array([5, 4, 5, 3]);
-   *  </pre>
+   *  &lt;/pre>
    *  and we invoked {@link ProAct.Array#plastIndexOf} on it like this:
-   *  <pre>
+   *  &lt;pre>
    *    var val = a.plastIndexOf(5); // val.v is 2.
-   *  </pre>
-   *  The new value - <b>val</b> is dependent on <b>a</b>, so if for example we sort <b>a</b>, <b>val</b> should be updated:
-   *  <pre>
+   *  &lt;/pre>
+   *  The new value - &lt;b>val&lt;/b> is dependent on &lt;b>a&lt;/b>, so if for example we sort &lt;b>a&lt;/b>, &lt;b>val&lt;/b> should be updated:
+   *  &lt;pre>
    *    a.sort(); // val.v authomatically should become 3.
-   *  </pre>
-   * </p>
-   * <p>
-   *  The generated listener by this method does this - updates the <i>val</i> {@link ProAct.Val}, when the <i>original</i> array changes
+   *  &lt;/pre>
+   * &lt;/p>
+   * &lt;p>
+   *  The generated listener by this method does this - updates the &lt;i>val&lt;/i> {@link ProAct.Val}, when the &lt;i>original&lt;/i> array changes
    *  and it does it in an optimal way.
-   * </p>
+   * &lt;/p>
    *
    * @memberof ProAct.Array.Listeners
    * @static
    * @constant
    * @param {ProAct.Val} val
-   *      The result of invoking {@link ProAct.Array#plastIndexOf} on the <i>original</i> {@link ProAct.Array}.
+   *      The result of invoking {@link ProAct.Array#plastIndexOf} on the &lt;i>original&lt;/i> {@link ProAct.Array}.
    * @param {ProAct.Array} original
    *      The {@link ProAct.Array} on which {@link ProAct.Array#plastIndexOf} was invoked.
    * @param {Array} args
-   *      The arguments passed to {@link ProAct.Array#plastIndexOf}, when it was invoked on the <i>original</i> {@link ProAct.Array}
+   *      The arguments passed to {@link ProAct.Array#plastIndexOf}, when it was invoked on the &lt;i>original&lt;/i> {@link ProAct.Array}
    * @return {Function}
-   *      A listener for events from the <i>original</i> {@link ProAct.Array}, updating the <i>val</i> {@link ProAct.Val} on
+   *      A listener for events from the &lt;i>original&lt;/i> {@link ProAct.Array}, updating the &lt;i>val&lt;/i> {@link ProAct.Val} on
    *      every new event, if it is necessary.
    */
   lastIndexOf: function (val, original, args) {
@@ -822,18 +849,18 @@ ProAct.Array.Listeners = P.A.L = pArrayLs = Pro.Array.Listeners || {
       if (op === pArrayOps.set) {
         if (ov === what) {
           val.v = lastIndexOf.apply(original._array, args);
-        } else if (nv === what && (ind > v || v === -1) && (!hasFrom || ind <= fromIndex)) {
+        } else if (nv === what && (ind > v || v === -1) && (!hasFrom || ind &lt;= fromIndex)) {
           val.v = ind;
         }
       } else if (op === pArrayOps.add) {
         nvi = nv.indexOf(what);
         if (ind === 0) {
-          if (nvi !== -1 && v === -1 && (!hasFrom || ind <= fromIndex)) {
+          if (nvi !== -1 && v === -1 && (!hasFrom || ind &lt;= fromIndex)) {
             val.v = nvi;
           } else if (v !== -1) {
             val.v = v + nv.length;
           }
-        } else if (nvi !== -1 && (!hasFrom || (ind + nvi) <= fromIndex)) {
+        } else if (nvi !== -1 && (!hasFrom || (ind + nvi) &lt;= fromIndex)) {
           val.v = ind + nvi;
         }
       } else if (op === pArrayOps.remove) {
@@ -844,7 +871,7 @@ ProAct.Array.Listeners = P.A.L = pArrayLs = Pro.Array.Listeners || {
             val.v = lastIndexOf.apply(original._array, args);
           }
         }
-      } else if (op === pArrayOps.splice || op === pArrayOps.reverse || op === pArrayOps.sort || (op === pArrayOps.setLength && nv < ov)) {
+      } else if (op === pArrayOps.splice || op === pArrayOps.reverse || op === pArrayOps.sort || (op === pArrayOps.setLength && nv &lt; ov)) {
         val.v = lastIndexOf.apply(original._array, args);
       }
     };
@@ -853,39 +880,39 @@ ProAct.Array.Listeners = P.A.L = pArrayLs = Pro.Array.Listeners || {
   /**
    * Generates a listener that can be attached to an {@link ProAct.Array} on which
    * the method {@link ProAct.Array#slice} is invoked.
-   * <p>
-   *  The result of the {@link ProAct.Array#slice} method is another {@link ProAct.Array}, dependent on the <i>original</i> one.
-   * </p>
-   * <p>
+   * &lt;p>
+   *  The result of the {@link ProAct.Array#slice} method is another {@link ProAct.Array}, dependent on the &lt;i>original&lt;/i> one.
+   * &lt;/p>
+   * &lt;p>
    *  For example if the original was:
-   *  <pre>
+   *  &lt;pre>
    *    var a = new ProAct.Array([1, 3, 5]);
-   *  </pre>
+   *  &lt;/pre>
    *  and we invoked {@link ProAct.Array#slice} on it like this:
-   *  <pre>
+   *  &lt;pre>
    *    var b = a.slice(1); // b is [3, 5]
-   *  </pre>
-   *  The new array - <b>b</b> is dependent on <b>a</b>, so if for example we push to <b>a</b>, <b>b</b> should be updated:
-   *  <pre>
+   *  &lt;/pre>
+   *  The new array - &lt;b>b&lt;/b> is dependent on &lt;b>a&lt;/b>, so if for example we push to &lt;b>a&lt;/b>, &lt;b>b&lt;/b> should be updated:
+   *  &lt;pre>
    *    a.push(32); // b authomatically should become [3, 5, 32]
-   *  </pre>
-   * </p>
-   * <p>
-   *  The generated listener by this method does this - updates the <i>sliced</i> {@link ProAct.Array}, when the <i>original</i> changes
+   *  &lt;/pre>
+   * &lt;/p>
+   * &lt;p>
+   *  The generated listener by this method does this - updates the &lt;i>sliced&lt;/i> {@link ProAct.Array}, when the &lt;i>original&lt;/i> changes
    *  and it does it in an optimal way.
-   * </p>
+   * &lt;/p>
    *
    * @memberof ProAct.Array.Listeners
    * @static
    * @constant
    * @param {ProAct.Array} sliced
-   *      The array created as a result of invoking {@link ProAct.Array#slice} on the <i>original</i> {@link ProAct.Array}.
+   *      The array created as a result of invoking {@link ProAct.Array#slice} on the &lt;i>original&lt;/i> {@link ProAct.Array}.
    * @param {ProAct.Array} original
    *      The {@link ProAct.Array} on which {@link ProAct.Array#slice} was invoked.
    * @param {Array} args
-   *      The arguments passed to {@link ProAct.Array#slice}, when it was invoked on the <i>original</i> {@link ProAct.Array}
+   *      The arguments passed to {@link ProAct.Array#slice}, when it was invoked on the &lt;i>original&lt;/i> {@link ProAct.Array}
    * @return {Function}
-   *      A listener for events from the <i>original</i> {@link ProAct.Array}, updating the <i>sliced</i> {@link ProAct.Array} on
+   *      A listener for events from the &lt;i>original&lt;/i> {@link ProAct.Array}, updating the &lt;i>sliced&lt;/i> {@link ProAct.Array} on
    *      every new event, if it is necessary.
    */
   slice: function (sliced, original, args) {
@@ -898,7 +925,7 @@ ProAct.Array.Listeners = P.A.L = pArrayLs = Pro.Array.Listeners || {
           nv  = event.args[3],
           osl;
       if (op === pArrayOps.set) {
-        if (ind >= s && (!hasEnd || ind < e)) {
+        if (ind >= s && (!hasEnd || ind &lt; e)) {
           sliced[ind - s] = nv;
         }
       } else {
@@ -910,3 +937,26 @@ ProAct.Array.Listeners = P.A.L = pArrayLs = Pro.Array.Listeners || {
     };
   }
 };
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Index</a></h2><h3>Classes</h3><ul><li><a href="ProAct.Array.html">Array</a></li><li><a href="ProAct.ArrayCore.html">ArrayCore</a></li><li><a href="ProAct.ArrayProperty.html">ArrayProperty</a></li><li><a href="ProAct.AutoProperty.html">AutoProperty</a></li><li><a href="ProAct.BufferedStream.html">BufferedStream</a></li><li><a href="ProAct.Core.html">Core</a></li><li><a href="ProAct.DebouncingStream.html">DebouncingStream</a></li><li><a href="ProAct.DelayedStream.html">DelayedStream</a></li><li><a href="ProAct.Event.html">Event</a></li><li><a href="ProAct.Flow.html">Flow</a></li><li><a href="ProAct.NullProperty.html">NullProperty</a></li><li><a href="ProAct.ObjectCore.html">ObjectCore</a></li><li><a href="ProAct.ObjectProperty.html">ObjectProperty</a></li><li><a href="ProAct.Observable.html">Observable</a></li><li><a href="ProAct.Property.html">Property</a></li><li><a href="ProAct.Queue.html">Queue</a></li><li><a href="ProAct.Queues.html">Queues</a></li><li><a href="ProAct.SizeBufferedStream.html">SizeBufferedStream</a></li><li><a href="ProAct.Stream.html">Stream</a></li><li><a href="ProAct.ThrottlingStream.html">ThrottlingStream</a></li></ul><h3>Namespaces</h3><ul><li><a href="ProAct.html">ProAct</a></li><li><a href="ProAct.Array.Listeners.html">Listeners</a></li><li><a href="ProAct.Array.Operations.html">Operations</a></li><li><a href="ProAct.Configuration.html">Configuration</a></li><li><a href="ProAct.Event.Types.html">Types</a></li><li><a href="ProAct.Property.Types.html">Types</a></li><li><a href="ProAct.States.html">States</a></li><li><a href="ProAct.Utils.html">Utils</a></li></ul>
+</nav>
+
+<br clear="both">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.2</a> on Wed Jul 30 2014 09:34:05 GMT+0300 (EEST)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
