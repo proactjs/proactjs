@@ -385,7 +385,7 @@ P.Observable.prototype = {
    * <p>
    *  A transformation is a function or an object that has a <i>call</i> method defined.
    *  This function or call method should have one argument and to return a transformed version of it.
-   *  If the returned value is ProAct.Observable.BadValue, the next transformations are skipped and the updating
+   *  If the returned value is {@link ProAct.Observable.BadValue}, the next transformations are skipped and the updating
    *  value/event becomes - bad value.
    * </p>
    * <p>
@@ -560,7 +560,7 @@ P.Observable.prototype = {
   },
 
   /**
-   * Update notifies all the observers of thise ProAct.Observable.
+   * Update notifies all the observers of this ProAct.Observable.
    * <p>
    *  If there is running {@link ProAct.flow} instance it uses it to call the
    *  {@link ProAct.Observable.willUpdate} action with the passed <i>parameters</i>.
@@ -574,7 +574,7 @@ P.Observable.prototype = {
    * @instance
    * @method update
    * @param {Object} source
-   *      The source of the update, for example update of ProAct.Observable, that <i></i> this is observing.
+   *      The source of the update, for example update of ProAct.Observable, that <i>this</i> is observing.
    *      <p>
    *        Can be null - no source.
    *      </p>
@@ -604,7 +604,7 @@ P.Observable.prototype = {
   },
 
   /**
-   * Will update is the method used to notify observers that <i>this</i> ProAct.Observable will be updated.
+   * <b>willUpdate()</b> is the method used to notify observers that <i>this</i> ProAct.Observable will be updated.
    * <p>
    *  It uses the {@link ProAct.Observable#defer} to defer the listeners of the listening ProAct.Observables.
    *  The idea is that everything should be executed in a running {@link ProAct.Flow}, so there will be no repetative
@@ -623,7 +623,7 @@ P.Observable.prototype = {
    * @instance
    * @method willUpdate
    * @param {Object} source
-   *      The source of the update, for example update of ProAct.Observable, that <i></i> this is observing.
+   *      The source of the update, for example update of ProAct.Observable, that <i>this</i> is observing.
    *      <p>
    *        Can be null - no source.
    *      </p>

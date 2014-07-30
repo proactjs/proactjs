@@ -26,7 +26,7 @@ module.exports = function(karma) {
       'src/js/cores/array_core.js',
       'src/js/arrays/array.js',
       'src/js/arrays/listeners.js',
-      'src/js/objects/pro_val.js',
+      'src/js/objects/val.js',
       'src/js/objects/prob.js',
       'src/js/registry/registry.js',
       'src/js/registry/dsl.js',

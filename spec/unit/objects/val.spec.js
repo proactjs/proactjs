@@ -1,24 +1,24 @@
 'use strict';
 
-describe('Pro.Val', function () {
+describe('ProAct.Val', function () {
 
   describe('#constructor', function () {
-    it ('constructs a Pro object with only one property - v', function () {
-      var val = new Pro.Val(3);
+    it ('constructs a ProAct.js object with only one property - v', function () {
+      var val = new ProAct.Val(3);
 
-      expect(Pro.Utils.isProObject(val)).toBe(true);
+      expect(ProAct.Utils.isProObject(val)).toBe(true);
       expect(val.v).toBe(3);
     });
 
     it ('the constructed val can be empty', function () {
-      var val = new Pro.Val();
+      var val = new ProAct.Val();
 
-      expect(Pro.Utils.isProObject(val)).toBe(true);
+      expect(ProAct.Utils.isProObject(val)).toBe(true);
       expect(val.v).toBe(undefined);
     });
 
     it ('meta can be passed to the constructor', function () {
-      var val = new Pro.Val(0, ['@($1)', function (v) {
+      var val = new ProAct.Val(0, ['@($1)', function (v) {
             res.push(v);
           }]),
           res = [];
@@ -32,15 +32,15 @@ describe('Pro.Val', function () {
 
   describe('#type', function () {
     it('returns the right type, depending on the value', function () {
-      var val = new Pro.Val(3);
+      var val = new ProAct.Val(3);
 
-      expect(val.type()).toBe(Pro.Property.Types.simple);
+      expect(val.type()).toBe(ProAct.Property.Types.simple);
     });
   });
 
   it ('one value can depend on another', function () {
-    var val = new Pro.Val(5),
-        vall = new Pro.Val(function () {
+    var val = new ProAct.Val(5),
+        vall = new ProAct.Val(function () {
           return val.v + 5;
         });
     expect(val.v).toBe(5);

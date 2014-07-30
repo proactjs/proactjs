@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Class: ArrayCore</title>
+    <title>JSDoc: Class: Val</title>
     
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
     
-    <h1 class="page-title">Class: ArrayCore</h1>
+    <h1 class="page-title">Class: Val</h1>
     
     
 
@@ -29,7 +29,7 @@
     <h2>
         <span class="ancestors"><a href="ProAct.html">ProAct</a>.</span>
     
-    ArrayCore
+    Val
     </h2>
     
 </header>  
@@ -41,7 +41,7 @@
     
         
 <dt>
-    <h4 class="name" id="ArrayCore"><span class="type-signature"></span>new ArrayCore<span class="signature">(array, meta)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="Val"><span class="type-signature"></span>new Val<span class="signature">(val, meta)</span><span class="type-signature"></span></h4>
     
     
 </dt>
@@ -50,13 +50,20 @@
     
     <div class="description">
         <p>
- Constructs a ProAct.ArrayCore. ProAct.ArrayCore is a <a href="ProAct.Core.html">ProAct.Core</a> that manages all the updates/listeners for an ProAct.Array.
+ Constructs a ProAct.Val. The ProAct.Vals are the simplest ProAct.js reactive objects, they have only one property - 'v' and all their methods,
+ extended from <a href="ProAct.Observable.html">ProAct.Observable</a> delegate to it.
 </p>
 <p>
- It is responsible for updating length or index listeners and adding the right ones on read.
+ Like every object turned to ProAct.js reactive one, the ProAct.Val has a <a href="ProAct.ObjectCore.html">ProAct.ObjectCore</a> managing its single <a href="ProAct.Property.html">ProAct.Property</a>.
 </p>
 <p>
- ProAct.ArrayCore is part of the arrays module of ProAct.js.
+ The core can be accessed via:
+ <pre>
+   var core = v.p();
+ </pre>
+</p>
+<p>
+ ProAct.Val is part of the properties module of ProAct.js.
 </p>
     </div>
     
@@ -91,7 +98,7 @@
 	
         <tr>
             
-                <td class="name"><code>array</code></td>
+                <td class="name"><code>val</code></td>
             
             
             <td class="type">
@@ -107,7 +114,7 @@
             
             
             
-            <td class="description last">The shell <a href="ProAct.Array.html">ProAct.Array</a> arround this core.</td>
+            <td class="description last">The value that will be wrapped and tracked by the ProAct.Val being created.</td>
         </tr>
 	
 	
@@ -120,7 +127,7 @@
             <td class="type">
             
                 
-<span class="param-type">Object</span>
+<span class="param-type">String</span>
 
 
             
@@ -130,7 +137,7 @@
             
             
             
-            <td class="description last">Optional meta data to be used to define the observer-observable behavior of the <i>array</i>.</td>
+            <td class="description last">Meta-data passed to the <a href="ProAct.Property.html">ProAct.Property</a> construction logic.</td>
         </tr>
 	
 	
@@ -161,7 +168,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="array_core.js.html">cores/array_core.js</a>, <a href="array_core.js.html#line1">line 1</a>
+        <a href="val.js.html">objects/val.js</a>, <a href="val.js.html#line1">line 1</a>
     </li></ul></dd>
     
     
@@ -171,7 +178,9 @@
     <dt class="tag-see">See:</dt>
     <dd class="tag-see">
         <ul>
-            <li><a href="ProAct.Array.html">ProAct.Array</a></li>
+            <li><a href="ProAct.ObjectCore.html">ProAct.ObjectCore</a></li>
+        
+            <li><a href="ProAct.Property.html">ProAct.Property</a></li>
         </ul>
     </dd>
     
@@ -200,7 +209,7 @@
         <h3 class="subsection-title">Extends</h3>
         
         <ul>
-            <li><a href="ProAct.Core.html">ProAct.Core</a></li>
+            <li><a href="ProAct.Observable.html">ProAct.Observable</a></li>
         </ul>
     
     
@@ -252,14 +261,14 @@
     
     <dt class="tag-default">Default Value:</dt>
     <dd class="tag-default"><ul class="dummy">
-            <li>ProAct.ArrayCore</li>
+            <li>ProAct.Val</li>
         </ul></dd>
     
     
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="array_core.js.html">cores/array_core.js</a>, <a href="array_core.js.html#line37">line 37</a>
+        <a href="val.js.html">objects/val.js</a>, <a href="val.js.html#line50">line 50</a>
     </li></ul></dd>
     
     
@@ -638,7 +647,7 @@ the passed <i>accumulation function</i>.
         
             
 <dt>
-    <h4 class="name" id="addCaller"><span class="type-signature"></span>addCaller<span class="signature">(type)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="defaultActions"><span class="type-signature"></span>defaultActions<span class="signature">()</span><span class="type-signature"> &rarr; {Array|String}</span></h4>
     
     
 </dt>
@@ -646,10 +655,7 @@ the passed <i>accumulation function</i>.
     
     
     <div class="description">
-        Uses <a href="ProAct.html#currentCaller">ProAct.currentCaller</a> to automatically add a new listener to this property if the caller is set.
-<p>
- This method is used by the index getters or the length getter to make every reader of the length/index a listener to it.
-</p>
+        A list of actions or action to be used when no action is passed for the methods working with actions.
     </div>
     
 
@@ -657,174 +663,6 @@ the passed <i>accumulation function</i>.
     
     
     
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-		
-		<th>Type</th>
-		
-		
-		
-		
-		
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-	
-	<tbody>
-	
-	
-        <tr>
-            
-                <td class="name"><code>type</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">String</span>
-
-
-            
-            </td>
-            
-            
-            
-            
-            
-            <td class="description last">If the caller should be added as an 'index' listener or a 'length' listener. If skipped or null it is added as both.</td>
-        </tr>
-	
-	
-	</tbody>
-</table>
-    
-    
-    
-<dl class="details">
-    
-        
-    
-    
-    
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="array_core.js.html">cores/array_core.js</a>, <a href="array_core.js.html#line115">line 115</a>
-    </li></ul></dd>
-    
-    
-    
-    
-    
-    
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="call"><span class="type-signature"></span>call<span class="signature">(event)</span><span class="type-signature"></span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        ProAct.Core can be used as a parent listener for other <a href="ProAct.Observable.html">ProAct.Observable</a>s, so it defines the <i>call</i> method.
-<p>
- By default this method calls <a href="ProAct.Observable.html#update">ProAct.Observable#update</a> of <i>this</i> with the passed <i>event</i>.
-</p>
-    </div>
-    
-
-    
-    
-    
-    
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-		
-		<th>Type</th>
-		
-		
-		
-		
-		
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-	
-	<tbody>
-	
-	
-        <tr>
-            
-                <td class="name"><code>event</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">Object</span>
-
-
-            
-            </td>
-            
-            
-            
-            
-            
-            <td class="description last">The value/event that this listener is notified for.</td>
-        </tr>
-	
-	
-	</tbody>
-</table>
     
     
     
@@ -838,87 +676,8 @@ the passed <i>accumulation function</i>.
     
     <dt class="inherited-from">Inherited From:</dt>
     <dd class="inherited-from"><ul class="dummy"><li>
-        <a href="ProAct.Core.html#call">ProAct.Core#call</a>
+        <a href="ProAct.Observable.html#defaultActions">ProAct.Observable#defaultActions</a>
     </li></dd>
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="core.js.html">cores/core.js</a>, <a href="core.js.html#line121">line 121</a>
-    </li></ul></dd>
-    
-    
-    
-    
-    
-    <dt class="tag-see">See:</dt>
-    <dd class="tag-see">
-        <ul>
-            <li><a href="ProAct.Observable.html#update">ProAct.Observable#update</a></li>
-        </ul>
-    </dd>
-    
-    
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="defaultActions"><span class="type-signature"></span>defaultActions<span class="signature">()</span><span class="type-signature"> &rarr; {Array}</span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        A list of actions or action to be used when no action is passed for the methods working with actions.
-<p>
- For ProAct.ArrayCore these are both 'length' and 'index' actions.
-</p>
-    </div>
-    
-
-    
-    
-    
-    
-    
-    
-    
-<dl class="details">
-    
-        
-    
-    
-    
-
     
     
     
@@ -932,14 +691,14 @@ the passed <i>accumulation function</i>.
     
     <dt class="tag-default">Default Value:</dt>
     <dd class="tag-default"><ul class="dummy">
-            <li>['length', 'index']</li>
+            <li>'change'</li>
         </ul></dd>
     
     
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="array_core.js.html">cores/array_core.js</a>, <a href="array_core.js.html#line65">line 65</a>
+        <a href="observable.js.html">objects/observable.js</a>, <a href="observable.js.html#line103">line 103</a>
     </li></ul></dd>
     
     
@@ -977,6 +736,9 @@ the passed <i>accumulation function</i>.
 	<dd>
 		
 <span class="param-type">Array</span>
+|
+
+<span class="param-type">String</span>
 
 
 	</dd>
@@ -998,17 +760,8 @@ the passed <i>accumulation function</i>.
     
     
     <div class="description">
-        Generates the initial listeners object.
+        Generates the initial listeners object. It can be overridden for alternative listeners collections.
 It is used for resetting all the listeners too.
-<p>
- For ProAct.ArrayCore the default listeners object is
- <pre>
-   {
-     index: [],
-     length: []
-   }
- </pre>
-</p>
     </div>
     
 
@@ -1027,6 +780,11 @@ It is used for resetting all the listeners too.
     
 
     
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from"><ul class="dummy"><li>
+        <a href="ProAct.Observable.html#defaultListeners">ProAct.Observable#defaultListeners</a>
+    </li></dd>
+    
     
     
     
@@ -1041,7 +799,7 @@ It is used for resetting all the listeners too.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="array_core.js.html">cores/array_core.js</a>, <a href="array_core.js.html#line39">line 39</a>
+        <a href="observable.js.html">objects/observable.js</a>, <a href="observable.js.html#line86">line 86</a>
     </li></ul></dd>
     
     
@@ -1066,7 +824,7 @@ It is used for resetting all the listeners too.
     
             
 <div class="param-desc">
-    A map containing the default listeners collections (index and length type of listeners).
+    A map containing the default listeners collections.
 </div>
 
 
@@ -1266,144 +1024,6 @@ It is used for resetting all the listeners too.
 </dl>
 
         
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="defineIndexProp"><span class="type-signature"></span>defineIndexProp<span class="signature">(i)</span><span class="type-signature"></span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        Defines accessors for index of <i>this' shell array</i>.
-<p>
- For an index on every read, the <a href="ProAct.html#currentCaller">ProAct.currentCaller</a> is added as an 'index' listener.
-</p>
-<p>
- <a href="ProAct.ArrayCore.html#addCaller">ProAct.ArrayCore#addCaller</a> is used to retrieve the current caller and add it as the right listener.
-</p>
-<p>
- Setting values for an index updates the 'index' listeners.
-</p>
-<p>
- If on the index is reciding an array or an object, it is turned to reactive object/array.
-</p>
-    </div>
-    
-
-    
-    
-    
-    
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-		
-		<th>Type</th>
-		
-		
-		
-		
-		
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-	
-	<tbody>
-	
-	
-        <tr>
-            
-                <td class="name"><code>i</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">Number</span>
-
-
-            
-            </td>
-            
-            
-            
-            
-            
-            <td class="description last">The index to define accessor for.</td>
-        </tr>
-	
-	
-	</tbody>
-</table>
-    
-    
-    
-<dl class="details">
-    
-        
-    
-    
-    
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="array_core.js.html">cores/array_core.js</a>, <a href="array_core.js.html#line270">line 270</a>
-    </li></ul></dd>
-    
-    
-    
-    
-    
-    <dt class="tag-see">See:</dt>
-    <dd class="tag-see">
-        <ul>
-            <li><a href="ProAct.ArrayCore.html#addCaller">ProAct.ArrayCore#addCaller</a></li>
-        
-            <li><a href="ProAct.html#currentCaller">ProAct.currentCaller</a></li>
-        </ul>
-    </dd>
-    
-    
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
     
     
 </dd>
@@ -1721,7 +1341,7 @@ the passed <i>filtering function</i>.
         
             
 <dt>
-    <h4 class="name" id="into"><span class="type-signature"></span>into<span class="signature">()</span><span class="type-signature"> &rarr; {<a href="ProAct.Observable.html">ProAct.Observable</a>}</span></h4>
+    <h4 class="name" id="into"><span class="type-signature"></span>into<span class="signature">()</span><span class="type-signature"> &rarr; {<a href="ProAct.Val.html">ProAct.Val</a>}</span></h4>
     
     
 </dt>
@@ -1729,15 +1349,8 @@ the passed <i>filtering function</i>.
     
     
     <div class="description">
-        Links source observables into this observable. This means that <i>this observable</i>
-is listening for changes from the <i>sources</i>.
-<p>
- A good example is one stream to have another as as source -> if data comes into the source
- stream, it is passed to the listening too. That way the source stream is plugged <b>into</b> the listening one.
-</p>
-<p>
- The listeners from <a href="ProAct.Observable.html#makeListener">ProAct.Observable#makeListener</a> and <a href="ProAct.Observable.html#makeErrListener">ProAct.Observable#makeErrListener</a> are used.
-</p>
+        Links source <a href="ProAct.Observable.html">ProAct.Observable</a>s into the <a href="ProAct.Property.html">ProAct.Property</a> managing the 'v' field of <i>this</i>.
+This means that the property is listening for changes from the <i>sources</i>.
     </div>
     
 
@@ -1811,11 +1424,6 @@ is listening for changes from the <i>sources</i>.
     
 
     
-    <dt class="inherited-from">Inherited From:</dt>
-    <dd class="inherited-from"><ul class="dummy"><li>
-        <a href="ProAct.Observable.html#into">ProAct.Observable#into</a>
-    </li></dd>
-    
     
     
     
@@ -1830,21 +1438,12 @@ is listening for changes from the <i>sources</i>.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="observable.js.html">objects/observable.js</a>, <a href="observable.js.html#line309">line 309</a>
+        <a href="val.js.html">objects/val.js</a>, <a href="val.js.html#line180">line 180</a>
     </li></ul></dd>
     
     
     
     
-    
-    <dt class="tag-see">See:</dt>
-    <dd class="tag-see">
-        <ul>
-            <li><a href="ProAct.Observable.html#makeListener">ProAct.Observable#makeListener</a></li>
-        
-            <li><a href="ProAct.Observable.html#makeErrListener">ProAct.Observable#makeErrListener</a></li>
-        </ul>
-    </dd>
     
     
     
@@ -1875,7 +1474,7 @@ is listening for changes from the <i>sources</i>.
 	</dt>
 	<dd>
 		
-<span class="param-type"><a href="ProAct.Observable.html">ProAct.Observable</a></span>
+<span class="param-type"><a href="ProAct.Val.html">ProAct.Val</a></span>
 
 
 	</dd>
@@ -1997,7 +1596,7 @@ Every observable should have one error listener that should pass to other observ
         
             
 <dt>
-    <h4 class="name" id="makeEvent"><span class="type-signature"></span>makeEvent<span class="signature">(source, eventData)</span><span class="type-signature"> &rarr; {<a href="ProAct.Event.html">ProAct.Event</a>}</span></h4>
+    <h4 class="name" id="makeEvent"><span class="type-signature"></span>makeEvent<span class="signature">(source)</span><span class="type-signature"> &rarr; {<a href="ProAct.Event.html">ProAct.Event</a>}</span></h4>
     
     
 </dt>
@@ -2007,7 +1606,10 @@ Every observable should have one error listener that should pass to other observ
     <div class="description">
         Creates the <i>event</i> to be send to the listeners on update.
 <p>
- By default this method returns <a href="ProAct.Event.Types.html#array">ProAct.Event.Types.array</a> event.
+ The <i>event</i> should be an instance of <a href="ProAct.Event.html">ProAct.Event</a>.
+</p>
+<p>
+ By default this method returns <a href="ProAct.Event.Types.html#value">ProAct.Event.Types.value</a> event.
 </p>
     </div>
     
@@ -2062,35 +1664,6 @@ Every observable should have one error listener that should pass to other observ
         </tr>
 	
 	
-	
-        <tr>
-            
-                <td class="name"><code>eventData</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">Array</span>
-
-
-            
-            </td>
-            
-            
-            
-            
-            
-            <td class="description last">An array of four elements describing the changes:
-     <ol>
-       <li><a href="ProAct.Array.Operations.html">ProAct.Array.Operations</a> member defining the changing operation - for example <a href="ProAct.Array.Operations.html#add">ProAct.Array.Operations.add</a></li>
-       <li>The index on which the chage occures.</li>
-       <li>The old values beginning from the index.</li>
-       <li>The new values beginning from the index.</li>
-     </ol></td>
-        </tr>
-	
-	
 	</tbody>
 </table>
     
@@ -2104,6 +1677,11 @@ Every observable should have one error listener that should pass to other observ
     
 
     
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from"><ul class="dummy"><li>
+        <a href="ProAct.Observable.html#makeEvent">ProAct.Observable#makeEvent</a>
+    </li></dd>
+    
     
     
     
@@ -2116,14 +1694,14 @@ Every observable should have one error listener that should pass to other observ
     
     <dt class="tag-default">Default Value:</dt>
     <dd class="tag-default"><ul class="dummy">
-            <li>{ProAct.Event} with type <a href="ProAct.Event.Types.html#array">ProAct.Event.Types.array</a></li>
+            <li>{ProAct.Event} with type <a href="ProAct.Event.Types.html#value">ProAct.Event.Types.value</a></li>
         </ul></dd>
     
     
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="array_core.js.html">cores/array_core.js</a>, <a href="array_core.js.html#line83">line 83</a>
+        <a href="observable.js.html">objects/observable.js</a>, <a href="observable.js.html#line158">line 158</a>
     </li></ul></dd>
     
     
@@ -2592,7 +2170,7 @@ the passed <i>mapping function</i>.
         
             
 <dt>
-    <h4 class="name" id="off"><span class="type-signature"></span>off<span class="signature">(actions, listener)</span><span class="type-signature"> &rarr; {<a href="ProAct.Observable.html">ProAct.Observable</a>}</span></h4>
+    <h4 class="name" id="off"><span class="type-signature"></span>off<span class="signature">(actions, listener)</span><span class="type-signature"> &rarr; {<a href="ProAct.Val.html">ProAct.Val</a>}</span></h4>
     
     
 </dt>
@@ -2600,7 +2178,7 @@ the passed <i>mapping function</i>.
     
     
     <div class="description">
-        Removes a <i>listener</i> from the passed <i>action</i>.
+        Removes a <i>listener</i> from the <a href="ProAct.Property.html">ProAct.Property</a> managing the 'v' field of <i>this</i> for passed <i>action</i>.
 <p>
  If this method is called without parameters, all the listeners for all the actions are removed.
  The listeners are reset using <a href="ProAct.Observable.html#defaultListeners">ProAct.Observable#defaultListeners</a>.
@@ -2683,7 +2261,7 @@ the passed <i>mapping function</i>.
             
             
             
-            <td class="description last">The listener to detach. If it is skipped, null or undefined all the listeners are removed from this observable.</td>
+            <td class="description last">The listener to detach. If it is skipped, null or undefined all the listeners are removed.</td>
         </tr>
 	
 	
@@ -2700,11 +2278,6 @@ the passed <i>mapping function</i>.
     
 
     
-    <dt class="inherited-from">Inherited From:</dt>
-    <dd class="inherited-from"><ul class="dummy"><li>
-        <a href="ProAct.Observable.html#off">ProAct.Observable#off</a>
-    </li></dd>
-    
     
     
     
@@ -2719,7 +2292,7 @@ the passed <i>mapping function</i>.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="observable.js.html">objects/observable.js</a>, <a href="observable.js.html#line224">line 224</a>
+        <a href="val.js.html">objects/val.js</a>, <a href="val.js.html#line91">line 91</a>
     </li></ul></dd>
     
     
@@ -2729,11 +2302,9 @@ the passed <i>mapping function</i>.
     <dt class="tag-see">See:</dt>
     <dd class="tag-see">
         <ul>
-            <li><a href="ProAct.Observable.html#on">ProAct.Observable#on</a></li>
-        
             <li><a href="ProAct.Observable.html#defaultActions">ProAct.Observable#defaultActions</a></li>
         
-            <li><a href="ProAct.Observable.html#defaultListeners">ProAct.Observable#defaultListeners</a></li>
+            <li><a href="ProAct.Property.html">ProAct.Property</a></li>
         </ul>
     </dd>
     
@@ -2766,7 +2337,7 @@ the passed <i>mapping function</i>.
 	</dt>
 	<dd>
 		
-<span class="param-type"><a href="ProAct.Observable.html">ProAct.Observable</a></span>
+<span class="param-type"><a href="ProAct.Val.html">ProAct.Val</a></span>
 
 
 	</dd>
@@ -2780,7 +2351,7 @@ the passed <i>mapping function</i>.
         
             
 <dt>
-    <h4 class="name" id="offErr"><span class="type-signature"></span>offErr<span class="signature">(listener)</span><span class="type-signature"> &rarr; {<a href="ProAct.Observable.html">ProAct.Observable</a>}</span></h4>
+    <h4 class="name" id="offErr"><span class="type-signature"></span>offErr<span class="signature">(listener)</span><span class="type-signature"> &rarr; {<a href="ProAct.Val.html">ProAct.Val</a>}</span></h4>
     
     
 </dt>
@@ -2788,7 +2359,7 @@ the passed <i>mapping function</i>.
     
     
     <div class="description">
-        Removes an error <i>listener</i> from the passed <i>action</i>.
+        Removes an error <i>listener</i> from the <a href="ProAct.Property.html">ProAct.Property</a> managing the 'v' field of <i>this</i>.
     </div>
     
 
@@ -2838,7 +2409,7 @@ the passed <i>mapping function</i>.
             
             
             
-            <td class="description last">The listener to detach. If it is skipped, null or undefined all the listeners are removed from this observable.</td>
+            <td class="description last">The listener to detach. If it is skipped, null or undefined all the listeners are removed.</td>
         </tr>
 	
 	
@@ -2855,11 +2426,6 @@ the passed <i>mapping function</i>.
     
 
     
-    <dt class="inherited-from">Inherited From:</dt>
-    <dd class="inherited-from"><ul class="dummy"><li>
-        <a href="ProAct.Observable.html#offErr">ProAct.Observable#offErr</a>
-    </li></dd>
-    
     
     
     
@@ -2874,7 +2440,7 @@ the passed <i>mapping function</i>.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="observable.js.html">objects/observable.js</a>, <a href="observable.js.html#line293">line 293</a>
+        <a href="val.js.html">objects/val.js</a>, <a href="val.js.html#line136">line 136</a>
     </li></ul></dd>
     
     
@@ -2884,7 +2450,7 @@ the passed <i>mapping function</i>.
     <dt class="tag-see">See:</dt>
     <dd class="tag-see">
         <ul>
-            <li><a href="ProAct.Observable.html#onErr">ProAct.Observable#onErr</a></li>
+            <li><a href="ProAct.Val.html#onErr">ProAct.Val#onErr</a></li>
         </ul>
     </dd>
     
@@ -2917,7 +2483,7 @@ the passed <i>mapping function</i>.
 	</dt>
 	<dd>
 		
-<span class="param-type"><a href="ProAct.Observable.html">ProAct.Observable</a></span>
+<span class="param-type"><a href="ProAct.Val.html">ProAct.Val</a></span>
 
 
 	</dd>
@@ -3082,7 +2648,7 @@ the passed <i>mapping function</i>.
         
             
 <dt>
-    <h4 class="name" id="on"><span class="type-signature"></span>on<span class="signature">(actions, listener)</span><span class="type-signature"> &rarr; {<a href="ProAct.Observable.html">ProAct.Observable</a>}</span></h4>
+    <h4 class="name" id="on"><span class="type-signature"></span>on<span class="signature">(actions, listener)</span><span class="type-signature"> &rarr; {<a href="ProAct.Val.html">ProAct.Val</a>}</span></h4>
     
     
 </dt>
@@ -3090,7 +2656,7 @@ the passed <i>mapping function</i>.
     
     
     <div class="description">
-        Attaches a new listener to this ProAct.Observable.
+        Attaches a new listener to the <a href="ProAct.Property.html">ProAct.Property</a> managing the 'v' field of <i>this</i>.
 The listener may be function or object that defines a <i>call</i> method.
     </div>
     
@@ -3187,11 +2753,6 @@ The listener may be function or object that defines a <i>call</i> method.
     
 
     
-    <dt class="inherited-from">Inherited From:</dt>
-    <dd class="inherited-from"><ul class="dummy"><li>
-        <a href="ProAct.Observable.html#on">ProAct.Observable#on</a>
-    </li></dd>
-    
     
     
     
@@ -3206,7 +2767,7 @@ The listener may be function or object that defines a <i>call</i> method.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="observable.js.html">objects/observable.js</a>, <a href="observable.js.html#line180">line 180</a>
+        <a href="val.js.html">objects/val.js</a>, <a href="val.js.html#line67">line 67</a>
     </li></ul></dd>
     
     
@@ -3217,6 +2778,8 @@ The listener may be function or object that defines a <i>call</i> method.
     <dd class="tag-see">
         <ul>
             <li><a href="ProAct.Observable.html#defaultActions">ProAct.Observable#defaultActions</a></li>
+        
+            <li><a href="ProAct.Property.html">ProAct.Property</a></li>
         </ul>
     </dd>
     
@@ -3249,7 +2812,7 @@ The listener may be function or object that defines a <i>call</i> method.
 	</dt>
 	<dd>
 		
-<span class="param-type"><a href="ProAct.Observable.html">ProAct.Observable</a></span>
+<span class="param-type"><a href="ProAct.Val.html">ProAct.Val</a></span>
 
 
 	</dd>
@@ -3263,7 +2826,7 @@ The listener may be function or object that defines a <i>call</i> method.
         
             
 <dt>
-    <h4 class="name" id="onErr"><span class="type-signature"></span>onErr<span class="signature">(listener)</span><span class="type-signature"> &rarr; {<a href="ProAct.Observable.html">ProAct.Observable</a>}</span></h4>
+    <h4 class="name" id="onErr"><span class="type-signature"></span>onErr<span class="signature">(listener)</span><span class="type-signature"> &rarr; {<a href="ProAct.Val.html">ProAct.Val</a>}</span></h4>
     
     
 </dt>
@@ -3271,7 +2834,7 @@ The listener may be function or object that defines a <i>call</i> method.
     
     
     <div class="description">
-        Attaches a new error listener to this ProAct.Observable.
+        Attaches a new error listener to the <a href="ProAct.Property.html">ProAct.Property</a> managing the 'v' field of <i>this</i>.
 The listener may be function or object that defines a <i>call</i> method.
     </div>
     
@@ -3339,11 +2902,6 @@ The listener may be function or object that defines a <i>call</i> method.
     
 
     
-    <dt class="inherited-from">Inherited From:</dt>
-    <dd class="inherited-from"><ul class="dummy"><li>
-        <a href="ProAct.Observable.html#onErr">ProAct.Observable#onErr</a>
-    </li></dd>
-    
     
     
     
@@ -3358,7 +2916,7 @@ The listener may be function or object that defines a <i>call</i> method.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="observable.js.html">objects/observable.js</a>, <a href="observable.js.html#line276">line 276</a>
+        <a href="val.js.html">objects/val.js</a>, <a href="val.js.html#line118">line 118</a>
     </li></ul></dd>
     
     
@@ -3368,7 +2926,7 @@ The listener may be function or object that defines a <i>call</i> method.
     <dt class="tag-see">See:</dt>
     <dd class="tag-see">
         <ul>
-            <li><a href="ProAct.Observable.html#on">ProAct.Observable#on</a></li>
+            <li><a href="ProAct.Val.html#on">ProAct.Val#on</a></li>
         </ul>
     </dd>
     
@@ -3401,7 +2959,7 @@ The listener may be function or object that defines a <i>call</i> method.
 	</dt>
 	<dd>
 		
-<span class="param-type"><a href="ProAct.Observable.html">ProAct.Observable</a></span>
+<span class="param-type"><a href="ProAct.Val.html">ProAct.Val</a></span>
 
 
 	</dd>
@@ -3415,7 +2973,7 @@ The listener may be function or object that defines a <i>call</i> method.
         
             
 <dt>
-    <h4 class="name" id="out"><span class="type-signature"></span>out<span class="signature">(destination)</span><span class="type-signature"> &rarr; {<a href="ProAct.Observable.html">ProAct.Observable</a>}</span></h4>
+    <h4 class="name" id="out"><span class="type-signature"></span>out<span class="signature">(destination)</span><span class="type-signature"> &rarr; {<a href="ProAct.Val.html">ProAct.Val</a>}</span></h4>
     
     
 </dt>
@@ -3423,7 +2981,7 @@ The listener may be function or object that defines a <i>call</i> method.
     
     
     <div class="description">
-        The reverse of <a href="ProAct.Observable.html#into">ProAct.Observable#into</a> - sets <i>this observable</i> as a source
+        The reverse of <a href="ProAct.Val.html#into">ProAct.Val#into</a> - sets the <a href="ProAct.Property.html">ProAct.Property</a> managing the 'v' field of <i>this</i> as a source
 to the passed <i>destination</i> observable.
     </div>
     
@@ -3474,7 +3032,7 @@ to the passed <i>destination</i> observable.
             
             
             
-            <td class="description last">The observable to set as source <i>this</i> to.</td>
+            <td class="description last">The observable to set as source the <a href="ProAct.Property.html">ProAct.Property</a> managing the 'v' field of <i>this</i> to.</td>
         </tr>
 	
 	
@@ -3491,11 +3049,6 @@ to the passed <i>destination</i> observable.
     
 
     
-    <dt class="inherited-from">Inherited From:</dt>
-    <dd class="inherited-from"><ul class="dummy"><li>
-        <a href="ProAct.Observable.html#out">ProAct.Observable#out</a>
-    </li></dd>
-    
     
     
     
@@ -3510,7 +3063,7 @@ to the passed <i>destination</i> observable.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="observable.js.html">objects/observable.js</a>, <a href="observable.js.html#line343">line 343</a>
+        <a href="val.js.html">objects/val.js</a>, <a href="val.js.html#line197">line 197</a>
     </li></ul></dd>
     
     
@@ -3520,7 +3073,7 @@ to the passed <i>destination</i> observable.
     <dt class="tag-see">See:</dt>
     <dd class="tag-see">
         <ul>
-            <li><a href="ProAct.Observable.html#into">ProAct.Observable#into</a></li>
+            <li><a href="ProAct.Val.html#into">ProAct.Val#into</a></li>
         </ul>
     </dd>
     
@@ -3553,120 +3106,7 @@ to the passed <i>destination</i> observable.
 	</dt>
 	<dd>
 		
-<span class="param-type"><a href="ProAct.Observable.html">ProAct.Observable</a></span>
-
-
-	</dd>
-</dl>
-
-        
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="prob"><span class="type-signature"></span>prob<span class="signature">()</span><span class="type-signature"> &rarr; {<a href="ProAct.Core.html">ProAct.Core</a>}</span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        Initializes <i>this</i> ProAct.Core. This method should be called when the core should become active.
-<p>
- The main idea of the method is to change the <a href="ProAct.States.html">ProAct.States</a> state of <i>this</i> to ProAct.States.ready, by
- settuping everything needed by the shell to has observer-observable logic.
-</p>
-<p>
- The abstract <a href="ProAct.Core.html#setup">ProAct.Core#setup</a> method is called for the actual setup. If it throws an error, <i>this</i> state
- is set to ProAct.States.error and the core stays inactive.
-</p>
-    </div>
-    
-
-    
-    
-    
-    
-    
-    
-    
-<dl class="details">
-    
-        
-    
-    
-    
-
-    
-    <dt class="inherited-from">Inherited From:</dt>
-    <dd class="inherited-from"><ul class="dummy"><li>
-        <a href="ProAct.Core.html#prob">ProAct.Core#prob</a>
-    </li></dd>
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="core.js.html">cores/core.js</a>, <a href="core.js.html#line67">line 67</a>
-    </li></ul></dd>
-    
-    
-    
-    
-    
-    <dt class="tag-see">See:</dt>
-    <dd class="tag-see">
-        <ul>
-            <li><a href="ProAct.Core.html#setup">ProAct.Core#setup</a></li>
-        
-            <li><a href="ProAct.States.html">ProAct.States</a></li>
-        </ul>
-    </dd>
-    
-    
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    <h5>Returns:</h5>
-    
-            
-<div class="param-desc">
-    <i>this</i>
-</div>
-
-
-
-<dl>
-	<dt>
-		Type
-	</dt>
-	<dd>
-		
-<span class="param-type"><a href="ProAct.Core.html">ProAct.Core</a></span>
+<span class="param-type"><a href="ProAct.Val.html">ProAct.Val</a></span>
 
 
 	</dd>
@@ -3859,7 +3299,7 @@ to the passed <i>destination</i> observable.
         
             
 <dt>
-    <h4 class="name" id="setup"><span class="type-signature"></span>setup<span class="signature">()</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="toString"><span class="type-signature"></span>toString<span class="signature">()</span><span class="type-signature"> &rarr; {Object}</span></h4>
     
     
 </dt>
@@ -3867,20 +3307,8 @@ to the passed <i>destination</i> observable.
     
     
     <div class="description">
-        Initializes all the index accessors and the length accessor for <i>this's shell array</i>.
-<p>
- For the length on every read, the <a href="ProAct.html#currentCaller">ProAct.currentCaller</a> is added as a 'length' listener.
-</p>
-<p>
- For every index on every read, the <a href="ProAct.html#currentCaller">ProAct.currentCaller</a> is added as an 'index' listener.
- Listener accessors are defined using <a href="ProAct.ArrayCore.html#defineIndexProp">ProAct.ArrayCore#defineIndexProp</a>.
-</p>
-<p>
- <a href="ProAct.ArrayCore.html#addCaller">ProAct.ArrayCore#addCaller</a> is used to retrieve the current caller and add it as the right listener.
-</p>
-<p>
- Setting values for an index or the length updates the right listeners.
-</p>
+        A string representation of the value set to <i>this</i>' 'v' property.
+By reaing it using this method, no listeners set to <a href="ProAct.html#currentCaller">ProAct.currentCaller</a> are attached.
     </div>
     
 
@@ -3913,23 +3341,12 @@ to the passed <i>destination</i> observable.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="array_core.js.html">cores/array_core.js</a>, <a href="array_core.js.html#line210">line 210</a>
+        <a href="val.js.html">objects/val.js</a>, <a href="val.js.html#line300">line 300</a>
     </li></ul></dd>
     
     
     
     
-    
-    <dt class="tag-see">See:</dt>
-    <dd class="tag-see">
-        <ul>
-            <li><a href="ProAct.ArrayCore.html#addCaller">ProAct.ArrayCore#addCaller</a></li>
-        
-            <li><a href="ProAct.ArrayCore.html#defineIndexProp">ProAct.ArrayCore#defineIndexProp</a></li>
-        
-            <li><a href="ProAct.html#currentCaller">ProAct.currentCaller</a></li>
-        </ul>
-    </dd>
     
     
     
@@ -3945,6 +3362,28 @@ to the passed <i>destination</i> observable.
     
     
     
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    A string representation of the actual value set in <i>this</i>.
+</div>
+
+
+
+<dl>
+	<dt>
+		Type
+	</dt>
+	<dd>
+		
+<span class="param-type">Object</span>
+
+
+	</dd>
+</dl>
+
+        
     
     
 </dd>
@@ -3952,7 +3391,7 @@ to the passed <i>destination</i> observable.
         
             
 <dt>
-    <h4 class="name" id="transform"><span class="type-signature"></span>transform<span class="signature">(transformation)</span><span class="type-signature"> &rarr; {<a href="ProAct.Observable.html">ProAct.Observable</a>}</span></h4>
+    <h4 class="name" id="transform"><span class="type-signature"></span>transform<span class="signature">(transformation)</span><span class="type-signature"> &rarr; {<a href="ProAct.Val.html">ProAct.Val</a>}</span></h4>
     
     
 </dt>
@@ -3961,7 +3400,7 @@ to the passed <i>destination</i> observable.
     
     <div class="description">
         Adds a new <i>transformation</i> to the list of transformations
-of <i>this observable</i>.
+of the <a href="ProAct.Property.html">ProAct.Property</a> managing the 'v' field of <i>this</i>.
 <p>
  A transformation is a function or an object that has a <i>call</i> method defined.
  This function or call method should have one argument and to return a transformed version of it.
@@ -3969,7 +3408,7 @@ of <i>this observable</i>.
  value/event becomes - bad value.
 </p>
 <p>
- Every value/event that updates <i>this observable</i> will be transformed using the new transformation.
+ Every value/event that updates the <a href="ProAct.Property.html">ProAct.Property</a> managing the 'v' field of <i>this</i> will be transformed using the new transformation.
 </p>
     </div>
     
@@ -4037,11 +3476,6 @@ of <i>this observable</i>.
     
 
     
-    <dt class="inherited-from">Inherited From:</dt>
-    <dd class="inherited-from"><ul class="dummy"><li>
-        <a href="ProAct.Observable.html#transform">ProAct.Observable#transform</a>
-    </li></dd>
-    
     
     
     
@@ -4056,7 +3490,7 @@ of <i>this observable</i>.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="observable.js.html">objects/observable.js</a>, <a href="observable.js.html#line382">line 382</a>
+        <a href="val.js.html">objects/val.js</a>, <a href="val.js.html#line153">line 153</a>
     </li></ul></dd>
     
     
@@ -4099,7 +3533,7 @@ of <i>this observable</i>.
 	</dt>
 	<dd>
 		
-<span class="param-type"><a href="ProAct.Observable.html">ProAct.Observable</a></span>
+<span class="param-type"><a href="ProAct.Val.html">ProAct.Val</a></span>
 
 
 	</dd>
@@ -4113,7 +3547,7 @@ of <i>this observable</i>.
         
             
 <dt>
-    <h4 class="name" id="update"><span class="type-signature"></span>update<span class="signature">(source, actions, eventData)</span><span class="type-signature"> &rarr; {<a href="ProAct.Observable.html">ProAct.Observable</a>}</span></h4>
+    <h4 class="name" id="type"><span class="type-signature"></span>type<span class="signature">()</span><span class="type-signature"> &rarr; {Number}</span></h4>
     
     
 </dt>
@@ -4121,15 +3555,107 @@ of <i>this observable</i>.
     
     
     <div class="description">
-        Update notifies all the observers of this ProAct.Observable.
-<p>
- If there is running <a href="ProAct.html#flow">ProAct.flow</a> instance it uses it to call the
- ProAct.Observable.willUpdate action with the passed <i>parameters</i>.
-</p>
-<p>
- If <a href="ProAct.html#flow">ProAct.flow</a> is not running, a new instance is created and the
- ProAct.Observable.willUpdate action of <i>this</i> is called in it.
-</p>
+        Retrieves the <a href="ProAct.Property.Types.html">ProAct.Property.Types</a> value of <i>this</i> <a href="ProAct.Property.html">ProAct.Property</a> managing the 'v' field.
+    </div>
+    
+
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="val.js.html">objects/val.js</a>, <a href="val.js.html#line52">line 52</a>
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    <dt class="tag-see">See:</dt>
+    <dd class="tag-see">
+        <ul>
+            <li><a href="ProAct.Property.Types.html">ProAct.Property.Types</a></li>
+        
+            <li><a href="ProAct.Property.html#type">ProAct.Property#type</a></li>
+        </ul>
+    </dd>
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    The right type of the 'v' field's property.
+</div>
+
+
+
+<dl>
+	<dt>
+		Type
+	</dt>
+	<dd>
+		
+<span class="param-type">Number</span>
+
+
+	</dd>
+</dl>
+
+        
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="update"><span class="type-signature"></span>update<span class="signature">(source, actions, eventData)</span><span class="type-signature"> &rarr; {<a href="ProAct.Val.html">ProAct.Val</a>}</span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Update notifies all the observers of the <a href="ProAct.Property.html">ProAct.Property</a> managing the 'v' field of <i>this</i>.
     </div>
     
 
@@ -4179,7 +3705,8 @@ of <i>this observable</i>.
             
             
             
-            <td class="description last">The source of the update, for example update of ProAct.Observable, that <i>this</i> is observing.
+            <td class="description last">The source of the update, for example update of <a href="ProAct.Observable.html">ProAct.Observable</a>,
+     that the <a href="ProAct.Property.html">ProAct.Property</a> managing the 'v' field of <i>this</i> is observing.
      <p>
        Can be null - no source.
      </p>
@@ -4251,11 +3778,6 @@ of <i>this observable</i>.
     
 
     
-    <dt class="inherited-from">Inherited From:</dt>
-    <dd class="inherited-from"><ul class="dummy"><li>
-        <a href="ProAct.Observable.html#update">ProAct.Observable#update</a>
-    </li></dd>
-    
     
     
     
@@ -4270,7 +3792,7 @@ of <i>this observable</i>.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="observable.js.html">objects/observable.js</a>, <a href="observable.js.html#line562">line 562</a>
+        <a href="val.js.html">objects/val.js</a>, <a href="val.js.html#line215">line 215</a>
     </li></ul></dd>
     
     
@@ -4280,9 +3802,9 @@ of <i>this observable</i>.
     <dt class="tag-see">See:</dt>
     <dd class="tag-see">
         <ul>
-            <li><a href="ProAct.Observable.html#willUpdate">ProAct.Observable#willUpdate</a></li>
+            <li><a href="ProAct.Observable.html#update">ProAct.Observable#update</a></li>
         
-            <li><a href="ProAct.Observable.html#makeEvent">ProAct.Observable#makeEvent</a></li>
+            <li><a href="ProAct.Property.html#makeEvent">ProAct.Property#makeEvent</a></li>
         
             <li><a href="ProAct.html#flow">ProAct.flow</a></li>
         </ul>
@@ -4317,7 +3839,7 @@ of <i>this observable</i>.
 	</dt>
 	<dd>
 		
-<span class="param-type"><a href="ProAct.Observable.html">ProAct.Observable</a></span>
+<span class="param-type"><a href="ProAct.Val.html">ProAct.Val</a></span>
 
 
 	</dd>
@@ -4331,7 +3853,7 @@ of <i>this observable</i>.
         
             
 <dt>
-    <h4 class="name" id="updateByDiff"><span class="type-signature"></span>updateByDiff<span class="signature">(array)</span><span class="type-signature"> &rarr; {<a href="ProAct.ArrayCore.html">ProAct.ArrayCore</a>}</span></h4>
+    <h4 class="name" id="valueOf"><span class="type-signature"></span>valueOf<span class="signature">()</span><span class="type-signature"> &rarr; {Object}</span></h4>
     
     
 </dt>
@@ -4339,10 +3861,8 @@ of <i>this observable</i>.
     
     
     <div class="description">
-        Special update method for updating listeners by comparrison to another array.
-<p>
- For every difference between <i>this shell</i>'s array and the passed one, there will be listeners notification.
-</p>
+        The value set to <i>this</i>' 'v' property. By reaing it using this method, no listeners set to
+<a href="ProAct.html#currentCaller">ProAct.currentCaller</a> are attached.
     </div>
     
 
@@ -4350,54 +3870,6 @@ of <i>this observable</i>.
     
     
     
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-		
-		<th>Type</th>
-		
-		
-		
-		
-		
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-	
-	<tbody>
-	
-	
-        <tr>
-            
-                <td class="name"><code>array</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">Array</span>
-
-
-            
-            </td>
-            
-            
-            
-            
-            
-            <td class="description last">The array to compare to.</td>
-        </tr>
-	
-	
-	</tbody>
-</table>
     
     
     
@@ -4423,318 +3895,7 @@ of <i>this observable</i>.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="array_core.js.html">cores/array_core.js</a>, <a href="array_core.js.html#line181">line 181</a>
-    </li></ul></dd>
-    
-    
-    
-    
-    
-    <dt class="tag-see">See:</dt>
-    <dd class="tag-see">
-        <ul>
-            <li><a href="ProAct.Observable.html#update">ProAct.Observable#update</a></li>
-        
-            <li><a href="ProAct.Utils.html#diff">ProAct.Utils.diff</a></li>
-        </ul>
-    </dd>
-    
-    
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    <h5>Returns:</h5>
-    
-            
-<div class="param-desc">
-    <i>this</i>
-</div>
-
-
-
-<dl>
-	<dt>
-		Type
-	</dt>
-	<dd>
-		
-<span class="param-type"><a href="ProAct.ArrayCore.html">ProAct.ArrayCore</a></span>
-
-
-	</dd>
-</dl>
-
-        
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="updateSplice"><span class="type-signature"></span>updateSplice<span class="signature">(index, spliced, newItems)</span><span class="type-signature"> &rarr; {<a href="ProAct.ArrayCore.html">ProAct.ArrayCore</a>}</span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        Special update method for updating listeners after a <a href="ProAct.Array.html#splice">ProAct.Array#splice</a> call.
-<p>
- Depending on the changes the index listeners, the length listeners or both can be notified.
-</p>
-    </div>
-    
-
-    
-    
-    
-    
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-		
-		<th>Type</th>
-		
-		
-		
-		
-		
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-	
-	<tbody>
-	
-	
-        <tr>
-            
-                <td class="name"><code>index</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">Number</span>
-
-
-            
-            </td>
-            
-            
-            
-            
-            
-            <td class="description last">The index of the splice operation.</td>
-        </tr>
-	
-	
-	
-        <tr>
-            
-                <td class="name"><code>spliced</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">Array</span>
-
-
-            
-            </td>
-            
-            
-            
-            
-            
-            <td class="description last">A list of the deleted items. Can be empty.</td>
-        </tr>
-	
-	
-	
-        <tr>
-            
-                <td class="name"><code>newItems</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">Array</span>
-
-
-            
-            </td>
-            
-            
-            
-            
-            
-            <td class="description last">A list of the newly added items. Can be empty.</td>
-        </tr>
-	
-	
-	</tbody>
-</table>
-    
-    
-    
-<dl class="details">
-    
-        
-    
-    
-    
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="array_core.js.html">cores/array_core.js</a>, <a href="array_core.js.html#line145">line 145</a>
-    </li></ul></dd>
-    
-    
-    
-    
-    
-    <dt class="tag-see">See:</dt>
-    <dd class="tag-see">
-        <ul>
-            <li><a href="ProAct.Observable.html#update">ProAct.Observable#update</a></li>
-        
-            <li><a href="ProAct.Array.html#splice">ProAct.Array#splice</a></li>
-        </ul>
-    </dd>
-    
-    
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    <h5>Returns:</h5>
-    
-            
-<div class="param-desc">
-    <i>this</i>
-</div>
-
-
-
-<dl>
-	<dt>
-		Type
-	</dt>
-	<dd>
-		
-<span class="param-type"><a href="ProAct.ArrayCore.html">ProAct.ArrayCore</a></span>
-
-
-	</dd>
-</dl>
-
-        
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="value"><span class="type-signature"></span>value<span class="signature">()</span><span class="type-signature"> &rarr; {Object}</span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        A function to be set to the <i>shell</i> object's <b>p</b> field (if it is configured in @{link ProAct.Configuration}).
-<p>
- This function is the link to the this ProAct.Core of the <i>shell</i>. It can be overridden to return different aspects of
- the core depending on parameters passed.
-</p>
-    </div>
-    
-
-    
-    
-    
-    
-    
-    
-    
-<dl class="details">
-    
-        
-    
-    
-    
-
-    
-    <dt class="inherited-from">Inherited From:</dt>
-    <dd class="inherited-from"><ul class="dummy"><li>
-        <a href="ProAct.Core.html#value">ProAct.Core#value</a>
-    </li></dd>
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    <dt class="tag-default">Default Value:</dt>
-    <dd class="tag-default"><ul class="dummy">
-            <li>{this}</li>
-        </ul></dd>
-    
-    
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="core.js.html">cores/core.js</a>, <a href="core.js.html#line49">line 49</a>
+        <a href="val.js.html">objects/val.js</a>, <a href="val.js.html#line286">line 286</a>
     </li></ul></dd>
     
     
@@ -4759,7 +3920,7 @@ of <i>this observable</i>.
     
             
 <div class="param-desc">
-    Some aspects of <i>this</i> ProAct.Core.
+    The actual value set in <i>this</i>.
 </div>
 
 
@@ -4784,7 +3945,7 @@ of <i>this observable</i>.
         
             
 <dt>
-    <h4 class="name" id="willUpdate"><span class="type-signature"></span>willUpdate<span class="signature">(source, actions, eventData)</span><span class="type-signature"> &rarr; {<a href="ProAct.Observable.html">ProAct.Observable</a>}</span></h4>
+    <h4 class="name" id="willUpdate"><span class="type-signature"></span>willUpdate<span class="signature">(source, actions, eventData)</span><span class="type-signature"> &rarr; {<a href="ProAct.Val.html">ProAct.Val</a>}</span></h4>
     
     
 </dt>
@@ -4792,19 +3953,15 @@ of <i>this observable</i>.
     
     
     <div class="description">
-        <b>willUpdate()</b> is the method used to notify observers that <i>this</i> ProAct.Observable will be updated.
+        <b>willUpdate()</b> is the method used to notify observers that the <a href="ProAct.Property.html">ProAct.Property</a> managing the 'v' field of <i>this</i> will be updated.
 <p>
- It uses the <a href="ProAct.Observable.html#defer">ProAct.Observable#defer</a> to defer the listeners of the listening ProAct.Observables.
+ It uses the <a href="ProAct.Observable.html#defer">ProAct.Observable#defer</a> to defer the listeners of the listening <a href="ProAct.Observable.html">ProAct.Observable</a>s.
  The idea is that everything should be executed in a running <a href="ProAct.Flow.html">ProAct.Flow</a>, so there will be no repetative
  updates.
 </p>
 <p>
- The update value will come from the <a href="ProAct.Observable.html#makeEvent">ProAct.Observable#makeEvent</a> method and the <i>source</i>
+ The update value will come from the <a href="ProAct.Property.html#makeEvent">ProAct.Property#makeEvent</a> method and the <i>source</i>
  parameter will be passed to it.
-</p>
-<p>
- If <i>this</i> ProAct.Observable has a <i>parent</i> ProAct.Observable it will be notified in the running flow
- as well.
 </p>
     </div>
     
@@ -4855,7 +4012,8 @@ of <i>this observable</i>.
             
             
             
-            <td class="description last">The source of the update, for example update of ProAct.Observable, that <i>this</i> is observing.
+            <td class="description last">The source of the update, for example update of <a href="ProAct.Observable.html">ProAct.Observable</a>,
+     that the <a href="ProAct.Property.html">ProAct.Property</a> managing the 'v' field of <i>this</i> is observing.
      <p>
        Can be null - no source.
      </p>
@@ -4928,11 +4086,6 @@ of <i>this observable</i>.
     
 
     
-    <dt class="inherited-from">Inherited From:</dt>
-    <dd class="inherited-from"><ul class="dummy"><li>
-        <a href="ProAct.Observable.html#willUpdate">ProAct.Observable#willUpdate</a>
-    </li></dd>
-    
     
     
     
@@ -4947,7 +4100,7 @@ of <i>this observable</i>.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="observable.js.html">objects/observable.js</a>, <a href="observable.js.html#line606">line 606</a>
+        <a href="val.js.html">objects/val.js</a>, <a href="val.js.html#line245">line 245</a>
     </li></ul></dd>
     
     
@@ -4959,7 +4112,7 @@ of <i>this observable</i>.
         <ul>
             <li><a href="ProAct.Observable.html#defer">ProAct.Observable#defer</a></li>
         
-            <li><a href="ProAct.Observable.html#makeEvent">ProAct.Observable#makeEvent</a></li>
+            <li><a href="ProAct.Property.html#makeEvent">ProAct.Property#makeEvent</a></li>
         
             <li><a href="ProAct.Observable.html#defaultActions">ProAct.Observable#defaultActions</a></li>
         
@@ -4996,7 +4149,7 @@ of <i>this observable</i>.
 	</dt>
 	<dd>
 		
-<span class="param-type"><a href="ProAct.Observable.html">ProAct.Observable</a></span>
+<span class="param-type"><a href="ProAct.Val.html">ProAct.Val</a></span>
 
 
 	</dd>
@@ -5029,7 +4182,7 @@ of <i>this observable</i>.
 <br clear="both">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.2</a> on Wed Jul 30 2014 13:17:18 GMT+0300 (EEST)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.2</a> on Wed Jul 30 2014 13:17:28 GMT+0300 (EEST)
 </footer>
 
 <script> prettyPrint(); </script>

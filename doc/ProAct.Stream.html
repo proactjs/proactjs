@@ -3691,7 +3691,7 @@ to the passed <i>destination</i> observable.
         
             
 <dt>
-    <h4 class="name" id="reduce"><span class="type-signature"></span>reduce<span class="signature">(initVal, accumulationFunction)</span><span class="type-signature"> &rarr; {ProAct.Val}</span></h4>
+    <h4 class="name" id="reduce"><span class="type-signature"></span>reduce<span class="signature">(initVal, accumulationFunction)</span><span class="type-signature"> &rarr; {<a href="ProAct.Val.html">ProAct.Val</a>}</span></h4>
     
     
 </dt>
@@ -3699,7 +3699,7 @@ to the passed <i>destination</i> observable.
     
     
     <div class="description">
-        Generates a new ProAct.Val containing the state of an accumulations.
+        Generates a new <a href="ProAct.Val.html">ProAct.Val</a> containing the state of an accumulations.
 <p>
  The value will be updated with every update coming to this observable.
 </p>
@@ -3823,7 +3823,7 @@ to the passed <i>destination</i> observable.
         <ul>
             <li><a href="ProAct.Observable.html#accumulate">ProAct.Observable#accumulate</a></li>
         
-            <li>ProAct.Val</li>
+            <li><a href="ProAct.Val.html">ProAct.Val</a></li>
         </ul>
     </dd>
     
@@ -3845,7 +3845,7 @@ to the passed <i>destination</i> observable.
     
             
 <div class="param-desc">
-    A ProAct.Val instance observing <i>this</i> with the accumulation applied.
+    A <a href="ProAct.Val.html">ProAct.Val</a> instance observing <i>this</i> with the accumulation applied.
 </div>
 
 
@@ -3856,7 +3856,7 @@ to the passed <i>destination</i> observable.
 	</dt>
 	<dd>
 		
-<span class="param-type">ProAct.Val</span>
+<span class="param-type"><a href="ProAct.Val.html">ProAct.Val</a></span>
 
 
 	</dd>
@@ -4022,7 +4022,7 @@ of <i>this observable</i>.
 <p>
  A transformation is a function or an object that has a <i>call</i> method defined.
  This function or call method should have one argument and to return a transformed version of it.
- If the returned value is ProAct.Observable.BadValue, the next transformations are skipped and the updating
+ If the returned value is <a href="ProAct.Observable.html#BadValue">ProAct.Observable.BadValue</a>, the next transformations are skipped and the updating
  value/event becomes - bad value.
 </p>
 <p>
@@ -4663,7 +4663,7 @@ of <i>this observable</i>.
     
     
     <div class="description">
-        Update notifies all the observers of thise ProAct.Observable.
+        Update notifies all the observers of this ProAct.Observable.
 <p>
  If there is running <a href="ProAct.html#flow">ProAct.flow</a> instance it uses it to call the
  ProAct.Observable.willUpdate action with the passed <i>parameters</i>.
@@ -4721,7 +4721,7 @@ of <i>this observable</i>.
             
             
             
-            <td class="description last">The source of the update, for example update of ProAct.Observable, that <i></i> this is observing.
+            <td class="description last">The source of the update, for example update of ProAct.Observable, that <i>this</i> is observing.
      <p>
        Can be null - no source.
      </p>
@@ -4881,7 +4881,7 @@ of <i>this observable</i>.
     
     
     <div class="description">
-        Will update is the method used to notify observers that <i>this</i> ProAct.Observable will be updated.
+        <b>willUpdate()</b> is the method used to notify observers that <i>this</i> ProAct.Observable will be updated.
 <p>
  It uses the <a href="ProAct.Observable.html#defer">ProAct.Observable#defer</a> to defer the listeners of the listening ProAct.Observables.
  The idea is that everything should be executed in a running <a href="ProAct.Flow.html">ProAct.Flow</a>, so there will be no repetative
@@ -4944,7 +4944,7 @@ of <i>this observable</i>.
             
             
             
-            <td class="description last">The source of the update, for example update of ProAct.Observable, that <i></i> this is observing.
+            <td class="description last">The source of the update, for example update of ProAct.Observable, that <i>this</i> is observing.
      <p>
        Can be null - no source.
      </p>
@@ -5112,13 +5112,13 @@ of <i>this observable</i>.
 </div>
 
 <nav>
-    <h2><a href="index.html">Index</a></h2><h3>Classes</h3><ul><li><a href="ProAct.Array.html">Array</a></li><li><a href="ProAct.ArrayCore.html">ArrayCore</a></li><li><a href="ProAct.ArrayProperty.html">ArrayProperty</a></li><li><a href="ProAct.AutoProperty.html">AutoProperty</a></li><li><a href="ProAct.BufferedStream.html">BufferedStream</a></li><li><a href="ProAct.Core.html">Core</a></li><li><a href="ProAct.DebouncingStream.html">DebouncingStream</a></li><li><a href="ProAct.DelayedStream.html">DelayedStream</a></li><li><a href="ProAct.Event.html">Event</a></li><li><a href="ProAct.Flow.html">Flow</a></li><li><a href="ProAct.NullProperty.html">NullProperty</a></li><li><a href="ProAct.ObjectCore.html">ObjectCore</a></li><li><a href="ProAct.ObjectProperty.html">ObjectProperty</a></li><li><a href="ProAct.Observable.html">Observable</a></li><li><a href="ProAct.Property.html">Property</a></li><li><a href="ProAct.Queue.html">Queue</a></li><li><a href="ProAct.Queues.html">Queues</a></li><li><a href="ProAct.SizeBufferedStream.html">SizeBufferedStream</a></li><li><a href="ProAct.Stream.html">Stream</a></li><li><a href="ProAct.ThrottlingStream.html">ThrottlingStream</a></li></ul><h3>Namespaces</h3><ul><li><a href="ProAct.html">ProAct</a></li><li><a href="ProAct.Array.Listeners.html">Listeners</a></li><li><a href="ProAct.Array.Operations.html">Operations</a></li><li><a href="ProAct.Configuration.html">Configuration</a></li><li><a href="ProAct.Event.Types.html">Types</a></li><li><a href="ProAct.Property.Types.html">Types</a></li><li><a href="ProAct.States.html">States</a></li><li><a href="ProAct.Utils.html">Utils</a></li></ul>
+    <h2><a href="index.html">Index</a></h2><h3>Classes</h3><ul><li><a href="ProAct.Array.html">Array</a></li><li><a href="ProAct.ArrayCore.html">ArrayCore</a></li><li><a href="ProAct.ArrayProperty.html">ArrayProperty</a></li><li><a href="ProAct.AutoProperty.html">AutoProperty</a></li><li><a href="ProAct.BufferedStream.html">BufferedStream</a></li><li><a href="ProAct.Core.html">Core</a></li><li><a href="ProAct.DebouncingStream.html">DebouncingStream</a></li><li><a href="ProAct.DelayedStream.html">DelayedStream</a></li><li><a href="ProAct.Event.html">Event</a></li><li><a href="ProAct.Flow.html">Flow</a></li><li><a href="ProAct.NullProperty.html">NullProperty</a></li><li><a href="ProAct.ObjectCore.html">ObjectCore</a></li><li><a href="ProAct.ObjectProperty.html">ObjectProperty</a></li><li><a href="ProAct.Observable.html">Observable</a></li><li><a href="ProAct.Property.html">Property</a></li><li><a href="ProAct.Queue.html">Queue</a></li><li><a href="ProAct.Queues.html">Queues</a></li><li><a href="ProAct.SizeBufferedStream.html">SizeBufferedStream</a></li><li><a href="ProAct.Stream.html">Stream</a></li><li><a href="ProAct.ThrottlingStream.html">ThrottlingStream</a></li><li><a href="ProAct.Val.html">Val</a></li></ul><h3>Namespaces</h3><ul><li><a href="ProAct.html">ProAct</a></li><li><a href="ProAct.Array.Listeners.html">Listeners</a></li><li><a href="ProAct.Array.Operations.html">Operations</a></li><li><a href="ProAct.Configuration.html">Configuration</a></li><li><a href="ProAct.Event.Types.html">Types</a></li><li><a href="ProAct.Property.Types.html">Types</a></li><li><a href="ProAct.States.html">States</a></li><li><a href="ProAct.Utils.html">Utils</a></li></ul>
 </nav>
 
 <br clear="both">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.2</a> on Wed Jul 30 2014 09:34:15 GMT+0300 (EEST)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.2</a> on Wed Jul 30 2014 13:17:26 GMT+0300 (EEST)
 </footer>
 
 <script> prettyPrint(); </script>

@@ -412,7 +412,7 @@ P.Observable.prototype = {
    * &lt;p>
    *  A transformation is a function or an object that has a &lt;i>call&lt;/i> method defined.
    *  This function or call method should have one argument and to return a transformed version of it.
-   *  If the returned value is ProAct.Observable.BadValue, the next transformations are skipped and the updating
+   *  If the returned value is {@link ProAct.Observable.BadValue}, the next transformations are skipped and the updating
    *  value/event becomes - bad value.
    * &lt;/p>
    * &lt;p>
@@ -587,7 +587,7 @@ P.Observable.prototype = {
   },
 
   /**
-   * Update notifies all the observers of thise ProAct.Observable.
+   * Update notifies all the observers of this ProAct.Observable.
    * &lt;p>
    *  If there is running {@link ProAct.flow} instance it uses it to call the
    *  {@link ProAct.Observable.willUpdate} action with the passed &lt;i>parameters&lt;/i>.
@@ -601,7 +601,7 @@ P.Observable.prototype = {
    * @instance
    * @method update
    * @param {Object} source
-   *      The source of the update, for example update of ProAct.Observable, that &lt;i>&lt;/i> this is observing.
+   *      The source of the update, for example update of ProAct.Observable, that &lt;i>this&lt;/i> is observing.
    *      &lt;p>
    *        Can be null - no source.
    *      &lt;/p>
@@ -631,7 +631,7 @@ P.Observable.prototype = {
   },
 
   /**
-   * Will update is the method used to notify observers that &lt;i>this&lt;/i> ProAct.Observable will be updated.
+   * &lt;b>willUpdate()&lt;/b> is the method used to notify observers that &lt;i>this&lt;/i> ProAct.Observable will be updated.
    * &lt;p>
    *  It uses the {@link ProAct.Observable#defer} to defer the listeners of the listening ProAct.Observables.
    *  The idea is that everything should be executed in a running {@link ProAct.Flow}, so there will be no repetative
@@ -650,7 +650,7 @@ P.Observable.prototype = {
    * @instance
    * @method willUpdate
    * @param {Object} source
-   *      The source of the update, for example update of ProAct.Observable, that &lt;i>&lt;/i> this is observing.
+   *      The source of the update, for example update of ProAct.Observable, that &lt;i>this&lt;/i> is observing.
    *      &lt;p>
    *        Can be null - no source.
    *      &lt;/p>
@@ -758,13 +758,13 @@ P.Observable.prototype = {
 </div>
 
 <nav>
-    <h2><a href="index.html">Index</a></h2><h3>Classes</h3><ul><li><a href="ProAct.Array.html">Array</a></li><li><a href="ProAct.ArrayCore.html">ArrayCore</a></li><li><a href="ProAct.ArrayProperty.html">ArrayProperty</a></li><li><a href="ProAct.AutoProperty.html">AutoProperty</a></li><li><a href="ProAct.BufferedStream.html">BufferedStream</a></li><li><a href="ProAct.Core.html">Core</a></li><li><a href="ProAct.DebouncingStream.html">DebouncingStream</a></li><li><a href="ProAct.DelayedStream.html">DelayedStream</a></li><li><a href="ProAct.Event.html">Event</a></li><li><a href="ProAct.Flow.html">Flow</a></li><li><a href="ProAct.NullProperty.html">NullProperty</a></li><li><a href="ProAct.ObjectCore.html">ObjectCore</a></li><li><a href="ProAct.ObjectProperty.html">ObjectProperty</a></li><li><a href="ProAct.Observable.html">Observable</a></li><li><a href="ProAct.Property.html">Property</a></li><li><a href="ProAct.Queue.html">Queue</a></li><li><a href="ProAct.Queues.html">Queues</a></li><li><a href="ProAct.SizeBufferedStream.html">SizeBufferedStream</a></li><li><a href="ProAct.Stream.html">Stream</a></li><li><a href="ProAct.ThrottlingStream.html">ThrottlingStream</a></li></ul><h3>Namespaces</h3><ul><li><a href="ProAct.html">ProAct</a></li><li><a href="ProAct.Array.Listeners.html">Listeners</a></li><li><a href="ProAct.Array.Operations.html">Operations</a></li><li><a href="ProAct.Configuration.html">Configuration</a></li><li><a href="ProAct.Event.Types.html">Types</a></li><li><a href="ProAct.Property.Types.html">Types</a></li><li><a href="ProAct.States.html">States</a></li><li><a href="ProAct.Utils.html">Utils</a></li></ul>
+    <h2><a href="index.html">Index</a></h2><h3>Classes</h3><ul><li><a href="ProAct.Array.html">Array</a></li><li><a href="ProAct.ArrayCore.html">ArrayCore</a></li><li><a href="ProAct.ArrayProperty.html">ArrayProperty</a></li><li><a href="ProAct.AutoProperty.html">AutoProperty</a></li><li><a href="ProAct.BufferedStream.html">BufferedStream</a></li><li><a href="ProAct.Core.html">Core</a></li><li><a href="ProAct.DebouncingStream.html">DebouncingStream</a></li><li><a href="ProAct.DelayedStream.html">DelayedStream</a></li><li><a href="ProAct.Event.html">Event</a></li><li><a href="ProAct.Flow.html">Flow</a></li><li><a href="ProAct.NullProperty.html">NullProperty</a></li><li><a href="ProAct.ObjectCore.html">ObjectCore</a></li><li><a href="ProAct.ObjectProperty.html">ObjectProperty</a></li><li><a href="ProAct.Observable.html">Observable</a></li><li><a href="ProAct.Property.html">Property</a></li><li><a href="ProAct.Queue.html">Queue</a></li><li><a href="ProAct.Queues.html">Queues</a></li><li><a href="ProAct.SizeBufferedStream.html">SizeBufferedStream</a></li><li><a href="ProAct.Stream.html">Stream</a></li><li><a href="ProAct.ThrottlingStream.html">ThrottlingStream</a></li><li><a href="ProAct.Val.html">Val</a></li></ul><h3>Namespaces</h3><ul><li><a href="ProAct.html">ProAct</a></li><li><a href="ProAct.Array.Listeners.html">Listeners</a></li><li><a href="ProAct.Array.Operations.html">Operations</a></li><li><a href="ProAct.Configuration.html">Configuration</a></li><li><a href="ProAct.Event.Types.html">Types</a></li><li><a href="ProAct.Property.Types.html">Types</a></li><li><a href="ProAct.States.html">States</a></li><li><a href="ProAct.Utils.html">Utils</a></li></ul>
 </nav>
 
 <br clear="both">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.2</a> on Wed Jul 30 2014 09:34:05 GMT+0300 (EEST)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.2</a> on Wed Jul 30 2014 13:17:16 GMT+0300 (EEST)
 </footer>
 
 <script> prettyPrint(); </script>
