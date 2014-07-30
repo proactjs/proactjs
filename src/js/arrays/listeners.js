@@ -1,6 +1,6 @@
-ProAct.Array.Listeners = pArrayLs = Pro.Array.Listeners || {
+ProAct.Array.Listeners = P.A.L = pArrayLs = Pro.Array.Listeners || {
   check: function(event) {
-    if (event.type !== Pro.Event.Types.array) {
+    if (event.type !== P.E.Types.array) {
       throw Error('Not implemented for non array events');
     }
   },
@@ -39,7 +39,7 @@ ProAct.Array.Listeners = pArrayLs = Pro.Array.Listeners || {
         }
       } else if (op === pArrayOps.reverse || op === pArrayOps.sort) {
         nvs = transformed._array;
-        if (Pro.Utils.isProArray(args)) {
+        if (P.U.isProArray(args)) {
           toAdd = args._array;
         } else {
           toAdd = args;

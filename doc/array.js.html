@@ -439,50 +439,272 @@ ProAct.Array.prototype = pArrayProto = P.U.ex(Object.create(arrayProto), {
 
     return reduce.apply(this._array, arguments);
   },
+
+  /**
+   * Does the same as the {@link ProAct.Array#reduce} method, but the result is a {@link ProAct.Val} depending on changes on &lt;i>this&lt;/i> ProAct.Array.
+   *
+   * @memberof ProAct.Array
+   * @instance
+   * @method preduce
+   * @param {Function} fun
+   *      Function to execute on each value in the array, taking four arguments:
+   *      &lt;ol>
+   *        &lt;li>&lt;b>previousValue&lt;/b> : The value previously returned in the last invocation of the &lt;i>fun&lt;/i>, or &lt;i>initialValue&lt;/i>, if supplied.&lt;/li>
+   *        &lt;li>&lt;b>currentValue&lt;/b> : The current element being processed in the ProAct.Array.&lt;/li>
+   *        &lt;li>&lt;b>index&lt;/b> : The index of the current element being processed in the ProAct.Array.&lt;/li>
+   *        &lt;li>&lt;b>array&lt;/b> : The array reduce was called upon.&lt;/li>
+   *      &lt;/ol>
+   * @param {Object} initialValue
+   *      Object to use as the first argument to the first call of the &lt;i>fun&lt;/i> .
+   * @return {ProAct.Val}
+   *      {@link ProAct.Val} with value of the last &lt;i>fun&lt;/i> invocation.
+   * @see {@link ProAct.ArrayCore#addCaller}
+   * @see {@link ProAct.Val}
+   * @see {@link ProAct.Array.Listeners.reduce}
+   */
   preduce: function (fun /*, initialValue */) {
     var val = new P.Val(reduce.apply(this._array, arguments));
     this.core.on(pArrayLs.reduce(val, this, arguments));
 
     return val;
   },
+
+  /**
+   * The &lt;b>reduceRight()&lt;/b> method applies a function against an accumulator and each value of the ProAct.Array (from right-to-left) as to reduce it to a single value.
+   * &lt;p>
+   *  This method adds the {@link ProAct.currentCaller} as a listener to both 'index' type and 'length' type of changes.
+   * &lt;/p>
+   *
+   * @memberof ProAct.Array
+   * @instance
+   * @method reduceRight
+   * @param {Function} fun
+   *      Function to execute on each value in the array, taking four arguments:
+   *      &lt;ol>
+   *        &lt;li>&lt;b>previousValue&lt;/b> : The value previously returned in the last invocation of the &lt;i>fun&lt;/i>, or &lt;i>initialValue&lt;/i>, if supplied.&lt;/li>
+   *        &lt;li>&lt;b>currentValue&lt;/b> : The current element being processed in the ProAct.Array.&lt;/li>
+   *        &lt;li>&lt;b>index&lt;/b> : The index of the current element being processed in the ProAct.Array.&lt;/li>
+   *        &lt;li>&lt;b>array&lt;/b> : The array reduce was called upon.&lt;/li>
+   *      &lt;/ol>
+   * @param {Object} initialValue
+   *      Object to use as the first argument to the first call of the &lt;i>fun&lt;/i> .
+   * @return {Object}
+   *      The value of the last &lt;i>fun&lt;/i> invocation.
+   * @see {@link ProAct.ArrayCore#addCaller}
+   */
   reduceRight: function (fun /*, initialValue */) {
     this.core.addCaller();
 
     return reduceRight.apply(this._array, arguments);
   },
+
+  /**
+   * Does the same as the {@link ProAct.Array#reduceRight} method, but the result is a {@link ProAct.Val} depending on changes on &lt;i>this&lt;/i> ProAct.Array.
+   *
+   * @memberof ProAct.Array
+   * @instance
+   * @method preduceRight
+   * @param {Function} fun
+   *      Function to execute on each value in the array, taking four arguments:
+   *      &lt;ol>
+   *        &lt;li>&lt;b>previousValue&lt;/b> : The value previously returned in the last invocation of the &lt;i>fun&lt;/i>, or &lt;i>initialValue&lt;/i>, if supplied.&lt;/li>
+   *        &lt;li>&lt;b>currentValue&lt;/b> : The current element being processed in the ProAct.Array.&lt;/li>
+   *        &lt;li>&lt;b>index&lt;/b> : The index of the current element being processed in the ProAct.Array.&lt;/li>
+   *        &lt;li>&lt;b>array&lt;/b> : The array reduce was called upon.&lt;/li>
+   *      &lt;/ol>
+   * @param {Object} initialValue
+   *      Object to use as the first argument to the first call of the &lt;i>fun&lt;/i> .
+   * @return {ProAct.Val}
+   *      {@link ProAct.Val} with value of the last &lt;i>fun&lt;/i> invocation.
+   * @see {@link ProAct.ArrayCore#addCaller}
+   * @see {@link ProAct.Val}
+   * @see {@link ProAct.Array.Listeners.reduceRight}
+   */
   preduceRight: function (fun /*, initialValue */) {
     var val = new P.Val(reduceRight.apply(this._array, arguments));
     this.core.on(pArrayLs.reduceRight(val, this, arguments));
 
     return val;
   },
+
+  /**
+   * The &lt;b>indexOf()&lt;/b> method returns the first index at which a given element can be found in the ProAct.Array, or -1 if it is not present.
+   * &lt;p>
+   *  This method adds the {@link ProAct.currentCaller} as a listener to both 'index' type and 'length' type of changes.
+   * &lt;/p>
+   *
+   * @memberof ProAct.Array
+   * @instance
+   * @method indexOf
+   * @param {Object} searchElement
+   *      Element to locate in the ProAct.Array.
+   * @param {Number} fromIndex
+   *      Default: 0 (Entire array is searched)
+   *      &lt;p>
+   *        The index to start the search at.
+   *        If the index is greater than or equal to the ProAct.Array's length, -1 is returned,
+   *        which means the array will not be searched.
+   *        If the provided index value is a negative number,
+   *        it is taken as the offset from the end of the ProAct.Array.
+   *      &lt;/p>
+   *      &lt;p>
+   *        Note: if the provided index is negative, the ProAct.Array is still searched from front to back.
+   *        If the calculated index is less than 0, then the whole ProAct.Array will be searched.
+   *      &lt;/p>
+   * @return {Number}
+   *      The index of the searched element or '-1' if it is not found in &lt;i>this&lt;/i> ProAct.Array.
+   * @see {@link ProAct.ArrayCore#addCaller}
+   */
   indexOf: function () {
     this.core.addCaller();
 
     return indexOf.apply(this._array, arguments);
   },
+
+  /**
+   * Does the same as the {@link ProAct.Array#indexOf} method, but the result is a {@link ProAct.Val} depending on changes on &lt;i>this&lt;/i> ProAct.Array.
+   *
+   * @memberof ProAct.Array
+   * @instance
+   * @method pindexOf
+   * @param {Object} searchElement
+   *      Element to locate in the ProAct.Array.
+   * @param {Number} fromIndex
+   *      Default: 0 (Entire array is searched)
+   *      &lt;p>
+   *        The index to start the search at.
+   *        If the index is greater than or equal to the ProAct.Array's length, -1 is returned,
+   *        which means the array will not be searched.
+   *        If the provided index value is a negative number,
+   *        it is taken as the offset from the end of the ProAct.Array.
+   *      &lt;/p>
+   *      &lt;p>
+   *        Note: if the provided index is negative, the ProAct.Array is still searched from front to back.
+   *        If the calculated index is less than 0, then the whole ProAct.Array will be searched.
+   *      &lt;/p>
+   * @return {ProAct.Val}
+   *      A {@link ProAct.Val} instance with value, the index of the searched element or '-1' if it is not found in &lt;i>this&lt;/i> ProAct.Array.
+   * @see {@link ProAct.ArrayCore#addCaller}
+   * @see {@link ProAct.Val}
+   * @see {@link ProAct.Array.Listeners.indexOf}
+   */
   pindexOf: function () {
     var val = new P.Val(indexOf.apply(this._array, arguments));
     this.core.on(pArrayLs.indexOf(val, this, arguments));
 
     return val;
   },
+
+  /**
+   * The &lt;b>lastIndexOf()&lt;/b> method returns the last index at which a given element can be found in the ProAct.Array, or -1 if it is not present.
+   * The ProAct.Array is searched backwards, starting at &lt;i>fromIndex&lt;/i>.
+   * &lt;p>
+   *  This method adds the {@link ProAct.currentCaller} as a listener to both 'index' type and 'length' type of changes.
+   * &lt;/p>
+   *
+   * @memberof ProAct.Array
+   * @instance
+   * @method lastIndexOf
+   * @param {Object} searchElement
+   *      Element to locate in the ProAct.Array.
+   * @param {Number} fromIndex
+   *      &lt;p>
+   *        The index at which to start searching backwards.
+   *        Defaults to the ProAct.Array's length, i.e. the whole array will be searched.
+   *        If the index is greater than or equal to the length of the ProAct.Array, the whole ProAct.Array will be searched.
+   *        If negative, it is taken as the offset from the end of the ProAct.Array.
+   *      &lt;/p>
+   *      &lt;p>
+   *        Note that even when the index is negative,
+   *        the ProAct.Array is still searched from back to front.
+   *        If the calculated index is less than 0, -1 is returned, i.e. the ProAct.Array will not be searched.
+   *      &lt;/p>
+   * @return {Number}
+   *      The index of the searched backwards element or '-1' if it is not found in &lt;i>this&lt;/i> ProAct.Array.
+   * @see {@link ProAct.ArrayCore#addCaller}
+   */
   lastIndexOf: function () {
     this.core.addCaller();
 
     return lastIndexOf.apply(this._array, arguments);
   },
+
+  /**
+   * Does the same as the {@link ProAct.Array#lastIndexOf} method, but the result is a {@link ProAct.Val} depending on changes on &lt;i>this&lt;/i> ProAct.Array.
+   *
+   * @memberof ProAct.Array
+   * @instance
+   * @method plastindexOf
+   * @param {Object} searchElement
+   *      Element to locate in the ProAct.Array.
+   * @param {Number} fromIndex
+   *      &lt;p>
+   *        The index at which to start searching backwards.
+   *        Defaults to the ProAct.Array's length, i.e. the whole array will be searched.
+   *        If the index is greater than or equal to the length of the ProAct.Array, the whole ProAct.Array will be searched.
+   *        If negative, it is taken as the offset from the end of the ProAct.Array.
+   *      &lt;/p>
+   *      &lt;p>
+   *        Note that even when the index is negative,
+   *        the ProAct.Array is still searched from back to front.
+   *        If the calculated index is less than 0, -1 is returned, i.e. the ProAct.Array will not be searched.
+   *      &lt;/p>
+   * @return {ProAct.Val}
+   *      A {@link ProAct.Val} instance with value, the index of the backwards searched element or '-1' if it is not found in &lt;i>this&lt;/i> ProAct.Array.
+   * @see {@link ProAct.ArrayCore#addCaller}
+   * @see {@link ProAct.Val}
+   * @see {@link ProAct.Array.Listeners.lastIndexOf}
+   */
   plastindexOf: function () {
     var val = new P.Val(lastIndexOf.apply(this._array, arguments));
     this.core.on(pArrayLs.lastIndexOf(val, this, arguments));
 
     return val;
   },
+
+  /**
+   * The &lt;b>join()&lt;/b> method joins all elements of an ProAct.Array into a string.
+   * &lt;p>
+   *  This method adds the {@link ProAct.currentCaller} as a listener to both 'index' type and 'length' type of changes.
+   * &lt;/p>
+   *
+   * @memberof ProAct.Array
+   * @instance
+   * @method join
+   * @param {String} separator
+   *      Specifies a string to separate each element of the ProAct.
+   *      The separator is converted to a string if necessary.
+   *      &lt;p>
+   *       If omitted, the ProAct.Array elements are separated with a comma.
+   *      &lt;/p>
+   * @return {String}
+   *      A string representation of all the elements in &lt;i>this&lt;/i> ProAct.Array, separated by the provided &lt;i>separator&lt;/i>.
+   * @see {@link ProAct.ArrayCore#addCaller}
+   */
   join: function () {
     this.core.addCaller();
 
     return join.apply(this._array, arguments);
   },
+
+  /**
+   * Does the same as the {@link ProAct.Array#join} method, but the result is a {@link ProAct.Val} depending on changes on &lt;i>this&lt;/i> ProAct.Array.
+   *
+   * @memberof ProAct.Array
+   * @instance
+   * @method pjoin
+   * @param {String} separator
+   *      Specifies a string to separate each element of the ProAct.
+   *      The separator is converted to a string if necessary.
+   *      &lt;p>
+   *       If omitted, the ProAct.Array elements are separated with a comma.
+   *      &lt;/p>
+   * @return {ProAct.Val}
+   *      A {@link ProAct.Val} instance with value : string representation of all the elements in &lt;i>this&lt;/i> ProAct.Array, separated by the provided &lt;i>separator&lt;/i>.
+   * @see {@link ProAct.ArrayCore#addCaller}
+   * @see {@link ProAct.ArrayCore#preduce}
+   * @see {@link ProAct.Val}
+   */
   pjoin: function (separator) {
     var reduced = this.preduce(function (i, el) {
       return i + separator + el;
@@ -494,25 +716,101 @@ ProAct.Array.prototype = pArrayProto = P.U.ex(Object.create(arrayProto), {
     });
     return res;
   },
+
+  /**
+   * The &lt;b>toLocaleString()&lt;/b> method returns a string representing the elements of the ProAct.Array.
+   * The elements are converted to Strings using their toLocaleString methods and these Strings are separated by a locale-specific String (such as a comma ",").
+   * &lt;p>
+   *  This method adds the {@link ProAct.currentCaller} as a listener to both 'index' type and 'length' type of changes.
+   * &lt;/p>
+   *
+   * @memberof ProAct.Array
+   * @instance
+   * @method toLocaleString
+   * @return {String}
+   *      Locale-specific string representing the elements of &lt;i>this&lt;/i> ProAct.Array.
+   * @see {@link ProAct.ArrayCore#addCaller}
+   */
   toLocaleString: function () {
     this.core.addCaller();
 
     return toLocaleString.apply(this._array, arguments);
   },
+
+  /**
+   * The &lt;b>toString()&lt;/b> method returns a string representing the specified ProAct.Array and its elements.
+   * The elements are converted to Strings using their toLocaleString methods and these Strings are separated by a locale-specific String (such as a comma ",").
+   * &lt;p>
+   *  This method adds the {@link ProAct.currentCaller} as a listener to both 'index' type and 'length' type of changes.
+   * &lt;/p>
+   *
+   * @memberof ProAct.Array
+   * @instance
+   * @method toString
+   * @return {String}
+   *      A string representing the elements of &lt;i>this&lt;/i> ProAct.Array.
+   * @see {@link ProAct.ArrayCore#addCaller}
+   */
   toString: function () {
     this.core.addCaller();
 
     return toString.apply(this._array, arguments);
   },
+
+  /**
+   * Returns the result of {@link ProAct.Array#toArray}.
+   *
+   * @memberof ProAct.Array
+   * @instance
+   * @method valueOf
+   * @return {Array}
+   *        This ProAct.Array converted to plain JavaScript array.
+   * @see {@link ProAct.Array#toArray}
+   */
   valueOf: function () {
     return this.toArray();
   },
+
+  /**
+   * The &lt;b>slice()&lt;/b> method returns a shallow copy of a portion of &lt;i>this&lt;/i> ProAct.Array into a new ProAct.Array object.
+   * &lt;p>
+   *  The result ProAct.Array is dependent on &lt;i>this&lt;/i>, so if &lt;i>this&lt;/i> changes, the slice resut will be updated.
+   * &lt;/p>
+   *
+   * @memberof ProAct.Array
+   * @instance
+   * @method slice
+   * @param {Number} begin
+   *      Zero-based index at which to begin extraction.
+   *      As a negative index, begin indicates an offset from the end of the sequence. slice(-2) extracts the last two elements in the sequence.
+   *      If begin is omitted, slice begins from index 0.
+   * @param {Number} end
+   *      Zero-based index at which to end extraction. slice extracts up to but not including end.
+   *      slice(1,4) extracts the second element up to the fourth element (elements indexed 1, 2, and 3).
+   *      As a negative index, end indicates an offset from the end of the sequence. slice(2,-1) extracts the third element through the second-to-last element in the sequence.
+   *      If end is omitted, slice extracts to the end of the sequence.
+   * @return {ProAct.Array}
+   *      A portion of &lt;i>this&lt;/i> ProAct.Array, dependent on it.
+   * @see {@link ProAct.Array.Listeners#slice}
+   */
   slice: function () {
     var sliced = new P.A(slice.apply(this._array, arguments));
     this.core.on(pArrayLs.slice(sliced, this, arguments));
 
     return sliced;
   },
+
+  /**
+   * The &lt;b>reverse()&lt;/b> method reverses an ProAct.Array in place. The first array element becomes the last and the last becomes the first.
+   * &lt;p>
+   *  This method notifies the 'index' listeners attached to &lt;i>this&lt;/i>' {@link ProAct.ArrayCore}.
+   * &lt;/p>
+   *
+   * @memberof ProAct.Array
+   * @instance
+   * @method reverse
+   * @see {@link ProAct.ArrayCore#update}
+   */
   reverse: function () {
     if (this._array.length === 0) {
       return;
@@ -522,6 +820,21 @@ ProAct.Array.prototype = pArrayProto = P.U.ex(Object.create(arrayProto), {
     this.core.update(null, 'index', [pArrayOps.reverse, -1, null, null]);
     return reversed;
   },
+
+  /**
+   * The &lt;b>sort()&lt;/b> method sorts the elements of &lt;i>this&lt;/i> ProAct.Array in place and returns the &lt;i>this&lt;/i>. The sort is not necessarily stable.
+   * The default sort order is according to string Unicode code points.
+   * &lt;p>
+   *  This method notifies the 'index' listeners attached to &lt;i>this&lt;/i>' {@link ProAct.ArrayCore}.
+   * &lt;/p>
+   *
+   * @memberof ProAct.Array
+   * @instance
+   * @method sort
+   * @return {ProAct.Array}
+   *      &lt;i>this&lt;/i>
+   * @see {@link ProAct.ArrayCore#update}
+   */
   sort: function () {
     if (this._array.length === 0) {
       return;
@@ -530,8 +843,39 @@ ProAct.Array.prototype = pArrayProto = P.U.ex(Object.create(arrayProto), {
         args = arguments;
 
     this.core.update(null, 'index', [pArrayOps.sort, -1, null, args]);
-    return sorted;
+    return this;
   },
+
+  /**
+   * The &lt;b>splice()&lt;/b> method changes the content of &lt;i>this&lt;/i> ProAct.Array, adding new elements while removing old elements.
+   * &lt;p>
+   *  This method may notify the 'index' listeners or the 'length' listeners, or even the both types of listeners, attached to &lt;i>this&lt;/i>' {@link ProAct.ArrayCore}, depending
+   *  on what the splicing does - removing, adding or changing elements (removing and adding).
+   * &lt;/p>
+   *
+   * @memberof ProAct.Array
+   * @instance
+   * @method splice
+   * @param {Number} index
+   *      Index at which to start changing the ProAct.Array.
+   *      If greater than the length of the ProAct.Array, actual starting index will be set to the length of the &lt;i>this&lt;/i>.
+   *      If negative, will begin that many elements from the end.
+   * @param {Number} howMany
+   *      An integer indicating the number of old ProAct.Array elements to remove.
+   *      If howMany is 0, no elements are removed. In this case, you should specify at least one new element.
+   *      If howMany is greater than the number of elements left in the ProAct.Array starting at index,
+   *      then all of the elements through the end of the ProAct.Array will be deleted.
+   * @param [...]
+   *      &lt;b>element1, ..., elementN&lt;/b>:
+   *      &lt;p>
+   *        The elements to add to the ProAct.Array. If you don't specify any elements, splice simply removes elements from the ProAct.Array.
+   *      &lt;/p>
+   * @return {ProAct.Array}
+   *      An ProAct.Array containing the removed elements.
+   *      If only one element is removed, an ProAct.Array of one element is returned.
+   *      If no elements are removed, an empty ProAct.Array is returned.
+   * @see {@link ProAct.ArrayCore#updateSplice}
+   */
   splice: function (index, howMany) {
     var oldLn = this._array.length,
         spliced = splice.apply(this._array, arguments),
@@ -556,6 +900,23 @@ ProAct.Array.prototype = pArrayProto = P.U.ex(Object.create(arrayProto), {
     this.core.updateSplice(index, spliced, newItems);
     return new P.A(spliced);
   },
+
+  /**
+   * The &lt;b>pop()&lt;/b> method removes the last element from an ProAct.Array and returns that element.
+   * &lt;p>
+   *  This method notifies the 'length' listeners, attached to &lt;i>this&lt;/i>' {@link ProAct.ArrayCore}.
+   * &lt;/p>
+   * &lt;p>
+   *  This method removes the special index accessor of the deleted element's index - the last index.
+   * &lt;/p>
+   *
+   * @memberof ProAct.Array
+   * @instance
+   * @method pop
+   * @return {Object}
+   *      The removed element. If &lt;i>this&lt;/i> ProAct.Array is empty the result is undefined.
+   * @see {@link ProAct.ArrayCore#update}
+   */
   pop: function () {
     if (this._array.length === 0) {
       return;
@@ -568,6 +929,27 @@ ProAct.Array.prototype = pArrayProto = P.U.ex(Object.create(arrayProto), {
 
     return popped;
   },
+
+  /**
+   * The &lt;b>push()&lt;/b> method adds one or more elements to the end of an ProAct.Array and returns the new length of the ProAct.Array.
+   * &lt;p>
+   *  This method notifies the 'length' listeners, attached to &lt;i>this&lt;/i>' {@link ProAct.ArrayCore}.
+   * &lt;/p>
+   * &lt;p>
+   *  This method defines new index accessors for the elements on the new indexes. So these indexes can be set and read, and
+   *  will attatch listeners to the {@link ProAct.ArrayCore} or update them.
+   * &lt;/p>
+   *
+   * @memberof ProAct.Array
+   * @instance
+   * @method push
+   * @param [...]
+   *      &lt;b>element1, ..., elementN&lt;/b> : The elements to add to the end of the array.
+   * @return {Object}
+   *      The new length property of the &lt;i>this&lt;/i>.
+   * @see {@link ProAct.ArrayCore#update}
+   * @see {@link ProAct.ArrayCore#defineIndexProp}
+   */
   push: function () {
     var vals = arguments, i, ln = arguments.length, index;
 
@@ -581,6 +963,23 @@ ProAct.Array.prototype = pArrayProto = P.U.ex(Object.create(arrayProto), {
 
     return this._array.length;
   },
+
+  /**
+   * The &lt;b>shift()&lt;/b> method removes the first element from an ProAct.Array and returns that element. This method changes the length of the ProAct.Array.
+   * &lt;p>
+   *  This method notifies the 'length' listeners, attached to &lt;i>this&lt;/i>' {@link ProAct.ArrayCore}.
+   * &lt;/p>
+   * &lt;p>
+   *  This method removes the special index accessor of the deleted element's index - the zero index.
+   * &lt;/p>
+   *
+   * @memberof ProAct.Array
+   * @instance
+   * @method shift
+   * @return {Object}
+   *      The removed element. If &lt;i>this&lt;/i> ProAct.Array is empty the result is undefined.
+   * @see {@link ProAct.ArrayCore#update}
+   */
   shift: function () {
     if (this._array.length === 0) {
       return;
@@ -593,6 +992,27 @@ ProAct.Array.prototype = pArrayProto = P.U.ex(Object.create(arrayProto), {
 
     return shifted;
   },
+
+  /**
+   * The &lt;b>unshift()&lt;/b> method adds one or more elements to the beginning of an ProAct.Array and returns the new length of the ProAct.Array.
+   * &lt;p>
+   *  This method notifies the 'length' listeners, attached to &lt;i>this&lt;/i>' {@link ProAct.ArrayCore}.
+   * &lt;/p>
+   * &lt;p>
+   *  This method defines new index accessors for the elements on the new indexes. So these indexes can be set and read, and
+   *  will attatch listeners to the {@link ProAct.ArrayCore} or update them.
+   * &lt;/p>
+   *
+   * @memberof ProAct.Array
+   * @instance
+   * @method unshift
+   * @param [...]
+   *      &lt;b>element1, ..., elementN&lt;/b> : The elements to add to the front of the array.
+   * @return {Object}
+   *      The new length property of the &lt;i>this&lt;/i>.
+   * @see {@link ProAct.ArrayCore#update}
+   * @see {@link ProAct.ArrayCore#defineIndexProp}
+   */
   unshift: function () {
     var vals = slice.call(arguments, 0), i, ln = arguments.length,
         array = this._array;
@@ -606,6 +1026,20 @@ ProAct.Array.prototype = pArrayProto = P.U.ex(Object.create(arrayProto), {
 
     return array.length;
   },
+
+  /**
+   * Generates an plain array representation of &lt;i>this&lt;/i>.
+   * &lt;p>
+   *  The returned array is shallow copy of &lt;i>this&lt;/i>' content, so if modified with methods like 'push' or 'pop',
+   *  &lt;i>this&lt;/i> content will not be modified
+   * &lt;/p>
+   *
+   * @memberof ProAct.Array
+   * @instance
+   * @method toArray
+   * @return {Array}
+   *      An plain JavaScript array representation of &lt;i>this&lt;/i>.
+   */
   toArray: function () {
     var result = [], i, ar = this._array, ln = ar.length, el,
         isPA = P.U.isProArray;
@@ -621,6 +1055,16 @@ ProAct.Array.prototype = pArrayProto = P.U.ex(Object.create(arrayProto), {
 
     return result;
   },
+
+  /**
+   * Generates a JSON representation of &lt;i>this&lt;/i>.
+   *
+   * @memberof ProAct.Array
+   * @instance
+   * @method toJSON
+   * @return {String}
+   *      A JSON array representing &lt;i>this&lt;/i>.
+   */
   toJSON: function () {
     return JSON.stringify(this._array);
   }
@@ -641,7 +1085,7 @@ ProAct.Array.prototype = pArrayProto = P.U.ex(Object.create(arrayProto), {
 <br clear="both">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.2</a> on Tue Jul 29 2014 19:32:21 GMT+0300 (EEST)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.2</a> on Wed Jul 30 2014 07:01:19 GMT+0300 (EEST)
 </footer>
 
 <script> prettyPrint(); </script>

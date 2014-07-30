@@ -1110,6 +1110,525 @@
         
             
 <dt>
+    <h4 class="name" id="indexOf"><span class="type-signature"></span>indexOf<span class="signature">(searchElement, fromIndex)</span><span class="type-signature"> &rarr; {Number}</span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        The <b>indexOf()</b> method returns the first index at which a given element can be found in the ProAct.Array, or -1 if it is not present.
+<p>
+ This method adds the <a href="ProAct.html#currentCaller">ProAct.currentCaller</a> as a listener to both 'index' type and 'length' type of changes.
+</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>searchElement</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">Element to locate in the ProAct.Array.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>fromIndex</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">Number</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">Default: 0 (Entire array is searched)
+     <p>
+       The index to start the search at.
+       If the index is greater than or equal to the ProAct.Array's length, -1 is returned,
+       which means the array will not be searched.
+       If the provided index value is a negative number,
+       it is taken as the offset from the end of the ProAct.Array.
+     </p>
+     <p>
+       Note: if the provided index is negative, the ProAct.Array is still searched from front to back.
+       If the calculated index is less than 0, then the whole ProAct.Array will be searched.
+     </p></td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="array.js.html">arrays/array.js</a>, <a href="array.js.html#line503">line 503</a>
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    <dt class="tag-see">See:</dt>
+    <dd class="tag-see">
+        <ul>
+            <li><a href="ProAct.ArrayCore.html#addCaller">ProAct.ArrayCore#addCaller</a></li>
+        </ul>
+    </dd>
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    The index of the searched element or '-1' if it is not found in <i>this</i> ProAct.Array.
+</div>
+
+
+
+<dl>
+	<dt>
+		Type
+	</dt>
+	<dd>
+		
+<span class="param-type">Number</span>
+
+
+	</dd>
+</dl>
+
+        
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="join"><span class="type-signature"></span>join<span class="signature">(separator)</span><span class="type-signature"> &rarr; {String}</span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        The <b>join()</b> method joins all elements of an ProAct.Array into a string.
+<p>
+ This method adds the <a href="ProAct.html#currentCaller">ProAct.currentCaller</a> as a listener to both 'index' type and 'length' type of changes.
+</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>separator</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">Specifies a string to separate each element of the ProAct.
+     The separator is converted to a string if necessary.
+     <p>
+      If omitted, the ProAct.Array elements are separated with a comma.
+     </p></td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="array.js.html">arrays/array.js</a>, <a href="array.js.html#line638">line 638</a>
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    <dt class="tag-see">See:</dt>
+    <dd class="tag-see">
+        <ul>
+            <li><a href="ProAct.ArrayCore.html#addCaller">ProAct.ArrayCore#addCaller</a></li>
+        </ul>
+    </dd>
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    A string representation of all the elements in <i>this</i> ProAct.Array, separated by the provided <i>separator</i>.
+</div>
+
+
+
+<dl>
+	<dt>
+		Type
+	</dt>
+	<dd>
+		
+<span class="param-type">String</span>
+
+
+	</dd>
+</dl>
+
+        
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="lastIndexOf"><span class="type-signature"></span>lastIndexOf<span class="signature">(searchElement, fromIndex)</span><span class="type-signature"> &rarr; {Number}</span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        The <b>lastIndexOf()</b> method returns the last index at which a given element can be found in the ProAct.Array, or -1 if it is not present.
+The ProAct.Array is searched backwards, starting at <i>fromIndex</i>.
+<p>
+ This method adds the <a href="ProAct.html#currentCaller">ProAct.currentCaller</a> as a listener to both 'index' type and 'length' type of changes.
+</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>searchElement</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">Element to locate in the ProAct.Array.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>fromIndex</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">Number</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last"><p>
+       The index at which to start searching backwards.
+       Defaults to the ProAct.Array's length, i.e. the whole array will be searched.
+       If the index is greater than or equal to the length of the ProAct.Array, the whole ProAct.Array will be searched.
+       If negative, it is taken as the offset from the end of the ProAct.Array.
+     </p>
+     <p>
+       Note that even when the index is negative,
+       the ProAct.Array is still searched from back to front.
+       If the calculated index is less than 0, -1 is returned, i.e. the ProAct.Array will not be searched.
+     </p></td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="array.js.html">arrays/array.js</a>, <a href="array.js.html#line571">line 571</a>
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    <dt class="tag-see">See:</dt>
+    <dd class="tag-see">
+        <ul>
+            <li><a href="ProAct.ArrayCore.html#addCaller">ProAct.ArrayCore#addCaller</a></li>
+        </ul>
+    </dd>
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    The index of the searched backwards element or '-1' if it is not found in <i>this</i> ProAct.Array.
+</div>
+
+
+
+<dl>
+	<dt>
+		Type
+	</dt>
+	<dd>
+		
+<span class="param-type">Number</span>
+
+
+	</dd>
+</dl>
+
+        
+    
+    
+</dd>
+
+        
+            
+<dt>
     <h4 class="name" id="map"><span class="type-signature"></span>map<span class="signature">(fun, thisArg)</span><span class="type-signature"> &rarr; {<a href="ProAct.Array.html">ProAct.Array</a>}</span></h4>
     
     
@@ -1460,6 +1979,989 @@
         
             
 <dt>
+    <h4 class="name" id="pindexOf"><span class="type-signature"></span>pindexOf<span class="signature">(searchElement, fromIndex)</span><span class="type-signature"> &rarr; {ProAct.Val}</span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Does the same as the <a href="ProAct.Array.html#indexOf">ProAct.Array#indexOf</a> method, but the result is a ProAct.Val depending on changes on <i>this</i> ProAct.Array.
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>searchElement</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">Element to locate in the ProAct.Array.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>fromIndex</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">Number</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">Default: 0 (Entire array is searched)
+     <p>
+       The index to start the search at.
+       If the index is greater than or equal to the ProAct.Array's length, -1 is returned,
+       which means the array will not be searched.
+       If the provided index value is a negative number,
+       it is taken as the offset from the end of the ProAct.Array.
+     </p>
+     <p>
+       Note: if the provided index is negative, the ProAct.Array is still searched from front to back.
+       If the calculated index is less than 0, then the whole ProAct.Array will be searched.
+     </p></td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="array.js.html">arrays/array.js</a>, <a href="array.js.html#line537">line 537</a>
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    <dt class="tag-see">See:</dt>
+    <dd class="tag-see">
+        <ul>
+            <li><a href="ProAct.ArrayCore.html#addCaller">ProAct.ArrayCore#addCaller</a></li>
+        
+            <li>ProAct.Val</li>
+        
+            <li>ProAct.Array.Listeners.indexOf</li>
+        </ul>
+    </dd>
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    A ProAct.Val instance with value, the index of the searched element or '-1' if it is not found in <i>this</i> ProAct.Array.
+</div>
+
+
+
+<dl>
+	<dt>
+		Type
+	</dt>
+	<dd>
+		
+<span class="param-type">ProAct.Val</span>
+
+
+	</dd>
+</dl>
+
+        
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="pjoin"><span class="type-signature"></span>pjoin<span class="signature">(separator)</span><span class="type-signature"> &rarr; {ProAct.Val}</span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Does the same as the <a href="ProAct.Array.html#join">ProAct.Array#join</a> method, but the result is a ProAct.Val depending on changes on <i>this</i> ProAct.Array.
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>separator</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">Specifies a string to separate each element of the ProAct.
+     The separator is converted to a string if necessary.
+     <p>
+      If omitted, the ProAct.Array elements are separated with a comma.
+     </p></td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="array.js.html">arrays/array.js</a>, <a href="array.js.html#line663">line 663</a>
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    <dt class="tag-see">See:</dt>
+    <dd class="tag-see">
+        <ul>
+            <li><a href="ProAct.ArrayCore.html#addCaller">ProAct.ArrayCore#addCaller</a></li>
+        
+            <li>ProAct.ArrayCore#preduce</li>
+        
+            <li>ProAct.Val</li>
+        </ul>
+    </dd>
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    A ProAct.Val instance with value : string representation of all the elements in <i>this</i> ProAct.Array, separated by the provided <i>separator</i>.
+</div>
+
+
+
+<dl>
+	<dt>
+		Type
+	</dt>
+	<dd>
+		
+<span class="param-type">ProAct.Val</span>
+
+
+	</dd>
+</dl>
+
+        
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="plastindexOf"><span class="type-signature"></span>plastindexOf<span class="signature">(searchElement, fromIndex)</span><span class="type-signature"> &rarr; {ProAct.Val}</span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Does the same as the <a href="ProAct.Array.html#lastIndexOf">ProAct.Array#lastIndexOf</a> method, but the result is a ProAct.Val depending on changes on <i>this</i> ProAct.Array.
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>searchElement</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">Element to locate in the ProAct.Array.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>fromIndex</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">Number</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last"><p>
+       The index at which to start searching backwards.
+       Defaults to the ProAct.Array's length, i.e. the whole array will be searched.
+       If the index is greater than or equal to the length of the ProAct.Array, the whole ProAct.Array will be searched.
+       If negative, it is taken as the offset from the end of the ProAct.Array.
+     </p>
+     <p>
+       Note that even when the index is negative,
+       the ProAct.Array is still searched from back to front.
+       If the calculated index is less than 0, -1 is returned, i.e. the ProAct.Array will not be searched.
+     </p></td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="array.js.html">arrays/array.js</a>, <a href="array.js.html#line605">line 605</a>
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    <dt class="tag-see">See:</dt>
+    <dd class="tag-see">
+        <ul>
+            <li><a href="ProAct.ArrayCore.html#addCaller">ProAct.ArrayCore#addCaller</a></li>
+        
+            <li>ProAct.Val</li>
+        
+            <li>ProAct.Array.Listeners.lastIndexOf</li>
+        </ul>
+    </dd>
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    A ProAct.Val instance with value, the index of the backwards searched element or '-1' if it is not found in <i>this</i> ProAct.Array.
+</div>
+
+
+
+<dl>
+	<dt>
+		Type
+	</dt>
+	<dd>
+		
+<span class="param-type">ProAct.Val</span>
+
+
+	</dd>
+</dl>
+
+        
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="pop"><span class="type-signature"></span>pop<span class="signature">()</span><span class="type-signature"> &rarr; {Object}</span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        The <b>pop()</b> method removes the last element from an ProAct.Array and returns that element.
+<p>
+ This method notifies the 'length' listeners, attached to <i>this</i>' <a href="ProAct.ArrayCore.html">ProAct.ArrayCore</a>.
+</p>
+<p>
+ This method removes the special index accessor of the deleted element's index - the last index.
+</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="array.js.html">arrays/array.js</a>, <a href="array.js.html#line877">line 877</a>
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    <dt class="tag-see">See:</dt>
+    <dd class="tag-see">
+        <ul>
+            <li><a href="ProAct.ArrayCore.html#update">ProAct.ArrayCore#update</a></li>
+        </ul>
+    </dd>
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    The removed element. If <i>this</i> ProAct.Array is empty the result is undefined.
+</div>
+
+
+
+<dl>
+	<dt>
+		Type
+	</dt>
+	<dd>
+		
+<span class="param-type">Object</span>
+
+
+	</dd>
+</dl>
+
+        
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="preduce"><span class="type-signature"></span>preduce<span class="signature">(fun, initialValue)</span><span class="type-signature"> &rarr; {ProAct.Val}</span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Does the same as the <a href="ProAct.Array.html#reduce">ProAct.Array#reduce</a> method, but the result is a ProAct.Val depending on changes on <i>this</i> ProAct.Array.
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>fun</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">Function to execute on each value in the array, taking four arguments:
+     <ol>
+       <li><b>previousValue</b> : The value previously returned in the last invocation of the <i>fun</i>, or <i>initialValue</i>, if supplied.</li>
+       <li><b>currentValue</b> : The current element being processed in the ProAct.Array.</li>
+       <li><b>index</b> : The index of the current element being processed in the ProAct.Array.</li>
+       <li><b>array</b> : The array reduce was called upon.</li>
+     </ol></td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>initialValue</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">Object to use as the first argument to the first call of the <i>fun</i> .</td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="array.js.html">arrays/array.js</a>, <a href="array.js.html#line416">line 416</a>
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    <dt class="tag-see">See:</dt>
+    <dd class="tag-see">
+        <ul>
+            <li><a href="ProAct.ArrayCore.html#addCaller">ProAct.ArrayCore#addCaller</a></li>
+        
+            <li>ProAct.Val</li>
+        
+            <li>ProAct.Array.Listeners.reduce</li>
+        </ul>
+    </dd>
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    ProAct.Val with value of the last <i>fun</i> invocation.
+</div>
+
+
+
+<dl>
+	<dt>
+		Type
+	</dt>
+	<dd>
+		
+<span class="param-type">ProAct.Val</span>
+
+
+	</dd>
+</dl>
+
+        
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="preduceRight"><span class="type-signature"></span>preduceRight<span class="signature">(fun, initialValue)</span><span class="type-signature"> &rarr; {ProAct.Val}</span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Does the same as the <a href="ProAct.Array.html#reduceRight">ProAct.Array#reduceRight</a> method, but the result is a ProAct.Val depending on changes on <i>this</i> ProAct.Array.
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>fun</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">Function to execute on each value in the array, taking four arguments:
+     <ol>
+       <li><b>previousValue</b> : The value previously returned in the last invocation of the <i>fun</i>, or <i>initialValue</i>, if supplied.</li>
+       <li><b>currentValue</b> : The current element being processed in the ProAct.Array.</li>
+       <li><b>index</b> : The index of the current element being processed in the ProAct.Array.</li>
+       <li><b>array</b> : The array reduce was called upon.</li>
+     </ol></td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>initialValue</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">Object to use as the first argument to the first call of the <i>fun</i> .</td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="array.js.html">arrays/array.js</a>, <a href="array.js.html#line474">line 474</a>
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    <dt class="tag-see">See:</dt>
+    <dd class="tag-see">
+        <ul>
+            <li><a href="ProAct.ArrayCore.html#addCaller">ProAct.ArrayCore#addCaller</a></li>
+        
+            <li>ProAct.Val</li>
+        
+            <li>ProAct.Array.Listeners.reduceRight</li>
+        </ul>
+    </dd>
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    ProAct.Val with value of the last <i>fun</i> invocation.
+</div>
+
+
+
+<dl>
+	<dt>
+		Type
+	</dt>
+	<dd>
+		
+<span class="param-type">ProAct.Val</span>
+
+
+	</dd>
+</dl>
+
+        
+    
+    
+</dd>
+
+        
+            
+<dt>
     <h4 class="name" id="psome"><span class="type-signature"></span>psome<span class="signature">(fun, thisArg)</span><span class="type-signature"> &rarr; {ProAct.Val}</span></h4>
     
     
@@ -1620,6 +3122,168 @@
 	<dd>
 		
 <span class="param-type">ProAct.Val</span>
+
+
+	</dd>
+</dl>
+
+        
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="push"><span class="type-signature"></span>push<span class="signature">()</span><span class="type-signature"> &rarr; {Object}</span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        The <b>push()</b> method adds one or more elements to the end of an ProAct.Array and returns the new length of the ProAct.Array.
+<p>
+ This method notifies the 'length' listeners, attached to <i>this</i>' <a href="ProAct.ArrayCore.html">ProAct.ArrayCore</a>.
+</p>
+<p>
+ This method defines new index accessors for the elements on the new indexes. So these indexes can be set and read, and
+ will attatch listeners to the <a href="ProAct.ArrayCore.html">ProAct.ArrayCore</a> or update them.
+</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		<th>Argument</th>
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>...</code></td>
+            
+            
+            <td class="type">
+            
+            </td>
+            
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+                    
+                
+                    
+                
+                </td>
+            
+            
+            
+            
+            <td class="description last"><b>element1, ..., elementN</b> : The elements to add to the end of the array.</td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="array.js.html">arrays/array.js</a>, <a href="array.js.html#line906">line 906</a>
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    <dt class="tag-see">See:</dt>
+    <dd class="tag-see">
+        <ul>
+            <li><a href="ProAct.ArrayCore.html#update">ProAct.ArrayCore#update</a></li>
+        
+            <li><a href="ProAct.ArrayCore.html#defineIndexProp">ProAct.ArrayCore#defineIndexProp</a></li>
+        </ul>
+    </dd>
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    The new length property of the <i>this</i>.
+</div>
+
+
+
+<dl>
+	<dt>
+		Type
+	</dt>
+	<dd>
+		
+<span class="param-type">Object</span>
 
 
 	</dd>
@@ -1811,6 +3475,544 @@
         
             
 <dt>
+    <h4 class="name" id="reduceRight"><span class="type-signature"></span>reduceRight<span class="signature">(fun, initialValue)</span><span class="type-signature"> &rarr; {Object}</span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        The <b>reduceRight()</b> method applies a function against an accumulator and each value of the ProAct.Array (from right-to-left) as to reduce it to a single value.
+<p>
+ This method adds the <a href="ProAct.html#currentCaller">ProAct.currentCaller</a> as a listener to both 'index' type and 'length' type of changes.
+</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>fun</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">Function to execute on each value in the array, taking four arguments:
+     <ol>
+       <li><b>previousValue</b> : The value previously returned in the last invocation of the <i>fun</i>, or <i>initialValue</i>, if supplied.</li>
+       <li><b>currentValue</b> : The current element being processed in the ProAct.Array.</li>
+       <li><b>index</b> : The index of the current element being processed in the ProAct.Array.</li>
+       <li><b>array</b> : The array reduce was called upon.</li>
+     </ol></td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>initialValue</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">Object to use as the first argument to the first call of the <i>fun</i> .</td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="array.js.html">arrays/array.js</a>, <a href="array.js.html#line445">line 445</a>
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    <dt class="tag-see">See:</dt>
+    <dd class="tag-see">
+        <ul>
+            <li><a href="ProAct.ArrayCore.html#addCaller">ProAct.ArrayCore#addCaller</a></li>
+        </ul>
+    </dd>
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    The value of the last <i>fun</i> invocation.
+</div>
+
+
+
+<dl>
+	<dt>
+		Type
+	</dt>
+	<dd>
+		
+<span class="param-type">Object</span>
+
+
+	</dd>
+</dl>
+
+        
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="reverse"><span class="type-signature"></span>reverse<span class="signature">()</span><span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        The <b>reverse()</b> method reverses an ProAct.Array in place. The first array element becomes the last and the last becomes the first.
+<p>
+ This method notifies the 'index' listeners attached to <i>this</i>' <a href="ProAct.ArrayCore.html">ProAct.ArrayCore</a>.
+</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="array.js.html">arrays/array.js</a>, <a href="array.js.html#line776">line 776</a>
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    <dt class="tag-see">See:</dt>
+    <dd class="tag-see">
+        <ul>
+            <li><a href="ProAct.ArrayCore.html#update">ProAct.ArrayCore#update</a></li>
+        </ul>
+    </dd>
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="shift"><span class="type-signature"></span>shift<span class="signature">()</span><span class="type-signature"> &rarr; {Object}</span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        The <b>shift()</b> method removes the first element from an ProAct.Array and returns that element. This method changes the length of the ProAct.Array.
+<p>
+ This method notifies the 'length' listeners, attached to <i>this</i>' <a href="ProAct.ArrayCore.html">ProAct.ArrayCore</a>.
+</p>
+<p>
+ This method removes the special index accessor of the deleted element's index - the zero index.
+</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="array.js.html">arrays/array.js</a>, <a href="array.js.html#line940">line 940</a>
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    <dt class="tag-see">See:</dt>
+    <dd class="tag-see">
+        <ul>
+            <li><a href="ProAct.ArrayCore.html#update">ProAct.ArrayCore#update</a></li>
+        </ul>
+    </dd>
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    The removed element. If <i>this</i> ProAct.Array is empty the result is undefined.
+</div>
+
+
+
+<dl>
+	<dt>
+		Type
+	</dt>
+	<dd>
+		
+<span class="param-type">Object</span>
+
+
+	</dd>
+</dl>
+
+        
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="slice"><span class="type-signature"></span>slice<span class="signature">(begin, end)</span><span class="type-signature"> &rarr; {<a href="ProAct.Array.html">ProAct.Array</a>}</span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        The <b>slice()</b> method returns a shallow copy of a portion of <i>this</i> ProAct.Array into a new ProAct.Array object.
+<p>
+ The result ProAct.Array is dependent on <i>this</i>, so if <i>this</i> changes, the slice resut will be updated.
+</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>begin</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">Number</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">Zero-based index at which to begin extraction.
+     As a negative index, begin indicates an offset from the end of the sequence. slice(-2) extracts the last two elements in the sequence.
+     If begin is omitted, slice begins from index 0.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>end</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">Number</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">Zero-based index at which to end extraction. slice extracts up to but not including end.
+     slice(1,4) extracts the second element up to the fourth element (elements indexed 1, 2, and 3).
+     As a negative index, end indicates an offset from the end of the sequence. slice(2,-1) extracts the third element through the second-to-last element in the sequence.
+     If end is omitted, slice extracts to the end of the sequence.</td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="array.js.html">arrays/array.js</a>, <a href="array.js.html#line747">line 747</a>
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    <dt class="tag-see">See:</dt>
+    <dd class="tag-see">
+        <ul>
+            <li>ProAct.Array.Listeners#slice</li>
+        </ul>
+    </dd>
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    A portion of <i>this</i> ProAct.Array, dependent on it.
+</div>
+
+
+
+<dl>
+	<dt>
+		Type
+	</dt>
+	<dd>
+		
+<span class="param-type"><a href="ProAct.Array.html">ProAct.Array</a></span>
+
+
+	</dd>
+</dl>
+
+        
+    
+    
+</dd>
+
+        
+            
+<dt>
     <h4 class="name" id="some"><span class="type-signature"></span>some<span class="signature">(callback, thisArg)</span><span class="type-signature"> &rarr; {Boolean}</span></h4>
     
     
@@ -1980,6 +4182,987 @@
     
 </dd>
 
+        
+            
+<dt>
+    <h4 class="name" id="sort"><span class="type-signature"></span>sort<span class="signature">()</span><span class="type-signature"> &rarr; {<a href="ProAct.Array.html">ProAct.Array</a>}</span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        The <b>sort()</b> method sorts the elements of <i>this</i> ProAct.Array in place and returns the <i>this</i>. The sort is not necessarily stable.
+The default sort order is according to string Unicode code points.
+<p>
+ This method notifies the 'index' listeners attached to <i>this</i>' <a href="ProAct.ArrayCore.html">ProAct.ArrayCore</a>.
+</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="array.js.html">arrays/array.js</a>, <a href="array.js.html#line797">line 797</a>
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    <dt class="tag-see">See:</dt>
+    <dd class="tag-see">
+        <ul>
+            <li><a href="ProAct.ArrayCore.html#update">ProAct.ArrayCore#update</a></li>
+        </ul>
+    </dd>
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    <i>this</i>
+</div>
+
+
+
+<dl>
+	<dt>
+		Type
+	</dt>
+	<dd>
+		
+<span class="param-type"><a href="ProAct.Array.html">ProAct.Array</a></span>
+
+
+	</dd>
+</dl>
+
+        
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="splice"><span class="type-signature"></span>splice<span class="signature">(index, howMany)</span><span class="type-signature"> &rarr; {<a href="ProAct.Array.html">ProAct.Array</a>}</span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        The <b>splice()</b> method changes the content of <i>this</i> ProAct.Array, adding new elements while removing old elements.
+<p>
+ This method may notify the 'index' listeners or the 'length' listeners, or even the both types of listeners, attached to <i>this</i>' <a href="ProAct.ArrayCore.html">ProAct.ArrayCore</a>, depending
+ on what the splicing does - removing, adding or changing elements (removing and adding).
+</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		<th>Argument</th>
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>index</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">Number</span>
+
+
+            
+            </td>
+            
+            
+                <td class="attributes">
+                
+                    
+                
+                    
+                
+                </td>
+            
+            
+            
+            
+            <td class="description last">Index at which to start changing the ProAct.Array.
+     If greater than the length of the ProAct.Array, actual starting index will be set to the length of the <i>this</i>.
+     If negative, will begin that many elements from the end.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>howMany</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">Number</span>
+
+
+            
+            </td>
+            
+            
+                <td class="attributes">
+                
+                    
+                
+                    
+                
+                </td>
+            
+            
+            
+            
+            <td class="description last">An integer indicating the number of old ProAct.Array elements to remove.
+     If howMany is 0, no elements are removed. In this case, you should specify at least one new element.
+     If howMany is greater than the number of elements left in the ProAct.Array starting at index,
+     then all of the elements through the end of the ProAct.Array will be deleted.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>...</code></td>
+            
+            
+            <td class="type">
+            
+            </td>
+            
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+                    
+                
+                    
+                
+                </td>
+            
+            
+            
+            
+            <td class="description last"><b>element1, ..., elementN</b>:
+     <p>
+       The elements to add to the ProAct.Array. If you don't specify any elements, splice simply removes elements from the ProAct.Array.
+     </p></td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="array.js.html">arrays/array.js</a>, <a href="array.js.html#line822">line 822</a>
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    <dt class="tag-see">See:</dt>
+    <dd class="tag-see">
+        <ul>
+            <li><a href="ProAct.ArrayCore.html#updateSplice">ProAct.ArrayCore#updateSplice</a></li>
+        </ul>
+    </dd>
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    An ProAct.Array containing the removed elements.
+     If only one element is removed, an ProAct.Array of one element is returned.
+     If no elements are removed, an empty ProAct.Array is returned.
+</div>
+
+
+
+<dl>
+	<dt>
+		Type
+	</dt>
+	<dd>
+		
+<span class="param-type"><a href="ProAct.Array.html">ProAct.Array</a></span>
+
+
+	</dd>
+</dl>
+
+        
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="toArray"><span class="type-signature"></span>toArray<span class="signature">()</span><span class="type-signature"> &rarr; {Array}</span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Generates an plain array representation of <i>this</i>.
+<p>
+ The returned array is shallow copy of <i>this</i>' content, so if modified with methods like 'push' or 'pop',
+ <i>this</i> content will not be modified
+</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="array.js.html">arrays/array.js</a>, <a href="array.js.html#line1003">line 1003</a>
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    An plain JavaScript array representation of <i>this</i>.
+</div>
+
+
+
+<dl>
+	<dt>
+		Type
+	</dt>
+	<dd>
+		
+<span class="param-type">Array</span>
+
+
+	</dd>
+</dl>
+
+        
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="toJSON"><span class="type-signature"></span>toJSON<span class="signature">()</span><span class="type-signature"> &rarr; {String}</span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Generates a JSON representation of <i>this</i>.
+    </div>
+    
+
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="array.js.html">arrays/array.js</a>, <a href="array.js.html#line1032">line 1032</a>
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    A JSON array representing <i>this</i>.
+</div>
+
+
+
+<dl>
+	<dt>
+		Type
+	</dt>
+	<dd>
+		
+<span class="param-type">String</span>
+
+
+	</dd>
+</dl>
+
+        
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="toLocaleString"><span class="type-signature"></span>toLocaleString<span class="signature">()</span><span class="type-signature"> &rarr; {String}</span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        The <b>toLocaleString()</b> method returns a string representing the elements of the ProAct.Array.
+The elements are converted to Strings using their toLocaleString methods and these Strings are separated by a locale-specific String (such as a comma ",").
+<p>
+ This method adds the <a href="ProAct.html#currentCaller">ProAct.currentCaller</a> as a listener to both 'index' type and 'length' type of changes.
+</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="array.js.html">arrays/array.js</a>, <a href="array.js.html#line693">line 693</a>
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    <dt class="tag-see">See:</dt>
+    <dd class="tag-see">
+        <ul>
+            <li><a href="ProAct.ArrayCore.html#addCaller">ProAct.ArrayCore#addCaller</a></li>
+        </ul>
+    </dd>
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    Locale-specific string representing the elements of <i>this</i> ProAct.Array.
+</div>
+
+
+
+<dl>
+	<dt>
+		Type
+	</dt>
+	<dd>
+		
+<span class="param-type">String</span>
+
+
+	</dd>
+</dl>
+
+        
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="toString"><span class="type-signature"></span>toString<span class="signature">()</span><span class="type-signature"> &rarr; {String}</span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        The <b>toString()</b> method returns a string representing the specified ProAct.Array and its elements.
+The elements are converted to Strings using their toLocaleString methods and these Strings are separated by a locale-specific String (such as a comma ",").
+<p>
+ This method adds the <a href="ProAct.html#currentCaller">ProAct.currentCaller</a> as a listener to both 'index' type and 'length' type of changes.
+</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="array.js.html">arrays/array.js</a>, <a href="array.js.html#line713">line 713</a>
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    <dt class="tag-see">See:</dt>
+    <dd class="tag-see">
+        <ul>
+            <li><a href="ProAct.ArrayCore.html#addCaller">ProAct.ArrayCore#addCaller</a></li>
+        </ul>
+    </dd>
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    A string representing the elements of <i>this</i> ProAct.Array.
+</div>
+
+
+
+<dl>
+	<dt>
+		Type
+	</dt>
+	<dd>
+		
+<span class="param-type">String</span>
+
+
+	</dd>
+</dl>
+
+        
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="unshift"><span class="type-signature"></span>unshift<span class="signature">()</span><span class="type-signature"> &rarr; {Object}</span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        The <b>unshift()</b> method adds one or more elements to the beginning of an ProAct.Array and returns the new length of the ProAct.Array.
+<p>
+ This method notifies the 'length' listeners, attached to <i>this</i>' <a href="ProAct.ArrayCore.html">ProAct.ArrayCore</a>.
+</p>
+<p>
+ This method defines new index accessors for the elements on the new indexes. So these indexes can be set and read, and
+ will attatch listeners to the <a href="ProAct.ArrayCore.html">ProAct.ArrayCore</a> or update them.
+</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		<th>Argument</th>
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>...</code></td>
+            
+            
+            <td class="type">
+            
+            </td>
+            
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+                    
+                
+                    
+                
+                </td>
+            
+            
+            
+            
+            <td class="description last"><b>element1, ..., elementN</b> : The elements to add to the front of the array.</td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="array.js.html">arrays/array.js</a>, <a href="array.js.html#line969">line 969</a>
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    <dt class="tag-see">See:</dt>
+    <dd class="tag-see">
+        <ul>
+            <li><a href="ProAct.ArrayCore.html#update">ProAct.ArrayCore#update</a></li>
+        
+            <li><a href="ProAct.ArrayCore.html#defineIndexProp">ProAct.ArrayCore#defineIndexProp</a></li>
+        </ul>
+    </dd>
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    The new length property of the <i>this</i>.
+</div>
+
+
+
+<dl>
+	<dt>
+		Type
+	</dt>
+	<dd>
+		
+<span class="param-type">Object</span>
+
+
+	</dd>
+</dl>
+
+        
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="valueOf"><span class="type-signature"></span>valueOf<span class="signature">()</span><span class="type-signature"> &rarr; {Array}</span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Returns the result of <a href="ProAct.Array.html#toArray">ProAct.Array#toArray</a>.
+    </div>
+    
+
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="array.js.html">arrays/array.js</a>, <a href="array.js.html#line733">line 733</a>
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    <dt class="tag-see">See:</dt>
+    <dd class="tag-see">
+        <ul>
+            <li><a href="ProAct.Array.html#toArray">ProAct.Array#toArray</a></li>
+        </ul>
+    </dd>
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    This ProAct.Array converted to plain JavaScript array.
+</div>
+
+
+
+<dl>
+	<dt>
+		Type
+	</dt>
+	<dd>
+		
+<span class="param-type">Array</span>
+
+
+	</dd>
+</dl>
+
+        
+    
+    
+</dd>
+
         </dl>
     
     
@@ -2002,7 +5185,7 @@
 <br clear="both">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.2</a> on Tue Jul 29 2014 19:32:22 GMT+0300 (EEST)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.2</a> on Wed Jul 30 2014 07:01:20 GMT+0300 (EEST)
 </footer>
 
 <script> prettyPrint(); </script>
