@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Namespace: predefined</title>
+    <title>JSDoc: Namespace: accumulation</title>
     
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
     
-    <h1 class="page-title">Namespace: predefined</h1>
+    <h1 class="page-title">Namespace: accumulation</h1>
     
     
 
@@ -27,9 +27,9 @@
     
 <header>
     <h2>
-        <span class="ancestors"><a href="ProAct.html">ProAct</a><a href="ProAct.DSL.html">.DSL</a>.</span>
+        <span class="ancestors"><a href="ProAct.html">ProAct</a><a href="ProAct.DSL.html">.DSL</a><a href="ProAct.DSL.predefined.html">.predefined</a>.</span>
     
-    predefined
+    accumulation
     </h2>
     
 </header>  
@@ -40,7 +40,7 @@
     
     
         
-            <div class="description">A set of predefined operations to be used by the DSL.</div>
+            <div class="description">A set of predefined accumulation operations to be used by the DSL.</div>
         
         
         
@@ -66,7 +66,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="dsl.js.html">registry/dsl.js</a>, <a href="dsl.js.html#line342">line 342</a>
+        <a href="dsl.js.html">registry/dsl.js</a>, <a href="dsl.js.html#line542">line 542</a>
     </li></ul></dd>
     
     
@@ -76,7 +76,7 @@
     <dt class="tag-see">See:</dt>
     <dd class="tag-see">
         <ul>
-            <li><a href="ProAct.DSL.ops.html">ProAct.DSL.ops</a></li>
+            <li><a href="ProAct.DSL.ops.html#accumulation">ProAct.DSL.ops.accumulation</a></li>
         </ul>
     </dd>
     
@@ -98,20 +98,212 @@
     
     
     
-        <h3 class="subsection-title">Namespaces</h3>
+    
+    
+        <h3 class="subsection-title">Members</h3>
         
         <dl>
-            <dt><a href="namespaces.html#ProAct.DSL.predefined.accumulation"><a href="ProAct.DSL.predefined.accumulation.html">accumulation</a></a></dt>
-            <dd></dd>
+            
+<dt>
+    <h4 class="name" id=""*""><span class="type-signature">&lt;static, constant> </span>"*"<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        Accumulation operation representing a product of numbers.
+<p>
+ Usage in a DSL expression:
+ <pre>
+   acc(*)
+ </pre>
+</p>
+    </div>
+    
+    
+    
+
+    
+<dl class="details">
+    
         
-            <dt><a href="namespaces.html#ProAct.DSL.predefined.filtering"><a href="ProAct.DSL.predefined.filtering.html">filtering</a></a></dt>
-            <dd></dd>
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="dsl.js.html">registry/dsl.js</a>, <a href="dsl.js.html#line582">line 582</a>
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    <dt class="tag-see">See:</dt>
+    <dd class="tag-see">
+        <ul>
+            <li><a href="ProAct.DSL.ops.html#accumulation">ProAct.DSL.ops.accumulation</a></li>
+        </ul>
+    </dd>
+    
+    
+    
+</dl>
+
+    
+    
+</dd>
+
         
-            <dt><a href="namespaces.html#ProAct.DSL.predefined.mapping"><a href="ProAct.DSL.predefined.mapping.html">mapping</a></a></dt>
-            <dd></dd>
+            
+<dt>
+    <h4 class="name" id=""+""><span class="type-signature">&lt;static, constant> </span>"+"<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        Accumulation operation representing a sum of numbers.
+<p>
+ Usage in a DSL expression:
+ <pre>
+   acc(+)
+ </pre>
+</p>
+    </div>
+    
+    
+    
+
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="dsl.js.html">registry/dsl.js</a>, <a href="dsl.js.html#line566">line 566</a>
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    <dt class="tag-see">See:</dt>
+    <dd class="tag-see">
+        <ul>
+            <li><a href="ProAct.DSL.ops.html#accumulation">ProAct.DSL.ops.accumulation</a></li>
+        </ul>
+    </dd>
+    
+    
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id=""+str""><span class="type-signature">&lt;static, constant> </span>"+str"<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        Accumulation operation representing string concatenation.
+<p>
+ Usage in a DSL expression:
+ <pre>
+   acc(+str)
+ </pre>
+</p>
+    </div>
+    
+    
+    
+
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="dsl.js.html">registry/dsl.js</a>, <a href="dsl.js.html#line598">line 598</a>
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    <dt class="tag-see">See:</dt>
+    <dd class="tag-see">
+        <ul>
+            <li><a href="ProAct.DSL.ops.html#accumulation">ProAct.DSL.ops.accumulation</a></li>
+        </ul>
+    </dd>
+    
+    
+    
+</dl>
+
+    
+    
+</dd>
+
         </dl>
-    
-    
     
     
     

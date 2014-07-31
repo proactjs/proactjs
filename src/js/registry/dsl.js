@@ -355,7 +355,7 @@ ProAct.DSL = {
      * @namespace ProAct.DSL.predefined.mapping
      * @memberof ProAct.DSL.predefined
      * @static
-     * @see {@link ProAct.DSL.ops.map}
+     * @see {@link ProAct.DSL.ops.mapping}
      */
     mapping: {
 
@@ -463,21 +463,212 @@ ProAct.DSL = {
         };
       }
     },
+
+    /**
+     * A set of predefined filtering operations to be used by the DSL.
+     *
+     * @namespace ProAct.DSL.predefined.filtering
+     * @memberof ProAct.DSL.predefined
+     * @static
+     * @see {@link ProAct.DSL.ops.filtering}
+     */
     filtering: {
+
+      /**
+       * Filtering operation for filtering only odd Numbers.
+       * <p>
+       *  Usage in a DSL expression:
+       *  <pre>
+       *    filter(odd)
+       *  </pre>
+       * </p>
+       *
+       * @memberof ProAct.DSL.predefined.filtering
+       * @static
+       * @method
+       * @see {@link ProAct.DSL.ops.filter}
+       */
       'odd': function (el) { return el % 2 !== 0; },
+
+      /**
+       * Filtering operation for filtering only even Numbers.
+       * <p>
+       *  Usage in a DSL expression:
+       *  <pre>
+       *    filter(even)
+       *  </pre>
+       * </p>
+       *
+       * @memberof ProAct.DSL.predefined.filtering
+       * @static
+       * @method
+       * @see {@link ProAct.DSL.ops.filter}
+       */
       'even': function (el) { return el % 2 === 0; },
+
+      /**
+       * Filtering operation for filtering only positive Numbers.
+       * <p>
+       *  Usage in a DSL expression:
+       *  <pre>
+       *    filter(+)
+       *  </pre>
+       * </p>
+       *
+       * @memberof ProAct.DSL.predefined.filtering
+       * @static
+       * @method
+       * @see {@link ProAct.DSL.ops.filter}
+       */
       '+': function (el) { return el >= 0; },
+
+      /**
+       * Filtering operation for filtering only negative Numbers.
+       * <p>
+       *  Usage in a DSL expression:
+       *  <pre>
+       *    filter(-)
+       *  </pre>
+       * </p>
+       *
+       * @memberof ProAct.DSL.predefined.filtering
+       * @static
+       * @method
+       * @see {@link ProAct.DSL.ops.filter}
+       */
       '-': function (el) { return el <= 0; }
     },
+
+    /**
+     * A set of predefined accumulation operations to be used by the DSL.
+     *
+     * @namespace ProAct.DSL.predefined.accumulation
+     * @memberof ProAct.DSL.predefined
+     * @static
+     * @see {@link ProAct.DSL.ops.accumulation}
+     */
     accumulation: {
+
+      /**
+       * Accumulation operation representing a sum of numbers.
+       * <p>
+       *  Usage in a DSL expression:
+       *  <pre>
+       *    acc(+)
+       *  </pre>
+       * </p>
+       *
+       * @memberof ProAct.DSL.predefined.accumulation
+       * @static
+       * @constant
+       * @see {@link ProAct.DSL.ops.accumulation}
+       */
       '+': [0, function (x, y) { return x + y; }],
+
+      /**
+       * Accumulation operation representing a product of numbers.
+       * <p>
+       *  Usage in a DSL expression:
+       *  <pre>
+       *    acc(*)
+       *  </pre>
+       * </p>
+       *
+       * @memberof ProAct.DSL.predefined.accumulation
+       * @static
+       * @constant
+       * @see {@link ProAct.DSL.ops.accumulation}
+       */
       '*': [1, function (x, y) { return x * y; }],
+
+      /**
+       * Accumulation operation representing string concatenation.
+       * <p>
+       *  Usage in a DSL expression:
+       *  <pre>
+       *    acc(+str)
+       *  </pre>
+       * </p>
+       *
+       * @memberof ProAct.DSL.predefined.accumulation
+       * @static
+       * @constant
+       * @see {@link ProAct.DSL.ops.accumulation}
+       */
       '+str': ['', function (x, y) { return x + y; }],
     }
   },
+
+  /**
+   * Extracts DSL actions and options from a string.
+   * <p>
+   *  Splits the passed <i>optionString</i> using {@link ProAct.DSL.separator} as saparator and calls {@link ProAct.DSL.optionsFromArray} on
+   *  the result.
+   * </p>
+   *
+   * @memberof ProAct.DSL
+   * @static
+   * @method
+   * @param {String} optionString
+   *      The string to use to extract options from.
+   * @param [...]
+   *      Parameters for the extracted actions/functions/operations.
+   *      <p>
+   *        For example if the string contains 'map($1)', the first argument passed after the <i>optionString</i> argument
+   *        is passed to the 'map' operation.
+   *      </p>
+   * @return {Object}
+   *      Object containing operations as fields and options(arguments) for these operations as values.
+   *      <p>
+   *        'map($1)|filter(+)|@($2)' becomes:
+   *        <pre>
+   *          {
+   *            mapping: {first-argument-to-this-function-after-the-optionString-arg},
+   *            filtering: {@link ProAct.DSL.predefined.filtering['+']},
+   *            on: {second-argument-to-this-function-after-the-optionString-arg}
+   *          }
+   *        </pre>
+   *      </p>
+   * @see {@link ProAct.DSL.run}
+   * @see {@link ProAct.DSL.optionsFromArray}
+   * @see {@link ProAct.DSL.separator}
+   */
   optionsFromString: function (optionString) {
     return dsl.optionsFromArray.apply(null, [optionString.split(dsl.separator)].concat(slice.call(arguments, 1)));
   },
+
+  /**
+   * Extracts DSL actions and options from an array of strings.
+   * <p>
+   *  Example <i>optionArray</i> is ['map($1)', 'filter(+)', @($2)'] and it will become options object of functions and arguments to
+   *  be applied on a target {@link ProAct.Observable} passed to the {@link ProAct.DSL.run} method.
+   * </p>
+   *
+   * @memberof ProAct.DSL
+   * @static
+   * @method
+   * @param {Array} optionArray
+   *      The array of strings to use to extract options from.
+   * @param [...]
+   *      Parameters for the extracted actions/functions/operations.
+   *      <p>
+   *        For example if the array contains 'map($1)', the first argument passed after the <i>optionArray</i> argument
+   *        is passed to the 'map' operation.
+   *      </p>
+   * @return {Object}
+   *      Object containing operations as fields and options(arguments) for these operations as values.
+   *      <p>
+   *        ['map($1)', 'filter(+)', @($2)'] becomes:
+   *        <pre>
+   *          {
+   *            mapping: {first-argument-to-this-function-after-the-optionString-arg},
+   *            filtering: {@link ProAct.DSL.predefined.filtering['+']},
+   *            on: {second-argument-to-this-function-after-the-optionString-arg}
+   *          }
+   *        </pre>
+   *      </p>
+   * @see {@link ProAct.DSL.run}
+   */
   optionsFromArray: function (optionArray) {
     var result = {}, i, ln = optionArray.length,
         ops = P.R.ops, op, opType;
@@ -493,6 +684,56 @@ ProAct.DSL = {
     }
     return result;
   },
+
+  /**
+   * Configures an {@link ProAct.Observable} using the DSL passed with the <i>options</i> argument.
+   * <p>
+   *  Uses the passed {@link ProAct.Registry} to read stored values from.
+   * </p>
+   *
+   * @memberof ProAct.DSL
+   * @static
+   * @method
+   * @param {ProAct.Observable} observable
+   *      The target of the DSL operations.
+   * @param {ProAct.Observable|String|Object} options
+   *      The DSL formatted options to be used for the configuration.
+   *      <p>
+   *        If the value of this parameter is instance of {@link ProAct.Observable} it is set as a source to the <i>target observable</i>.
+   *      </p>
+   *      <p>
+   *        If the value ot this parameter is String - {@link ProAct.DSL.optionsFromString} is used to be turned to an options object.
+   *      </p>
+   *      <p>
+   *        If the values of this parameter is object, it is used to configure the <i>targed observable</i>.
+   *      </p>
+   *      <p>
+   *        The format of the object should be something like:
+   *        <pre>
+   *          {
+   *            dsl-operation: function|array-of-functions-and-arguments,
+   *            dsl-operation: function|array-of-functions-and-arguments,
+   *            dsl-operation: function|array-of-functions-and-arguments,
+   *            ...
+   *          }
+   *        </pre>
+   *      </p>
+   * @param {ProAct.Registry} registry
+   *      The registry to read stored values for the DSL operations.
+   *      <p>
+   *        For example if there is 'map(f:foo)', the mapping function is read from the registry at the key 'foo'.
+   *      </p>
+   * @param [...]
+   *      Parameters for the DSL operations.
+   *      <p>
+   *        For example if the array contains 'map($1)', the first argument passed after the <i>observable</i>, <i>options</i> and <i>registry</i> arguments
+   *        is passed to the 'map' operation.
+   *      </p>
+   * @return {ProAct.Observable}
+   *      The configured observable.
+   * @see {@link ProAct.DSL.optionsFromString}
+   * @see {@link ProAct.Observable}
+   */
   run: function (observable, options, registry) {
     var isS = P.U.isString,
         args = slice.call(arguments, 3),

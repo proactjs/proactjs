@@ -177,6 +177,702 @@
     
     
     
+        <h3 class="subsection-title">Methods</h3>
+        
+        <dl>
+            
+<dt>
+    <h4 class="name" id="optionsFromArray"><span class="type-signature">&lt;static> </span>optionsFromArray<span class="signature">(optionArray)</span><span class="type-signature"> &rarr; {Object}</span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Extracts DSL actions and options from an array of strings.
+<p>
+ Example <i>optionArray</i> is ['map($1)', 'filter(+)', @($2)'] and it will become options object of functions and arguments to
+ be applied on a target <a href="ProAct.Observable.html">ProAct.Observable</a> passed to the <a href="ProAct.DSL.html#run">ProAct.DSL.run</a> method.
+</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		<th>Argument</th>
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>optionArray</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">Array</span>
+
+
+            
+            </td>
+            
+            
+                <td class="attributes">
+                
+                    
+                
+                    
+                
+                </td>
+            
+            
+            
+            
+            <td class="description last">The array of strings to use to extract options from.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>...</code></td>
+            
+            
+            <td class="type">
+            
+            </td>
+            
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+                    
+                
+                    
+                
+                </td>
+            
+            
+            
+            
+            <td class="description last">Parameters for the extracted actions/functions/operations.
+     <p>
+       For example if the array contains 'map($1)', the first argument passed after the <i>optionArray</i> argument
+       is passed to the 'map' operation.
+     </p></td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="dsl.js.html">registry/dsl.js</a>, <a href="dsl.js.html#line672">line 672</a>
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    <dt class="tag-see">See:</dt>
+    <dd class="tag-see">
+        <ul>
+            <li><a href="ProAct.DSL.html#run">ProAct.DSL.run</a></li>
+        </ul>
+    </dd>
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    Object containing operations as fields and options(arguments) for these operations as values.
+     <p>
+       ['map($1)', 'filter(+)', @($2)'] becomes:
+       <pre>
+         {
+           mapping: {first-argument-to-this-function-after-the-optionString-arg},
+           filtering: ProAct.DSL.predefined.filtering['+'],
+           on: {second-argument-to-this-function-after-the-optionString-arg}
+         }
+       </pre>
+     </p>
+</div>
+
+
+
+<dl>
+	<dt>
+		Type
+	</dt>
+	<dd>
+		
+<span class="param-type">Object</span>
+
+
+	</dd>
+</dl>
+
+        
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="optionsFromString"><span class="type-signature">&lt;static> </span>optionsFromString<span class="signature">(optionString)</span><span class="type-signature"> &rarr; {Object}</span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Extracts DSL actions and options from a string.
+<p>
+ Splits the passed <i>optionString</i> using <a href="ProAct.DSL.html#separator">ProAct.DSL.separator</a> as saparator and calls <a href="ProAct.DSL.html#optionsFromArray">ProAct.DSL.optionsFromArray</a> on
+ the result.
+</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		<th>Argument</th>
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>optionString</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+            
+            
+                <td class="attributes">
+                
+                    
+                
+                    
+                
+                </td>
+            
+            
+            
+            
+            <td class="description last">The string to use to extract options from.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>...</code></td>
+            
+            
+            <td class="type">
+            
+            </td>
+            
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+                    
+                
+                    
+                
+                </td>
+            
+            
+            
+            
+            <td class="description last">Parameters for the extracted actions/functions/operations.
+     <p>
+       For example if the string contains 'map($1)', the first argument passed after the <i>optionString</i> argument
+       is passed to the 'map' operation.
+     </p></td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="dsl.js.html">registry/dsl.js</a>, <a href="dsl.js.html#line636">line 636</a>
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    <dt class="tag-see">See:</dt>
+    <dd class="tag-see">
+        <ul>
+            <li><a href="ProAct.DSL.html#run">ProAct.DSL.run</a></li>
+        
+            <li><a href="ProAct.DSL.html#optionsFromArray">ProAct.DSL.optionsFromArray</a></li>
+        
+            <li><a href="ProAct.DSL.html#separator">ProAct.DSL.separator</a></li>
+        </ul>
+    </dd>
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    Object containing operations as fields and options(arguments) for these operations as values.
+     <p>
+       'map($1)|filter(+)|@($2)' becomes:
+       <pre>
+         {
+           mapping: {first-argument-to-this-function-after-the-optionString-arg},
+           filtering: ProAct.DSL.predefined.filtering['+'],
+           on: {second-argument-to-this-function-after-the-optionString-arg}
+         }
+       </pre>
+     </p>
+</div>
+
+
+
+<dl>
+	<dt>
+		Type
+	</dt>
+	<dd>
+		
+<span class="param-type">Object</span>
+
+
+	</dd>
+</dl>
+
+        
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="run"><span class="type-signature">&lt;static> </span>run<span class="signature">(observable, options, registry)</span><span class="type-signature"> &rarr; {<a href="ProAct.Observable.html">ProAct.Observable</a>}</span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Configures an <a href="ProAct.Observable.html">ProAct.Observable</a> using the DSL passed with the <i>options</i> argument.
+<p>
+ Uses the passed <a href="ProAct.Registry.html">ProAct.Registry</a> to read stored values from.
+</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		<th>Argument</th>
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>observable</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type"><a href="ProAct.Observable.html">ProAct.Observable</a></span>
+
+
+            
+            </td>
+            
+            
+                <td class="attributes">
+                
+                    
+                
+                    
+                
+                </td>
+            
+            
+            
+            
+            <td class="description last">The target of the DSL operations.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>options</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type"><a href="ProAct.Observable.html">ProAct.Observable</a></span>
+|
+
+<span class="param-type">String</span>
+|
+
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+            
+            
+                <td class="attributes">
+                
+                    
+                
+                    
+                
+                </td>
+            
+            
+            
+            
+            <td class="description last">The DSL formatted options to be used for the configuration.
+     <p>
+       If the value of this parameter is instance of <a href="ProAct.Observable.html">ProAct.Observable</a> it is set as a source to the <i>target observable</i>.
+     </p>
+     <p>
+       If the value ot this parameter is String - <a href="ProAct.DSL.html#optionsFromString">ProAct.DSL.optionsFromString</a> is used to be turned to an options object.
+     </p>
+     <p>
+       If the values of this parameter is object, it is used to configure the <i>targed observable</i>.
+     </p>
+     <p>
+       The format of the object should be something like:
+       <pre>
+         {
+           dsl-operation: function|array-of-functions-and-arguments,
+           dsl-operation: function|array-of-functions-and-arguments,
+           dsl-operation: function|array-of-functions-and-arguments,
+           ...
+         }
+       </pre>
+     </p></td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>registry</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type"><a href="ProAct.Registry.html">ProAct.Registry</a></span>
+
+
+            
+            </td>
+            
+            
+                <td class="attributes">
+                
+                    
+                
+                    
+                
+                </td>
+            
+            
+            
+            
+            <td class="description last">The registry to read stored values for the DSL operations.
+     <p>
+       For example if there is 'map(f:foo)', the mapping function is read from the registry at the key 'foo'.
+     </p></td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>...</code></td>
+            
+            
+            <td class="type">
+            
+            </td>
+            
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+                    
+                
+                    
+                
+                </td>
+            
+            
+            
+            
+            <td class="description last">Parameters for the DSL operations.
+     <p>
+       For example if the array contains 'map($1)', the first argument passed after the <i>observable</i>, <i>options</i> and <i>registry</i> arguments
+       is passed to the 'map' operation.
+     </p></td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="dsl.js.html">registry/dsl.js</a>, <a href="dsl.js.html#line737">line 737</a>
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    <dt class="tag-see">See:</dt>
+    <dd class="tag-see">
+        <ul>
+            <li><a href="ProAct.DSL.html#optionsFromString">ProAct.DSL.optionsFromString</a></li>
+        
+            <li><a href="ProAct.Observable.html">ProAct.Observable</a></li>
+        </ul>
+    </dd>
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    The configured observable.
+</div>
+
+
+
+<dl>
+	<dt>
+		Type
+	</dt>
+	<dd>
+		
+<span class="param-type"><a href="ProAct.Observable.html">ProAct.Observable</a></span>
+
+
+	</dd>
+</dl>
+
+        
+    
+    
+</dd>
+
+        </dl>
+    
     
     
     
@@ -191,13 +887,13 @@
 </div>
 
 <nav>
-    <h2><a href="index.html">Index</a></h2><h3>Classes</h3><ul><li><a href="ProAct.Array.html">Array</a></li><li><a href="ProAct.ArrayCore.html">ArrayCore</a></li><li><a href="ProAct.ArrayProperty.html">ArrayProperty</a></li><li><a href="ProAct.AutoProperty.html">AutoProperty</a></li><li><a href="ProAct.BufferedStream.html">BufferedStream</a></li><li><a href="ProAct.Core.html">Core</a></li><li><a href="ProAct.DebouncingStream.html">DebouncingStream</a></li><li><a href="ProAct.DelayedStream.html">DelayedStream</a></li><li><a href="ProAct.Event.html">Event</a></li><li><a href="ProAct.Flow.html">Flow</a></li><li><a href="ProAct.NullProperty.html">NullProperty</a></li><li><a href="ProAct.ObjectCore.html">ObjectCore</a></li><li><a href="ProAct.ObjectProperty.html">ObjectProperty</a></li><li><a href="ProAct.Observable.html">Observable</a></li><li><a href="ProAct.Property.html">Property</a></li><li><a href="ProAct.Queue.html">Queue</a></li><li><a href="ProAct.Queues.html">Queues</a></li><li><a href="ProAct.Registry.html">Registry</a></li><li><a href="ProAct.SizeBufferedStream.html">SizeBufferedStream</a></li><li><a href="ProAct.Stream.html">Stream</a></li><li><a href="ProAct.ThrottlingStream.html">ThrottlingStream</a></li><li><a href="ProAct.Val.html">Val</a></li></ul><h3>Namespaces</h3><ul><li><a href="ProAct.html">ProAct</a></li><li><a href="ProAct.Array.Listeners.html">Listeners</a></li><li><a href="ProAct.Array.Operations.html">Operations</a></li><li><a href="ProAct.Configuration.html">Configuration</a></li><li><a href="ProAct.DSL.html">DSL</a></li><li><a href="ProAct.DSL.ops.html">ops</a></li><li><a href="ProAct.DSL.predefined.html">predefined</a></li><li><a href="ProAct.DSL.predefined.mapping.html">mapping</a></li><li><a href="ProAct.Event.Types.html">Types</a></li><li><a href="ProAct.OpStore.html">OpStore</a></li><li><a href="ProAct.Property.Types.html">Types</a></li><li><a href="ProAct.States.html">States</a></li><li><a href="ProAct.Utils.html">Utils</a></li></ul>
+    <h2><a href="index.html">Index</a></h2><h3>Classes</h3><ul><li><a href="ProAct.Array.html">Array</a></li><li><a href="ProAct.ArrayCore.html">ArrayCore</a></li><li><a href="ProAct.ArrayProperty.html">ArrayProperty</a></li><li><a href="ProAct.AutoProperty.html">AutoProperty</a></li><li><a href="ProAct.BufferedStream.html">BufferedStream</a></li><li><a href="ProAct.Core.html">Core</a></li><li><a href="ProAct.DebouncingStream.html">DebouncingStream</a></li><li><a href="ProAct.DelayedStream.html">DelayedStream</a></li><li><a href="ProAct.Event.html">Event</a></li><li><a href="ProAct.Flow.html">Flow</a></li><li><a href="ProAct.NullProperty.html">NullProperty</a></li><li><a href="ProAct.ObjectCore.html">ObjectCore</a></li><li><a href="ProAct.ObjectProperty.html">ObjectProperty</a></li><li><a href="ProAct.Observable.html">Observable</a></li><li><a href="ProAct.Property.html">Property</a></li><li><a href="ProAct.Queue.html">Queue</a></li><li><a href="ProAct.Queues.html">Queues</a></li><li><a href="ProAct.Registry.html">Registry</a></li><li><a href="ProAct.Registry.FunctionProvider.html">FunctionProvider</a></li><li><a href="ProAct.Registry.ProObjectProvider.html">ProObjectProvider</a></li><li><a href="ProAct.Registry.Provider.html">Provider</a></li><li><a href="ProAct.Registry.StreamProvider.html">StreamProvider</a></li><li><a href="ProAct.SizeBufferedStream.html">SizeBufferedStream</a></li><li><a href="ProAct.Stream.html">Stream</a></li><li><a href="ProAct.ThrottlingStream.html">ThrottlingStream</a></li><li><a href="ProAct.Val.html">Val</a></li></ul><h3>Namespaces</h3><ul><li><a href="ProAct.html">ProAct</a></li><li><a href="ProAct.Array.Listeners.html">Listeners</a></li><li><a href="ProAct.Array.Operations.html">Operations</a></li><li><a href="ProAct.Configuration.html">Configuration</a></li><li><a href="ProAct.DSL.html">DSL</a></li><li><a href="ProAct.DSL.ops.html">ops</a></li><li><a href="ProAct.DSL.predefined.html">predefined</a></li><li><a href="ProAct.DSL.predefined.accumulation.html">accumulation</a></li><li><a href="ProAct.DSL.predefined.filtering.html">filtering</a></li><li><a href="ProAct.DSL.predefined.mapping.html">mapping</a></li><li><a href="ProAct.Event.Types.html">Types</a></li><li><a href="ProAct.OpStore.html">OpStore</a></li><li><a href="ProAct.Property.Types.html">Types</a></li><li><a href="ProAct.States.html">States</a></li><li><a href="ProAct.Utils.html">Utils</a></li></ul>
 </nav>
 
 <br clear="both">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.2</a> on Thu Jul 31 2014 10:03:16 GMT+0300 (EEST)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.2</a> on Thu Jul 31 2014 18:41:43 GMT+0300 (EEST)
 </footer>
 
 <script> prettyPrint(); </script>

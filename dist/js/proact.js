@@ -7733,7 +7733,7 @@
 	     * @namespace ProAct.DSL.predefined.mapping
 	     * @memberof ProAct.DSL.predefined
 	     * @static
-	     * @see {@link ProAct.DSL.ops.map}
+	     * @see {@link ProAct.DSL.ops.mapping}
 	     */
 	    mapping: {
 	
@@ -7812,6 +7812,22 @@
 	       * @see {@link ProAct.DSL.ops.map}
 	       */
 	      'int': function (el) { return parseInt(el, 10); },
+	
+	      /**
+	       * Mapping operation for calling a method of an object.
+	       * <p>
+	       *  Usage in a DSL expression:
+	       *  <pre>
+	       *    map(&.&go)
+	       *  </pre>
+	       *  This will call the 'target.go' method and use its result.
+	       * </p>
+	       *
+	       * @memberof ProAct.DSL.predefined.mapping
+	       * @static
+	       * @method
+	       * @see {@link ProAct.DSL.ops.map}
+	       */
 	      '&.': function (arg) {
 	        return function (el) {
 	          var p = el[arg];
@@ -7825,21 +7841,212 @@
 	        };
 	      }
 	    },
+	
+	    /**
+	     * A set of predefined filtering operations to be used by the DSL.
+	     *
+	     * @namespace ProAct.DSL.predefined.filtering
+	     * @memberof ProAct.DSL.predefined
+	     * @static
+	     * @see {@link ProAct.DSL.ops.filtering}
+	     */
 	    filtering: {
+	
+	      /**
+	       * Filtering operation for filtering only odd Numbers.
+	       * <p>
+	       *  Usage in a DSL expression:
+	       *  <pre>
+	       *    filter(odd)
+	       *  </pre>
+	       * </p>
+	       *
+	       * @memberof ProAct.DSL.predefined.filtering
+	       * @static
+	       * @method
+	       * @see {@link ProAct.DSL.ops.filter}
+	       */
 	      'odd': function (el) { return el % 2 !== 0; },
+	
+	      /**
+	       * Filtering operation for filtering only even Numbers.
+	       * <p>
+	       *  Usage in a DSL expression:
+	       *  <pre>
+	       *    filter(even)
+	       *  </pre>
+	       * </p>
+	       *
+	       * @memberof ProAct.DSL.predefined.filtering
+	       * @static
+	       * @method
+	       * @see {@link ProAct.DSL.ops.filter}
+	       */
 	      'even': function (el) { return el % 2 === 0; },
+	
+	      /**
+	       * Filtering operation for filtering only positive Numbers.
+	       * <p>
+	       *  Usage in a DSL expression:
+	       *  <pre>
+	       *    filter(+)
+	       *  </pre>
+	       * </p>
+	       *
+	       * @memberof ProAct.DSL.predefined.filtering
+	       * @static
+	       * @method
+	       * @see {@link ProAct.DSL.ops.filter}
+	       */
 	      '+': function (el) { return el >= 0; },
+	
+	      /**
+	       * Filtering operation for filtering only negative Numbers.
+	       * <p>
+	       *  Usage in a DSL expression:
+	       *  <pre>
+	       *    filter(-)
+	       *  </pre>
+	       * </p>
+	       *
+	       * @memberof ProAct.DSL.predefined.filtering
+	       * @static
+	       * @method
+	       * @see {@link ProAct.DSL.ops.filter}
+	       */
 	      '-': function (el) { return el <= 0; }
 	    },
+	
+	    /**
+	     * A set of predefined accumulation operations to be used by the DSL.
+	     *
+	     * @namespace ProAct.DSL.predefined.accumulation
+	     * @memberof ProAct.DSL.predefined
+	     * @static
+	     * @see {@link ProAct.DSL.ops.accumulation}
+	     */
 	    accumulation: {
+	
+	      /**
+	       * Accumulation operation representing a sum of numbers.
+	       * <p>
+	       *  Usage in a DSL expression:
+	       *  <pre>
+	       *    acc(+)
+	       *  </pre>
+	       * </p>
+	       *
+	       * @memberof ProAct.DSL.predefined.accumulation
+	       * @static
+	       * @constant
+	       * @see {@link ProAct.DSL.ops.accumulation}
+	       */
 	      '+': [0, function (x, y) { return x + y; }],
+	
+	      /**
+	       * Accumulation operation representing a product of numbers.
+	       * <p>
+	       *  Usage in a DSL expression:
+	       *  <pre>
+	       *    acc(*)
+	       *  </pre>
+	       * </p>
+	       *
+	       * @memberof ProAct.DSL.predefined.accumulation
+	       * @static
+	       * @constant
+	       * @see {@link ProAct.DSL.ops.accumulation}
+	       */
 	      '*': [1, function (x, y) { return x * y; }],
+	
+	      /**
+	       * Accumulation operation representing string concatenation.
+	       * <p>
+	       *  Usage in a DSL expression:
+	       *  <pre>
+	       *    acc(+str)
+	       *  </pre>
+	       * </p>
+	       *
+	       * @memberof ProAct.DSL.predefined.accumulation
+	       * @static
+	       * @constant
+	       * @see {@link ProAct.DSL.ops.accumulation}
+	       */
 	      '+str': ['', function (x, y) { return x + y; }],
 	    }
 	  },
+	
+	  /**
+	   * Extracts DSL actions and options from a string.
+	   * <p>
+	   *  Splits the passed <i>optionString</i> using {@link ProAct.DSL.separator} as saparator and calls {@link ProAct.DSL.optionsFromArray} on
+	   *  the result.
+	   * </p>
+	   *
+	   * @memberof ProAct.DSL
+	   * @static
+	   * @method
+	   * @param {String} optionString
+	   *      The string to use to extract options from.
+	   * @param [...]
+	   *      Parameters for the extracted actions/functions/operations.
+	   *      <p>
+	   *        For example if the string contains 'map($1)', the first argument passed after the <i>optionString</i> argument
+	   *        is passed to the 'map' operation.
+	   *      </p>
+	   * @return {Object}
+	   *      Object containing operations as fields and options(arguments) for these operations as values.
+	   *      <p>
+	   *        'map($1)|filter(+)|@($2)' becomes:
+	   *        <pre>
+	   *          {
+	   *            mapping: {first-argument-to-this-function-after-the-optionString-arg},
+	   *            filtering: {@link ProAct.DSL.predefined.filtering['+']},
+	   *            on: {second-argument-to-this-function-after-the-optionString-arg}
+	   *          }
+	   *        </pre>
+	   *      </p>
+	   * @see {@link ProAct.DSL.run}
+	   * @see {@link ProAct.DSL.optionsFromArray}
+	   * @see {@link ProAct.DSL.separator}
+	   */
 	  optionsFromString: function (optionString) {
 	    return dsl.optionsFromArray.apply(null, [optionString.split(dsl.separator)].concat(slice.call(arguments, 1)));
 	  },
+	
+	  /**
+	   * Extracts DSL actions and options from an array of strings.
+	   * <p>
+	   *  Example <i>optionArray</i> is ['map($1)', 'filter(+)', @($2)'] and it will become options object of functions and arguments to
+	   *  be applied on a target {@link ProAct.Observable} passed to the {@link ProAct.DSL.run} method.
+	   * </p>
+	   *
+	   * @memberof ProAct.DSL
+	   * @static
+	   * @method
+	   * @param {Array} optionArray
+	   *      The array of strings to use to extract options from.
+	   * @param [...]
+	   *      Parameters for the extracted actions/functions/operations.
+	   *      <p>
+	   *        For example if the array contains 'map($1)', the first argument passed after the <i>optionArray</i> argument
+	   *        is passed to the 'map' operation.
+	   *      </p>
+	   * @return {Object}
+	   *      Object containing operations as fields and options(arguments) for these operations as values.
+	   *      <p>
+	   *        ['map($1)', 'filter(+)', @($2)'] becomes:
+	   *        <pre>
+	   *          {
+	   *            mapping: {first-argument-to-this-function-after-the-optionString-arg},
+	   *            filtering: {@link ProAct.DSL.predefined.filtering['+']},
+	   *            on: {second-argument-to-this-function-after-the-optionString-arg}
+	   *          }
+	   *        </pre>
+	   *      </p>
+	   * @see {@link ProAct.DSL.run}
+	   */
 	  optionsFromArray: function (optionArray) {
 	    var result = {}, i, ln = optionArray.length,
 	        ops = P.R.ops, op, opType;
@@ -7855,6 +8062,56 @@
 	    }
 	    return result;
 	  },
+	
+	  /**
+	   * Configures an {@link ProAct.Observable} using the DSL passed with the <i>options</i> argument.
+	   * <p>
+	   *  Uses the passed {@link ProAct.Registry} to read stored values from.
+	   * </p>
+	   *
+	   * @memberof ProAct.DSL
+	   * @static
+	   * @method
+	   * @param {ProAct.Observable} observable
+	   *      The target of the DSL operations.
+	   * @param {ProAct.Observable|String|Object} options
+	   *      The DSL formatted options to be used for the configuration.
+	   *      <p>
+	   *        If the value of this parameter is instance of {@link ProAct.Observable} it is set as a source to the <i>target observable</i>.
+	   *      </p>
+	   *      <p>
+	   *        If the value ot this parameter is String - {@link ProAct.DSL.optionsFromString} is used to be turned to an options object.
+	   *      </p>
+	   *      <p>
+	   *        If the values of this parameter is object, it is used to configure the <i>targed observable</i>.
+	   *      </p>
+	   *      <p>
+	   *        The format of the object should be something like:
+	   *        <pre>
+	   *          {
+	   *            dsl-operation: function|array-of-functions-and-arguments,
+	   *            dsl-operation: function|array-of-functions-and-arguments,
+	   *            dsl-operation: function|array-of-functions-and-arguments,
+	   *            ...
+	   *          }
+	   *        </pre>
+	   *      </p>
+	   * @param {ProAct.Registry} registry
+	   *      The registry to read stored values for the DSL operations.
+	   *      <p>
+	   *        For example if there is 'map(f:foo)', the mapping function is read from the registry at the key 'foo'.
+	   *      </p>
+	   * @param [...]
+	   *      Parameters for the DSL operations.
+	   *      <p>
+	   *        For example if the array contains 'map($1)', the first argument passed after the <i>observable</i>, <i>options</i> and <i>registry</i> arguments
+	   *        is passed to the 'map' operation.
+	   *      </p>
+	   * @return {ProAct.Observable}
+	   *      The configured observable.
+	   * @see {@link ProAct.DSL.optionsFromString}
+	   * @see {@link ProAct.Observable}
+	   */
 	  run: function (observable, options, registry) {
 	    var isS = P.U.isString,
 	        args = slice.call(arguments, 3),
@@ -7899,28 +8156,121 @@
 	dslOps = dsl.ops;
 	
 	P.U.ex(ProAct.Registry, {
+	
+	  /**
+	   * Constructs a ProAct.Registry.Provider. The {@link ProAct.Registry} uses registered providers as storage for different objects.
+	   * <p>
+	   *  Every provider has one or more namespaces in the {@link ProAct.Registry} it is registered to.
+	   * </p>
+	   * <p>
+	   *  Every provider knows how to store its type of obects, how to make them, or delete them.
+	   * </p>
+	   *
+	   * @class ProAct.Registry.Provider
+	   * @memberof ProAct.Registry
+	   * @static
+	   * @see {@link ProAct.Registry}
+	   */
 	  Provider: function () {
 	    this.stored = {};
 	  },
+	
+	  /**
+	   * Constructs a ProAct.Registry.StreamProvider. The {@link ProAct.Registry} uses registered stream providers as storage for {@link ProAct.Stream}s.
+	   *
+	   * @class ProAct.Registry.StreamProvider
+	   * @extends ProAct.Registry.Provider
+	   * @memberof ProAct.Registry
+	   * @static
+	   * @see {@link ProAct.Registry}
+	   */
 	  StreamProvider: function () {
 	    P.R.Provider.call(this);
 	  },
+	
+	  /**
+	   * Constructs a ProAct.Registry.FunctionProvider. The {@link ProAct.Registry} uses registered function providers as storage for Functions.
+	   *
+	   * @class ProAct.Registry.FunctionProvider
+	   * @extends ProAct.Registry.Provider
+	   * @memberof ProAct.Registry
+	   * @static
+	   * @see {@link ProAct.Registry}
+	   */
 	  FunctionProvider: function () {
-	    Pro.Registry.Provider.call(this);
+	    P.R.Provider.call(this);
 	  },
+	
+	  /**
+	   * Constructs a ProAct.Registry.ProObjectProvider.
+	   * The {@link ProAct.Registry} uses registered function providers as storage for objects with reactive {@link ProAct.Property} instances.
+	   *
+	   * @class ProAct.Registry.ProObjectProvider
+	   * @extends ProAct.Registry.Provider
+	   * @memberof ProAct.Registry
+	   * @static
+	   * @see {@link ProAct.Registry}
+	   * @see {@link ProAct.Property}
+	   */
 	  ProObjectProvider: function () {
-	    Pro.Registry.Provider.call(this);
+	    P.R.Provider.call(this);
 	  }
 	});
 	
-	Pro.Registry.Provider.prototype = {
-	  constructor: Pro.Registry.Provider,
+	ProAct.Registry.Provider.prototype = {
+	
+	  /**
+	   * Reference to the constructor of this object.
+	   *
+	   * @memberof ProAct.Registry.Provider
+	   * @instance
+	   * @constant
+	   * @default ProAct.Registry.Provider
+	   */
+	  constructor: ProAct.Registry.Provider,
+	
+	  /**
+	   * Creates and stores an instance of the object this ProAct.Registry.Provider manages.
+	   * <p>
+	   *  For the creation is used the {@link ProAct.Registry.Provider#provide} method.
+	   * </p>
+	   *
+	   * @memberof ProAct.Registry.Provider
+	   * @instance
+	   * @method make
+	   * @param {String} key
+	   *      The key on which the new instance will be stored.
+	   * @param {String} options
+	   *      String containing options for the creation process. For example the exact sub-type of the object to create (optional).
+	   * @param [...]
+	   *      Parameters passed to the constructor when the new instance is created.
+	   * @return {Object}
+	   *      The newly created and stored object.
+	   * @see {@link ProAct.Registry.Provider#provide}
+	   */
 	  make: function (key, options) {
 	    var provided, args = slice.call(arguments, 1);
 	    this.stored[key] = provided = this.provide.apply(this, args);
 	    return provided;
 	  },
-	  store: function (key, func, options) { return this.stored[key] = func; },
+	
+	  /**
+	   * Stores an instance of an object this ProAct.Registry.Provider manages.
+	   *
+	   * @memberof ProAct.Registry.Provider
+	   * @instance
+	   * @method store
+	   * @param {String} key
+	   *      The key on which the <i>object</i> will be stored.
+	   * @param {Object} object
+	   *      The object to store.
+	   * @param [...]
+	   *      Parameters passed to the constructor when the new instance is created.
+	   * @return {Object}
+	   *      The newly created and stored object.
+	   * @see {@link ProAct.Registry.Provider#provide}
+	   */
+	  store: function (key, object) { return this.stored[key] = object; },
 	  get: function (key) { return this.stored[key]; },
 	  del: function(key) {
 	    var deleted = this.get(key);
@@ -7954,13 +8304,13 @@
 	  }
 	};
 	
-	Pro.Registry.StreamProvider.prototype = Pro.U.ex(Object.create(Pro.Registry.Provider.prototype), {
-	  constructor: Pro.Registry.StreamProvider,
+	ProAct.Registry.StreamProvider.prototype = P.U.ex(Object.create(P.R.Provider.prototype), {
+	  constructor: ProAct.Registry.StreamProvider,
 	  registered: function (registry) {
-	    registry.s = registry.stream = Pro.U.bind(this, this.get);
+	    registry.s = registry.stream = P.U.bind(this, this.get);
 	  },
 	  types: {
-	    basic: function () { return new Pro.Stream(); },
+	    basic: function () { return new P.S(); },
 	    delayed: function (args) { return new Pro.DelayedStream(parseInt(args[0], 10)); },
 	    size: function (args) { return new Pro.SizeBufferedStream(parseInt(args[0], 10)); },
 	    debouncing: function (args) { return new Pro.DebouncingStream(parseInt(args[0], 10)); },
@@ -7968,30 +8318,30 @@
 	  }
 	});
 	
-	Pro.Registry.FunctionProvider.prototype = Pro.U.ex(Object.create(Pro.Registry.Provider.prototype), {
-	  constructor: Pro.Registry.FunctionProvider
+	ProAct.Registry.FunctionProvider.prototype = P.U.ex(Object.create(P.R.Provider.prototype), {
+	  constructor: ProAct.Registry.FunctionProvider
 	});
 	
-	Pro.Registry.ProObjectProvider.prototype = Pro.U.ex(Object.create(Pro.Registry.Provider.prototype), {
-	  constructor: Pro.Registry.ProObjectProvider,
+	ProAct.Registry.ProObjectProvider.prototype = P.U.ex(Object.create(P.R.Provider.prototype), {
+	  constructor: ProAct.Registry.ProObjectProvider,
 	  registered: function (registry) {
-	    registry.po = registry.proObject = Pro.U.bind(this, this.get);
+	    registry.po = registry.proObject = P.U.bind(this, this.get);
 	    registry.prob = P.U.bind(this, function (key, val, meta) {
 	      return this.make(key, null, val, meta);
 	    });
 	  },
 	  types: {
 	    basic: function (options, value, meta) {
-	      return Pro.prob(value, meta);
+	      return P.prob(value, meta);
 	    }
 	  }
 	});
 	
-	streamProvider = new Pro.Registry.StreamProvider();
-	functionProvider = new Pro.Registry.FunctionProvider();
-	proObjectProvider = new Pro.Registry.ProObjectProvider();
+	streamProvider = new P.R.StreamProvider();
+	functionProvider = new P.R.FunctionProvider();
+	proObjectProvider = new P.R.ProObjectProvider();
 	
-	Pro.registry = new Pro.Registry()
+	P.registry = new P.R()
 	  .register('s', streamProvider)
 	  .register('po', proObjectProvider)
 	  .register('obj', proObjectProvider)

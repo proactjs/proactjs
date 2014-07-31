@@ -1,13 +1,40 @@
-P.U.ex(ProAct.Registry, {
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: registry/provider.js</title>
+    
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+    
+    <h1 class="page-title">Source: registry/provider.js</h1>
+    
+    
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source"><code>P.U.ex(ProAct.Registry, {
 
   /**
    * Constructs a ProAct.Registry.Provider. The {@link ProAct.Registry} uses registered providers as storage for different objects.
-   * <p>
+   * &lt;p>
    *  Every provider has one or more namespaces in the {@link ProAct.Registry} it is registered to.
-   * </p>
-   * <p>
+   * &lt;/p>
+   * &lt;p>
    *  Every provider knows how to store its type of obects, how to make them, or delete them.
-   * </p>
+   * &lt;/p>
    *
    * @class ProAct.Registry.Provider
    * @memberof ProAct.Registry
@@ -61,56 +88,13 @@ P.U.ex(ProAct.Registry, {
 });
 
 ProAct.Registry.Provider.prototype = {
-
-  /**
-   * Reference to the constructor of this object.
-   *
-   * @memberof ProAct.Registry.Provider
-   * @instance
-   * @constant
-   * @default ProAct.Registry.Provider
-   */
   constructor: ProAct.Registry.Provider,
-
-  /**
-   * Creates and stores an instance of the object this ProAct.Registry.Provider manages.
-   * <p>
-   *  For the creation is used the {@link ProAct.Registry.Provider#provide} method.
-   * </p>
-   *
-   * @memberof ProAct.Registry.Provider
-   * @instance
-   * @method make
-   * @param {String} key
-   *      The key on which the new instance will be stored.
-   * @param {String} options
-   *      String containing options for the creation process. For example the exact sub-type of the object to create (optional).
-   * @param [...]
-   *      Parameters passed to the constructor when the new instance is created.
-   * @return {Object}
-   *      The newly created and stored object.
-   * @see {@link ProAct.Registry.Provider#provide}
-   */
   make: function (key, options) {
     var provided, args = slice.call(arguments, 1);
     this.stored[key] = provided = this.provide.apply(this, args);
     return provided;
   },
-
-  /**
-   * Stores an instance of an object this ProAct.Registry.Provider manages.
-   *
-   * @memberof ProAct.Registry.Provider
-   * @instance
-   * @method store
-   * @param {String} key
-   *      The key on which the <i>object</i> will be stored.
-   * @param {Object} object
-   *      The object to store.
-   * @return {Object}
-   *      The stored object.
-   */
-  store: function (key, object) { return this.stored[key] = object; },
+  store: function (key, func, options) { return this.stored[key] = func; },
   get: function (key) { return this.stored[key]; },
   del: function(key) {
     var deleted = this.get(key);
@@ -187,3 +171,26 @@ P.registry = new P.R()
   .register('obj', proObjectProvider)
   .register('f', functionProvider)
   .register('l', functionProvider);
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Index</a></h2><h3>Classes</h3><ul><li><a href="ProAct.Array.html">Array</a></li><li><a href="ProAct.ArrayCore.html">ArrayCore</a></li><li><a href="ProAct.ArrayProperty.html">ArrayProperty</a></li><li><a href="ProAct.AutoProperty.html">AutoProperty</a></li><li><a href="ProAct.BufferedStream.html">BufferedStream</a></li><li><a href="ProAct.Core.html">Core</a></li><li><a href="ProAct.DebouncingStream.html">DebouncingStream</a></li><li><a href="ProAct.DelayedStream.html">DelayedStream</a></li><li><a href="ProAct.Event.html">Event</a></li><li><a href="ProAct.Flow.html">Flow</a></li><li><a href="ProAct.NullProperty.html">NullProperty</a></li><li><a href="ProAct.ObjectCore.html">ObjectCore</a></li><li><a href="ProAct.ObjectProperty.html">ObjectProperty</a></li><li><a href="ProAct.Observable.html">Observable</a></li><li><a href="ProAct.Property.html">Property</a></li><li><a href="ProAct.Queue.html">Queue</a></li><li><a href="ProAct.Queues.html">Queues</a></li><li><a href="ProAct.Registry.html">Registry</a></li><li><a href="ProAct.Registry.FunctionProvider.html">FunctionProvider</a></li><li><a href="ProAct.Registry.ProObjectProvider.html">ProObjectProvider</a></li><li><a href="ProAct.Registry.Provider.html">Provider</a></li><li><a href="ProAct.Registry.StreamProvider.html">StreamProvider</a></li><li><a href="ProAct.SizeBufferedStream.html">SizeBufferedStream</a></li><li><a href="ProAct.Stream.html">Stream</a></li><li><a href="ProAct.ThrottlingStream.html">ThrottlingStream</a></li><li><a href="ProAct.Val.html">Val</a></li></ul><h3>Namespaces</h3><ul><li><a href="ProAct.html">ProAct</a></li><li><a href="ProAct.Array.Listeners.html">Listeners</a></li><li><a href="ProAct.Array.Operations.html">Operations</a></li><li><a href="ProAct.Configuration.html">Configuration</a></li><li><a href="ProAct.DSL.html">DSL</a></li><li><a href="ProAct.DSL.ops.html">ops</a></li><li><a href="ProAct.DSL.predefined.html">predefined</a></li><li><a href="ProAct.DSL.predefined.accumulation.html">accumulation</a></li><li><a href="ProAct.DSL.predefined.filtering.html">filtering</a></li><li><a href="ProAct.DSL.predefined.mapping.html">mapping</a></li><li><a href="ProAct.Event.Types.html">Types</a></li><li><a href="ProAct.OpStore.html">OpStore</a></li><li><a href="ProAct.Property.Types.html">Types</a></li><li><a href="ProAct.States.html">States</a></li><li><a href="ProAct.Utils.html">Utils</a></li></ul>
+</nav>
+
+<br clear="both">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.2</a> on Thu Jul 31 2014 18:41:34 GMT+0300 (EEST)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
