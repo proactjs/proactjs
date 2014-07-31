@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Namespace: ops</title>
+    
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+    
+    <h1 class="page-title">Namespace: ops</h1>
+    
+    
+
+
+
+<section>
+    
+<header>
+    <h2>
+        <span class="ancestors"><a href="ProAct.html">ProAct</a><a href="ProAct.DSL.html">.DSL</a>.</span>
+    
+    ops
+    </h2>
+    
+</header>  
+
+<article>
+    <div class="container-overview">
+    
+    
+    
+        
+            <div class="description">The operation definitions of the DSL.
+<p>
+ All of the available and executable operations defined in the ProAct.DSL.
+</p>
+<p>
+ Users of ProAct.js can add their own operation to it.
+ <pre>
+   ProAct.DSL.ops.myOp = ProAct.OpStore.all.simpleOp('foo', 'foo');
+ </pre>
+</p></div>
+        
+        
+        
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="dsl.js.html">registry/dsl.js</a>, <a href="dsl.js.html#line162">line 162</a>
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    <dt class="tag-see">See:</dt>
+    <dd class="tag-see">
+        <ul>
+            <li><a href="ProAct.OpStore.html">ProAct.OpStore</a></li>
+        </ul>
+    </dd>
+    
+    
+    
+</dl>
+
+        
+        
+    
+    </div>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+        <h3 class="subsection-title">Members</h3>
+        
+        <dl>
+            
+<dt>
+    <h4 class="name" id="accumulation"><span class="type-signature">&lt;static, constant> </span>accumulation<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        DSL operation for adding accumulation to the target <a href="ProAct.Observable.html">ProAct.Observable</a> of the DSL.
+<p>
+ For example
+ <pre>
+   'acc($1, f:bla)'
+ </pre>
+ means that accumulating function, stored in the <a href="ProAct.Registry.html">ProAct.Registry</a> as 'bla'
+ should be added as accumulation to the targed <a href="ProAct.Observable.html">ProAct.Observable</a> of the DSL,
+ and the first argument passed to ProAct.DSL.run after the targed object, the DSL data and the registry should
+ be used as initial value for the accumulation.
+</p>
+    </div>
+    
+    
+    
+
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="dsl.js.html">registry/dsl.js</a>, <a href="dsl.js.html#line339">line 339</a>
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    <dt class="tag-see">See:</dt>
+    <dd class="tag-see">
+        <ul>
+            <li><a href="ProAct.OpStore.html">ProAct.OpStore</a></li>
+        
+            <li><a href="ProAct.Registry.html">ProAct.Registry</a></li>
+        
+            <li><a href="ProAct.Observable.html">ProAct.Observable</a></li>
+        
+            <li>ProAct.DSL.run</li>
+        </ul>
+    </dd>
+    
+    
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="filtering"><span class="type-signature">&lt;static, constant> </span>filtering<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        DSL operation for adding filters to the target <a href="ProAct.Observable.html">ProAct.Observable</a> of the DSL.
+<p>
+ For example
+ <pre>
+   'filter(f:bla)'
+ </pre>
+ means that filtering function, stored in the <a href="ProAct.Registry.html">ProAct.Registry</a> as 'bla'
+ should be add as filter to the targed <a href="ProAct.Observable.html">ProAct.Observable</a> of the DSL.
+</p>
+<p>
+ or
+ <pre>
+   'filter($1)'
+ </pre>
+ means that filtering function passed to the ProAct.Dsl.run
+ method as the first argument after the targed object, the DSL data and the registry
+ should be added as filter to the targed <a href="ProAct.Observable.html">ProAct.Observable</a> of the DSL.
+</p>
+    </div>
+    
+    
+    
+
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="dsl.js.html">registry/dsl.js</a>, <a href="dsl.js.html#line316">line 316</a>
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    <dt class="tag-see">See:</dt>
+    <dd class="tag-see">
+        <ul>
+            <li><a href="ProAct.OpStore.html">ProAct.OpStore</a></li>
+        
+            <li><a href="ProAct.Registry.html">ProAct.Registry</a></li>
+        
+            <li><a href="ProAct.Observable.html">ProAct.Observable</a></li>
+        
+            <li>ProAct.DSL.run</li>
+        </ul>
+    </dd>
+    
+    
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="into"><span class="type-signature">&lt;static, constant> </span>into<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        DSL operation for defining sources of <a href="ProAct.Observable.html">ProAct.Observable</a>s.
+<p>
+ For example
+ <pre>
+   '<<(s:bla)'
+ </pre>
+ means that the source of the targed of the DSL should be a stream stored in the <a href="ProAct.Registry.html">ProAct.Registry</a> by the key 'bla'.
+</p>
+<p>
+ or
+ <pre>
+   '<<($1)'
+ </pre>
+ means that the source of the targed of the DSL should be an <a href="ProAct.Observable.html">ProAct.Observable</a> passed to the ProAct.Dsl.run
+ method as the first argument after the targed object, the DSL data and the registry.
+</p>
+    </div>
+    
+    
+    
+
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="dsl.js.html">registry/dsl.js</a>, <a href="dsl.js.html#line207">line 207</a>
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    <dt class="tag-see">See:</dt>
+    <dd class="tag-see">
+        <ul>
+            <li><a href="ProAct.OpStore.html">ProAct.OpStore</a></li>
+        
+            <li><a href="ProAct.Registry.html">ProAct.Registry</a></li>
+        
+            <li><a href="ProAct.Observable.html">ProAct.Observable</a></li>
+        
+            <li>ProAct.DSL.run</li>
+        </ul>
+    </dd>
+    
+    
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="mapping"><span class="type-signature">&lt;static, constant> </span>mapping<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        DSL operation for adding mapping to the target <a href="ProAct.Observable.html">ProAct.Observable</a> of the DSL.
+<p>
+ For example
+ <pre>
+   'map(f:bla)'
+ </pre>
+ means that mapping function, stored in the <a href="ProAct.Registry.html">ProAct.Registry</a> as 'bla'
+ should be mapped to the targed <a href="ProAct.Observable.html">ProAct.Observable</a> of the DSL.
+</p>
+<p>
+ or
+ <pre>
+   'map($2)'
+ </pre>
+ means that mapping function passed to the ProAct.Dsl.run
+ method as the second argument after the targed object, the DSL data and the registry
+ should be mapped to the targed <a href="ProAct.Observable.html">ProAct.Observable</a> of the DSL.
+</p>
+    </div>
+    
+    
+    
+
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="dsl.js.html">registry/dsl.js</a>, <a href="dsl.js.html#line286">line 286</a>
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    <dt class="tag-see">See:</dt>
+    <dd class="tag-see">
+        <ul>
+            <li><a href="ProAct.OpStore.html">ProAct.OpStore</a></li>
+        
+            <li><a href="ProAct.Registry.html">ProAct.Registry</a></li>
+        
+            <li><a href="ProAct.Observable.html">ProAct.Observable</a></li>
+        
+            <li>ProAct.DSL.run</li>
+        </ul>
+    </dd>
+    
+    
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="on"><span class="type-signature">&lt;static, constant> </span>on<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        DSL operation for attaching listener to the target <a href="ProAct.Observable.html">ProAct.Observable</a> of the DSL.
+<p>
+ For example
+ <pre>
+   '@(f:bla)'
+ </pre>
+ means that listener function, stored in the <a href="ProAct.Registry.html">ProAct.Registry</a> as 'bla'
+ should be attached as a listener to the targed <a href="ProAct.Observable.html">ProAct.Observable</a> of the DSL.
+</p>
+    </div>
+    
+    
+    
+
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="dsl.js.html">registry/dsl.js</a>, <a href="dsl.js.html#line256">line 256</a>
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    <dt class="tag-see">See:</dt>
+    <dd class="tag-see">
+        <ul>
+            <li><a href="ProAct.OpStore.html">ProAct.OpStore</a></li>
+        
+            <li><a href="ProAct.Registry.html">ProAct.Registry</a></li>
+        
+            <li><a href="ProAct.Observable.html">ProAct.Observable</a></li>
+        
+            <li>ProAct.DSL.run</li>
+        </ul>
+    </dd>
+    
+    
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="out"><span class="type-signature">&lt;static, constant> </span>out<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        DSL operation for setting the targed of the DSL as sources of another <a href="ProAct.Observable.html">ProAct.Observable</a>s.
+<p>
+ For example
+ <pre>
+   '>>(s:bla)'
+ </pre>
+ means that the targed of the DSL should become a source for a stream stored in the <a href="ProAct.Registry.html">ProAct.Registry</a> by the key 'bla'.
+</p>
+<p>
+ or
+ <pre>
+   '>>($1)'
+ </pre>
+ means that the targed of the DSL should become a source for an <a href="ProAct.Observable.html">ProAct.Observable</a> passed to the ProAct.Dsl.run
+ method as the first argument after the targed object, the DSL data and the registry.
+</p>
+    </div>
+    
+    
+    
+
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="dsl.js.html">registry/dsl.js</a>, <a href="dsl.js.html#line235">line 235</a>
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    <dt class="tag-see">See:</dt>
+    <dd class="tag-see">
+        <ul>
+            <li><a href="ProAct.OpStore.html">ProAct.OpStore</a></li>
+        
+            <li><a href="ProAct.Registry.html">ProAct.Registry</a></li>
+        
+            <li><a href="ProAct.Observable.html">ProAct.Observable</a></li>
+        
+            <li>ProAct.DSL.run</li>
+        </ul>
+    </dd>
+    
+    
+    
+</dl>
+
+    
+    
+</dd>
+
+        </dl>
+    
+    
+    
+    
+    
+    
+    
+</article>
+
+</section>  
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Index</a></h2><h3>Classes</h3><ul><li><a href="ProAct.Array.html">Array</a></li><li><a href="ProAct.ArrayCore.html">ArrayCore</a></li><li><a href="ProAct.ArrayProperty.html">ArrayProperty</a></li><li><a href="ProAct.AutoProperty.html">AutoProperty</a></li><li><a href="ProAct.BufferedStream.html">BufferedStream</a></li><li><a href="ProAct.Core.html">Core</a></li><li><a href="ProAct.DebouncingStream.html">DebouncingStream</a></li><li><a href="ProAct.DelayedStream.html">DelayedStream</a></li><li><a href="ProAct.Event.html">Event</a></li><li><a href="ProAct.Flow.html">Flow</a></li><li><a href="ProAct.NullProperty.html">NullProperty</a></li><li><a href="ProAct.ObjectCore.html">ObjectCore</a></li><li><a href="ProAct.ObjectProperty.html">ObjectProperty</a></li><li><a href="ProAct.Observable.html">Observable</a></li><li><a href="ProAct.Property.html">Property</a></li><li><a href="ProAct.Queue.html">Queue</a></li><li><a href="ProAct.Queues.html">Queues</a></li><li><a href="ProAct.Registry.html">Registry</a></li><li><a href="ProAct.SizeBufferedStream.html">SizeBufferedStream</a></li><li><a href="ProAct.Stream.html">Stream</a></li><li><a href="ProAct.ThrottlingStream.html">ThrottlingStream</a></li><li><a href="ProAct.Val.html">Val</a></li></ul><h3>Namespaces</h3><ul><li><a href="ProAct.html">ProAct</a></li><li><a href="ProAct.Array.Listeners.html">Listeners</a></li><li><a href="ProAct.Array.Operations.html">Operations</a></li><li><a href="ProAct.Configuration.html">Configuration</a></li><li><a href="ProAct.DSL.html">DSL</a></li><li><a href="ProAct.DSL.ops.html">ops</a></li><li><a href="ProAct.DSL.predefined.html">predefined</a></li><li><a href="ProAct.DSL.predefined.mapping.html">mapping</a></li><li><a href="ProAct.Event.Types.html">Types</a></li><li><a href="ProAct.OpStore.html">OpStore</a></li><li><a href="ProAct.Property.Types.html">Types</a></li><li><a href="ProAct.States.html">States</a></li><li><a href="ProAct.Utils.html">Utils</a></li></ul>
+</nav>
+
+<br clear="both">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.2</a> on Thu Jul 31 2014 10:03:16 GMT+0300 (EEST)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

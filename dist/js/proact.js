@@ -7376,8 +7376,68 @@
 	  }
 	};
 	
+	/**
+	 * Contains {@link ProAct.DSl} operation logic definitions.
+	 * <p>
+	 *  Every operation has
+	 *  <ol>
+	 *    <li><b>sym</b> - A symbol used to identify the right operation in a DSL string or object.</li>
+	 *    <li><b>match method</b> - A method used for identifying the operation, usually it uses the <i>sym</i></li>
+	 *    <li>
+	 *      <b>toOptions</b> - A method which is able to turn a DSL string with the operation,
+	 *      into an actual array of options containing all the functions to be executed by the DSL and their arguments.
+	 *    </li>
+	 *    <li><b>action</b> - The operation logic. The options object of the above method should be passed to it, as well as the targed on which the DSL should be run.</li>
+	 *  </ol>
+	 * </p>
+	 *
+	 * @namespace ProAct.OpStore
+	 */
 	ProAct.OpStore = {
+	
+	  /**
+	   * Default operation definitions, that can be used by most of the operations to be defined.
+	   *
+	   * @memberof ProAct.OpStore
+	   * @static
+	   * @constant
+	   */
 	  all: {
+	
+	    /**
+	     * Can generate a simple operation definition.
+	     * <p>
+	     *  It is used for defining all the simple operations, like <i>map</i> or <i>filter</i>.
+	     * </p>
+	     *
+	     * @memberof ProAct.OpStore.all
+	     * @static
+	     * @param {String} name
+	     *      The name of the operation to define.
+	     * @param {String} sym
+	     *      The symbol of the operation that shoul dbe used to identify it from within a DSL string.
+	     * @return {Object}
+	     *      <ol>
+	     *        <li><b>sym</b> - The symbol used to identify the operation in a DSL string or object.</li>
+	     *        <li><b>match method</b> - A method using the <i>sym</i> for identifying the operation in a DSL string.</li>
+	     *        <li>
+	     *          <b>toOptions</b> - A method which is able to turn a DSL string with the operation,
+	     *          into the actual array of options containing all the functions to be executed by the DSL and their arguments.
+	     *          <p>
+	     *            This method is able to fetch predefined operation functions.
+	     *          </p>
+	     *        </li>
+	     *        <li>
+	     *          <b>action</b> - The operation logic.
+	     *          The options object of the above method should be passed to it, as well as the targed on which the DSL should be run.
+	     *          <p>
+	     *            It just calls method named as the passed <i>name</i> parameter on the targed <i>object</i>, passing it as arguments,
+	     *            the argument array generated from the <i>toOptions</i> method.
+	     *          </p>
+	     *        </li>
+	     *      </ol>
+	     * @see {@link ProAct.DSl.predefined}
+	     */
 	    simpleOp: function(name, sym) {
 	      return {
 	        sym: sym,
@@ -7447,21 +7507,310 @@
 	};
 	opStoreAll = P.OpStore.all;
 	
+	/**
+	 * Contains implementation of the ProAct.js DSL.
+	 * <p>
+	 *  The idea of the DSL is to define {@link ProAct.Observable}s and their dependencies on each other in a declarative and simple way.
+	 * </p>
+	 * <p>
+	 *  The {@link ProAct.Registry} is used to store these observables.
+	 * </p>
+	 * <p>
+	 *  For example if we want to have a stream configured to write in a property, it is very easy done using the DSL:
+	 *  <pre>
+	 *    ProAct.registry.prob('val', 0, '<<(s:data)');
+	 *  </pre>
+	 *  This tells the {@link ProAct.Registry} to create a {@link ProAct.Val} with the value of zero, and to point the previously,
+	 *  stored 'data' stream to it.
+	 * </p>
+	 *
+	 * @namespace ProAct.DSL
+	 */
 	ProAct.DSL = {
+	
+	  /**
+	   * A separator which can be used to separate multiple DSL expressions in one string.
+	   *
+	   * @memberof ProAct.DSL
+	   * @static
+	   * @constant
+	   */
 	  separator: '|',
+	
+	  /**
+	   * The operation definitions of the DSL.
+	   * <p>
+	   *  All of the available and executable operations defined in the ProAct.DSL.
+	   * </p>
+	   * <p>
+	   *  Users of ProAct.js can add their own operation to it.
+	   *  <pre>
+	   *    ProAct.DSL.ops.myOp = ProAct.OpStore.all.simpleOp('foo', 'foo');
+	   *  </pre>
+	   * </p>
+	   *
+	   * @namespace ProAct.DSL.ops
+	   * @memberof ProAct.DSL
+	   * @static
+	   * @see {@link ProAct.OpStore}
+	   */
 	  ops: {
+	
+	    /**
+	     * DSL operation for defining sources of {@link ProAct.Observable}s.
+	     * <p>
+	     *  For example
+	     *  <pre>
+	     *    '<<(s:bla)'
+	     *  </pre>
+	     *  means that the source of the targed of the DSL should be a stream stored in the {@link ProAct.Registry} by the key 'bla'.
+	     * </p>
+	     * <p>
+	     *  or
+	     *  <pre>
+	     *    '<<($1)'
+	     *  </pre>
+	     *  means that the source of the targed of the DSL should be an {@link ProAct.Observable} passed to the {@link ProAct.Dsl.run}
+	     *  method as the first argument after the targed object, the DSL data and the registry.
+	     * </p>
+	     *
+	     * @memberof ProAct.DSL.ops
+	     * @static
+	     * @constant
+	     * @see {@link ProAct.OpStore}
+	     * @see {@link ProAct.Registry}
+	     * @see {@link ProAct.Observable}
+	     * @see {@link ProAct.DSL.run}
+	     */
 	    into: opStoreAll.simpleOp('into', '<<'),
+	
+	    /**
+	     * DSL operation for setting the targed of the DSL as sources of another {@link ProAct.Observable}s.
+	     * <p>
+	     *  For example
+	     *  <pre>
+	     *    '>>(s:bla)'
+	     *  </pre>
+	     *  means that the targed of the DSL should become a source for a stream stored in the {@link ProAct.Registry} by the key 'bla'.
+	     * </p>
+	     * <p>
+	     *  or
+	     *  <pre>
+	     *    '>>($1)'
+	     *  </pre>
+	     *  means that the targed of the DSL should become a source for an {@link ProAct.Observable} passed to the {@link ProAct.Dsl.run}
+	     *  method as the first argument after the targed object, the DSL data and the registry.
+	     * </p>
+	     *
+	     * @memberof ProAct.DSL.ops
+	     * @static
+	     * @constant
+	     * @see {@link ProAct.OpStore}
+	     * @see {@link ProAct.Registry}
+	     * @see {@link ProAct.Observable}
+	     * @see {@link ProAct.DSL.run}
+	     */
 	    out: opStoreAll.simpleOp('out', '>>'),
+	
+	    /**
+	     * DSL operation for attaching listener to the target {@link ProAct.Observable} of the DSL.
+	     * <p>
+	     *  For example
+	     *  <pre>
+	     *    '@(f:bla)'
+	     *  </pre>
+	     *  means that listener function, stored in the {@link ProAct.Registry} as 'bla'
+	     *  should be attached as a listener to the targed {@link ProAct.Observable} of the DSL.
+	     * </p>
+	     *
+	     * @memberof ProAct.DSL.ops
+	     * @static
+	     * @constant
+	     * @see {@link ProAct.OpStore}
+	     * @see {@link ProAct.Registry}
+	     * @see {@link ProAct.Observable}
+	     * @see {@link ProAct.DSL.run}
+	     */
 	    on: opStoreAll.simpleOp('on', '@'),
+	
+	    /**
+	     * DSL operation for adding mapping to the target {@link ProAct.Observable} of the DSL.
+	     * <p>
+	     *  For example
+	     *  <pre>
+	     *    'map(f:bla)'
+	     *  </pre>
+	     *  means that mapping function, stored in the {@link ProAct.Registry} as 'bla'
+	     *  should be mapped to the targed {@link ProAct.Observable} of the DSL.
+	     * </p>
+	     * <p>
+	     *  or
+	     *  <pre>
+	     *    'map($2)'
+	     *  </pre>
+	     *  means that mapping function passed to the {@link ProAct.Dsl.run}
+	     *  method as the second argument after the targed object, the DSL data and the registry
+	     *  should be mapped to the targed {@link ProAct.Observable} of the DSL.
+	     * </p>
+	     *
+	     * @memberof ProAct.DSL.ops
+	     * @static
+	     * @constant
+	     * @see {@link ProAct.OpStore}
+	     * @see {@link ProAct.Registry}
+	     * @see {@link ProAct.Observable}
+	     * @see {@link ProAct.DSL.run}
+	     */
 	    mapping: opStoreAll.simpleOp('mapping', 'map'),
+	
+	    /**
+	     * DSL operation for adding filters to the target {@link ProAct.Observable} of the DSL.
+	     * <p>
+	     *  For example
+	     *  <pre>
+	     *    'filter(f:bla)'
+	     *  </pre>
+	     *  means that filtering function, stored in the {@link ProAct.Registry} as 'bla'
+	     *  should be add as filter to the targed {@link ProAct.Observable} of the DSL.
+	     * </p>
+	     * <p>
+	     *  or
+	     *  <pre>
+	     *    'filter($1)'
+	     *  </pre>
+	     *  means that filtering function passed to the {@link ProAct.Dsl.run}
+	     *  method as the first argument after the targed object, the DSL data and the registry
+	     *  should be added as filter to the targed {@link ProAct.Observable} of the DSL.
+	     * </p>
+	     *
+	     * @memberof ProAct.DSL.ops
+	     * @static
+	     * @constant
+	     * @see {@link ProAct.OpStore}
+	     * @see {@link ProAct.Registry}
+	     * @see {@link ProAct.Observable}
+	     * @see {@link ProAct.DSL.run}
+	     */
 	    filtering: opStoreAll.simpleOp('filtering', 'filter'),
+	
+	    /**
+	     * DSL operation for adding accumulation to the target {@link ProAct.Observable} of the DSL.
+	     * <p>
+	     *  For example
+	     *  <pre>
+	     *    'acc($1, f:bla)'
+	     *  </pre>
+	     *  means that accumulating function, stored in the {@link ProAct.Registry} as 'bla'
+	     *  should be added as accumulation to the targed {@link ProAct.Observable} of the DSL,
+	     *  and the first argument passed to {@link ProAct.DSL.run} after the targed object, the DSL data and the registry should
+	     *  be used as initial value for the accumulation.
+	     * </p>
+	     *
+	     * @memberof ProAct.DSL.ops
+	     * @static
+	     * @constant
+	     * @see {@link ProAct.OpStore}
+	     * @see {@link ProAct.Registry}
+	     * @see {@link ProAct.Observable}
+	     * @see {@link ProAct.DSL.run}
+	     */
 	    accumulation: opStoreAll.simpleOp('accumulation', 'acc')
 	  },
+	
+	  /**
+	   * A set of predefined operations to be used by the DSL.
+	   *
+	   * @namespace ProAct.DSL.predefined
+	   * @memberof ProAct.DSL
+	   * @static
+	   * @see {@link ProAct.DSL.ops}
+	   */
 	  predefined: {
+	
+	    /**
+	     * A set of predefined mapping operations to be used by the DSL.
+	     *
+	     * @namespace ProAct.DSL.predefined.mapping
+	     * @memberof ProAct.DSL.predefined
+	     * @static
+	     * @see {@link ProAct.DSL.ops.map}
+	     */
 	    mapping: {
+	
+	      /**
+	       * Mapping operation for changing the sign of a number to the oposite.
+	       * <p>
+	       *  For example 4 becomes -4 and -5 becomes 5.
+	       * </p>
+	       * <p>
+	       *  Usage in a DSL expression:
+	       *  <pre>
+	       *    map(-)
+	       *  </pre>
+	       * </p>
+	       *
+	       * @memberof ProAct.DSL.predefined.mapping
+	       * @static
+	       * @method
+	       * @see {@link ProAct.DSL.ops.map}
+	       */
 	      '-': function (el) { return -el; },
+	
+	      /**
+	       * Mapping operation for computing the square of a number.
+	       * <p>
+	       *  For example 4 becomes 16.
+	       * </p>
+	       * <p>
+	       *  Usage in a DSL expression:
+	       *  <pre>
+	       *    map(pow)
+	       *  </pre>
+	       * </p>
+	       *
+	       * @memberof ProAct.DSL.predefined.mapping
+	       * @static
+	       * @method
+	       * @see {@link ProAct.DSL.ops.map}
+	       */
 	      'pow': function (el) { return el * el; },
+	
+	      /**
+	       * Mapping operation for computing the square root of a number.
+	       * <p>
+	       *  For example 4 becomes 2.
+	       * </p>
+	       * <p>
+	       *  Usage in a DSL expression:
+	       *  <pre>
+	       *    map(sqrt)
+	       *  </pre>
+	       * </p>
+	       *
+	       * @memberof ProAct.DSL.predefined.mapping
+	       * @static
+	       * @method
+	       * @see {@link ProAct.DSL.ops.map}
+	       */
 	      'sqrt': function (el) { return Math.sqrt(el); },
+	
+	      /**
+	       * Mapping operation for turning an object to a decimal Number - integer.
+	       * <p>
+	       *  For example '4' becomes 4.
+	       * </p>
+	       * <p>
+	       *  Usage in a DSL expression:
+	       *  <pre>
+	       *    map(int)
+	       *  </pre>
+	       * </p>
+	       *
+	       * @memberof ProAct.DSL.predefined.mapping
+	       * @static
+	       * @method
+	       * @see {@link ProAct.DSL.ops.map}
+	       */
 	      'int': function (el) { return parseInt(el, 10); },
 	      '&.': function (arg) {
 	        return function (el) {

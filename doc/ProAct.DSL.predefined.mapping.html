@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Namespace: Configuration</title>
+    <title>JSDoc: Namespace: mapping</title>
     
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
     
-    <h1 class="page-title">Namespace: Configuration</h1>
+    <h1 class="page-title">Namespace: mapping</h1>
     
     
 
@@ -27,9 +27,9 @@
     
 <header>
     <h2>
-        <span class="ancestors"><a href="ProAct.html">ProAct</a>.</span>
+        <span class="ancestors"><a href="ProAct.html">ProAct</a><a href="ProAct.DSL.html">.DSL</a><a href="ProAct.DSL.predefined.html">.predefined</a>.</span>
     
-    Configuration
+    mapping
     </h2>
     
 </header>  
@@ -40,7 +40,7 @@
     
     
         
-            <div class="description">Contains various configurations for the ProAct.js library.</div>
+            <div class="description">A set of predefined mapping operations to be used by the DSL.</div>
         
         
         
@@ -66,86 +66,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="pro.js.html">pro.js</a>, <a href="pro.js.html#line407">line 407</a>
-    </li></ul></dd>
-    
-    
-    
-    
-    
-    
-    
-</dl>
-
-        
-        
-    
-    </div>
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-        <h3 class="subsection-title">Members</h3>
-        
-        <dl>
-            
-<dt>
-    <h4 class="name" id="keypropList"><span class="type-signature">&lt;static> </span>keypropList<span class="type-signature"> :Array</span></h4>
-    
-    
-</dt>
-<dd>
-    
-    <div class="description">
-        Defines a list of the keyword properties that can not be used in ProAct.js objects.
-The <a href="ProAct.Configuration.html#keyprops">ProAct.Configuration.keyprops</a> option must be set to true in order for this list to be used.
-    </div>
-    
-    
-    
-        <h5>Type:</h5>
-        <ul>
-            <li>
-                
-<span class="param-type">Array</span>
-
-
-            </li>
-        </ul>
-    
-
-    
-<dl class="details">
-    
-        
-    
-    
-    
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="pro.js.html">pro.js</a>, <a href="pro.js.html#line434">line 434</a>
+        <a href="dsl.js.html">registry/dsl.js</a>, <a href="dsl.js.html#line352">line 352</a>
     </li></ul></dd>
     
     
@@ -155,7 +76,7 @@ The <a href="ProAct.Configuration.html#keyprops">ProAct.Configuration.keyprops</
     <dt class="tag-see">See:</dt>
     <dd class="tag-see">
         <ul>
-            <li><a href="ProAct.Configuration.html#keyprops">ProAct.Configuration.keyprops</a></li>
+            <li>ProAct.DSL.ops.map</li>
         </ul>
     </dd>
     
@@ -163,6 +84,107 @@ The <a href="ProAct.Configuration.html#keyprops">ProAct.Configuration.keyprops</
     
 </dl>
 
+        
+        
+    
+    </div>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+        <h3 class="subsection-title">Methods</h3>
+        
+        <dl>
+            
+<dt>
+    <h4 class="name" id=""-""><span class="type-signature">&lt;static> </span>"-"<span class="signature">()</span><span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Mapping operation for changing the sign of a number to the oposite.
+<p>
+ For example 4 becomes -4 and -5 becomes 5.
+</p>
+<p>
+ Usage in a DSL expression:
+ <pre>
+   map(-)
+ </pre>
+</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="dsl.js.html">registry/dsl.js</a>, <a href="dsl.js.html#line379">line 379</a>
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    <dt class="tag-see">See:</dt>
+    <dd class="tag-see">
+        <ul>
+            <li>ProAct.DSL.ops.map</li>
+        </ul>
+    </dd>
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
     
     
 </dd>
@@ -170,31 +192,33 @@ The <a href="ProAct.Configuration.html#keyprops">ProAct.Configuration.keyprops</
         
             
 <dt>
-    <h4 class="name" id="keyprops"><span class="type-signature">&lt;static> </span>keyprops<span class="type-signature"> :Boolean</span></h4>
+    <h4 class="name" id="pow"><span class="type-signature">&lt;static> </span>pow<span class="signature">()</span><span class="type-signature"></span></h4>
     
     
 </dt>
 <dd>
     
+    
     <div class="description">
-        If this option is set to true, when a ProAct.js object is created and has properties named
-as one or more of the properties listed in <i>ProAct.Configuration.keypropList</i> an Error will be thrown.
-In other words declares some of the properties of every ProAct objects as keyword properties.
+        Mapping operation for computing computing the square of a number.
+<p>
+ For example 4 becomes 16.
+</p>
+<p>
+ Usage in a DSL expression:
+ <pre>
+   map(pow)
+ </pre>
+</p>
     </div>
     
+
     
     
-        <h5>Type:</h5>
-        <ul>
-            <li>
-                
-<span class="param-type">Boolean</span>
-
-
-            </li>
-        </ul>
     
-
+    
+    
+    
     
 <dl class="details">
     
@@ -218,7 +242,7 @@ In other words declares some of the properties of every ProAct objects as keywor
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="pro.js.html">pro.js</a>, <a href="pro.js.html#line423">line 423</a>
+        <a href="dsl.js.html">registry/dsl.js</a>, <a href="dsl.js.html#line398">line 398</a>
     </li></ul></dd>
     
     
@@ -228,7 +252,7 @@ In other words declares some of the properties of every ProAct objects as keywor
     <dt class="tag-see">See:</dt>
     <dd class="tag-see">
         <ul>
-            <li><a href="ProAct.Configuration.html#keypropList">ProAct.Configuration.keypropList</a></li>
+            <li>ProAct.DSL.ops.map</li>
         </ul>
     </dd>
     
@@ -236,13 +260,21 @@ In other words declares some of the properties of every ProAct objects as keywor
     
 </dl>
 
+    
+    
+
+    
+
+    
+    
+    
+    
+    
     
     
 </dd>
 
         </dl>
-    
-    
     
     
     
@@ -264,7 +296,7 @@ In other words declares some of the properties of every ProAct objects as keywor
 <br clear="both">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.2</a> on Thu Jul 31 2014 10:03:14 GMT+0300 (EEST)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.2</a> on Thu Jul 31 2014 10:03:17 GMT+0300 (EEST)
 </footer>
 
 <script> prettyPrint(); </script>

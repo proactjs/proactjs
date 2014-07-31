@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Namespace: Configuration</title>
+    <title>JSDoc: Namespace: DSL</title>
     
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
     
-    <h1 class="page-title">Namespace: Configuration</h1>
+    <h1 class="page-title">Namespace: DSL</h1>
     
     
 
@@ -29,7 +29,7 @@
     <h2>
         <span class="ancestors"><a href="ProAct.html">ProAct</a>.</span>
     
-    Configuration
+    DSL
     </h2>
     
 </header>  
@@ -40,7 +40,21 @@
     
     
         
-            <div class="description">Contains various configurations for the ProAct.js library.</div>
+            <div class="description">Contains implementation of the ProAct.js DSL.
+<p>
+ The idea of the DSL is to define <a href="ProAct.Observable.html">ProAct.Observable</a>s and their dependencies on each other in a declarative and simple way.
+</p>
+<p>
+ The <a href="ProAct.Registry.html">ProAct.Registry</a> is used to store these observables.
+</p>
+<p>
+ For example if we want to have a stream configured to write in a property, it is very easy done using the DSL:
+ <pre>
+   ProAct.registry.prob('val', 0, '<<(s:data)');
+ </pre>
+ This tells the <a href="ProAct.Registry.html">ProAct.Registry</a> to create a <a href="ProAct.Val.html">ProAct.Val</a> with the value of zero, and to point the previously,
+ stored 'data' stream to it.
+</p></div>
         
         
         
@@ -66,7 +80,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="pro.js.html">pro.js</a>, <a href="pro.js.html#line407">line 407</a>
+        <a href="dsl.js.html">registry/dsl.js</a>, <a href="dsl.js.html#line132">line 132</a>
     </li></ul></dd>
     
     
@@ -90,6 +104,16 @@
     
     
     
+    
+        <h3 class="subsection-title">Namespaces</h3>
+        
+        <dl>
+            <dt><a href="namespaces.html#ProAct.DSL.ops"><a href="ProAct.DSL.ops.html">ops</a></a></dt>
+            <dd></dd>
+        
+            <dt><a href="namespaces.html#ProAct.DSL.predefined"><a href="ProAct.DSL.predefined.html">predefined</a></a></dt>
+            <dd></dd>
+        </dl>
     
     
     
@@ -98,28 +122,17 @@
         <dl>
             
 <dt>
-    <h4 class="name" id="keypropList"><span class="type-signature">&lt;static> </span>keypropList<span class="type-signature"> :Array</span></h4>
+    <h4 class="name" id="separator"><span class="type-signature">&lt;static, constant> </span>separator<span class="type-signature"></span></h4>
     
     
 </dt>
 <dd>
     
     <div class="description">
-        Defines a list of the keyword properties that can not be used in ProAct.js objects.
-The <a href="ProAct.Configuration.html#keyprops">ProAct.Configuration.keyprops</a> option must be set to true in order for this list to be used.
+        A separator which can be used to separate multiple DSL expressions in one string.
     </div>
     
     
-    
-        <h5>Type:</h5>
-        <ul>
-            <li>
-                
-<span class="param-type">Array</span>
-
-
-            </li>
-        </ul>
     
 
     
@@ -145,92 +158,12 @@ The <a href="ProAct.Configuration.html#keyprops">ProAct.Configuration.keyprops</
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="pro.js.html">pro.js</a>, <a href="pro.js.html#line434">line 434</a>
+        <a href="dsl.js.html">registry/dsl.js</a>, <a href="dsl.js.html#line160">line 160</a>
     </li></ul></dd>
     
     
     
     
-    
-    <dt class="tag-see">See:</dt>
-    <dd class="tag-see">
-        <ul>
-            <li><a href="ProAct.Configuration.html#keyprops">ProAct.Configuration.keyprops</a></li>
-        </ul>
-    </dd>
-    
-    
-    
-</dl>
-
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="keyprops"><span class="type-signature">&lt;static> </span>keyprops<span class="type-signature"> :Boolean</span></h4>
-    
-    
-</dt>
-<dd>
-    
-    <div class="description">
-        If this option is set to true, when a ProAct.js object is created and has properties named
-as one or more of the properties listed in <i>ProAct.Configuration.keypropList</i> an Error will be thrown.
-In other words declares some of the properties of every ProAct objects as keyword properties.
-    </div>
-    
-    
-    
-        <h5>Type:</h5>
-        <ul>
-            <li>
-                
-<span class="param-type">Boolean</span>
-
-
-            </li>
-        </ul>
-    
-
-    
-<dl class="details">
-    
-        
-    
-    
-    
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="pro.js.html">pro.js</a>, <a href="pro.js.html#line423">line 423</a>
-    </li></ul></dd>
-    
-    
-    
-    
-    
-    <dt class="tag-see">See:</dt>
-    <dd class="tag-see">
-        <ul>
-            <li><a href="ProAct.Configuration.html#keypropList">ProAct.Configuration.keypropList</a></li>
-        </ul>
-    </dd>
     
     
     
@@ -264,7 +197,7 @@ In other words declares some of the properties of every ProAct objects as keywor
 <br clear="both">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.2</a> on Thu Jul 31 2014 10:03:14 GMT+0300 (EEST)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.2</a> on Thu Jul 31 2014 10:03:16 GMT+0300 (EEST)
 </footer>
 
 <script> prettyPrint(); </script>

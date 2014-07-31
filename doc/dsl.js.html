@@ -1,17 +1,44 @@
-/**
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: registry/dsl.js</title>
+    
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+    
+    <h1 class="page-title">Source: registry/dsl.js</h1>
+    
+    
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source"><code>/**
  * Contains {@link ProAct.DSl} operation logic definitions.
- * <p>
+ * &lt;p>
  *  Every operation has
- *  <ol>
- *    <li><b>sym</b> - A symbol used to identify the right operation in a DSL string or object.</li>
- *    <li><b>match method</b> - A method used for identifying the operation, usually it uses the <i>sym</i></li>
- *    <li>
- *      <b>toOptions</b> - A method which is able to turn a DSL string with the operation,
+ *  &lt;ol>
+ *    &lt;li>&lt;b>sym&lt;/b> - A symbol used to identify the right operation in a DSL string or object.&lt;/li>
+ *    &lt;li>&lt;b>match method&lt;/b> - A method used for identifying the operation, usually it uses the &lt;i>sym&lt;/i>&lt;/li>
+ *    &lt;li>
+ *      &lt;b>toOptions&lt;/b> - A method which is able to turn a DSL string with the operation,
  *      into an actual array of options containing all the functions to be executed by the DSL and their arguments.
- *    </li>
- *    <li><b>action</b> - The operation logic. The options object of the above method should be passed to it, as well as the targed on which the DSL should be run.</li>
- *  </ol>
- * </p>
+ *    &lt;/li>
+ *    &lt;li>&lt;b>action&lt;/b> - The operation logic. The options object of the above method should be passed to it, as well as the targed on which the DSL should be run.&lt;/li>
+ *  &lt;/ol>
+ * &lt;/p>
  *
  * @namespace ProAct.OpStore
  */
@@ -28,9 +55,9 @@ ProAct.OpStore = {
 
     /**
      * Can generate a simple operation definition.
-     * <p>
-     *  It is used for defining all the simple operations, like <i>map</i> or <i>filter</i>.
-     * </p>
+     * &lt;p>
+     *  It is used for defining all the simple operations, like &lt;i>map&lt;/i> or &lt;i>filter&lt;/i>.
+     * &lt;/p>
      *
      * @memberof ProAct.OpStore.all
      * @static
@@ -39,25 +66,25 @@ ProAct.OpStore = {
      * @param {String} sym
      *      The symbol of the operation that shoul dbe used to identify it from within a DSL string.
      * @return {Object}
-     *      <ol>
-     *        <li><b>sym</b> - The symbol used to identify the operation in a DSL string or object.</li>
-     *        <li><b>match method</b> - A method using the <i>sym</i> for identifying the operation in a DSL string.</li>
-     *        <li>
-     *          <b>toOptions</b> - A method which is able to turn a DSL string with the operation,
+     *      &lt;ol>
+     *        &lt;li>&lt;b>sym&lt;/b> - The symbol used to identify the operation in a DSL string or object.&lt;/li>
+     *        &lt;li>&lt;b>match method&lt;/b> - A method using the &lt;i>sym&lt;/i> for identifying the operation in a DSL string.&lt;/li>
+     *        &lt;li>
+     *          &lt;b>toOptions&lt;/b> - A method which is able to turn a DSL string with the operation,
      *          into the actual array of options containing all the functions to be executed by the DSL and their arguments.
-     *          <p>
+     *          &lt;p>
      *            This method is able to fetch predefined operation functions.
-     *          </p>
-     *        </li>
-     *        <li>
-     *          <b>action</b> - The operation logic.
+     *          &lt;/p>
+     *        &lt;/li>
+     *        &lt;li>
+     *          &lt;b>action&lt;/b> - The operation logic.
      *          The options object of the above method should be passed to it, as well as the targed on which the DSL should be run.
-     *          <p>
-     *            It just calls method named as the passed <i>name</i> parameter on the targed <i>object</i>, passing it as arguments,
-     *            the argument array generated from the <i>toOptions</i> method.
-     *          </p>
-     *        </li>
-     *      </ol>
+     *          &lt;p>
+     *            It just calls method named as the passed &lt;i>name&lt;/i> parameter on the targed &lt;i>object&lt;/i>, passing it as arguments,
+     *            the argument array generated from the &lt;i>toOptions&lt;/i> method.
+     *          &lt;/p>
+     *        &lt;/li>
+     *      &lt;/ol>
      * @see {@link ProAct.DSl.predefined}
      */
     simpleOp: function(name, sym) {
@@ -81,7 +108,7 @@ ProAct.OpStore = {
           if (args) {
             args = args.split(',');
             ln = args.length;
-            for (i = 0; i < ln; i++) {
+            for (i = 0; i &lt; ln; i++) {
               arg = args[i].trim();
               if (arg.charAt(0) === '$') {
                 arg = realArguments[parseInt(arg.substring(1), 10) - 1];
@@ -131,20 +158,20 @@ opStoreAll = P.OpStore.all;
 
 /**
  * Contains implementation of the ProAct.js DSL.
- * <p>
+ * &lt;p>
  *  The idea of the DSL is to define {@link ProAct.Observable}s and their dependencies on each other in a declarative and simple way.
- * </p>
- * <p>
+ * &lt;/p>
+ * &lt;p>
  *  The {@link ProAct.Registry} is used to store these observables.
- * </p>
- * <p>
+ * &lt;/p>
+ * &lt;p>
  *  For example if we want to have a stream configured to write in a property, it is very easy done using the DSL:
- *  <pre>
- *    ProAct.registry.prob('val', 0, '<<(s:data)');
- *  </pre>
+ *  &lt;pre>
+ *    ProAct.registry.prob('val', 0, '&lt;&lt;(s:data)');
+ *  &lt;/pre>
  *  This tells the {@link ProAct.Registry} to create a {@link ProAct.Val} with the value of zero, and to point the previously,
  *  stored 'data' stream to it.
- * </p>
+ * &lt;/p>
  *
  * @namespace ProAct.DSL
  */
@@ -161,15 +188,15 @@ ProAct.DSL = {
 
   /**
    * The operation definitions of the DSL.
-   * <p>
+   * &lt;p>
    *  All of the available and executable operations defined in the ProAct.DSL.
-   * </p>
-   * <p>
+   * &lt;/p>
+   * &lt;p>
    *  Users of ProAct.js can add their own operation to it.
-   *  <pre>
+   *  &lt;pre>
    *    ProAct.DSL.ops.myOp = ProAct.OpStore.all.simpleOp('foo', 'foo');
-   *  </pre>
-   * </p>
+   *  &lt;/pre>
+   * &lt;/p>
    *
    * @namespace ProAct.DSL.ops
    * @memberof ProAct.DSL
@@ -180,21 +207,21 @@ ProAct.DSL = {
 
     /**
      * DSL operation for defining sources of {@link ProAct.Observable}s.
-     * <p>
+     * &lt;p>
      *  For example
-     *  <pre>
-     *    '<<(s:bla)'
-     *  </pre>
+     *  &lt;pre>
+     *    '&lt;&lt;(s:bla)'
+     *  &lt;/pre>
      *  means that the source of the targed of the DSL should be a stream stored in the {@link ProAct.Registry} by the key 'bla'.
-     * </p>
-     * <p>
+     * &lt;/p>
+     * &lt;p>
      *  or
-     *  <pre>
-     *    '<<($1)'
-     *  </pre>
+     *  &lt;pre>
+     *    '&lt;&lt;($1)'
+     *  &lt;/pre>
      *  means that the source of the targed of the DSL should be an {@link ProAct.Observable} passed to the {@link ProAct.Dsl.run}
      *  method as the first argument after the targed object, the DSL data and the registry.
-     * </p>
+     * &lt;/p>
      *
      * @memberof ProAct.DSL.ops
      * @static
@@ -204,25 +231,25 @@ ProAct.DSL = {
      * @see {@link ProAct.Observable}
      * @see {@link ProAct.DSL.run}
      */
-    into: opStoreAll.simpleOp('into', '<<'),
+    into: opStoreAll.simpleOp('into', '&lt;&lt;'),
 
     /**
      * DSL operation for setting the targed of the DSL as sources of another {@link ProAct.Observable}s.
-     * <p>
+     * &lt;p>
      *  For example
-     *  <pre>
+     *  &lt;pre>
      *    '>>(s:bla)'
-     *  </pre>
+     *  &lt;/pre>
      *  means that the targed of the DSL should become a source for a stream stored in the {@link ProAct.Registry} by the key 'bla'.
-     * </p>
-     * <p>
+     * &lt;/p>
+     * &lt;p>
      *  or
-     *  <pre>
+     *  &lt;pre>
      *    '>>($1)'
-     *  </pre>
+     *  &lt;/pre>
      *  means that the targed of the DSL should become a source for an {@link ProAct.Observable} passed to the {@link ProAct.Dsl.run}
      *  method as the first argument after the targed object, the DSL data and the registry.
-     * </p>
+     * &lt;/p>
      *
      * @memberof ProAct.DSL.ops
      * @static
@@ -236,14 +263,14 @@ ProAct.DSL = {
 
     /**
      * DSL operation for attaching listener to the target {@link ProAct.Observable} of the DSL.
-     * <p>
+     * &lt;p>
      *  For example
-     *  <pre>
+     *  &lt;pre>
      *    '@(f:bla)'
-     *  </pre>
+     *  &lt;/pre>
      *  means that listener function, stored in the {@link ProAct.Registry} as 'bla'
      *  should be attached as a listener to the targed {@link ProAct.Observable} of the DSL.
-     * </p>
+     * &lt;/p>
      *
      * @memberof ProAct.DSL.ops
      * @static
@@ -257,23 +284,23 @@ ProAct.DSL = {
 
     /**
      * DSL operation for adding mapping to the target {@link ProAct.Observable} of the DSL.
-     * <p>
+     * &lt;p>
      *  For example
-     *  <pre>
+     *  &lt;pre>
      *    'map(f:bla)'
-     *  </pre>
+     *  &lt;/pre>
      *  means that mapping function, stored in the {@link ProAct.Registry} as 'bla'
      *  should be mapped to the targed {@link ProAct.Observable} of the DSL.
-     * </p>
-     * <p>
+     * &lt;/p>
+     * &lt;p>
      *  or
-     *  <pre>
+     *  &lt;pre>
      *    'map($2)'
-     *  </pre>
+     *  &lt;/pre>
      *  means that mapping function passed to the {@link ProAct.Dsl.run}
      *  method as the second argument after the targed object, the DSL data and the registry
      *  should be mapped to the targed {@link ProAct.Observable} of the DSL.
-     * </p>
+     * &lt;/p>
      *
      * @memberof ProAct.DSL.ops
      * @static
@@ -287,23 +314,23 @@ ProAct.DSL = {
 
     /**
      * DSL operation for adding filters to the target {@link ProAct.Observable} of the DSL.
-     * <p>
+     * &lt;p>
      *  For example
-     *  <pre>
+     *  &lt;pre>
      *    'filter(f:bla)'
-     *  </pre>
+     *  &lt;/pre>
      *  means that filtering function, stored in the {@link ProAct.Registry} as 'bla'
      *  should be add as filter to the targed {@link ProAct.Observable} of the DSL.
-     * </p>
-     * <p>
+     * &lt;/p>
+     * &lt;p>
      *  or
-     *  <pre>
+     *  &lt;pre>
      *    'filter($1)'
-     *  </pre>
+     *  &lt;/pre>
      *  means that filtering function passed to the {@link ProAct.Dsl.run}
      *  method as the first argument after the targed object, the DSL data and the registry
      *  should be added as filter to the targed {@link ProAct.Observable} of the DSL.
-     * </p>
+     * &lt;/p>
      *
      * @memberof ProAct.DSL.ops
      * @static
@@ -317,16 +344,16 @@ ProAct.DSL = {
 
     /**
      * DSL operation for adding accumulation to the target {@link ProAct.Observable} of the DSL.
-     * <p>
+     * &lt;p>
      *  For example
-     *  <pre>
+     *  &lt;pre>
      *    'acc($1, f:bla)'
-     *  </pre>
+     *  &lt;/pre>
      *  means that accumulating function, stored in the {@link ProAct.Registry} as 'bla'
      *  should be added as accumulation to the targed {@link ProAct.Observable} of the DSL,
      *  and the first argument passed to {@link ProAct.DSL.run} after the targed object, the DSL data and the registry should
      *  be used as initial value for the accumulation.
-     * </p>
+     * &lt;/p>
      *
      * @memberof ProAct.DSL.ops
      * @static
@@ -361,15 +388,15 @@ ProAct.DSL = {
 
       /**
        * Mapping operation for changing the sign of a number to the oposite.
-       * <p>
+       * &lt;p>
        *  For example 4 becomes -4 and -5 becomes 5.
-       * </p>
-       * <p>
+       * &lt;/p>
+       * &lt;p>
        *  Usage in a DSL expression:
-       *  <pre>
+       *  &lt;pre>
        *    map(-)
-       *  </pre>
-       * </p>
+       *  &lt;/pre>
+       * &lt;/p>
        *
        * @memberof ProAct.DSL.predefined.mapping
        * @static
@@ -379,16 +406,16 @@ ProAct.DSL = {
       '-': function (el) { return -el; },
 
       /**
-       * Mapping operation for computing the square of a number.
-       * <p>
+       * Mapping operation for computing computing the square of a number.
+       * &lt;p>
        *  For example 4 becomes 16.
-       * </p>
-       * <p>
+       * &lt;/p>
+       * &lt;p>
        *  Usage in a DSL expression:
-       *  <pre>
+       *  &lt;pre>
        *    map(pow)
-       *  </pre>
-       * </p>
+       *  &lt;/pre>
+       * &lt;/p>
        *
        * @memberof ProAct.DSL.predefined.mapping
        * @static
@@ -396,60 +423,8 @@ ProAct.DSL = {
        * @see {@link ProAct.DSL.ops.map}
        */
       'pow': function (el) { return el * el; },
-
-      /**
-       * Mapping operation for computing the square root of a number.
-       * <p>
-       *  For example 4 becomes 2.
-       * </p>
-       * <p>
-       *  Usage in a DSL expression:
-       *  <pre>
-       *    map(sqrt)
-       *  </pre>
-       * </p>
-       *
-       * @memberof ProAct.DSL.predefined.mapping
-       * @static
-       * @method
-       * @see {@link ProAct.DSL.ops.map}
-       */
       'sqrt': function (el) { return Math.sqrt(el); },
-
-      /**
-       * Mapping operation for turning an object to a decimal Number - integer.
-       * <p>
-       *  For example '4' becomes 4.
-       * </p>
-       * <p>
-       *  Usage in a DSL expression:
-       *  <pre>
-       *    map(int)
-       *  </pre>
-       * </p>
-       *
-       * @memberof ProAct.DSL.predefined.mapping
-       * @static
-       * @method
-       * @see {@link ProAct.DSL.ops.map}
-       */
       'int': function (el) { return parseInt(el, 10); },
-
-      /**
-       * Mapping operation for calling a method of an object.
-       * <p>
-       *  Usage in a DSL expression:
-       *  <pre>
-       *    map(&.&go)
-       *  </pre>
-       *  This will call the 'target.go' method and use its result.
-       * </p>
-       *
-       * @memberof ProAct.DSL.predefined.mapping
-       * @static
-       * @method
-       * @see {@link ProAct.DSL.ops.map}
-       */
       '&.': function (arg) {
         return function (el) {
           var p = el[arg];
@@ -467,7 +442,7 @@ ProAct.DSL = {
       'odd': function (el) { return el % 2 !== 0; },
       'even': function (el) { return el % 2 === 0; },
       '+': function (el) { return el >= 0; },
-      '-': function (el) { return el <= 0; }
+      '-': function (el) { return el &lt;= 0; }
     },
     accumulation: {
       '+': [0, function (x, y) { return x + y; }],
@@ -481,7 +456,7 @@ ProAct.DSL = {
   optionsFromArray: function (optionArray) {
     var result = {}, i, ln = optionArray.length,
         ops = P.R.ops, op, opType;
-    for (i = 0; i < ln; i++) {
+    for (i = 0; i &lt; ln; i++) {
       op = optionArray[i];
       for (opType in P.DSL.ops) {
         opType = P.DSL.ops[opType];
@@ -508,7 +483,7 @@ ProAct.DSL = {
 
     if (options && options.order) {
       ln = options.order.length;
-      for (i = 0; i < ln; i++) {
+      for (i = 0; i &lt; ln; i++) {
         option = options.order[i];
         if (opType = dslOps[option]) {
           if (registry) {
@@ -535,3 +510,26 @@ ProAct.DSL = {
 
 dsl = P.DSL;
 dslOps = dsl.ops;
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Index</a></h2><h3>Classes</h3><ul><li><a href="ProAct.Array.html">Array</a></li><li><a href="ProAct.ArrayCore.html">ArrayCore</a></li><li><a href="ProAct.ArrayProperty.html">ArrayProperty</a></li><li><a href="ProAct.AutoProperty.html">AutoProperty</a></li><li><a href="ProAct.BufferedStream.html">BufferedStream</a></li><li><a href="ProAct.Core.html">Core</a></li><li><a href="ProAct.DebouncingStream.html">DebouncingStream</a></li><li><a href="ProAct.DelayedStream.html">DelayedStream</a></li><li><a href="ProAct.Event.html">Event</a></li><li><a href="ProAct.Flow.html">Flow</a></li><li><a href="ProAct.NullProperty.html">NullProperty</a></li><li><a href="ProAct.ObjectCore.html">ObjectCore</a></li><li><a href="ProAct.ObjectProperty.html">ObjectProperty</a></li><li><a href="ProAct.Observable.html">Observable</a></li><li><a href="ProAct.Property.html">Property</a></li><li><a href="ProAct.Queue.html">Queue</a></li><li><a href="ProAct.Queues.html">Queues</a></li><li><a href="ProAct.Registry.html">Registry</a></li><li><a href="ProAct.SizeBufferedStream.html">SizeBufferedStream</a></li><li><a href="ProAct.Stream.html">Stream</a></li><li><a href="ProAct.ThrottlingStream.html">ThrottlingStream</a></li><li><a href="ProAct.Val.html">Val</a></li></ul><h3>Namespaces</h3><ul><li><a href="ProAct.html">ProAct</a></li><li><a href="ProAct.Array.Listeners.html">Listeners</a></li><li><a href="ProAct.Array.Operations.html">Operations</a></li><li><a href="ProAct.Configuration.html">Configuration</a></li><li><a href="ProAct.DSL.html">DSL</a></li><li><a href="ProAct.DSL.ops.html">ops</a></li><li><a href="ProAct.DSL.predefined.html">predefined</a></li><li><a href="ProAct.DSL.predefined.mapping.html">mapping</a></li><li><a href="ProAct.Event.Types.html">Types</a></li><li><a href="ProAct.OpStore.html">OpStore</a></li><li><a href="ProAct.Property.Types.html">Types</a></li><li><a href="ProAct.States.html">States</a></li><li><a href="ProAct.Utils.html">Utils</a></li></ul>
+</nav>
+
+<br clear="both">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.2</a> on Thu Jul 31 2014 10:03:09 GMT+0300 (EEST)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
