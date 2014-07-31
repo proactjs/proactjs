@@ -613,7 +613,7 @@ describe('ProAct.Array', function () {
     });
 
     it ('supports chain filtering', function () {
-      var a1 = new Pro.Array('true', 'detective', 'yellow', 'king', 'Carcosa', 'death', 'scarred'),
+      var a1 = new ProAct.Array('true', 'detective', 'yellow', 'king', 'Carcosa', 'death', 'scarred'),
           a2, a3, a4;
 
       a2 = a1.filter(function (el) {
@@ -698,14 +698,14 @@ describe('ProAct.Array', function () {
   });
 
   describe('#map', function () {
-    it('creates a new Pro.Array dependable on the original', function () {
-      var array = new Pro.Array(1, 2, 3), mapped;
+    it('creates a new ProAct.Array dependable on the original', function () {
+      var array = new ProAct.Array(1, 2, 3), mapped;
 
       mapped = array.map(function (el, i, arr) {
         return el + el;
       });
 
-      expect(Pro.Utils.isProArray(mapped)).toBe(true);
+      expect(ProAct.Utils.isProArray(mapped)).toBe(true);
       expect(mapped.toArray()).toEqual([2, 4, 6]);
 
       array[0] = 0;
@@ -754,7 +754,7 @@ describe('ProAct.Array', function () {
     });
 
     it('updates properties depending on #map', function () {
-      var array = new Pro.Array(3, 5, 4),
+      var array = new ProAct.Array(3, 5, 4),
           obj = {
             prop: function () {
               return array.map(function (el) {
@@ -762,7 +762,7 @@ describe('ProAct.Array', function () {
               });
             }
           },
-          property = new Pro.AutoProperty(obj, 'prop');
+          property = new ProAct.AutoProperty(obj, 'prop');
 
       expect(obj.prop.valueOf()).toEqual([9, 25, 16].valueOf());
 
@@ -774,7 +774,7 @@ describe('ProAct.Array', function () {
     });
 
     it('chain mapping works', function () {
-      var a1 = new Pro.Array(1, 2, 3, 4, 5),
+      var a1 = new ProAct.Array(1, 2, 3, 4, 5),
           a2, a3, a4;
 
       a2 = a1.map(function (el) {
@@ -835,7 +835,7 @@ describe('ProAct.Array', function () {
 
   describe('#reduce & #preduce', function () {
     it('updates properties depending on #reduce', function () {
-      var array = new Pro.Array(3, 5, 4),
+      var array = new ProAct.Array(3, 5, 4),
           obj = {
             prop: function () {
               return array.reduce(function (sum, el2) {
@@ -843,7 +843,7 @@ describe('ProAct.Array', function () {
               }, 0);
             }
           },
-          property = new Pro.AutoProperty(obj, 'prop');
+          property = new ProAct.AutoProperty(obj, 'prop');
 
       expect(obj.prop).toEqual(50);
 
@@ -859,17 +859,17 @@ describe('ProAct.Array', function () {
 
     describe('#preduce', function () {
       it('returns pro value', function () {
-        var array = new Pro.Array(1, 2, 3, 4, 5),
+        var array = new ProAct.Array(1, 2, 3, 4, 5),
             val = array.preduce(function (i, el) {
               return i + el;
             }, 0);
 
-        expect(Pro.Utils.isProVal(val)).toBe(true);
+        expect(ProAct.Utils.isProVal(val)).toBe(true);
         expect(val.valueOf()).toBe(15);
       });
 
       it('on list changes the produced value is updated', function () {
-        var array = new Pro.Array('b', 'a', 'h', 'a', 'm', 'a'),
+        var array = new ProAct.Array('b', 'a', 'h', 'a', 'm', 'a'),
             val = array.preduce(function (pel, el) {
               return pel + '-' + el;
             });
@@ -911,7 +911,7 @@ describe('ProAct.Array', function () {
 
   describe('#reduceRight & #preduceRight', function () {
     it('updates properties depending on #reduceRight', function () {
-      var array = new Pro.Array(3, 5, 4),
+      var array = new ProAct.Array(3, 5, 4),
           obj = {
             prop: function () {
               return array.reduceRight(function (sum, el2) {
@@ -919,7 +919,7 @@ describe('ProAct.Array', function () {
               }, 0);
             }
           },
-          property = new Pro.AutoProperty(obj, 'prop');
+          property = new ProAct.AutoProperty(obj, 'prop');
 
       expect(obj.prop).toEqual(50);
 
@@ -935,17 +935,17 @@ describe('ProAct.Array', function () {
 
     describe('#preduceRight', function () {
       it('returns pro value', function () {
-        var array = new Pro.Array(1, 2, 3, 4, 5),
+        var array = new ProAct.Array(1, 2, 3, 4, 5),
             val = array.preduceRight(function (i, el) {
               return i + el;
             }, 0);
 
-        expect(Pro.Utils.isProVal(val)).toBe(true);
+        expect(ProAct.Utils.isProVal(val)).toBe(true);
         expect(val.valueOf()).toBe(15);
       });
 
       it('on list changes the produced value is updated', function () {
-        var array = new Pro.Array('b', 'a', 'h', 'a', 'm', 'a'),
+        var array = new ProAct.Array('b', 'a', 'h', 'a', 'm', 'a'),
             val = array.preduceRight(function (pel, el) {
               return pel + '-' + el;
             });
@@ -987,13 +987,13 @@ describe('ProAct.Array', function () {
 
   describe('#indexOf & #pindexof', function () {
     it('updates properties depending on #indexOf', function () {
-      var array = new Pro.Array(3, 5, 4),
+      var array = new ProAct.Array(3, 5, 4),
           obj = {
             prop: function () {
               return array.indexOf(3);
             }
           },
-          property = new Pro.AutoProperty(obj, 'prop');
+          property = new ProAct.AutoProperty(obj, 'prop');
 
       expect(obj.prop).toEqual(0);
 
@@ -1009,15 +1009,15 @@ describe('ProAct.Array', function () {
 
     describe('#pindexOf', function () {
       it('returns pro value', function () {
-        var array = new Pro.Array(1, 2, 3, 4, 5),
+        var array = new ProAct.Array(1, 2, 3, 4, 5),
             val = array.pindexOf(5);
 
-        expect(Pro.Utils.isProVal(val)).toBe(true);
+        expect(ProAct.Utils.isProVal(val)).toBe(true);
         expect(val.valueOf()).toBe(4);
       });
 
       it('on list changes the produced value is updated', function () {
-        var array = new Pro.Array('a', 'b', 'c'),
+        var array = new ProAct.Array('a', 'b', 'c'),
             val = array.pindexOf('b'),
             fval = array.pindexOf('b', 2);
 
@@ -1110,13 +1110,13 @@ describe('ProAct.Array', function () {
 
   describe('#lastIndexOf and plastindexOf', function () {
     it('updates properties depending on #lastIndexOf', function () {
-      var array = new Pro.Array(3, 5, 4),
+      var array = new ProAct.Array(3, 5, 4),
           obj = {
             prop: function () {
               return array.lastIndexOf(3);
             }
           },
-          property = new Pro.AutoProperty(obj, 'prop');
+          property = new ProAct.AutoProperty(obj, 'prop');
 
       expect(obj.prop).toEqual(0);
 
@@ -1132,15 +1132,15 @@ describe('ProAct.Array', function () {
 
     describe('#plastindexOf', function () {
       it('returns pro value', function () {
-        var array = new Pro.Array(1, 2, 3, 2, 5),
+        var array = new ProAct.Array(1, 2, 3, 2, 5),
             val = array.plastindexOf(2);
 
-        expect(Pro.Utils.isProVal(val)).toBe(true);
+        expect(ProAct.Utils.isProVal(val)).toBe(true);
         expect(val.valueOf()).toBe(3);
       });
 
       it('on list changes the produced value is updated', function () {
-        var array = new Pro.Array('a', 'b', 'c', 'b', 'a'),
+        var array = new ProAct.Array('a', 'b', 'c', 'b', 'a'),
             val = array.plastindexOf('b');
 
         expect(val.valueOf()).toBe(3);
@@ -1203,13 +1203,13 @@ describe('ProAct.Array', function () {
 
   describe('#join and #pjoin', function () {
     it('updates properties depending on #join', function () {
-      var array = new Pro.Array(3, 5, 4),
+      var array = new ProAct.Array(3, 5, 4),
           obj = {
             prop: function () {
               return array.join('-');
             }
           },
-          property = new Pro.AutoProperty(obj, 'prop');
+          property = new ProAct.AutoProperty(obj, 'prop');
 
       expect(obj.prop).toEqual('3-5-4');
 
@@ -1225,16 +1225,16 @@ describe('ProAct.Array', function () {
 
     describe('#pjoin', function () {
       it('returns pro value', function () {
-        var array = new Pro.Array(0, 8, 8, 8),
+        var array = new ProAct.Array(0, 8, 8, 8),
             val = array.pjoin('-');
 
         val.v;
-        expect(Pro.Utils.isProVal(val)).toBe(true);
+        expect(ProAct.Utils.isProVal(val)).toBe(true);
         expect(val.valueOf()).toBe('0-8-8-8');
       });
 
       it('on list changes the produced value is updated', function () {
-        var array = new Pro.Array('', ''),
+        var array = new ProAct.Array('', ''),
             val = array.pjoin('-');
 
         val.v;
@@ -1247,13 +1247,13 @@ describe('ProAct.Array', function () {
   });
 
   it('updates properties depending on #toString', function () {
-    var array = new Pro.Array(3, 5, 4),
+    var array = new ProAct.Array(3, 5, 4),
         obj = {
           prop: function () {
             return array.toString();
           }
         },
-        property = new Pro.AutoProperty(obj, 'prop');
+        property = new ProAct.AutoProperty(obj, 'prop');
 
     expect(obj.prop).toEqual(array.toString());
 
@@ -1266,13 +1266,13 @@ describe('ProAct.Array', function () {
 
   describe('#slice', function () {
     it('updates properties depending on it', function () {
-      var array = new Pro.Array(1, 2, 3, 4, 5, 6, 7, 8, 9, 10),
+      var array = new ProAct.Array(1, 2, 3, 4, 5, 6, 7, 8, 9, 10),
           obj = {
             prop: function () {
               return array.slice(1, 5);
             }
           },
-          property = new Pro.AutoProperty(obj, 'prop');
+          property = new ProAct.AutoProperty(obj, 'prop');
 
       expect(obj.prop.valueOf()).toEqual([2, 3, 4, 5]);
 
@@ -1284,7 +1284,7 @@ describe('ProAct.Array', function () {
     });
 
     it('on list changes the produced value is updated', function () {
-      var array = new Pro.Array(1, 2, 3, 4, 5, 6, 7),
+      var array = new ProAct.Array(1, 2, 3, 4, 5, 6, 7),
           sliced = array.slice(2, 4);
 
       expect(sliced.valueOf()).toEqual([3, 4]);
@@ -1301,13 +1301,13 @@ describe('ProAct.Array', function () {
   });
 
   it('#reverse updates depending properties', function () {
-    var array = new Pro.Array(1, 2, 3),
+    var array = new ProAct.Array(1, 2, 3),
         obj = {
           prop: function () {
             return array[0] + array.length;
           }
         },
-        property = new Pro.AutoProperty(obj, 'prop');
+        property = new ProAct.AutoProperty(obj, 'prop');
 
     expect(obj.prop).toEqual(4);
 
@@ -1316,13 +1316,13 @@ describe('ProAct.Array', function () {
   });
 
   it('#sort updates depending properties', function () {
-    var array = new Pro.Array(4, 1, 2, 3),
+    var array = new ProAct.Array(4, 1, 2, 3),
         obj = {
           prop: function () {
             return '[' + array[0] + ', ' + array[3] + ']';
           }
         },
-        property = new Pro.AutoProperty(obj, 'prop');
+        property = new ProAct.AutoProperty(obj, 'prop');
 
     expect(obj.prop).toEqual('[4, 3]');
 
@@ -1332,7 +1332,7 @@ describe('ProAct.Array', function () {
   });
 
   it('#push updates depending properties and adds new index dependencies', function () {
-    var array = new Pro.Array(4, 1, 2, 3),
+    var array = new ProAct.Array(4, 1, 2, 3),
         obj = {
           prop: function () {
             if (array[5] === undefined) {
@@ -1342,7 +1342,7 @@ describe('ProAct.Array', function () {
             return array[1] + array[5];
           }
         },
-        property = new Pro.AutoProperty(obj, 'prop');
+        property = new ProAct.AutoProperty(obj, 'prop');
 
     expect(obj.prop).toBe(4);
 
@@ -1354,7 +1354,7 @@ describe('ProAct.Array', function () {
   });
 
   it('#pop updates depending properties and removes index dependencies', function () {
-    var array = new Pro.Array(4, 1, 2, 3),
+    var array = new ProAct.Array(4, 1, 2, 3),
         obj = {
           prop: function () {
             if (array[3] === undefined) {
@@ -1366,7 +1366,7 @@ describe('ProAct.Array', function () {
             return array[2] + array[3];
           }
         },
-        property = new Pro.AutoProperty(obj, 'prop');
+        property = new ProAct.AutoProperty(obj, 'prop');
 
     expect(obj.prop).toBe(5);
 
@@ -1378,7 +1378,7 @@ describe('ProAct.Array', function () {
   });
 
   it('#unshift updates depending properties and adds new index dependencies', function () {
-    var array = new Pro.Array(4, 1, 2, 3),
+    var array = new ProAct.Array(4, 1, 2, 3),
         obj = {
           prop: function () {
             if (array[5] === undefined) {
@@ -1388,7 +1388,7 @@ describe('ProAct.Array', function () {
             return array[1] + array[5];
           }
         },
-        property = new Pro.AutoProperty(obj, 'prop');
+        property = new ProAct.AutoProperty(obj, 'prop');
 
     expect(obj.prop).toBe(4);
 
@@ -1400,7 +1400,7 @@ describe('ProAct.Array', function () {
   });
 
   it('#shift updates depending properties and removes index dependencies', function () {
-    var array = new Pro.Array(4, 1, 2, 3),
+    var array = new ProAct.Array(4, 1, 2, 3),
         obj = {
           prop: function () {
             if (array[3] === undefined) {
@@ -1412,7 +1412,7 @@ describe('ProAct.Array', function () {
             return array[2] + array[3];
           }
         },
-        property = new Pro.AutoProperty(obj, 'prop');
+        property = new ProAct.AutoProperty(obj, 'prop');
 
     expect(obj.prop).toBe(5);
 
@@ -1476,7 +1476,7 @@ describe('ProAct.Array', function () {
     expect(stack.slice(3)).toEqual(['length', 'index']);
   });
 
-  it('#splice updates index propeties of the Pro.Array depending on removing and adding', function () {
+  it('#splice updates index propeties of the ProAct.Array depending on removing and adding', function () {
     var array = new ProAct.Array(1, 2, 3, 4, 5),
         o, i, ov, nv, stack = [];
 
@@ -1514,7 +1514,7 @@ describe('ProAct.Array', function () {
 
     // add 1 element
     array.splice(3, 0, 6);
-    expect(o).toBe(Pro.Array.Operations.splice);
+    expect(o).toBe(ProAct.Array.Operations.splice);
     expect(i).toBe(3);
     expect(ov).toEqual([]);
     expect(nv).toEqual([6]);
@@ -1523,7 +1523,7 @@ describe('ProAct.Array', function () {
     expect(array.length).toBe(4);
 
     array[3] = 12;
-    expect(o).toBe(Pro.Array.Operations.set);
+    expect(o).toBe(ProAct.Array.Operations.set);
     expect(i).toBe(3);
     expect(ov).toEqual(6);
     expect(nv).toEqual(12);
@@ -1532,9 +1532,9 @@ describe('ProAct.Array', function () {
     expect(array.length).toBe(4);
   });
 
-  it ('turns array memebers into Pro.Arrays.', function () {
-    var array = new Pro.Array(1, [1, 2], [[1, 2, 3], [1, 2, 3, 4], [1, 2, 3, 4, 5]], [[[6], 7], 8]),
-        isPA = Pro.Utils.isProArray;
+  it ('turns array memebers into ProAct.Arrays.', function () {
+    var array = new ProAct.Array(1, [1, 2], [[1, 2, 3], [1, 2, 3, 4], [1, 2, 3, 4, 5]], [[[6], 7], 8]),
+        isPA = ProAct.Utils.isProArray;
 
     expect(isPA(array)).toBe(true);
     expect(isPA(array[0])).toBe(false);
@@ -1574,10 +1574,10 @@ describe('ProAct.Array', function () {
     expect(array.valueOf()).toEqual([1, [1, 2], [[1, 2, 3], [1, 2, 3, 4], [1, 2, 3, 4, 5]], [[[6], 7], 8]]);
   });
 
-  it ('turns object memebers into Pro.Objects.', function () {
-    var array = new Pro.Array(1, [1, 2], {a:1, b: 2}, {c:3, d: {e: 4, f: [5, 6]}}, {g:7, h: function () {return this.g + 3;}}),
-        isPO = Pro.Utils.isProObject,
-        isPA = Pro.Utils.isProArray;
+  it ('turns object memebers into ProAct.Objects.', function () {
+    var array = new ProAct.Array(1, [1, 2], {a:1, b: 2}, {c:3, d: {e: 4, f: [5, 6]}}, {g:7, h: function () {return this.g + 3;}}),
+        isPO = ProAct.Utils.isProObject,
+        isPA = ProAct.Utils.isProArray;
 
     expect(isPA(array)).toBe(true);
     expect(isPA(array[0])).toBe(false);
@@ -1597,10 +1597,10 @@ describe('ProAct.Array', function () {
     expect(array[4].h).toEqual(10);
   });
 
-  it ('turns new object memebers into Pro.Objects.', function () {
-    var array = new Pro.Array(),
-        isPO = Pro.Utils.isProObject,
-        isPA = Pro.Utils.isProArray;
+  it ('turns new object memebers into ProAct.Objects.', function () {
+    var array = new ProAct.Array(),
+        isPO = ProAct.Utils.isProObject,
+        isPA = ProAct.Utils.isProArray;
 
     array.push({
       a: 3,

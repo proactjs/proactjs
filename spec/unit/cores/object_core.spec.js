@@ -54,14 +54,14 @@ describe('ProAct.ObjectCore', function () {
 
       core.set('b', 3);
       expect(core.properties.b).not.toBe(undefined);
-      expect(core.properties.b.type()).toBe(Pro.Property.Types.simple);
+      expect(core.properties.b.type()).toBe(ProAct.Property.Types.simple);
       expect(obj.b).toEqual(3);
 
       core.set('c', function () {
         return this.a + this.b;
       });
       expect(core.properties.c).not.toBe(undefined);
-      expect(core.properties.c.type()).toBe(Pro.Property.Types.auto);
+      expect(core.properties.c.type()).toBe(ProAct.Property.Types.auto);
       expect(obj.c).toEqual(4);
 
       obj.a = 6;

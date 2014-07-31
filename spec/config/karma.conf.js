@@ -9,7 +9,7 @@ module.exports = function(karma) {
       'src/js/flow/queues.js',
       'src/js/flow/flow.js',
       'src/js/objects/observable.js',
-      'src/js/events/pro_event.js',
+      'src/js/events/event.js',
       'src/js/streams/stream.js',
       'src/js/streams/buffered_stream.js',
       'src/js/streams/size_buffered_stream.js',

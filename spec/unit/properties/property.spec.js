@@ -9,23 +9,23 @@ describe('ProAct.Property', function () {
   describe('#constructor', function () {
 
     it('initializes the property', function () {
-      var property = new Pro.Property(obj, 'a');
-      expect(property.type()).toEqual(Pro.Property.Types.simple);
-      expect(property.state).toEqual(Pro.States.ready);
+      var property = new ProAct.Property(obj, 'a');
+      expect(property.type()).toEqual(ProAct.Property.Types.simple);
+      expect(property.state).toEqual(ProAct.States.ready);
     });
 
     it('doesn\'t change the object structure.', function () {
-      var property = new Pro.Property(obj, 'a');
+      var property = new ProAct.Property(obj, 'a');
       expect(obj.a).toEqual('my val');
     });
 
     it('stores the property in the proObject', function () {
-      var property = new Pro.Property(obj, 'a');
+      var property = new ProAct.Property(obj, 'a');
       expect(property).toEqual(obj.__pro__.properties.a);
     });
 
     it('passing a getter can override a propertie value', function () {
-      var property = new Pro.Property(obj, 'a', function () {
+      var property = new ProAct.Property(obj, 'a', function () {
         return 70;
       });
       expect(obj.a).toEqual(70);
@@ -35,13 +35,13 @@ describe('ProAct.Property', function () {
 
   describe('#destroy', function () {
     it('destroys the property', function () {
-      var property = new Pro.Property(obj, 'a');
+      var property = new ProAct.Property(obj, 'a');
       property.destroy();
-      expect(property.state).toEqual(Pro.States.destroyed);
+      expect(property.state).toEqual(ProAct.States.destroyed);
     });
 
     it('doesn\'t change the object structure.', function () {
-      var property = new Pro.Property(obj, 'a');
+      var property = new ProAct.Property(obj, 'a');
       property.destroy();
       expect(obj.a).toEqual('my val');
     });
@@ -49,32 +49,32 @@ describe('ProAct.Property', function () {
 
   describe('#get', function () {
     it('is the same as getting the original value', function () {
-      var property = new Pro.Property(obj, 'a');
+      var property = new ProAct.Property(obj, 'a');
       expect(property.get()).toEqual(obj.a);
     });
 
     it('has the alias "g"', function () {
-      var property = new Pro.Property(obj, 'a');
+      var property = new ProAct.Property(obj, 'a');
       expect(property.g).toBe(property.get);
     });
 
     it('adds listener for the current caller', function () {
-      var property = new Pro.Property(obj, 'a'), func;
+      var property = new ProAct.Property(obj, 'a'), func;
       obj.b = function () {
         return this.a + ' is cool';
       };
       func = obj.b;
-      Pro.currentCaller = {
-        property: new Pro.Property(obj, 'b'),
+      ProAct.currentCaller = {
+        property: new ProAct.Property(obj, 'b'),
         call: function () {
           obj.b = func.call(obj);
         }
       };
       property.get();
-      Pro.currentCaller = null;
+      ProAct.currentCaller = null;
       expect(property.listeners.change.length).toBe(1);
 
-      Pro.flow.run(function () {
+      ProAct.flow.run(function () {
         property.willUpdate();
       });
       expect(obj.b).toEqual('my val is cool');
@@ -83,18 +83,18 @@ describe('ProAct.Property', function () {
 
   describe('#set', function () {
     it('it changes the original value', function () {
-      var property = new Pro.Property(obj, 'a');
+      var property = new ProAct.Property(obj, 'a');
       property.set(5);
       expect(obj.a).toEqual(5);
     });
 
     it('has the alias "s"', function () {
-      var property = new Pro.Property(obj, 'a');
+      var property = new ProAct.Property(obj, 'a');
       expect(property.s).toBe(property.set);
     });
 
     it('notifies the listeners of the property', function () {
-      var property = new Pro.Property(obj, 'a');
+      var property = new ProAct.Property(obj, 'a');
       property.on('change', function () {});
       spyOn(property, 'willUpdate');
       property.set(3);
@@ -104,7 +104,7 @@ describe('ProAct.Property', function () {
 
     describe('transformators', function () {
       it('transformator added with #transform is always applied', function () {
-        var property = new Pro.Property(obj, 'a');
+        var property = new ProAct.Property(obj, 'a');
         property.transform(function (val) {
           return val * val;
         });
@@ -114,7 +114,7 @@ describe('ProAct.Property', function () {
       });
 
       it('chained transformations work', function () {
-        var property = new Pro.Property(obj, 'a');
+        var property = new ProAct.Property(obj, 'a');
         property.transform(function (val) {
           return val * val;
         });
@@ -133,7 +133,7 @@ describe('ProAct.Property', function () {
 
   describe('#willUpdate', function () {
     it('must be called in a flow', function () {
-      var property = new Pro.Property(obj, 'a'), go;
+      var property = new ProAct.Property(obj, 'a'), go;
       property.on(function () {});
       go = function () {
         property.willUpdate();
@@ -142,30 +142,30 @@ describe('ProAct.Property', function () {
       expect(go).toThrow('Not in running flow!');
     });
 
-    it('executes the listeners of a property and passes to them a value Pro.Event', function () {
-      var property = new Pro.Property(obj, 'a'), called = false;
+    it('executes the listeners of a property and passes to them a value ProAct.Event', function () {
+      var property = new ProAct.Property(obj, 'a'), called = false;
       property.on(function (event) {
         called = true;
 
-        expect(event instanceof Pro.Event).toBe(true);
+        expect(event instanceof ProAct.Event).toBe(true);
         expect(event.source).toBeUndefined();
         expect(event.target).toBe(property.property);
-        expect(event.type).toBe(Pro.Event.Types.value);
+        expect(event.type).toBe(ProAct.Event.Types.value);
 
         expect(event.args.length).toBe(3);
       });
 
       property.oldVal = property.val;
       property.val = 10;
-      Pro.flow.run(function () {
+      ProAct.flow.run(function () {
         property.willUpdate();
       });
       expect(called).toBe(true);
     });
 
-    it('executes the listeners of a sub-property and passes to them a value Pro.Event', function () {
-      var propertyA = new Pro.Property(obj, 'a'),
-          propertyB = new Pro.Property(obj, 'b'),
+    it('executes the listeners of a sub-property and passes to them a value ProAct.Event', function () {
+      var propertyA = new ProAct.Property(obj, 'a'),
+          propertyB = new ProAct.Property(obj, 'b'),
           called = false, ev;
       propertyA.on({
         call: function (event) {
@@ -179,18 +179,18 @@ describe('ProAct.Property', function () {
       propertyB.on(function (event) {
         called = true;
 
-        expect(event instanceof Pro.Event).toBe(true);
+        expect(event instanceof ProAct.Event).toBe(true);
         expect(event.source).not.toBeUndefined();
         expect(event.source).toBe(ev);
         expect(event.target).toBe(propertyB.property);
-        expect(event.type).toBe(Pro.Event.Types.value);
+        expect(event.type).toBe(ProAct.Event.Types.value);
 
         expect(event.args.length).toBe(3);
       });
 
       propertyA.oldVal = propertyA.val;
       propertyA.val = 10;
-      Pro.flow.run(function () {
+      ProAct.flow.run(function () {
         propertyA.willUpdate();
       });
       expect(called).toBe(true);

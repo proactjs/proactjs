@@ -3,7 +3,7 @@
  *
  * @namespace ProAct.Array.Listeners
  */
-ProAct.Array.Listeners = P.A.L = pArrayLs = Pro.Array.Listeners || {
+ProAct.Array.Listeners = P.A.L = pArrayLs = {
 
   /**
    * Checks the validity of an event.

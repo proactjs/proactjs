@@ -1,9 +1,9 @@
 'use strict';
 
-describe('Pro.Stream', function () {
+describe('ProAct.Stream', function () {
   describe('#trigger', function () {
     it ('updates the stream listeners', function () {
-      var stream = new Pro.Stream(), res = [];
+      var stream = new ProAct.Stream(), res = [];
       stream.on(function (number) {
         res.push(number);
       });
@@ -20,7 +20,7 @@ describe('Pro.Stream', function () {
 
   describe('#map', function () {
     it ('creates a new stream from the this stream, using the passed function as default transformation', function () {
-      var stream1 = new Pro.Stream(),
+      var stream1 = new ProAct.Stream(),
           stream2 = stream1.map(function (number) {return number * 2;}),
           res = [];
       stream2.on(function (number) {
@@ -37,7 +37,7 @@ describe('Pro.Stream', function () {
     });
 
     it ('is transitive', function () {
-      var stream1 = new Pro.Stream(),
+      var stream1 = new ProAct.Stream(),
           stream2 = stream1.map(function (number) {return number * 2;}),
           stream3 = stream2.map(function (number) {return number * 3;}),
           stream4 = stream3.map(function (number) {return '(' + number + ')';}),
@@ -59,7 +59,7 @@ describe('Pro.Stream', function () {
 
   describe('#filter', function () {
     it ('filters only chosen values', function() {
-      var stream1 = new Pro.Stream(),
+      var stream1 = new ProAct.Stream(),
           stream2 = stream1.filter(function (number) {return number % 2 === 0;}),
           res = [];
 
@@ -83,7 +83,7 @@ describe('Pro.Stream', function () {
     });
 
     it ('is chainable', function () {
-      var stream1 = new Pro.Stream(),
+      var stream1 = new ProAct.Stream(),
           stream2 = stream1.filter(function (number) {return number % 2 === 0;}),
           stream3 = stream2.filter(function (number) {return number % 3 === 0;}),
           res = [];
@@ -109,8 +109,8 @@ describe('Pro.Stream', function () {
   });
 
   describe('#reduce', function () {
-    it ('creates a Pro.Val that listens to accumulations', function () {
-      var stream = new Pro.Stream(),
+    it ('creates a ProAct.Val that listens to accumulations', function () {
+      var stream = new ProAct.Stream(),
           reduced = stream.reduce(0, function (x, y) {return x + y;});
       expect(reduced.v).toEqual(0);
 
@@ -124,7 +124,7 @@ describe('Pro.Stream', function () {
 
   describe('#accumulate', function () {
     it ('accumulates values using the passed function', function () {
-      var stream1 = new Pro.Stream(),
+      var stream1 = new ProAct.Stream(),
           stream2 = stream1.accumulate(0, function (x, y) {return x + y;}),
           res = [];
 
@@ -148,7 +148,7 @@ describe('Pro.Stream', function () {
     });
 
     it ('can be chained', function () {
-      var stream1 = new Pro.Stream(),
+      var stream1 = new ProAct.Stream(),
           stream2 = stream1.accumulate(0, function (x, y) {return x + y;}),
           stream3 = stream2.accumulate(1, function (x, y) {return x * y;}),
           res = [];
@@ -172,8 +172,8 @@ describe('Pro.Stream', function () {
 
   describe('#merge', function () {
     it ('merges two streams events into one stream of events', function () {
-      var stream1 = new Pro.Stream(),
-          stream2 = new Pro.Stream(),
+      var stream1 = new ProAct.Stream(),
+          stream2 = new ProAct.Stream(),
           stream3 = stream1.merge(stream2),
           res = [];
 
@@ -193,7 +193,7 @@ describe('Pro.Stream', function () {
 
   describe('Errors', function () {
     it ('can be triggered with #triggerErr and listen for with #onErr', function () {
-      var stream = new Pro.Stream(), res = [], resErr = [];
+      var stream = new ProAct.Stream(), res = [], resErr = [];
 
       stream.onErr(function (error) {
         resErr.push(error);
@@ -212,8 +212,8 @@ describe('Pro.Stream', function () {
     });
 
     it ('can be chained through many streams', function () {
-      var stream1 = new Pro.Stream(),
-          stream2 = new Pro.Stream(stream1),
+      var stream1 = new ProAct.Stream(),
+          stream2 = new ProAct.Stream(stream1),
           resErr = [];
 
       stream2.onErr(function (error) {
@@ -225,7 +225,7 @@ describe('Pro.Stream', function () {
     });
 
     it ('can be generated from transformations', function () {
-      var stream1 = new Pro.Stream(),
+      var stream1 = new ProAct.Stream(),
           stream2 = stream1.map(function (v) {
             if (v < 0) {
               throw Error('no!');
@@ -255,6 +255,6 @@ describe('Pro.Stream', function () {
 
   });
 
-  describe('Pro.mainStream', function () {
+  describe('ProAct.mainStream', function () {
   });
 });

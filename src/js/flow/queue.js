@@ -16,7 +16,7 @@
  *  order, using their priorities.
  * </p>
  * <p>
- *  A Pro.Queue can be used to setup the action flow - the order of the actions must be executed.
+ *  A ProAct.Queue can be used to setup the action flow - the order of the actions must be executed.
  *  ProAct.js uses it to create an action flow if something changes.
  * </p>
  *

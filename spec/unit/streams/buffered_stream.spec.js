@@ -1,9 +1,9 @@
 'use strict';
 
-describe('Pro.BufferedStream', function () {
+describe('ProAct.BufferedStream', function () {
     describe('#delay', function () {
       it ('fires all the buffered events', function () {
-        var stream = new Pro.Stream().delay(100), res = [];
+        var stream = new ProAct.Stream().delay(100), res = [];
 
         stream.on(function (el) {
           res.push(el);
@@ -24,7 +24,7 @@ describe('Pro.BufferedStream', function () {
 
     describe('#throttle', function () {
       it ('can trigger the same event in a given time tunnel only once', function () {
-        var stream = new Pro.Stream().throttle(100), res = [];
+        var stream = new ProAct.Stream().throttle(100), res = [];
 
         stream.on(function (el) {
           res.push(el);
@@ -54,7 +54,7 @@ describe('Pro.BufferedStream', function () {
 
     describe('#debounce', function () {
       it ('an event should be triggered only onle in the passed time period, or the period will grow', function () {
-        var stream = new Pro.Stream().debounce(50), res = [];
+        var stream = new ProAct.Stream().debounce(50), res = [];
 
         stream.on(function (el) {
           res.push(el);
@@ -105,7 +105,7 @@ describe('Pro.BufferedStream', function () {
 
     describe('#buffer', function () {
       it ('fires all the buffered events', function () {
-        var stream = new Pro.Stream().bufferit(5), res = [];
+        var stream = new ProAct.Stream().bufferit(5), res = [];
 
         stream.on(function (el) {
           res.push(el);

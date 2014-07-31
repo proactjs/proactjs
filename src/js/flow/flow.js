@@ -91,7 +91,7 @@ P.F.prototype = {
       this.flowInstances.push(queues);
     }
 
-    this.flowInstance = new Pro.Queues(queueNames, options.flowInstance);
+    this.flowInstance = new P.Queues(queueNames, options.flowInstance);
 
     if (start) {
       start(this.flowInstance);

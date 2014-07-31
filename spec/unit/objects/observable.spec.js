@@ -1,9 +1,9 @@
 'use strict';
 
-describe('Pro.Observable', function () {
+describe('ProAct.Observable', function () {
   describe('#on', function () {
     it ('adds observer to the observable', function () {
-      var observable = new Pro.Observable(), res = [];
+      var observable = new ProAct.Observable(), res = [];
 
       observable.on(function (event) {
         res.push(event);
@@ -18,7 +18,7 @@ describe('Pro.Observable', function () {
 
   describe('#off', function () {
     it ('removes observer from the observable', function () {
-      var observable = new Pro.Observable(), res = [],
+      var observable = new ProAct.Observable(), res = [],
           observer = function (event) {
             res.push(event);
           };

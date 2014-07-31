@@ -19,21 +19,21 @@ describe('ProAct.ArrayProperty', function () {
     var original = obj.a,
         property = new ProAct.ArrayProperty(obj, 'a');
 
-    expect(Pro.Utils.isArray(property.val)).toBe(true);
-    expect(Pro.Utils.isProArray(property.val)).toBe(false);
-    expect(property.state).toBe(Pro.States.init);
+    expect(ProAct.Utils.isArray(property.val)).toBe(true);
+    expect(ProAct.Utils.isProArray(property.val)).toBe(false);
+    expect(property.state).toBe(ProAct.States.init);
     expect(property.val).toBe(original);
 
     obj.a;
-    expect(property.state).toBe(Pro.States.ready);
-    expect(Pro.Utils.isArray(property.val)).toBe(false);
-    expect(Pro.Utils.isProArray(property.val)).toBe(true);
+    expect(property.state).toBe(ProAct.States.ready);
+    expect(ProAct.Utils.isArray(property.val)).toBe(false);
+    expect(ProAct.Utils.isProArray(property.val)).toBe(true);
     expect(property.val.valueOf()).toEqual(original);
   });
 
   it('updates depending properties when set', function () {
-    var property = new Pro.ArrayProperty(obj, 'a'),
-        autoProperty = new Pro.AutoProperty(obj, 'ap');
+    var property = new ProAct.ArrayProperty(obj, 'a'),
+        autoProperty = new ProAct.AutoProperty(obj, 'ap');
 
     expect(obj.ap).toEqual(obj.a[0] + obj.a[1]);
 
@@ -42,8 +42,8 @@ describe('ProAct.ArrayProperty', function () {
   });
 
   it('updates depending properties when value contents are changed', function () {
-    var property = new Pro.ArrayProperty(obj, 'a'),
-        autoProperty = new Pro.AutoProperty(obj, 'ap');
+    var property = new ProAct.ArrayProperty(obj, 'a'),
+        autoProperty = new ProAct.AutoProperty(obj, 'ap');
 
     expect(obj.ap).toEqual(obj.a[0] + obj.a[1]);
 
@@ -52,8 +52,8 @@ describe('ProAct.ArrayProperty', function () {
   });
 
   it('when array value changed properties continue to listen for the same changes on the new value', function () {
-    var property = new Pro.ArrayProperty(obj, 'a'),
-        autoProperty = new Pro.AutoProperty(obj, 'ap');
+    var property = new ProAct.ArrayProperty(obj, 'a'),
+        autoProperty = new ProAct.AutoProperty(obj, 'ap');
 
     expect(obj.ap).toEqual(obj.a[0] + obj.a[1]);
 

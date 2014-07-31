@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Source: streams/debouncing_stream.js</title>
+    <title>JSDoc: Source: events/event.js</title>
     
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
     
-    <h1 class="page-title">Source: streams/debouncing_stream.js</h1>
+    <h1 class="page-title">Source: events/event.js</h1>
     
     
 
@@ -27,93 +27,80 @@
         <article>
             <pre class="prettyprint source"><code>/**
  * &lt;p>
- *  Constructs a ProAct.DelayedStream. A {@link ProAct.DelayedStream} that resets its flushing interval on every new value/event.
- *  Only the last event/value triggered in given interval will be emitted.
+ *  Constructs a ProAct.Event. The event contains information of the update.
  * &lt;/p>
  * &lt;p>
- *  ProAct.DebouncingStream is part of the streams module of ProAct.js.
+ *  ProAct.Event is part of the core module of ProAct.js.
  * &lt;/p>
  *
- * @class ProAct.DebouncingStream
- * @extends ProAct.DelayedStream
- * @param {ProAct.Observable} source
- *      A default source of the stream, can be null.
- *      &lt;p>
- *        If this is the only one passed argument and it is a number - it becomes the delay of the stream.
- *      &lt;/p>
- * @param {Array} transforms
- *      A list of transformation to be used on all incoming chages.
- *      &lt;p>
- *        If the arguments passed are two and this is a number - it becomes the delay of the stream.
- *      &lt;/p>
- * @param {Number} delay
- *      The time delay to be used to flush the stream.
+ * @class ProAct.Event
+ * @param {ProAct.Event} source
+ *      If there is an event that coused this event - it is the source. Can be null - no source.
+ * @param {Object} target
+ *      The thing that triggered this event.
+ * @param {ProAct.Event.Types} type
+ *      The type of the event
+ * @param [...] args
+ *      Arguments of the event, for example for value event, these are the old value and the new value.
  */
-ProAct.DebouncingStream = P.DDS = function (source, transforms, delay) {
-  P.DBS.call(this, source, transforms, delay);
+ProAct.Event = P.E = function (source, target, type) {
+  this.source = source;
+  this.target = target;
+  this.type = type;
+  this.args = slice.call(arguments, 3);
 };
 
-ProAct.DebouncingStream.prototype = P.U.ex(Object.create(P.DBS.prototype), {
+/**
+ * Defines the possible types of the ProAct.Events.
+ *
+ * @namespace ProAct.Event.Types
+ */
+ProAct.Event.Types = {
 
   /**
-   * Reference to the constructor of this object.
+   * Value type events. Events for changing a value.
+   * &lt;p>
+   *  For properties the args of the event contain the ProAct Object, the old value
+   *  of the property and the new value.
+   * &lt;/p>
    *
-   * @memberof ProAct.DebouncingStream
-   * @instance
+   * @type Number
+   * @static
    * @constant
-   * @type {Object}
-   * @default ProAct.DebouncingStream
    */
-  constructor: ProAct.DebouncingStream,
+  value: 0,
 
   /**
+   * Array type events. Events for changes in {@link ProAct.Array}.
    * &lt;p>
-   *  Triggers a new event/value to the stream. It is stored in the buffer of the stream and not emitted.
-   *  But the buffer of ProAct.DebouncingStream can store only one value/event, so when the delay passes only
-   *  the last value/event triggered into the stream by this method is emitted. On every call of this method the delay is reset.
-   *  So for example if you have mouse move as source, it will emit only the last mouse move event, that was send &lt;i>delay&lt;/i> milliseconds ago.
-   * &lt;/p>
-   * &lt;p>
-   *  ProAct.DebouncingStream.t is alias of this method.
+   *  The args should consist of operation, index, old values, new values.
    * &lt;/p>
    *
-   * @memberof ProAct.ThrottlingStream
-   * @instance
-   * @method trigger
-   * @param {Object} event
-   *      The event/value to pass to trigger.
-   * @param {Boolean} useTransformations
-   *      If the stream should transform the triggered value. By default it is true (if not passed)
-   * @return {ProAct.ThrottlingStream}
-   *      &lt;i>this&lt;/i>
+   * @type Number
+   * @static
+   * @constant
+   * @see {@link ProAct.Array.Operations}
    */
-  trigger: function (event, useTransformations) {
-    this.buffer = [];
-    this.cancelDelay();
-    this.setDelay(this.delay);
-    this.buffer.push(event, useTransformations);
-  }
-});
-
-P.U.ex(P.Stream.prototype, {
+  array: 1,
 
   /**
-   * Creates a new {@link ProAct.DebouncingStream} instance having as source &lt;i>this&lt;/i>.
+   * Close type events. Events for closing streams or destroying properties.
    *
-   * @memberof ProAct.Stream
-   * @instance
-   * @method debounce
-   * @param {Number} delay
-   *      The time delay to be used for flushing the buffer of the new stream.
-   * @return {ProAct.DebouncingStream}
-   *      A {@link ProAct.DebouncingStream} instance.
+   * @type Number
+   * @static
+   * @constant
    */
-  debounce: function (delay) {
-    return new P.DDS(this, delay);
-  }
-});
+  close: 2,
 
-P.DDS.prototype.t = P.DDS.prototype.trigger;
+  /**
+   * Error type events. Events for errors.
+   *
+   * @type Number
+   * @static
+   * @constant
+   */
+  error: 3
+};
 </code></pre>
         </article>
     </section>

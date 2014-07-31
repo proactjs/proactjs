@@ -85,7 +85,7 @@ ProAct.Core.prototype = P.U.ex(Object.create(P.Observable.prototype), {
    */
   prob: function () {
     var self = this,
-        conf = P.Configuration,
+        conf = ProAct.Configuration,
         keyprops = conf.keyprops,
         keypropList = conf.keypropList;
 

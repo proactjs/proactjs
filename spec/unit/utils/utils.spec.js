@@ -1,16 +1,16 @@
 'use strict';
 
-describe('Pro.Utils', function () {
+describe('ProAct.Utils', function () {
   describe('#remove', function () {
     it ('removes element from array', function () {
       var arr = [1], obj = {a: 2}, a = [5];
 
       arr.push(obj, a, 3);
 
-      Pro.Utils.remove(arr, obj);
+      ProAct.Utils.remove(arr, obj);
       expect(arr).toEqual([1, a, 3]);
 
-      Pro.Utils.remove(arr, a);
+      ProAct.Utils.remove(arr, a);
       expect(arr).toEqual([1, 3]);
     });
   });
@@ -21,14 +21,14 @@ describe('Pro.Utils', function () {
           a2 = [1, 2],
           diff;
 
-      diff = Pro.Utils.diff(a1, a2);
+      diff = ProAct.Utils.diff(a1, a2);
       expect(diff).toBeDefined();
       expect(diff[2]).toBeDefined();
       expect(diff[2].o).toEqual([3]);
       expect(diff[2].n).toEqual([]);
 
       a2.push(3, 4);
-      diff = Pro.Utils.diff(a1, a2);
+      diff = ProAct.Utils.diff(a1, a2);
       expect(diff).toBeDefined();
       expect(diff[3]).toBeDefined();
       expect(diff[3].o).toEqual([]);
@@ -40,14 +40,14 @@ describe('Pro.Utils', function () {
           a2 = [1, 4, 3],
           diff;
 
-      diff = Pro.Utils.diff(a1, a2);
+      diff = ProAct.Utils.diff(a1, a2);
       expect(diff).toBeDefined();
       expect(diff[1]).toBeDefined();
       expect(diff[1].o).toEqual([2]);
       expect(diff[1].n).toEqual([4]);
 
       a2[2] = 5;
-      diff = Pro.Utils.diff(a1, a2);
+      diff = ProAct.Utils.diff(a1, a2);
       expect(diff).toBeDefined();
       expect(diff[1]).toBeDefined();
       expect(diff[1].o).toEqual([2, 3]);
@@ -55,7 +55,7 @@ describe('Pro.Utils', function () {
 
       a1.push(5, 4, 3, 2, 1);
       a2.push(5, 4, 2, 2, 3);
-      diff = Pro.Utils.diff(a1, a2);
+      diff = ProAct.Utils.diff(a1, a2);
       expect(diff).toBeDefined();
       expect(diff[0]).toBeUndefined();
       expect(diff[1]).toBeDefined();
@@ -78,7 +78,7 @@ describe('Pro.Utils', function () {
           a2 = [2, 4, 6, 4, 2, 6, 4, 2, 0, 10, 11],
           diff;
 
-      diff = Pro.Utils.diff(a1, a2);
+      diff = ProAct.Utils.diff(a1, a2);
       expect(diff).toBeDefined();
       expect(diff[0]).toBeDefined();
       expect(diff[0].o).toEqual([1, 2, 3]);

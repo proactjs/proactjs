@@ -104,7 +104,7 @@ ProAct.ObjectCore.prototype = P.U.ex(Object.create(P.C.prototype), {
    */
   makeProp: function (property, listeners, meta) {
     var object = this.shell,
-        conf = P.Configuration,
+        conf = ProAct.Configuration,
         keyprops = conf.keyprops,
         keypropList = conf.keypropList,
         isF = P.U.isFunction,
@@ -116,7 +116,7 @@ ProAct.ObjectCore.prototype = P.U.ex(Object.create(P.C.prototype), {
     }
 
     if (keyprops && keypropList.indexOf(property) !== -1) {
-      throw Error('The property name ' + property + ' is a key word for pro objects! Objects passed to Pro.prob can not contain properties named as keyword properties.');
+      throw Error('The property name ' + property + ' is a key word for pro objects! Objects passed to ProAct.prob can not contain properties named as keyword properties.');
       return null;
     }
 

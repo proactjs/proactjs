@@ -1,5 +1,5 @@
 'use strict';
 
 beforeEach(function() {
-  Pro.currentCaller = null;
+  ProAct.currentCaller = null;
 });

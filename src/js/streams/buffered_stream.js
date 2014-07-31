@@ -28,7 +28,7 @@ ProAct.BufferedStream = P.BS = function (source, transforms) {
   this.buffer = [];
 };
 
-ProAct.BufferedStream.prototype = Pro.U.ex(Object.create(P.S.prototype), {
+ProAct.BufferedStream.prototype = P.U.ex(Object.create(P.S.prototype), {
 
   /**
    * Reference to the constructor of this object.
