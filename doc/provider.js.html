@@ -60,6 +60,9 @@
 
   /**
    * Constructs a ProAct.Registry.FunctionProvider. The {@link ProAct.Registry} uses registered function providers as storage for Functions.
+   * &lt;p>
+   *  The function provider doesn't have implementation for creation of new functions, only for storing, readin and removing them.
+   * &lt;/p>
    *
    * @class ProAct.Registry.FunctionProvider
    * @extends ProAct.Registry.Provider
@@ -88,23 +91,146 @@
 });
 
 ProAct.Registry.Provider.prototype = {
+
+  /**
+   * Reference to the constructor of this object.
+   *
+   * @memberof ProAct.Registry.Provider
+   * @instance
+   * @constant
+   * @default ProAct.Registry.Provider
+   */
   constructor: ProAct.Registry.Provider,
+
+  /**
+   * Creates and stores an instance of the object this ProAct.Registry.Provider manages.
+   * &lt;p>
+   *  For the creation is used the {@link ProAct.Registry.Provider#provide} method.
+   * &lt;/p>
+   *
+   * @memberof ProAct.Registry.Provider
+   * @instance
+   * @method make
+   * @param {String} key
+   *      The key on which the new instance will be stored.
+   * @param {Array} options
+   *      Array containing options for the creation process. For example the exact sub-type of the object to create (optional).
+   * @param [...]
+   *      Parameters passed to the constructor when the new instance is created.
+   * @return {Object}
+   *      The newly created and stored object.
+   * @see {@link ProAct.Registry.Provider#provide}
+   */
   make: function (key, options) {
     var provided, args = slice.call(arguments, 1);
     this.stored[key] = provided = this.provide.apply(this, args);
     return provided;
   },
-  store: function (key, func, options) { return this.stored[key] = func; },
+
+  /**
+   * Stores an instance of an object this ProAct.Registry.Provider manages.
+   *
+   * @memberof ProAct.Registry.Provider
+   * @instance
+   * @method store
+   * @param {String} key
+   *      The key on which the &lt;i>object&lt;/i> will be stored.
+   * @param {Object} object
+   *      The object to store.
+   * @return {Object}
+   *      The stored object.
+   */
+  store: function (key, object) { return this.stored[key] = object; },
+
+  /**
+   * Reads a stored instance.
+   *
+   * @memberof ProAct.Registry.Provider
+   * @instance
+   * @method get
+   * @param {String} key
+   *      The key to read.
+   * @return {Object}
+   *      The stored object corresponding to the passed &lt;i>key&lt;/i> or undefined if there is no such object.
+   */
   get: function (key) { return this.stored[key]; },
+
+  /**
+   * Deletes a stored instance.
+   *
+   * @memberof ProAct.Registry.Provider
+   * @instance
+   * @method delete
+   * @param {String} key
+   *      The key to delete.
+   * @return {Object}
+   *      The stored object corresponding to the passed &lt;i>key&lt;/i> or undefined if there is no such object.
+   */
   del: function(key) {
     var deleted = this.get(key);
     delete this.stored[key];
     return deleted;
   },
+
+  /**
+   * A callback called by the {@link ProAct.Registry} when &lt;i>this&lt;/i> ProAct.Registry.Provider is registered.
+   *
+   * @memberof ProAct.Registry.Provider
+   * @instance
+   * @abstract
+   * @method registered
+   * @param {ProAct.Registry} registery
+   *      The registry in which &lt;i>this&lt;/i> is being registered.
+   */
   registered: function (registry) {},
+
+  /**
+   * An object containing all the available sub-types constructions of the managed by &lt;i>this&lt;/i> class.
+   * &lt;p>
+   *  Should always have a 'basic' field for the default construction operation.
+   * &lt;/p>
+   *
+   * @namespace ProAct.Registry.Provider.types
+   * @memberof ProAct.Registry.Provider
+   * @static
+   */
   types: {
+
+    /**
+     * Defines default construction logic for the managed object.
+     * &lt;p>
+     *  For example if we have a 'FooProvider', this method will be something like:
+     *  &lt;pre>
+     *    return new Foo();
+     *  &lt;/pre>
+     * &lt;/p>
+     * &lt;p>
+     *  It is abstract and must be overridden by the extenders, or an Error will be thrown.
+     * &lt;/p>
+     *
+     * @memberof ProAct.Registry.Provider.types
+     * @instance
+     * @abstract
+     * @method basic
+     * @return {Object}
+     *      An isntance of the managed class of objects.
+     */
     basic: function () { throw new Error('Abstract: implement!'); }
   },
+
+  /**
+   * Provides a new instance of the managed by &lt;i>this&lt;/i> ProAct.Registry.Provider object.
+   *
+   * @memberof ProAct.Registry.Provider
+   * @instance
+   * @method provide
+   * @param {Array} options
+   *      An array containing the key of the object to create and store. It may contain data to pass to the constructor of the object.
+   * @param [...]
+   *      Arguments that should be passed to the constructor.
+   * @return {Object}
+   *      An isntance of the managed class of objects.
+   */
   provide: function (options) {
     if (options) {
       var type = options[0],
@@ -129,32 +255,214 @@ ProAct.Registry.Provider.prototype = {
 };
 
 ProAct.Registry.StreamProvider.prototype = P.U.ex(Object.create(P.R.Provider.prototype), {
+
+  /**
+   * Reference to the constructor of this object.
+   *
+   * @memberof ProAct.Registry.StreamProvider
+   * @instance
+   * @constant
+   * @default ProAct.Registry.StreamProvider
+   */
   constructor: ProAct.Registry.StreamProvider,
+
+  /**
+   * A callback called by the {@link ProAct.Registry} when &lt;i>this&lt;/i> ProAct.Registry.StreamProvider is registered.
+   * &lt;p>
+   *  It adds the methods &lt;i>s&lt;/i> and &lt;i>stream&lt;/i> to the {@link ProAct.Registry}, which are aliases of &lt;i>this&lt;/i>' {@link ProAct.Registry.StreamProvider#get} method.
+   * &lt;/p>
+   *
+   * @memberof ProAct.Registry.StreamProvider
+   * @instance
+   * @method registered
+   * @param {ProAct.Registry} registery
+   *      The registry in which &lt;i>this&lt;/i> is being registered.
+   */
   registered: function (registry) {
     registry.s = registry.stream = P.U.bind(this, this.get);
   },
+
+  /**
+   * An object containing all the available sub-types constructions of the managed by &lt;i>this&lt;/i> class.
+   *
+   * @namespace ProAct.Registry.StreamProvider.types
+   * @memberof ProAct.Registry.StreamProvider
+   * @static
+   */
   types: {
+
+    /**
+     * Constructs a simple {@link ProAct.Stream}
+     * &lt;p>
+     *  &lt;pre>
+     *    return new ProAct.Stream();
+     *  &lt;/pre>
+     * &lt;/p>
+     *
+     * @memberof ProAct.Registry.StreamProvider.types
+     * @instance
+     * @method basic
+     * @return {ProAct.Stream}
+     *      An isntance of {@link ProAct.Stream}.
+     * @see {@link ProAct.Stream}
+     */
     basic: function () { return new P.S(); },
-    delayed: function (args) { return new Pro.DelayedStream(parseInt(args[0], 10)); },
-    size: function (args) { return new Pro.SizeBufferedStream(parseInt(args[0], 10)); },
-    debouncing: function (args) { return new Pro.DebouncingStream(parseInt(args[0], 10)); },
-    throttling: function (args) { return new Pro.ThrottlingStream(parseInt(args[0], 10)); }
+
+    /**
+     * Constructs a {@link ProAct.DelayedStream}
+     * &lt;p>
+     *  &lt;pre>
+     *    return new ProAct.DelayedStream(delay);
+     *  &lt;/pre>
+     * &lt;/p>
+     *
+     * @memberof ProAct.Registry.StreamProvider.types
+     * @instance
+     * @method delayed
+     * @param {Array} args
+     *      An array of arguments - the first element of which is the &lt;i>delay&lt;/i> of the stream to construct.
+     * @return {ProAct.DelayedStream}
+     *      An isntance of {@link ProAct.DelayedStream}.
+     * @see {@link ProAct.DelayedStream}
+     */
+    delayed: function (args) { return new P.DBS(parseInt(args[0], 10)); },
+
+    /**
+     * Constructs a {@link ProAct.SizeBufferedStream}
+     * &lt;p>
+     *  &lt;pre>
+     *    return new ProAct.SizeBufferedStream(size);
+     *  &lt;/pre>
+     * &lt;/p>
+     *
+     * @memberof ProAct.Registry.StreamProvider.types
+     * @instance
+     * @method size
+     * @param {Array} args
+     *      An array of arguments - the first element of which is the &lt;i>size&lt;/i> of the stream to construct.
+     * @return {ProAct.SizeBufferedStream}
+     *      An isntance of {@link ProAct.SizeBufferedStream}.
+     * @see {@link ProAct.SizeBufferedStream}
+     */
+    size: function (args) { return new P.SBS(parseInt(args[0], 10)); },
+
+    /**
+     * Constructs a {@link ProAct.DebouncingStream}
+     * &lt;p>
+     *  &lt;pre>
+     *    return new ProAct.DebouncingStream(delay);
+     *  &lt;/pre>
+     * &lt;/p>
+     *
+     * @memberof ProAct.Registry.StreamProvider.types
+     * @instance
+     * @method debouncing
+     * @param {Array} args
+     *      An array of arguments - the first element of which is the &lt;i>delay&lt;/i> of the stream to construct.
+     * @return {ProAct.DebouncingStream}
+     *      An isntance of {@link ProAct.DebouncingStream}.
+     * @see {@link ProAct.DebouncingStream}
+     */
+    debouncing: function (args) { return new P.DDS(parseInt(args[0], 10)); },
+
+    /**
+     * Constructs a {@link ProAct.ThrottlingStream}
+     * &lt;p>
+     *  &lt;pre>
+     *    return new ProAct.ThrottlingStream(delay);
+     *  &lt;/pre>
+     * &lt;/p>
+     *
+     * @memberof ProAct.Registry.StreamProvider.types
+     * @instance
+     * @method throttling
+     * @param {Array} args
+     *      An array of arguments - the first element of which is the &lt;i>delay&lt;/i> of the stream to construct.
+     * @return {ProAct.ThrottlingStream}
+     *      An isntance of {@link ProAct.ThrottlingStream}.
+     * @see {@link ProAct.ThrottlingStream}
+     */
+    throttling: function (args) { return new P.TDS(parseInt(args[0], 10)); }
   }
 });
 
 ProAct.Registry.FunctionProvider.prototype = P.U.ex(Object.create(P.R.Provider.prototype), {
+
+  /**
+   * Reference to the constructor of this object.
+   *
+   * @memberof ProAct.Registry.FunctionProvider
+   * @instance
+   * @constant
+   * @default ProAct.Registry.FunctionProvider
+   */
   constructor: ProAct.Registry.FunctionProvider
 });
 
 ProAct.Registry.ProObjectProvider.prototype = P.U.ex(Object.create(P.R.Provider.prototype), {
+
+  /**
+   * Reference to the constructor of this object.
+   *
+   * @memberof ProAct.Registry.ProObjectProvider
+   * @instance
+   * @constant
+   * @default ProAct.Registry.ProObjectProvider
+   */
   constructor: ProAct.Registry.ProObjectProvider,
+
+  /**
+   * A callback called by the {@link ProAct.Registry} when &lt;i>this&lt;/i> ProAct.Registry.ProObjectProvider is registered.
+   * &lt;p>
+   *  It adds the methods &lt;i>po&lt;/i> and &lt;i>proObject&lt;/i> to the {@link ProAct.Registry}, which are aliases of &lt;i>this&lt;/i>' {@link ProAct.Registry.ProObjectProvider#get} method.
+   * &lt;/p>
+   * &lt;p>
+   *  It adds the method &lt;i>prob&lt;/i> to the {@link ProAct.Registry}, which is alias of &lt;i>this&lt;/i>' {@link ProAct.Registry.ProObjectProvider#make} method.
+   * &lt;/p>
+   *
+   * @memberof ProAct.Registry.StreamProvider
+   * @instance
+   * @method registered
+   * @param {ProAct.Registry} registery
+   *      The registry in which &lt;i>this&lt;/i> is being registered.
+   */
   registered: function (registry) {
     registry.po = registry.proObject = P.U.bind(this, this.get);
     registry.prob = P.U.bind(this, function (key, val, meta) {
       return this.make(key, null, val, meta);
     });
   },
+
+  /**
+   * An object containing all the available sub-types constructions of the managed by &lt;i>this&lt;/i> class.
+   *
+   * @namespace ProAct.Registry.ProObjectProvider.types
+   * @memberof ProAct.Registry.ProObjectProvider
+   * @static
+   */
   types: {
+
+    /**
+     * Constructs a ProAct.js reactive object from original one, using {@link ProAct.prob}
+     * &lt;p>
+     *  &lt;pre>
+     *    return new ProAct.prob(value, meta);
+     *  &lt;/pre>
+     * &lt;/p>
+     *
+     * @memberof ProAct.Registry.ProObjectProvider.types
+     * @instance
+     * @method basic
+     * @param {Array} options
+     *      Array containing options for the creation process.
+     * @param {Object} value
+     *      The object/value to make reactive.
+     * @param {Object|String} meta
+     *      Meta-data used to help in the reactive object creation.
+     * @return {Object}
+     *      A ractive object.
+     * @see {@link ProAct.prob}
+     */
     basic: function (options, value, meta) {
       return P.prob(value, meta);
     }
@@ -165,7 +473,26 @@ streamProvider = new P.R.StreamProvider();
 functionProvider = new P.R.FunctionProvider();
 proObjectProvider = new P.R.ProObjectProvider();
 
-P.registry = new P.R()
+/**
+ * The {@link ProAct.Registry} instance used by ProAct's by default.
+ * &lt;p>
+ *  It has a {@link ProAct.Registry.StreamProvider} registered on the &lt;i>s&lt;/i> namespace.
+ * &lt;/p>
+ * &lt;p>
+ *  It has a {@link ProAct.Registry.ProObjectProvider} registered on the &lt;i>po&lt;/i> and &lt;i>obj&lt;/i> namespaces.
+ * &lt;/p>
+ * &lt;p>
+ *  It has a {@link ProAct.Registry.FunctionProvider} registered on the &lt;i>f&lt;/i> and &lt;i>l&lt;/i> namespaces.
+ * &lt;/p>
+ * &lt;p>
+ *  Override this instance or register your own providers in it to extend the ProAct.js DSL.
+ * &lt;/p>
+ *
+ * @type ProAct.Registry
+ * @memberof ProAct
+ * @static
+ */
+ProAct.registry = new P.R()
   .register('s', streamProvider)
   .register('po', proObjectProvider)
   .register('obj', proObjectProvider)
@@ -181,13 +508,13 @@ P.registry = new P.R()
 </div>
 
 <nav>
-    <h2><a href="index.html">Index</a></h2><h3>Classes</h3><ul><li><a href="ProAct.Array.html">Array</a></li><li><a href="ProAct.ArrayCore.html">ArrayCore</a></li><li><a href="ProAct.ArrayProperty.html">ArrayProperty</a></li><li><a href="ProAct.AutoProperty.html">AutoProperty</a></li><li><a href="ProAct.BufferedStream.html">BufferedStream</a></li><li><a href="ProAct.Core.html">Core</a></li><li><a href="ProAct.DebouncingStream.html">DebouncingStream</a></li><li><a href="ProAct.DelayedStream.html">DelayedStream</a></li><li><a href="ProAct.Event.html">Event</a></li><li><a href="ProAct.Flow.html">Flow</a></li><li><a href="ProAct.NullProperty.html">NullProperty</a></li><li><a href="ProAct.ObjectCore.html">ObjectCore</a></li><li><a href="ProAct.ObjectProperty.html">ObjectProperty</a></li><li><a href="ProAct.Observable.html">Observable</a></li><li><a href="ProAct.Property.html">Property</a></li><li><a href="ProAct.Queue.html">Queue</a></li><li><a href="ProAct.Queues.html">Queues</a></li><li><a href="ProAct.Registry.html">Registry</a></li><li><a href="ProAct.Registry.FunctionProvider.html">FunctionProvider</a></li><li><a href="ProAct.Registry.ProObjectProvider.html">ProObjectProvider</a></li><li><a href="ProAct.Registry.Provider.html">Provider</a></li><li><a href="ProAct.Registry.StreamProvider.html">StreamProvider</a></li><li><a href="ProAct.SizeBufferedStream.html">SizeBufferedStream</a></li><li><a href="ProAct.Stream.html">Stream</a></li><li><a href="ProAct.ThrottlingStream.html">ThrottlingStream</a></li><li><a href="ProAct.Val.html">Val</a></li></ul><h3>Namespaces</h3><ul><li><a href="ProAct.html">ProAct</a></li><li><a href="ProAct.Array.Listeners.html">Listeners</a></li><li><a href="ProAct.Array.Operations.html">Operations</a></li><li><a href="ProAct.Configuration.html">Configuration</a></li><li><a href="ProAct.DSL.html">DSL</a></li><li><a href="ProAct.DSL.ops.html">ops</a></li><li><a href="ProAct.DSL.predefined.html">predefined</a></li><li><a href="ProAct.DSL.predefined.accumulation.html">accumulation</a></li><li><a href="ProAct.DSL.predefined.filtering.html">filtering</a></li><li><a href="ProAct.DSL.predefined.mapping.html">mapping</a></li><li><a href="ProAct.Event.Types.html">Types</a></li><li><a href="ProAct.OpStore.html">OpStore</a></li><li><a href="ProAct.Property.Types.html">Types</a></li><li><a href="ProAct.States.html">States</a></li><li><a href="ProAct.Utils.html">Utils</a></li></ul>
+    <h2><a href="index.html">Index</a></h2><h3>Classes</h3><ul><li><a href="ProAct.Array.html">Array</a></li><li><a href="ProAct.ArrayCore.html">ArrayCore</a></li><li><a href="ProAct.ArrayProperty.html">ArrayProperty</a></li><li><a href="ProAct.AutoProperty.html">AutoProperty</a></li><li><a href="ProAct.BufferedStream.html">BufferedStream</a></li><li><a href="ProAct.Core.html">Core</a></li><li><a href="ProAct.DebouncingStream.html">DebouncingStream</a></li><li><a href="ProAct.DelayedStream.html">DelayedStream</a></li><li><a href="ProAct.Event.html">Event</a></li><li><a href="ProAct.Flow.html">Flow</a></li><li><a href="ProAct.NullProperty.html">NullProperty</a></li><li><a href="ProAct.ObjectCore.html">ObjectCore</a></li><li><a href="ProAct.ObjectProperty.html">ObjectProperty</a></li><li><a href="ProAct.Observable.html">Observable</a></li><li><a href="ProAct.Property.html">Property</a></li><li><a href="ProAct.Queue.html">Queue</a></li><li><a href="ProAct.Queues.html">Queues</a></li><li><a href="ProAct.Registry.html">Registry</a></li><li><a href="ProAct.Registry.FunctionProvider.html">FunctionProvider</a></li><li><a href="ProAct.Registry.ProObjectProvider.html">ProObjectProvider</a></li><li><a href="ProAct.Registry.Provider.html">Provider</a></li><li><a href="ProAct.Registry.StreamProvider.html">StreamProvider</a></li><li><a href="ProAct.SizeBufferedStream.html">SizeBufferedStream</a></li><li><a href="ProAct.Stream.html">Stream</a></li><li><a href="ProAct.ThrottlingStream.html">ThrottlingStream</a></li><li><a href="ProAct.Val.html">Val</a></li></ul><h3>Namespaces</h3><ul><li><a href="ProAct.html">ProAct</a></li><li><a href="ProAct.Array.Listeners.html">Listeners</a></li><li><a href="ProAct.Array.Operations.html">Operations</a></li><li><a href="ProAct.Configuration.html">Configuration</a></li><li><a href="ProAct.DSL.html">DSL</a></li><li><a href="ProAct.DSL.ops.html">ops</a></li><li><a href="ProAct.DSL.predefined.html">predefined</a></li><li><a href="ProAct.DSL.predefined.accumulation.html">accumulation</a></li><li><a href="ProAct.DSL.predefined.filtering.html">filtering</a></li><li><a href="ProAct.DSL.predefined.mapping.html">mapping</a></li><li><a href="ProAct.Event.Types.html">Types</a></li><li><a href="ProAct.OpStore.html">OpStore</a></li><li><a href="ProAct.Property.Types.html">Types</a></li><li><a href="ProAct.Registry.ProObjectProvider.types.html">types</a></li><li><a href="ProAct.Registry.Provider.types.html">types</a></li><li><a href="ProAct.Registry.StreamProvider.types.html">types</a></li><li><a href="ProAct.States.html">States</a></li><li><a href="ProAct.Utils.html">Utils</a></li></ul>
 </nav>
 
 <br clear="both">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.2</a> on Thu Jul 31 2014 18:41:34 GMT+0300 (EEST)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.2</a> on Thu Jul 31 2014 22:33:09 GMT+0300 (EEST)
 </footer>
 
 <script> prettyPrint(); </script>

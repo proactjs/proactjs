@@ -1,13 +1,13 @@
 'use strict';
 
-describe('Pro.Flow, Pro.Property and Pro.Stream', function () {
-  it ('all errors from the flow go to the Pro.flow#errStream', function () {
+describe('ProAct.Flow, ProAct.Property and ProAct.Stream', function () {
+  it ('all errors from the flow go to the ProAct.flow#errStream', function () {
     var res = [];
-    Pro.flow.errStream().onErr(function (e) {
+    ProAct.flow.errStream().onErr(function (e) {
       res.push(e)
     });
 
-    Pro.flow.run(function () {
+    ProAct.flow.run(function () {
       throw new Error('1');
     });
 
@@ -15,14 +15,14 @@ describe('Pro.Flow, Pro.Property and Pro.Stream', function () {
     expect(res[0].message).toBe('1');
   });
 
-  it ('all errors from pushed actions in the Pro.flow go to the Pro.flow#errStream', function () {
+  it ('all errors from pushed actions in the ProAct.flow go to the ProAct.flow#errStream', function () {
     var res = [];
-    Pro.flow.errStream().onErr(function (e) {
+    ProAct.flow.errStream().onErr(function (e) {
       res.push(e)
     });
 
-    Pro.flow.run(function () {
-      Pro.flow.push(function () {
+    ProAct.flow.run(function () {
+      ProAct.flow.push(function () {
         throw new Error('2');
       });
       throw new Error('1');
@@ -33,8 +33,8 @@ describe('Pro.Flow, Pro.Property and Pro.Stream', function () {
     expect(res[1].message).toEqual('2');
   });
 
-  it ('Errors from property objects go to the Pro.flow#errStream', function () {
-    var obj = Pro.prob({
+  it ('Errors from property objects go to the ProAct.flow#errStream', function () {
+    var obj = ProAct.prob({
           a: 0,
           b: 1,
           d: function () {
@@ -46,7 +46,7 @@ describe('Pro.Flow, Pro.Property and Pro.Stream', function () {
           }
         }),
         errs = [];
-    Pro.flow.errStream().onErr(function (e) {
+    ProAct.flow.errStream().onErr(function (e) {
       errs.push(e);
     });
 
@@ -60,7 +60,7 @@ describe('Pro.Flow, Pro.Property and Pro.Stream', function () {
   });
 
   it ('cycles...', function () {
-    var obj = Pro.prob({
+    var obj = ProAct.prob({
           b: 1,
           c: function () {
             this.b;
@@ -71,7 +71,7 @@ describe('Pro.Flow, Pro.Property and Pro.Stream', function () {
           }
         }),
         errs = [];
-    Pro.flow.errStream().onErr(function (e) {
+    ProAct.flow.errStream().onErr(function (e) {
       errs.push(e);
     });
 
@@ -79,18 +79,18 @@ describe('Pro.Flow, Pro.Property and Pro.Stream', function () {
     expect(errs.length).toBe(1);
   });
 
-  it ('Pro.AutoProperty can use Pro.flow#pause and Pro.flow#resume to set the properties it depends on.', function () {
+  it ('ProAct.AutoProperty can use ProAct.flow#pause and ProAct.flow#resume to set the properties it depends on.', function () {
     var computeCounter = 0,
-        obj = Pro.prob({
+        obj = ProAct.prob({
           a: 0,
           b: 0,
           c: function (val) {
             computeCounter++;
-            if (Pro.U.isArray(val) && val.length === 2) {
-              Pro.flow.pause();
+            if (ProAct.U.isArray(val) && val.length === 2) {
+              ProAct.flow.pause();
               this.a = val[0];
               this.b = val[1];
-              Pro.flow.resume();
+              ProAct.flow.resume();
             }
             return this.a + this.b;
           }

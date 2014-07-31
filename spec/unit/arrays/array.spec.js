@@ -166,14 +166,14 @@ describe('ProAct.Array', function () {
 
     array[1] = 43;
     expect(array[1]).toBe(43);
-    expect(op).toBe(Pro.Array.Operations.set);
+    expect(op).toBe(ProAct.Array.Operations.set);
     expect(i).toBe(1);
     expect(ov).toBe(2);
     expect(nv).toBe(43);
 
     array[2] = 35;
     expect(array[2]).toBe(35);
-    expect(op).toBe(Pro.Array.Operations.set);
+    expect(op).toBe(ProAct.Array.Operations.set);
     expect(i).toBe(2);
     expect(ov).toBe(3);
     expect(nv).toBe(35);
@@ -182,13 +182,13 @@ describe('ProAct.Array', function () {
   });
 
   it('updates properties depending on it by index', function () {
-    var array = new Pro.Array(1, 2, 3, 4, 5),
+    var array = new ProAct.Array(1, 2, 3, 4, 5),
         obj = {
           prop: function () {
             return array[1] + array[2];
           }
         },
-        property = new Pro.AutoProperty(obj, 'prop');
+        property = new ProAct.AutoProperty(obj, 'prop');
 
     expect(obj.prop).toBe(array[1] + array[2]);
 
@@ -200,13 +200,13 @@ describe('ProAct.Array', function () {
   });
 
   it('updates properties depending on it by length', function () {
-    var array = new Pro.Array(1, 2, 3, 4, 5),
+    var array = new ProAct.Array(1, 2, 3, 4, 5),
         obj = {
           prop: function () {
             return array.length;
           }
         },
-        property = new Pro.AutoProperty(obj, 'prop');
+        property = new ProAct.AutoProperty(obj, 'prop');
 
     expect(obj.prop).toBe(array.length);
 
@@ -218,22 +218,22 @@ describe('ProAct.Array', function () {
   });
 
   describe('#concat', function () {
-    it('returns a Pro.Array instance', function () {
-      var array = new Pro.Array(1, 2, 3, 4, 5),
+    it('returns a ProAct.Array instance', function () {
+      var array = new ProAct.Array(1, 2, 3, 4, 5),
           res = array.concat(6, 7);
 
-      expect(Pro.Utils.isProArray(res)).toBe(true);
+      expect(ProAct.Utils.isProArray(res)).toBe(true);
       expect(res.valueOf()).toEqual([1, 2, 3, 4, 5, 6, 7]);
     });
 
     it('updates properties depending on it', function () {
-      var array = new Pro.Array(1, 2, 3, 4, 5),
+      var array = new ProAct.Array(1, 2, 3, 4, 5),
           obj = {
             prop: function () {
               return array.concat(6, 7, 8, 9);
             }
           },
-          property = new Pro.AutoProperty(obj, 'prop');
+          property = new ProAct.AutoProperty(obj, 'prop');
 
       expect(obj.prop.valueOf()).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9]);
 
@@ -250,8 +250,8 @@ describe('ProAct.Array', function () {
       expect(obj.prop).toEqual(array.concat(6, 7, 8, 9));
     });
 
-    it('the returned Pro.Array depends on the original one', function () {
-      var array = new Pro.Array(1, 2, 3, 4, 5),
+    it('the returned ProAct.Array depends on the original one', function () {
+      var array = new ProAct.Array(1, 2, 3, 4, 5),
           res = array.concat(6, 7);
 
       array[2] = -3;
@@ -288,9 +288,9 @@ describe('ProAct.Array', function () {
       expect(res.toArray()).toEqual([0, 1, 4, 5, 6, 7]);
     });
 
-    it('the returned result depends on the argument if the argument is a Pro.Array too', function () {
-      var array1 = new Pro.Array(1, 2, 3, 4, 5),
-          array2 = new Pro.Array(6, 7, 8, 9, 10),
+    it('the returned result depends on the argument if the argument is a ProAct.Array too', function () {
+      var array1 = new ProAct.Array(1, 2, 3, 4, 5),
+          array2 = new ProAct.Array(6, 7, 8, 9, 10),
           res = array1.concat(array2);
 
       expect(res.toArray()).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
@@ -345,7 +345,7 @@ describe('ProAct.Array', function () {
 
   describe('#every & #pevery', function () {
     it('updates properties depending on #every', function () {
-      var array = new Pro.Array(2, 4, 6, 8, 10),
+      var array = new ProAct.Array(2, 4, 6, 8, 10),
           obj = {
             prop: function () {
               return array.every(function (el) {
@@ -353,7 +353,7 @@ describe('ProAct.Array', function () {
               });
             }
           },
-          property = new Pro.AutoProperty(obj, 'prop');
+          property = new ProAct.AutoProperty(obj, 'prop');
 
       expect(obj.prop).toEqual(true);
 
@@ -371,17 +371,17 @@ describe('ProAct.Array', function () {
 
     describe('#pevery', function () {
       it('returns pro value', function () {
-        var array = new Pro.Array(1, 2, 3, 4, 5),
+        var array = new ProAct.Array(1, 2, 3, 4, 5),
             every = array.pevery(function (el) {
               return typeof(el) === 'number';
             });
 
-        expect(Pro.Utils.isProVal(every)).toBe(true);
+        expect(ProAct.Utils.isProVal(every)).toBe(true);
         expect(every.valueOf()).toBe(true);
       });
 
       it('on list changes the produced value is updated', function () {
-        var array = new Pro.Array(1, 2, 3, 4, 5),
+        var array = new ProAct.Array(1, 2, 3, 4, 5),
             every = array.pevery(function (el) {
               return typeof(el) === 'number';
             });
@@ -429,7 +429,7 @@ describe('ProAct.Array', function () {
 
   describe('#some & #psome', function () {
     it('updates properties depending on #some', function () {
-      var array = new Pro.Array(2, 4, 5, 9, 10),
+      var array = new ProAct.Array(2, 4, 5, 9, 10),
           obj = {
             prop: function () {
               return array.some(function (el) {
@@ -437,7 +437,7 @@ describe('ProAct.Array', function () {
               });
             }
           },
-          property = new Pro.AutoProperty(obj, 'prop');
+          property = new ProAct.AutoProperty(obj, 'prop');
 
       expect(obj.prop).toEqual(true);
 
@@ -450,17 +450,17 @@ describe('ProAct.Array', function () {
 
     describe('#psome', function () {
       it('returns pro value', function () {
-        var array = new Pro.Array(1, 2, 3, 4, '5'),
+        var array = new ProAct.Array(1, 2, 3, 4, '5'),
             every = array.psome(function (el) {
               return typeof(el) === 'number';
             });
 
-        expect(Pro.Utils.isProVal(every)).toBe(true);
+        expect(ProAct.Utils.isProVal(every)).toBe(true);
         expect(every.valueOf()).toBe(true);
       });
 
       it('on list changes the produced value is updated', function () {
-        var array = new Pro.Array(1, '2', '3', '4', '5'),
+        var array = new ProAct.Array(1, '2', '3', '4', '5'),
             some = array.psome(function (el) {
               return typeof(el) === 'number';
             });
@@ -507,7 +507,7 @@ describe('ProAct.Array', function () {
   });
 
   it('updates properties depending on #forEach', function () {
-    var array = new Pro.Array(3, 5, 4),
+    var array = new ProAct.Array(3, 5, 4),
         obj = {
           prop: function () {
             var sum = 0;
@@ -517,7 +517,7 @@ describe('ProAct.Array', function () {
             return sum;
           }
         },
-        property = new Pro.AutoProperty(obj, 'prop');
+        property = new ProAct.AutoProperty(obj, 'prop');
 
     expect(obj.prop).toEqual(50);
 
@@ -532,14 +532,14 @@ describe('ProAct.Array', function () {
   });
 
   describe('#filter', function () {
-    it('creates a new Pro.Array dependable on the original', function () {
-      var array = new Pro.Array(1, 2, 3, 4), filtered;
+    it('creates a new ProAct.Array dependable on the original', function () {
+      var array = new ProAct.Array(1, 2, 3, 4), filtered;
 
       filtered = array.filter(function (el) {
         return (el % 2) === 0;
       });
 
-      expect(Pro.Utils.isProArray(filtered)).toBe(true);
+      expect(ProAct.Utils.isProArray(filtered)).toBe(true);
       expect(filtered.toArray()).toEqual([2, 4]);
 
       array[0] = -2;
@@ -593,7 +593,7 @@ describe('ProAct.Array', function () {
     });
 
     it('updates depending properties', function () {
-      var array = new Pro.Array(2, '4', 5, '9', 10),
+      var array = new ProAct.Array(2, '4', 5, '9', 10),
           obj = {
             prop: function () {
               return array.filter(function (el) {
@@ -601,7 +601,7 @@ describe('ProAct.Array', function () {
               });
             }
           },
-          property = new Pro.AutoProperty(obj, 'prop');
+          property = new ProAct.AutoProperty(obj, 'prop');
 
       expect(obj.prop.toArray()).toEqual(['4', '9']);
 

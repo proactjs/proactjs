@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Namespace: OpStore</title>
+    <title>JSDoc: Namespace: types</title>
     
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
     
-    <h1 class="page-title">Namespace: OpStore</h1>
+    <h1 class="page-title">Namespace: types</h1>
     
     
 
@@ -27,9 +27,9 @@
     
 <header>
     <h2>
-        <span class="ancestors"><a href="ProAct.html">ProAct</a>.</span>
+        <span class="ancestors"><a href="ProAct.html">ProAct</a><a href="ProAct.Registry.html">.Registry</a><a href="ProAct.Registry.ProObjectProvider.html">.ProObjectProvider</a>.</span>
     
-    OpStore
+    types
     </h2>
     
 </header>  
@@ -40,19 +40,7 @@
     
     
         
-            <div class="description">Contains ProAct.DSl operation logic definitions.
-<p>
- Every operation has
- <ol>
-   <li><b>sym</b> - A symbol used to identify the right operation in a DSL string or object.</li>
-   <li><b>match method</b> - A method used for identifying the operation, usually it uses the <i>sym</i></li>
-   <li>
-     <b>toOptions</b> - A method which is able to turn a DSL string with the operation,
-     into an actual array of options containing all the functions to be executed by the DSL and their arguments.
-   </li>
-   <li><b>action</b> - The operation logic. The options object of the above method should be passed to it, as well as the targed on which the DSL should be run.</li>
- </ol>
-</p></div>
+            <div class="description">An object containing all the available sub-types constructions of the managed by <i>this</i> class.</div>
         
         
         
@@ -78,7 +66,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="dsl.js.html">registry/dsl.js</a>, <a href="dsl.js.html#line1">line 1</a>
+        <a href="provider.js.html">registry/provider.js</a>, <a href="provider.js.html#line409">line 409</a>
     </li></ul></dd>
     
     
@@ -105,24 +93,133 @@
     
     
     
-        <h3 class="subsection-title">Members</h3>
+    
+    
+        <h3 class="subsection-title">Methods</h3>
         
         <dl>
             
 <dt>
-    <h4 class="name" id="all"><span class="type-signature">&lt;static, constant> </span>all<span class="type-signature"></span></h4>
+    <h4 class="name" id="basic"><span class="type-signature"></span>basic<span class="signature">(options, value, meta)</span><span class="type-signature"> &rarr; {Object}</span></h4>
     
     
 </dt>
 <dd>
     
+    
     <div class="description">
-        Default operation definitions, that can be used by most of the operations to be defined.
+        Constructs a ProAct.js reactive object from original one, using <a href="ProAct.html#prob">ProAct.prob</a>
+<p>
+ <pre>
+   return new ProAct.prob(value, meta);
+ </pre>
+</p>
     </div>
     
-    
-    
 
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>options</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">Array</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">Array containing options for the creation process.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>value</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">The object/value to make reactive.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>meta</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+|
+
+<span class="param-type">String</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">Meta-data used to help in the reactive object creation.</td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
     
 <dl class="details">
     
@@ -146,12 +243,19 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="dsl.js.html">registry/dsl.js</a>, <a href="dsl.js.html#line27">line 27</a>
+        <a href="provider.js.html">registry/provider.js</a>, <a href="provider.js.html#line418">line 418</a>
     </li></ul></dd>
     
     
     
     
+    
+    <dt class="tag-see">See:</dt>
+    <dd class="tag-see">
+        <ul>
+            <li><a href="ProAct.html#prob">ProAct.prob</a></li>
+        </ul>
+    </dd>
     
     
     
@@ -159,11 +263,41 @@
 
     
     
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    A ractive object.
+</div>
+
+
+
+<dl>
+	<dt>
+		Type
+	</dt>
+	<dd>
+		
+<span class="param-type">Object</span>
+
+
+	</dd>
+</dl>
+
+        
+    
+    
 </dd>
 
         </dl>
-    
-    
     
     
     
@@ -185,7 +319,7 @@
 <br clear="both">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.2</a> on Thu Jul 31 2014 22:33:20 GMT+0300 (EEST)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.2</a> on Thu Jul 31 2014 22:33:22 GMT+0300 (EEST)
 </footer>
 
 <script> prettyPrint(); </script>
