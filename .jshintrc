@@ -13,7 +13,6 @@
  "noarg": true,
  "sub": true,
  "boss": true,
- "es5": true,
  "eqnull": true,
  "evil": true,
  "scripturl": true,
