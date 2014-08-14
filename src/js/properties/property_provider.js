@@ -66,3 +66,74 @@ ProAct.NullPropertyProvider.prototype = P.U.ex(Object.create(P.PP.prototype), {
     return new P.NP(object, property);
   }
 });
+
+ProAct.SimplePropertyProvider = P.SPP = function () {
+  P.PP.call(this);
+};
+
+ProAct.SimplePropertyProvider.prototype = P.U.ex(Object.create(P.PP.prototype), {
+  constructor: ProAct.SimplePropertyProvider,
+
+  filter: function (object, property, meta) {
+    var v = object[property];
+    return v !== null && v !== undefined && !P.U.isFunction(v) && !P.U.isArrayObject(v) && !P.U.isObject(v);
+  },
+
+  provide: function (object, property, meta) {
+    return new P.P(object, property);
+  }
+});
+
+ProAct.AutoPropertyProvider = P.FPP = function () {
+  P.PP.call(this);
+};
+
+ProAct.AutoPropertyProvider.prototype = P.U.ex(Object.create(P.PP.prototype), {
+  constructor: ProAct.AutoPropertyProvider,
+
+  filter: function (object, property, meta) {
+    return P.U.isFunction(object[property]);
+  },
+
+  provide: function (object, property, meta) {
+    return new P.FP(object, property);
+  }
+});
+
+ProAct.ArrayPropertyProvider = P.APP = function () {
+  P.PP.call(this);
+};
+
+ProAct.ArrayPropertyProvider.prototype = P.U.ex(Object.create(P.PP.prototype), {
+  constructor: ProAct.ArrayPropertyProvider,
+
+  filter: function (object, property, meta) {
+    return P.U.isArrayObject(object[property]);
+  },
+
+  provide: function (object, property, meta) {
+    return new P.AP(object, property);
+  }
+});
+
+ProAct.ObjectPropertyProvider = P.OPP = function () {
+  P.PP.call(this);
+};
+
+ProAct.ObjectPropertyProvider.prototype = P.U.ex(Object.create(P.PP.prototype), {
+  constructor: ProAct.ObjectPropertyProvider,
+
+  filter: function (object, property, meta) {
+    return P.U.isObject(object[property]);
+  },
+
+  provide: function (object, property, meta) {
+    return new P.OP(object, property);
+  }
+});
+
+P.PP.registerProvider(new P.NullPropertyProvider());
+P.PP.registerProvider(new P.SimplePropertyProvider());
+P.PP.registerProvider(new P.AutoPropertyProvider());
+P.PP.registerProvider(new P.ArrayPropertyProvider());
+P.PP.registerProvider(new P.ObjectPropertyProvider());

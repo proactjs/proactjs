@@ -109,7 +109,8 @@ ProAct.ObjectCore.prototype = P.U.ex(Object.create(P.C.prototype), {
         keypropList = conf.keypropList,
         isF = P.U.isFunction,
         isA = P.U.isArrayObject,
-        isO = P.U.isObject, result;
+        isO = P.U.isObject,
+        result;
 
     if (meta && (meta === 'noprop' || (meta.indexOf && meta.indexOf('noprop') >= 0))) {
       return null;
@@ -120,16 +121,12 @@ ProAct.ObjectCore.prototype = P.U.ex(Object.create(P.C.prototype), {
       return null;
     }
 
-    if (object.hasOwnProperty(property) && (object[property] === null || object[property] === undefined)) {
-      result = new P.NP(object, property);
-    } else if (object.hasOwnProperty(property) && !isF(object[property]) && !isA(object[property]) && !isO(object[property])) {
-      result = new P.P(object, property);
-    } else if (object.hasOwnProperty(property) && isF(object[property])) {
-      result = new P.FP(object, property);
-    } else if (object.hasOwnProperty(property) && isA(object[property])) {
-      result = new P.AP(object, property);
-    } else if (object.hasOwnProperty(property) && isO(object[property])) {
-      result = new P.OP(object, property);
+    if (object.hasOwnProperty(property)) {
+      result = P.PP.provide(object, property, meta);
+    }
+
+    if (!result) {
+      return null;
     }
 
     if (listeners) {
