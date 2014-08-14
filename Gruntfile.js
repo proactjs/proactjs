@@ -151,6 +151,7 @@ module.exports = function(grunt) {
           'properties/auto_property',
           'properties/object_property',
           'properties/array_property',
+          'properties/property_provider',
           'cores/core',
           'cores/object_core',
           'cores/array_core',
