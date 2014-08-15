@@ -553,6 +553,27 @@ ProAct.ObjectPropertyProvider.prototype = P.U.ex(Object.create(P.PP.prototype), 
   }
 });
 
+ProAct.ProxyPropertyProvider = P.PXPP = function () {
+  P.PP.call(this);
+};
+
+ProAct.ProxyPropertyProvider.prototype = P.U.ex(Object.create(P.PP.prototype), {
+  constructor: ProAct.ProxyPropertyProvider,
+
+  filter: function (object, property, meta) {
+    if (!meta || !(meta instanceof ProAct.Property)) {
+      return false;
+    }
+
+    return meta instanceof ProAct.Property;
+  },
+
+  provide: function (object, property, meta) {
+    return new P.PXP(object, property, meta);
+  }
+});
+
+P.PP.registerProvider(new P.ProxyPropertyProvider());
 P.PP.registerProvider(new P.NullPropertyProvider());
 P.PP.registerProvider(new P.SimplePropertyProvider());
 P.PP.registerProvider(new P.AutoPropertyProvider());

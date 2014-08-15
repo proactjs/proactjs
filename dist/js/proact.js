@@ -4109,6 +4109,57 @@
 	  afterInit: function () {}
 	});
 	
+	ProAct.ProxyProperty = P.PXP = function (proObject, property, target) {
+	  var self = this, getter, setter;
+	
+	  getter = function () {
+	    self.addCaller();
+	    return target.val;
+	  };
+	
+	  setter = function (newVal) {
+	    if (target.val === newVal) {
+	      return;
+	    }
+	
+	    target.oldVal = target.val;
+	    target.val = P.Observable.transform(self, newVal);
+	
+	    if (target.val === null || target.val === undefined) {
+	      P.P.reProb(target).update();
+	      return;
+	    }
+	
+	    self.update();
+	  };
+	
+	  P.P.call(this, proObject, property, getter, setter);
+	
+	  this.target = target;
+	  this.target.on(this.makeListener());
+	};
+	
+	ProAct.ProxyProperty.prototype = P.U.ex(Object.create(P.P.prototype), {
+	  constructor: ProAct.ProxyProperty,
+	  type: function () {
+	    return this.target.type();
+	  },
+	
+	  makeListener: function () {
+	    if (!this.listener) {
+	      var self = this;
+	
+	      this.listener = {
+	        property: self,
+	        call: function () {}
+	      };
+	    }
+	
+	    return this.listener;
+	  },
+	
+	});
+	
 	/**
 	 * <p>
 	 *  Constructor for ProAct.PropertyProvider. The ProAct.PropertyProvider is an abstract class.
@@ -4664,6 +4715,27 @@
 	  }
 	});
 	
+	ProAct.ProxyPropertyProvider = P.PXPP = function () {
+	  P.PP.call(this);
+	};
+	
+	ProAct.ProxyPropertyProvider.prototype = P.U.ex(Object.create(P.PP.prototype), {
+	  constructor: ProAct.ProxyPropertyProvider,
+	
+	  filter: function (object, property, meta) {
+	    if (!meta || !(meta instanceof ProAct.Property)) {
+	      return false;
+	    }
+	
+	    return meta instanceof ProAct.Property;
+	  },
+	
+	  provide: function (object, property, meta) {
+	    return new P.PXP(object, property, meta);
+	  }
+	});
+	
+	P.PP.registerProvider(new P.ProxyPropertyProvider());
 	P.PP.registerProvider(new P.NullPropertyProvider());
 	P.PP.registerProvider(new P.SimplePropertyProvider());
 	P.PP.registerProvider(new P.AutoPropertyProvider());
@@ -7628,6 +7700,34 @@
 	  P.U.defValProp(object, '__pro__', false, false, false, core);
 	
 	  core.prob();
+	
+	  return object;
+	};
+	
+	ProAct.proxy = function (object, target, meta, targetMeta) {
+	  if (!object || !target) {
+	    return null;
+	  }
+	
+	  if (!P.U.isProObject(target)) {
+	    target = ProAct.prob(target, targetMeta);
+	  }
+	
+	  if (!meta || !P.U.isObject(meta)) {
+	    meta = {};
+	  }
+	
+	  var properties = target.__pro__.properties,
+	      property;
+	
+	  for (property in properties) {
+	    if (!object.hasOwnProperty(property)) {
+	      object[property] = null;
+	      meta[property] = properties[property];
+	    }
+	  }
+	
+	  object = ProAct.prob(object, meta);
 	
 	  return object;
 	};
