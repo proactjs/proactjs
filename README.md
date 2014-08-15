@@ -15,7 +15,7 @@
 
 ### Compatibility 
   ProAct.js is compatible with all the ECMAScript 5 browsers.
-  For example Google's Chrome, Mozilla's Firefox, Apple's Safari, Opera, and the newest IEs - 10 and 11 (Tested with chrome and firefox, will be tested agains the others soon).
+  For example Google's Chrome, Mozilla's Firefox, Apple's Safari, Opera, and the newest IEs - 10 and 11 (Tested with chrome and firefox, will be tested against the others soon).
   
 ### Use in sites
 ```html

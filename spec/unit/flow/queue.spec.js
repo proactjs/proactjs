@@ -1,10 +1,10 @@
 'use strict';
 
-describe('Pro.Queue', function () {
+describe('ProAct.Queue', function () {
   var queue, testFunc, resArray, obj, fnOrder;
 
   beforeEach(function () {
-    queue = new Pro.Queue('pro');
+    queue = new ProAct.Queue('pro');
     resArray = [];
     fnOrder = [];
     testFunc = function () {

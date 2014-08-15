@@ -1,46 +1,46 @@
 'use strict';
 
-describe('Pro.prob', function () {
+describe('ProAct.prob', function () {
 
   beforeEach(function () {
-    Pro.Configuration = {
+    ProAct.Configuration = {
       keyprops: true,
       keypropList: ['p']
     };
   });
 
-  it ('turns number to a Pro.Val with value the number', function () {
-    var val = Pro.prob(5);
+  it ('turns number to a ProAct.Val with value the number', function () {
+    var val = ProAct.prob(5);
 
-    expect(Pro.Utils.isProVal(val)).toBe(true);
+    expect(ProAct.Utils.isProVal(val)).toBe(true);
     expect(val.v).toBe(5);
   });
 
-  it ('turns string to a Pro.Val with value the string', function () {
-    var val = Pro.prob('5');
+  it ('turns string to a ProAct.Val with value the string', function () {
+    var val = ProAct.prob('5');
 
-    expect(Pro.Utils.isProVal(val)).toBe(true);
+    expect(ProAct.Utils.isProVal(val)).toBe(true);
     expect(val.v).toBe('5');
   });
 
-  it ('turns boolean to a Pro.Val with value the boolean', function () {
-    var val = Pro.prob(false);
+  it ('turns boolean to a ProAct.Val with value the boolean', function () {
+    var val = ProAct.prob(false);
 
-    expect(Pro.Utils.isProVal(val)).toBe(true);
+    expect(ProAct.Utils.isProVal(val)).toBe(true);
     expect(val.v).toBe(false);
   });
 
-  it ('turns null to a Pro.Val with value null', function () {
-    var val = Pro.prob(null);
+  it ('turns null to a ProAct.Val with value null', function () {
+    var val = ProAct.prob(null);
 
-    expect(Pro.Utils.isProVal(val)).toBe(true);
+    expect(ProAct.Utils.isProVal(val)).toBe(true);
     expect(val.v).toBe(null);
   });
 
-  it ('turns undefined to a Pro.Val with value undefined', function () {
-    var val = Pro.prob(undefined);
+  it ('turns undefined to a ProAct.Val with value undefined', function () {
+    var val = ProAct.prob(undefined);
 
-    expect(Pro.Utils.isProVal(val)).toBe(true);
+    expect(ProAct.Utils.isProVal(val)).toBe(true);
     expect(val.v).toBe(undefined);
   });
 
@@ -52,23 +52,23 @@ describe('Pro.prob', function () {
       d: 2.3,
     }, proObject;
 
-    proObject = Pro.prob(obj);
+    proObject = ProAct.prob(obj);
 
     expect(proObject).toBe(obj);
     expect(proObject.__pro__).not.toBe(undefined);
-    expect(proObject.__pro__.state).toBe(Pro.States.ready);
+    expect(proObject.__pro__.state).toBe(ProAct.States.ready);
 
     expect(proObject.__pro__.properties.a.get()).toBe(obj.a);
     expect(proObject.__pro__.properties.b.get()).toBe(obj.b);
     expect(proObject.__pro__.properties.c.get()).toBe(obj.c);
     expect(proObject.__pro__.properties.d.get()).toBe(obj.d);
 
-    expect(proObject.__pro__.properties.a.state).toBe(Pro.States.ready);
-    expect(proObject.__pro__.properties.b.state).toBe(Pro.States.ready);
-    expect(proObject.__pro__.properties.c.state).toBe(Pro.States.ready);
-    expect(proObject.__pro__.properties.d.state).toBe(Pro.States.ready);
+    expect(proObject.__pro__.properties.a.state).toBe(ProAct.States.ready);
+    expect(proObject.__pro__.properties.b.state).toBe(ProAct.States.ready);
+    expect(proObject.__pro__.properties.c.state).toBe(ProAct.States.ready);
+    expect(proObject.__pro__.properties.d.state).toBe(ProAct.States.ready);
 
-    if (Pro.Configuration.keyprops && Pro.Configuration.keypropList.indexOf('p') !== -1) {
+    if (ProAct.Configuration.keyprops && ProAct.Configuration.keypropList.indexOf('p') !== -1) {
       expect(proObject.__pro__.properties.a).toBe(obj.p('a'));
       expect(proObject.__pro__.properties.b).toBe(obj.p('b'));
       expect(proObject.__pro__.properties.c).toBe(obj.p('c'))
@@ -77,7 +77,7 @@ describe('Pro.prob', function () {
   });
 
   it('throws an error if there is object with keywprop property', function () {
-    Pro.Configuration = {
+    ProAct.Configuration = {
       keyprops: true,
       keypropList: ['c']
     };
@@ -90,11 +90,11 @@ describe('Pro.prob', function () {
     }, proObject;
 
     expect(function () {
-      Pro.prob(obj);
-    }).toThrow(new Error('The property name c is a key word for pro objects! Objects passed to Pro.prob can not contain properties named as keyword properties.'));
+      ProAct.prob(obj);
+    }).toThrow(new Error('The property name c is a key word for pro objects! Objects passed to ProAct.prob can not contain properties named as keyword properties.'));
 
     expect(obj.__pro__).not.toBe(undefined);
-    expect(obj.__pro__.state).toBe(Pro.States.error);
+    expect(obj.__pro__.state).toBe(ProAct.States.error);
   });
 
   it('creates pro objects with auto and normal properties from object with simple values and functions', function () {
@@ -112,11 +112,11 @@ describe('Pro.prob', function () {
       }
     }, proObject;
 
-    proObject = Pro.prob(obj);
+    proObject = ProAct.prob(obj);
 
     expect(proObject).toBe(obj);
     expect(proObject.__pro__).not.toBe(undefined);
-    expect(proObject.__pro__.state).toBe(Pro.States.ready);
+    expect(proObject.__pro__.state).toBe(ProAct.States.ready);
 
     expect(proObject.__pro__.properties.x.get()).toBe(obj.x);
     expect(proObject.__pro__.properties.y.get()).toBe(obj.y);
@@ -124,13 +124,13 @@ describe('Pro.prob', function () {
     expect(proObject.__pro__.properties.product.get()).toBe(obj.product);
     expect(proObject.__pro__.properties.rational.get()).toBe(obj.rational);
 
-    expect(proObject.__pro__.properties.x.state).toBe(Pro.States.ready);
-    expect(proObject.__pro__.properties.y.state).toBe(Pro.States.ready);
-    expect(proObject.__pro__.properties.sum.state).toBe(Pro.States.ready);
-    expect(proObject.__pro__.properties.product.state).toBe(Pro.States.ready);
-    expect(proObject.__pro__.properties.rational.state).toBe(Pro.States.ready);
+    expect(proObject.__pro__.properties.x.state).toBe(ProAct.States.ready);
+    expect(proObject.__pro__.properties.y.state).toBe(ProAct.States.ready);
+    expect(proObject.__pro__.properties.sum.state).toBe(ProAct.States.ready);
+    expect(proObject.__pro__.properties.product.state).toBe(ProAct.States.ready);
+    expect(proObject.__pro__.properties.rational.state).toBe(ProAct.States.ready);
 
-    if (Pro.Configuration.keyprops && Pro.Configuration.keypropList.indexOf('p') !== -1) {
+    if (ProAct.Configuration.keyprops && ProAct.Configuration.keypropList.indexOf('p') !== -1) {
       expect(proObject.__pro__.properties.x).toBe(obj.p('x'));
       expect(proObject.__pro__.properties.y).toBe(obj.p('y'));
       expect(proObject.__pro__.properties.sum).toBe(obj.p('sum'))
@@ -177,9 +177,9 @@ describe('Pro.prob', function () {
       }
     };
 
-    Pro.prob(objA);
-    Pro.prob(objB);
-    Pro.prob(objC);
+    ProAct.prob(objA);
+    ProAct.prob(objB);
+    ProAct.prob(objC);
 
     expect(objA.a).toEqual(1);
     expect(objA.foo).toEqual('11true');
@@ -227,26 +227,26 @@ describe('Pro.prob', function () {
       }
     };
 
-    obj = Pro.prob(obj);
+    obj = ProAct.prob(obj);
 
-    expect(Pro.Utils.isProObject(obj)).toBe(true);
-    expect(obj.__pro__.state).toBe(Pro.States.ready);
+    expect(ProAct.Utils.isProObject(obj)).toBe(true);
+    expect(obj.__pro__.state).toBe(ProAct.States.ready);
     expect(obj.num).toBe(5);
     expect(obj.str).toBe('some stuff');
     expect(obj.bool).toBe(true);
 
-    expect(Pro.Utils.isProObject(obj.obj1)).toBe(true);
-    expect(obj.obj1.__pro__.state).toBe(Pro.States.ready);
+    expect(ProAct.Utils.isProObject(obj.obj1)).toBe(true);
+    expect(obj.obj1.__pro__.state).toBe(ProAct.States.ready);
     expect(obj.obj1.fl).toEqual(3.4);
     expect(obj.obj1.nl).toBe(null);
-    expect(Pro.Utils.isProObject(obj.obj1.obj12)).toBe(true);
-    expect(obj.obj1.obj12.__pro__.state).toBe(Pro.States.ready);
-    expect(obj.obj1.obj12.__pro__.properties.f1.state).toBe(Pro.States.init);
+    expect(ProAct.Utils.isProObject(obj.obj1.obj12)).toBe(true);
+    expect(obj.obj1.obj12.__pro__.state).toBe(ProAct.States.ready);
+    expect(obj.obj1.obj12.__pro__.properties.f1.state).toBe(ProAct.States.init);
     expect(obj.obj1.obj12.f1).toEqual(3.4);
-    expect(obj.obj1.obj12.__pro__.properties.f1.state).toBe(Pro.States.ready);
+    expect(obj.obj1.obj12.__pro__.properties.f1.state).toBe(ProAct.States.ready);
 
-    expect(Pro.Utils.isProObject(obj.obj2)).toBe(true);
-    expect(obj.obj2.__pro__.state).toBe(Pro.States.ready);
+    expect(ProAct.Utils.isProObject(obj.obj2)).toBe(true);
+    expect(obj.obj2.__pro__.state).toBe(ProAct.States.ready);
     expect(obj.obj2.ar.valueOf()).toEqual([1, '2', true, f]);
     expect(obj.obj2.f2).toEqual('2');
 
@@ -259,16 +259,16 @@ describe('Pro.prob', function () {
     expect(obj.obj1.obj12.f2).toEqual('some stuff 15.4');
   });
 
-  it ('Creates arrays from Pro.Arrays.', function () {
+  it ('Creates arrays from ProAct.Arrays.', function () {
     var array = [1, '2', 3.0, true, null], proArray;
 
-    proArray = Pro.prob(array);
-    expect(Pro.Utils.isProArray(proArray)).toBe(true);
+    proArray = ProAct.prob(array);
+    expect(ProAct.Utils.isProArray(proArray)).toBe(true);
     expect(proArray.valueOf()).toEqual([1, '2', 3.0, true, null]);
   });
 
-  it ('the Pro.Core of property objects created by it can be retrieved through object#p()', function () {
-    var obj = Pro.prob({
+  it ('the ProAct.Core of property objects created by it can be retrieved through object#p()', function () {
+    var obj = ProAct.prob({
       a: 1,
       b: 3
     });
@@ -276,8 +276,8 @@ describe('Pro.prob', function () {
     expect(obj.p()).toBe(obj.__pro__)
   });
 
-  it ('the Pro.Core of property objects created by it can be retrieved through object#p("*")', function () {
-    var obj = Pro.prob({
+  it ('the ProAct.Core of property objects created by it can be retrieved through object#p("*")', function () {
+    var obj = ProAct.prob({
       a: 1,
       b: 3
     });
@@ -286,8 +286,8 @@ describe('Pro.prob', function () {
   });
 
   it ('can use the meta to set sources of properties using the <<($n) syntax', function () {
-    var source = Pro.prob({a: 1}),
-        obj = Pro.prob({
+    var source = ProAct.prob({a: 1}),
+        obj = ProAct.prob({
           a:1
         }, {
           a: ['<<($1)', source.p('a')]
@@ -300,7 +300,7 @@ describe('Pro.prob', function () {
   });
 
   it ('can use the meta to set mapping using map(?) syntax', function () {
-    var obj = Pro.prob({
+    var obj = ProAct.prob({
           b: 0,
           a: function () {
             return '(' + this.b + ')';

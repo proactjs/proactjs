@@ -1,14 +1,14 @@
 'use strict';
 
-describe('Pro.Registry.StreamProvider', function () {
+describe('ProAct.Registry.StreamProvider', function () {
   var reg, res, listener;
   beforeEach(function () {
-    var fProvider = new Pro.Registry.FunctionProvider();
+    var fProvider = new ProAct.Registry.FunctionProvider();
 
     res = [];
 
-    reg = new Pro.Registry()
-            .register('s', new Pro.Registry.StreamProvider())
+    reg = new ProAct.Registry()
+            .register('s', new ProAct.Registry.StreamProvider())
             .register('l', fProvider)
             .register('f', fProvider);
     listener = function (el) {
@@ -21,32 +21,32 @@ describe('Pro.Registry.StreamProvider', function () {
       it ('creates a delayed buffered sream if using name as s:test:delayed({delay})', function () {
         var stream = reg.make('s:test:delayed(300)');
 
-        expect(stream instanceof Pro.Stream).toBe(true);
-        expect(stream instanceof Pro.DelayedStream).toBe(true);
+        expect(stream instanceof ProAct.Stream).toBe(true);
+        expect(stream instanceof ProAct.DelayedStream).toBe(true);
         expect(reg.get('s:test')).toBe(stream);
       });
 
       it ('creates a size buffered sream if using name as s:test:size({size})', function () {
         var stream = reg.make('s:test:size(5)');
 
-        expect(stream instanceof Pro.Stream).toBe(true);
-        expect(stream instanceof Pro.SizeBufferedStream).toBe(true);
+        expect(stream instanceof ProAct.Stream).toBe(true);
+        expect(stream instanceof ProAct.SizeBufferedStream).toBe(true);
         expect(reg.get('s:test')).toBe(stream);
       });
 
       it ('creates a debouncing buffered sream if using name as s:test:debouncing({delay})', function () {
         var stream = reg.make('s:test:debouncing(300)');
 
-        expect(stream instanceof Pro.Stream).toBe(true);
-        expect(stream instanceof Pro.DebouncingStream).toBe(true);
+        expect(stream instanceof ProAct.Stream).toBe(true);
+        expect(stream instanceof ProAct.DebouncingStream).toBe(true);
         expect(reg.get('s:test')).toBe(stream);
       });
 
       it ('creates a throttling buffered sream if using name as s:test:throttling({delay})', function () {
         var stream = reg.make('s:test:throttling(300)');
 
-        expect(stream instanceof Pro.Stream).toBe(true);
-        expect(stream instanceof Pro.ThrottlingStream).toBe(true);
+        expect(stream instanceof ProAct.Stream).toBe(true);
+        expect(stream instanceof ProAct.ThrottlingStream).toBe(true);
         expect(reg.get('s:test')).toBe(stream);
       });
 
@@ -55,12 +55,12 @@ describe('Pro.Registry.StreamProvider', function () {
       it ('creates a simple stream that can be retrieved after that and used.', function () {
         var stream = reg.make('s:test');
 
-        expect(stream instanceof Pro.Stream).toBe(true);
+        expect(stream instanceof ProAct.Stream).toBe(true);
         expect(reg.get('s:test')).toBe(stream);
       });
 
       it ('creates a simple stream with source - another.', function () {
-        var source = new Pro.Stream();
+        var source = new ProAct.Stream();
 
         reg.make('s:test', source);
         expect(reg.get('s:test').sources[0]).toBe(source);

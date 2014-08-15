@@ -1,5 +1,13 @@
 'use strict';
 
 beforeEach(function() {
-  Pro.currentCaller = null;
+  ProAct.currentCaller = null;
+
+  P.PP.clearProviders();
+  P.PP.registerProvider(new P.ProxyPropertyProvider());
+  P.PP.registerProvider(new P.NullPropertyProvider());
+  P.PP.registerProvider(new P.SimplePropertyProvider());
+  P.PP.registerProvider(new P.AutoPropertyProvider());
+  P.PP.registerProvider(new P.ArrayPropertyProvider());
+  P.PP.registerProvider(new P.ObjectPropertyProvider());
 });

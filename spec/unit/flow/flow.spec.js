@@ -1,10 +1,10 @@
 'use strict';
 
-describe('Pro.Flow', function () {
+describe('ProAct.Flow', function () {
   var flow, obj1, obj2, fnOrder, resArray;
 
   beforeEach(function () {
-    flow = new Pro.Flow(['pro']);
+    flow = new ProAct.Flow(['pro']);
     fnOrder = [];
     resArray = [];
     obj1 = {
@@ -85,7 +85,7 @@ describe('Pro.Flow', function () {
   describe('#stop', function () {
     it ('nullifies the flow queuse instance', function () {
       expect(flow.flowInstance).toBe(null);
-      flow.flowInstance = new Pro.Queues();
+      flow.flowInstance = new ProAct.Queues();
 
       flow.stop();
       expect(flow.flowInstance).toBe(null);
@@ -98,7 +98,7 @@ describe('Pro.Flow', function () {
       flow.options.stop= function (flowInstance) {
         stopParam = flowInstance;
       };
-      pastFlowInstance = flow.flowInstance = new Pro.Queues();
+      pastFlowInstance = flow.flowInstance = new ProAct.Queues();
 
       flow.stop();
 
@@ -114,7 +114,7 @@ describe('Pro.Flow', function () {
       flow.options.stop= function (flowInstance) {
         stopCounter++;
       };
-      flow.flowInstance = new Pro.Queues();
+      flow.flowInstance = new ProAct.Queues();
       flow.stop();
       flow.stop();
       flow.stop();
@@ -128,7 +128,7 @@ describe('Pro.Flow', function () {
     it ('executes the flowInstance\'s #go method.', function () {
       var flowInstance = null;
 
-      flowInstance = flow.flowInstance = new Pro.Queues();
+      flowInstance = flow.flowInstance = new ProAct.Queues();
 
       spyOn(flowInstance, 'go');
       flow.stop();

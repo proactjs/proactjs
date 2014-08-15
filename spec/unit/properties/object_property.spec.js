@@ -1,6 +1,6 @@
 'use strict';
 
-describe('Pro.ObjectProperty', function () {
+describe('ProAct.ObjectProperty', function () {
   var obj;
   beforeEach(function () {
     obj = {
@@ -16,23 +16,23 @@ describe('Pro.ObjectProperty', function () {
 
   it('is lazy', function () {
     var original = obj.op,
-        property = new Pro.ObjectProperty(obj, 'op');
+        property = new ProAct.ObjectProperty(obj, 'op');
 
     expect(property.val.__pro__).toBe(undefined);
-    expect(property.type()).toBe(Pro.Property.Types.object);
-    expect(property.state).toBe(Pro.States.init);
+    expect(property.type()).toBe(ProAct.Property.Types.object);
+    expect(property.state).toBe(ProAct.States.init);
     expect(property.val).toBe(original);
 
     obj.op;
-    expect(property.state).toBe(Pro.States.ready);
+    expect(property.state).toBe(ProAct.States.ready);
     expect(property.val.__pro__).not.toBe(undefined);
     expect(property.val).toEqual(obj.op);
   });
 
   it('auto properties of object container are updated by object properties they depend on.', function () {
-    var property = new Pro.Property(obj, 'a'),
-        autoProperty = new Pro.AutoProperty(obj, 'ap'),
-        objectProperty = new Pro.ObjectProperty(obj, 'op');
+    var property = new ProAct.Property(obj, 'a'),
+        autoProperty = new ProAct.AutoProperty(obj, 'ap'),
+        objectProperty = new ProAct.ObjectProperty(obj, 'op');
 
     expect(obj.ap).toEqual(obj.a + obj.op.b);
 
@@ -44,9 +44,9 @@ describe('Pro.ObjectProperty', function () {
   });
 
   it('setting an object property updates the properties dependent on it sub-properties', function () {
-    var property = new Pro.Property(obj, 'a'),
-        autoProperty = new Pro.AutoProperty(obj, 'ap'),
-        objectProperty = new Pro.ObjectProperty(obj, 'op');
+    var property = new ProAct.Property(obj, 'a'),
+        autoProperty = new ProAct.AutoProperty(obj, 'ap'),
+        objectProperty = new ProAct.ObjectProperty(obj, 'op');
 
     expect(obj.ap).toEqual(obj.a + obj.op.b);
 
@@ -63,9 +63,9 @@ describe('Pro.ObjectProperty', function () {
   });
 
   it('old values\' subprop changes doesn\'t affect pro object auto properties', function () {
-    var property = new Pro.Property(obj, 'a'),
-        autoProperty = new Pro.AutoProperty(obj, 'ap'),
-        objectProperty = new Pro.ObjectProperty(obj, 'op'),
+    var property = new ProAct.Property(obj, 'a'),
+        autoProperty = new ProAct.AutoProperty(obj, 'ap'),
+        objectProperty = new ProAct.ObjectProperty(obj, 'op'),
         oldValue;
 
     expect(obj.ap).toEqual(obj.a + obj.op.b);
@@ -85,7 +85,7 @@ describe('Pro.ObjectProperty', function () {
   });
 
   it ('it can be set to an empty object', function () {
-    var objectProperty = new Pro.ObjectProperty(obj, 'op')
+    var objectProperty = new ProAct.ObjectProperty(obj, 'op')
     obj.op;
 
     obj.op = {};

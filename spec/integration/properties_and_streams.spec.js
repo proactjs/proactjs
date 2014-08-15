@@ -1,10 +1,10 @@
 'use strict';
 
-describe('Pro.Property & Pro.Stream', function () {
+describe('ProAct.Property & ProAct.Stream', function () {
 
   it ('is possible to direct a steam into a property', function () {
-    var stream = new Pro.Stream(),
-        obj = Pro.prob({
+    var stream = new ProAct.Stream(),
+        obj = ProAct.prob({
           a: 4
         });
 
@@ -15,10 +15,10 @@ describe('Pro.Property & Pro.Stream', function () {
   });
 
   it ('is possible to direct a steam chain into a property', function () {
-    var stream1 = new Pro.Stream(),
+    var stream1 = new ProAct.Stream(),
         stream2 = stream1.map(function (el) { return el * 3; }),
         stream3 = stream2.filter(function (el) { return el % 2 == 0; }),
-        obj = Pro.prob({
+        obj = ProAct.prob({
           a: 4
         });
 
@@ -32,8 +32,8 @@ describe('Pro.Property & Pro.Stream', function () {
   });
 
   it ('is posible to direct a stream out of property', function () {
-    var stream = new Pro.Stream(),
-        obj = Pro.prob({
+    var stream = new ProAct.Stream(),
+        obj = ProAct.prob({
           a: 4
         }), res = [];
 
@@ -48,11 +48,11 @@ describe('Pro.Property & Pro.Stream', function () {
   });
 
   it ('diamond streams update properties only once', function () {
-    var s1 = new Pro.Stream(),
-        s2 = new Pro.Stream(s1),
-        s3 = new Pro.Stream(s1),
+    var s1 = new ProAct.Stream(),
+        s2 = new ProAct.Stream(s1),
+        s3 = new ProAct.Stream(s1),
         s4 = s3.merge(s2), res = [],
-        p = new Pro.Property({}, 'a');
+        p = new ProAct.Property({}, 'a');
 
     p.makeListener = function () {
       return {
@@ -69,9 +69,9 @@ describe('Pro.Property & Pro.Stream', function () {
   });
 
   it ('auto property updates from buffered event are applied only once', function () {
-    var s = new Pro.Stream().delay(110),
+    var s = new ProAct.Stream().delay(110),
         res = [],
-        obj = Pro.prob({
+        obj = ProAct.prob({
           prop: 4,
           pp: function () {
             res.push(this.prop);

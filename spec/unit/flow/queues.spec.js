@@ -1,11 +1,11 @@
 'use strict';
 
-describe('Pro.Queues', function () {
+describe('ProAct.Queues', function () {
   describe('Handles one queue like a normal queue.', function () {
     var queue, testFunc, resArray, obj, fnOrder;
 
     beforeEach(function () {
-      queue = new Pro.Queues(['pro']);
+      queue = new ProAct.Queues(['pro']);
       resArray = [];
       fnOrder = []
       testFunc = function () {
@@ -189,7 +189,7 @@ describe('Pro.Queues', function () {
     var queues, testFunc, resArray, obj, fnOrder;
 
     beforeEach(function () {
-      queues = new Pro.Queues(['pro', 'model', 'controller', 'view']);
+      queues = new ProAct.Queues(['pro', 'model', 'controller', 'view']);
       resArray = [];
       fnOrder = []
       testFunc = function () {

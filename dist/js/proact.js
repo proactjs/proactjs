@@ -13,7 +13,7 @@
 	 *
 	 * So ProAct.js can turn every vanilla JavaScript value to a set of reactive properties, and this generates a dependency graph between them.
 	 * The data flow in this oriented graph is determined by its edges. So if we should receive data from the outside of this dependency system we'll need
-	 * a powerful but easy to use tool to turn every user or server generated action into a data event, common to the graph. Enter the Pro.Stream - the functional
+	 * a powerful but easy to use tool to turn every user or server generated action into a data event, common to the graph. Enter the ProAct.Stream - the functional
 	 * part of ProAct.js
 	 *
 	 * ProAct.js can be used to define bindings, to separate views from models (mv*), for performance optimizations... It is a tool.
@@ -26,7 +26,7 @@
 	 *
 	 * @namespace ProAct
 	 * @license MIT
-	 * @version 0.4.3
+	 * @version 1.0.0
 	 * @author meddle0x53
 	 */
 	var ProAct = Pro = P = {},
@@ -67,7 +67,7 @@
 	 * @static
 	 * @constant
 	 */
-	ProAct.VERSION = '0.4.3';
+	ProAct.VERSION = '1.0.0';
 	
 	/**
 	 * Defines the possible states of the ProAct objects.
@@ -171,64 +171,64 @@
 	   * @return {Boolean}
 	   */
 	  isArray: function (value) {
-	    return Pro.U.isObject(value) && Object.prototype.toString.call(value) === '[object Array]';
+	    return P.U.isObject(value) && Object.prototype.toString.call(value) === '[object Array]';
 	  },
 	
 	  /**
-	   * Checks if the passed value is instance of the Pro.Array type or not.
+	   * Checks if the passed value is instance of the {@link ProAct.Array} type or not.
 	   *
 	   * @memberof ProAct.Utils
 	   * @function isProArray
 	   * @param {Object} value
 	   * @return {Boolean}
-	   * @see {@link Pro.Array}
+	   * @see {@link ProAct.Array}
 	   */
 	  isProArray: function (value) {
-	    return value !== null && Pro.U.isObject(value) && Pro.U.isArray(value._array) && value.length !== undefined;
+	    return value !== null && P.U.isObject(value) && P.U.isArray(value._array) && value.length !== undefined;
 	  },
 	
 	  /**
 	   * Checks if the passed value is a valid array-like object or not.
-	   * Array like objects in ProAct.js are plain JavaScript arrays and Pro.Arrays.
+	   * Array like objects in ProAct.js are plain JavaScript arrays and {@link ProAct.Array}s.
 	   *
 	   * @memberof ProAct.Utils
 	   * @function isArrayObject
 	   * @param {Object} value
 	   * @return {Boolean}
-	   * @see {@link Pro.Array}
+	   * @see {@link ProAct.Array}
 	   */
 	  isArrayObject: function (value) {
-	    return Pro.U.isArray(value) || Pro.U.isProArray(value);
+	    return P.U.isArray(value) || P.U.isProArray(value);
 	  },
 	
 	  /**
 	   * Checks if the passed value is a valid ProAct.js object or not.
-	   * ProAct.js object have a special '__pro__' object that is hidden in them, which should be instance of Pro.Core.
+	   * ProAct.js object have a special '__pro__' object that is hidden in them, which should be instance of {@link ProAct.Core}.
 	   *
 	   * @memberof ProAct.Utils
 	   * @function isProObject
 	   * @param {Object} value
 	   * @return {Boolean}
-	   * @see {@link Pro.Array}
-	   * @see {@link Pro.Value}
-	   * @see {@link Pro.Core}
+	   * @see {@link ProAct.Array}
+	   * @see {@link ProAct.Value}
+	   * @see {@link ProAct.Core}
 	   */
 	  isProObject: function (value) {
-	    return value && Pro.U.isObject(value) && value.__pro__ !== undefined && Pro.U.isObject(value.__pro__.properties);
+	    return value && ProAct.U.isObject(value) && value.__pro__ !== undefined && ProAct.U.isObject(value.__pro__.properties);
 	  },
 	
 	  /**
-	   * Checks if the passed value is a valid Pro.Value or not.
-	   * Pro.Value is a simple ProAct.js object that has only one reactive property - 'v'.
+	   * Checks if the passed value is a valid {@link ProAct.Value} or not.
+	   * {@link ProAct.Value} is a simple ProAct.js object that has only one reactive property - 'v'.
 	   *
 	   * @memberof ProAct.Utils
 	   * @function isProVal
 	   * @param {Object} value
 	   * @return {Boolean}
-	   * @see {@link Pro.Value}
+	   * @see {@link ProAct.Value}
 	   */
 	  isProVal: function (value) {
-	    return Pro.U.isProObject(value) && value.__pro__.properties.v !== undefined;
+	    return P.U.isProObject(value) && value.__pro__.properties.v !== undefined;
 	  },
 	
 	  /**
@@ -366,7 +366,7 @@
 	        diff[index].o.push(e1);
 	      }
 	    } else {
-	      diff = Pro.U.diff(array2, array1);
+	      diff = P.U.diff(array2, array1);
 	      for (i in diff) {
 	        el1 = diff[i];
 	        el2 = el1.n;
@@ -416,7 +416,7 @@
 	 *
 	 * @namespace ProAct.Configuration
 	 */
-	ProAct.Configuration = P.Conf = {
+	ProAct.Configuration = {
 	  /**
 	   * If this option is set to true, when a ProAct.js object is created and has properties named
 	   * as one or more of the properties listed in <i>ProAct.Configuration.keypropList</i> an Error will be thrown.
@@ -488,7 +488,7 @@
 	 *  order, using their priorities.
 	 * </p>
 	 * <p>
-	 *  A Pro.Queue can be used to setup the action flow - the order of the actions must be executed.
+	 *  A ProAct.Queue can be used to setup the action flow - the order of the actions must be executed.
 	 *  ProAct.js uses it to create an action flow if something changes.
 	 * </p>
 	 *
@@ -1138,7 +1138,7 @@
 	      this.flowInstances.push(queues);
 	    }
 	
-	    this.flowInstance = new Pro.Queues(queueNames, options.flowInstance);
+	    this.flowInstance = new P.Queues(queueNames, options.flowInstance);
 	
 	    if (start) {
 	      start(this.flowInstance);
@@ -1462,17 +1462,12 @@
 	 *  ProAct.Observable is part of the core module of ProAct.js.
 	 * </p>
 	 *
-	 * TODO listeners must be divided to types in one hash map.
-	 *
 	 * @class ProAct.Observable
 	 * @param {Array} transforms
 	 *      A list of transformation to be used on all incoming chages.
 	 */
 	ProAct.Observable = function (transforms) {
-	  P.U.defValProp(this, 'listeners', false, false, true, {
-	    change: [],
-	    error: []
-	  });
+	  P.U.defValProp(this, 'listeners', false, false, true, this.defaultListeners());
 	  this.sources = [];
 	
 	  this.listener = null;
@@ -1488,6 +1483,7 @@
 	  /**
 	   * A constant defining bad values or bad events.
 	   *
+	   * @memberof ProAct.Observable
 	   * @type Object
 	   * @static
 	   * @constant
@@ -1528,10 +1524,41 @@
 	   * @memberof ProAct.Observable
 	   * @instance
 	   * @constant
-	   * @type {Object}
 	   * @default ProAct.Observable
 	   */
 	  constructor: ProAct.Observable,
+	
+	  /**
+	   * Generates the initial listeners object. It can be overridden for alternative listeners collections.
+	   * It is used for resetting all the listeners too.
+	   *
+	   * @memberof ProAct.Observable
+	   * @instance
+	   * @method defaultListeners
+	   * @return {Object}
+	   *      A map containing the default listeners collections.
+	   */
+	  defaultListeners: function () {
+	    return {
+	      change: [],
+	      error: []
+	    };
+	  },
+	
+	  /**
+	   * A list of actions or action to be used when no action is passed for the methods working with actions.
+	   *
+	   * @memberof ProAct.Observable
+	   * @instance
+	   * @method defaultActions
+	   * @default 'change'
+	   * @return {Array|String}
+	   *      The actions to be used if no actions are provided to action related methods,
+	   *      like {@link ProAct.Observable#on}, {@link ProAct.Observable#off}, {@link ProAct.Observable#update}, {@link ProAct.Observable#willUpdate}.
+	   */
+	  defaultActions: function () {
+	    return 'change';
+	  },
 	
 	  /**
 	   * Creates the <i>listener</i> of this observable.
@@ -1599,38 +1626,41 @@
 	   * Attaches a new listener to this ProAct.Observable.
 	   * The listener may be function or object that defines a <i>call</i> method.
 	   *
-	   * TODO The action is not used here, ProAct.Observable#listeners should be a set of collections. ~meddle@2014-07-12
-	   *
 	   * @memberof ProAct.Observable
 	   * @instance
 	   * @method on
-	   * @param {String} action
-	   *      The action to listen for. It is the default action if it is empty or skipped.
+	   * @param {Array|String} actions
+	   *      The action/actions to listen for. If this parameter is skipped or null/undefined, the actions from {@link ProAct.Observable#defaultActions} are used.
 	   *      <p>
-	   *        The action can be skipped and on its place as first parameter to be passed the <i>listener</i>.
+	   *        The actions can be skipped and on their place as first parameter to be passed the <i>listener</i>.
 	   *      </p>
 	   * @param {Object} listener
 	   *      The listener to attach. It must be instance of Function or object with a <i>call</i> method.
-	   * @param {Array} listeners
-	   *      By default the listener is attached to the ProAct.Observable#listeners collection.
-	   *      This behavior can be changed by passing another collection here.
 	   * @return {ProAct.Observable}
 	   *      <b>this</b>
+	   * @see {@link ProAct.Observable#defaultActions}
 	   */
-	  on: function (action, listener, listeners) {
-	    if (!P.U.isString(action)) {
-	      listener = action;
-	      action = 'change';
+	  on: function (actions, listener) {
+	    if (!P.U.isString(actions) && !P.U.isArray(actions)) {
+	      listener = actions;
+	      actions = this.defaultActions();
+	    }
+	    if (!P.U.isArray(actions)) {
+	      actions = [actions];
 	    }
 	
-	    if (!this.listeners[action]) {
-	      this.listeners[action] = [];
-	    }
+	    var ln = actions.length,
+	        action, i, listeners;
 	
-	    if (P.U.isArray(listeners)) {
+	    for (i = 0; i < ln; i ++) {
+	      action = actions[i];
+	      listeners = this.listeners[action];
+	
+	      if (!listeners) {
+	        listeners = this.listeners[action] = [];
+	      }
+	
 	      listeners.push(listener);
-	    } else {
-	      this.listeners[action].push(listener);
 	    }
 	
 	    return this;
@@ -1638,45 +1668,51 @@
 	
 	  /**
 	   * Removes a <i>listener</i> from the passed <i>action</i>.
+	   * <p>
+	   *  If this method is called without parameters, all the listeners for all the actions are removed.
+	   *  The listeners are reset using {@link ProAct.Observable#defaultListeners}.
+	   * </p>
 	   *
 	   * @memberof ProAct.Observable
 	   * @instance
 	   * @method off
-	   * @param {String} action
-	   *      The action to stop listening for. It is the default action if it is empty or skipped.
+	   * @param {Array|String} actions
+	   *      The action/actions to stop listening for. If this parameter is skipped or null/undefined, the actions from {@link ProAct.Observable#defaultActions} are used.
 	   *      <p>
-	   *        The action can be skipped and on its place as first parameter to be passed the <i>listener</i>.
+	   *        The actions can be skipped and on their place as first parameter to be passed the <i>listener</i>.
 	   *      </p>
 	   * @param {Object} listener
 	   *      The listener to detach. If it is skipped, null or undefined all the listeners are removed from this observable.
-	   * @param {Array} listeners
-	   *      By default the listener is detached from the ProAct.Observable#listeners collection.
-	   *      This behavior can be changed by passing another collection here.
 	   * @return {ProAct.Observable}
 	   *      <b>this</b>
 	   * @see {@link ProAct.Observable#on}
+	   * @see {@link ProAct.Observable#defaultActions}
+	   * @see {@link ProAct.Observable#defaultListeners}
 	   */
-	  off: function (action, listener, listeners) {
-	    if (!action && !listener) {
-	      if (P.U.isArray(listeners)) {
-	        listeners.length = 0;
-	      } else {
-	        this.listeners = {
-	          change: [],
-	          error: []
-	        };
-	      }
-	      return;
-	    }
-	    if (!P.U.isString(action)) {
-	      listener = action;
-	      action = 'change';
+	  off: function (actions, listener) {
+	    if (!actions && !listener) {
+	      this.listeners = this.defaultListeners();
+	      return this;
 	    }
 	
-	    if (P.U.isArray(listeners)) {
-	      P.U.remove(listeners, listener);
-	    } else {
-	      P.U.remove(this.listeners[action], listener);
+	    if (!P.U.isString(actions) && !P.U.isArray(actions)) {
+	      listener = actions;
+	      actions = this.defaultActions();
+	    }
+	    if (!P.U.isArray(actions)) {
+	      actions = [actions];
+	    }
+	
+	    var ln = actions.length,
+	        action, i, listeners;
+	
+	    for (i = 0; i < ln; i ++) {
+	      action = actions[i];
+	      listeners = this.listeners[action];
+	
+	      if (listeners) {
+	        P.U.remove(listeners, listener);
+	      }
 	    }
 	
 	    return this;
@@ -1794,7 +1830,7 @@
 	   * <p>
 	   *  A transformation is a function or an object that has a <i>call</i> method defined.
 	   *  This function or call method should have one argument and to return a transformed version of it.
-	   *  If the returned value is ProAct.Observable.BadValue, the next transformations are skipped and the updating
+	   *  If the returned value is {@link ProAct.Observable.BadValue}, the next transformations are skipped and the updating
 	   *  value/event becomes - bad value.
 	   * </p>
 	   * <p>
@@ -1969,7 +2005,7 @@
 	  },
 	
 	  /**
-	   * Update notifies all the observers of thise ProAct.Observable.
+	   * Update notifies all the observers of this ProAct.Observable.
 	   * <p>
 	   *  If there is running {@link ProAct.flow} instance it uses it to call the
 	   *  {@link ProAct.Observable.willUpdate} action with the passed <i>parameters</i>.
@@ -1983,41 +2019,37 @@
 	   * @instance
 	   * @method update
 	   * @param {Object} source
-	   *      The source of the update, for example update of ProAct.Observable, that <i></i> this is observing.
+	   *      The source of the update, for example update of ProAct.Observable, that <i>this</i> is observing.
 	   *      <p>
 	   *        Can be null - no source.
 	   *      </p>
 	   *      <p>
 	   *        In the most cases {@link ProAct.Event} is the source.
 	   *      </p>
-	   * @param {Array} listeners
-	   *      An array of listeners to notify, in the most cases this is null or undefined.
-	   *      <p>
-	   *        When this parameter is null or undefined, the ProAct.Observable.listeners array is used.
-	   *      </p>
+	   * @param {Array|String} actions
+	   *      A list of actions or a single action to update the listeners that listen to it.
+	   * @param {Array} eventData
+	   *      Data to be passed to the event to be created.
 	   * @return {ProAct.Observable}
 	   *      <i>this</i>
 	   * @see {@link ProAct.Observable#willUpdate}
+	   * @see {@link ProAct.Observable#makeEvent}
 	   * @see {@link ProAct.flow}
 	   */
-	  update: function (source, listeners) {
-	    if (this.listeners.change.length === 0 && this.listeners.error.length === 0 && this.parent === null) {
-	      return this;
-	    }
-	
+	  update: function (source, actions, eventData) {
 	    var observable = this;
 	    if (!P.flow.isRunning()) {
 	      P.flow.run(function () {
-	        observable.willUpdate(source, listeners);
+	        observable.willUpdate(source, actions, eventData);
 	      });
 	    } else {
-	      observable.willUpdate(source, listeners);
+	      observable.willUpdate(source, actions, eventData);
 	    }
 	    return this;
 	  },
 	
 	  /**
-	   * Will update is the method used to notify observers that <i>this</i> ProAct.Observable will be updated.
+	   * <b>willUpdate()</b> is the method used to notify observers that <i>this</i> ProAct.Observable will be updated.
 	   * <p>
 	   *  It uses the {@link ProAct.Observable#defer} to defer the listeners of the listening ProAct.Observables.
 	   *  The idea is that everything should be executed in a running {@link ProAct.Flow}, so there will be no repetative
@@ -2036,29 +2068,57 @@
 	   * @instance
 	   * @method willUpdate
 	   * @param {Object} source
-	   *      The source of the update, for example update of ProAct.Observable, that <i></i> this is observing.
+	   *      The source of the update, for example update of ProAct.Observable, that <i>this</i> is observing.
 	   *      <p>
 	   *        Can be null - no source.
 	   *      </p>
 	   *      <p>
 	   *        In the most cases {@link ProAct.Event} is the source.
 	   *      </p>
-	   * @param {Array} listeners
-	   *      An array of listeners to notify, in the most cases this is null or undefined.
-	   *      <p>
-	   *        When this parameter is null or undefined, the ProAct.Observable.listeners array is used.
-	   *      </p>
+	   * @param {Array|String} actions
+	   *      A list of actions or a single action to update the listeners that listen to it.
+	   *      If there is no action provided, the actions from {@link ProAct.Observable#defaultActions} are used.
+	   * @param {Array} eventData
+	   *      Data to be passed to the event to be created.
 	   * @return {ProAct.Observable}
 	   *      <i>this</i>
 	   * @see {@link ProAct.Observable#defer}
 	   * @see {@link ProAct.Observable#makeEvent}
+	   * @see {@link ProAct.Observable#defaultActions}
 	   * @see {@link ProAct.flow}
 	   */
-	  willUpdate: function (source, listeners) {
-	    var i, listener,
-	        listeners = P.U.isArray(listeners) ? listeners : this.listeners.change,
-	        length = listeners.length,
-	        event = this.makeEvent(source);
+	  willUpdate: function (source, actions, eventData) {
+	    if (!actions) {
+	      actions = this.defaultActions();
+	    }
+	
+	    var ln, i,
+	        listener,
+	        listeners,
+	        length,
+	        event;
+	
+	    if (P.U.isString(actions)) {
+	      listeners = this.listeners[actions];
+	    } else {
+	      listeners = [];
+	      ln = actions.length;
+	
+	      if (this.parent === null && actions.length === 0) {
+	        return this;
+	      }
+	
+	      for (i = 0; i < ln; i++) {
+	        listeners = listeners.concat(this.listeners[actions[i]]);
+	      }
+	    }
+	
+	    if (listeners.length === 0 && this.parent === null) {
+	      return this;
+	    }
+	
+	    length = listeners.length;
+	    event = this.makeEvent(source, eventData);
 	
 	    for (i = 0; i < length; i++) {
 	      listener = listeners[i];
@@ -2125,7 +2185,7 @@
 	 * @param [...] args
 	 *      Arguments of the event, for example for value event, these are the old value and the new value.
 	 */
-	ProAct.Event = function (source, target, type) {
+	ProAct.Event = P.E = function (source, target, type) {
 	  this.source = source;
 	  this.target = target;
 	  this.type = type;
@@ -2404,7 +2464,7 @@
 	   * @see {@link ProAct.Observable#update}
 	   */
 	  triggerErr: function (err) {
-	    return this.update(err, this.listeners.error);
+	    return this.update(err, 'error');
 	  },
 	
 	  // private
@@ -2555,7 +2615,7 @@
 	  this.buffer = [];
 	};
 	
-	ProAct.BufferedStream.prototype = Pro.U.ex(Object.create(P.S.prototype), {
+	ProAct.BufferedStream.prototype = P.U.ex(Object.create(P.S.prototype), {
 	
 	  /**
 	   * Reference to the constructor of this object.
@@ -3024,141 +3084,2392 @@
 	
 	P.DDS.prototype.t = P.DDS.prototype.trigger;
 	
-	ProAct.Array = P.A = pArray = function () {
-	  var self = this, getLength, setLength, i, oldLength, ln, arr;
+	/**
+	 * <p>
+	 *  Constructs a ProAct.Property. The properties are simple {@link ProAct.Observable}s with state. The basic property
+	 *  has a state of a simple value - number/string/boolean.
+	 * </p>
+	 * <p>
+	 *  Every property represents a field in a plain javascript object. It makes it reactive, on reading the property value,
+	 *  if {@link ProAct.currentCaller} is set, it is added as a listener to the property changes.
+	 * </p>
+	 * <p>
+	 *  Every property has a type the default property has a type of a simple value.
+	 * </p>
+	 * <p>
+	 *  All the properties of an object are managed by its {@link ProAct.ObjectCore}, which is set to a hidden field of the object - '__pro__'.
+	 * </p>
+	 * <p>
+	 *  When created every property is in {@link ProAct.States.init} state, when it is functional, the state is changed to {@link ProAct.States.ready}.
+	 *  If the property is not in {@link ProAct.States.ready} state, it is not useable.
+	 * </p>
+	 * <p>
+	 *  {@link ProAct.Property#init} is called by this constructor for the property initialization. It should initialize the property and set its state to {@link ProAct.States.ready}.
+	 * </p>
+	 * <p>
+	 *  ProAct.Property is part of the properties module of ProAct.js.
+	 * </p>
+	 *
+	 * @class ProAct.Property
+	 * @extends ProAct.Observable
+	 * @param {Object} proObject
+	 *      A plain JavaScript object, holding a field, this property will represent.
+	 * @param {String} property
+	 *      The name of the field of the object, this property should represent.
+	 * @param {Function} getter
+	 *      An optional getter to be used when the property is read. If this parameter is empty, a new {@link ProAct.Property.defaultGetter} is build for <i>this</i>.
+	 * @param {Function} setter
+	 *      An optional setter to be used when the property is written. If this parameter is empty, a new {@link ProAct.Property.defaultSetter} is build for <i>this</i>.
+	 * @see {@link ProAct.ObjectCore}
+	 * @see {@link ProAct.Property.defaultGetter}
+	 * @see {@link ProAct.Property.defaultSetter}
+	 * @see {@link ProAct.Property#init}
+	 * @see {@link ProAct.States.init}
+	 * @see {@link ProAct.States.ready}
+	 */
+	ProAct.Property = P.P = function (proObject, property, getter, setter) {
+	  P.U.defValProp(this, 'proObject', false, false, true, proObject);
+	  this.property = property;
 	
-	  if (arguments.length === 0) {
-	    arr = [];
-	  } else if (arguments.length === 1 && P.U.isArray(arguments[0])) {
-	    arr = arguments[0];
-	  } else {
-	    arr = slice.call(arguments);
+	  if (!this.proObject.__pro__) {
+	    P.U.defValProp(proObject, '__pro__', false, false, true, new ProAct.ObjectCore(proObject));
 	  }
 	
-	  P.U.defValProp(this, '_array', false, false, true, arr);
-	  P.U.defValProp(this, 'indexListeners', false, false, true, []);
-	  P.U.defValProp(this, 'lastIndexCaller', false, false, true, null);
-	  P.U.defValProp(this, 'lengthListeners', false, false, true, []);
-	  P.U.defValProp(this, 'lastLengthCaller', false, false, true, null);
+	  this.proObject.__pro__.properties[property] = this;
 	
-	  getLength = function () {
-	    self.addCaller('length');
+	  this.get = getter || P.P.defaultGetter(this);
+	  this.set = setter || P.P.defaultSetter(this);
 	
-	    return self._array.length;
-	  };
+	  this.oldVal = null;
+	  this.val = proObject[property];
 	
-	  setLength = function (newLength) {
-	    if (self._array.length === newLength) {
+	  this.state = P.States.init;
+	  this.g = this.get;
+	  this.s = this.set;
+	
+	  P.Observable.call(this); // Super!
+	  this.parent = this.proObject.__pro__;
+	
+	  this.init();
+	};
+	
+	P.U.ex(ProAct.Property, {
+	
+	  /**
+	   * Defines the possible types of the ProAct.Property.
+	   *
+	   * @namespace ProAct.Property.Types
+	   */
+	  Types: {
+	
+	    /**
+	     * ProAct.Property for simple types - Numbers, Strings or Booleans.
+	     *
+	     * @memberof ProAct.Property.Types
+	     * @static
+	     * @constant
+	     */
+	    simple: 0, // strings, booleans and numbers
+	
+	    /**
+	     * ProAct.Property for auto computed types - Functions.
+	     *
+	     * @memberof ProAct.Property.Types
+	     * @static
+	     * @constant
+	     */
+	    auto: 1, // functions - dependent
+	
+	    /**
+	     * ProAct.Property for object types - fields containing objects.
+	     *
+	     * @memberof ProAct.Property.Types
+	     * @static
+	     * @constant
+	     */
+	    object: 2, // references Pro objects
+	
+	    /**
+	     * ProAct.Property for array types - fields containing arrays.
+	     *
+	     * @memberof ProAct.Property.Types
+	     * @static
+	     * @constant
+	     */
+	    array: 3, // arrays
+	
+	    /**
+	     * ProAct.Property for nil types - fields containing null or undefined.
+	     *
+	     * @memberof ProAct.Property.Types
+	     * @static
+	     * @constant
+	     */
+	    nil: 4, // nulls
+	
+	    /**
+	     * Retrieves the right ProAct.Property.Types value from a value.
+	     *
+	     * @memberof ProAct.Property.Types
+	     * @static
+	     * @param {Object} value
+	     *      The value to use to compute the ProAct.Property.Types member for.
+	     * @return {Number}
+	     *      The type of the passed value.
+	     */
+	    type: function (value) {
+	      if (value === null) {
+	        return P.P.Types.nil;
+	      } else if (P.U.isFunction(value)) {
+	        return P.P.Types.auto;
+	      } else if (P.U.isArray(value)) {
+	        return P.P.Types.array;
+	      } else if (P.U.isObject(value)) {
+	        return P.P.Types.object;
+	      } else {
+	        return P.P.Types.simple;
+	      }
+	    }
+	  },
+	
+	  /**
+	   * Generates a default getter function for a ProAct.Property instance.
+	   * <p>
+	   *  Every ProAct.Property instance has a getter and a setter, they can be passed in the constructor, but if left blank,
+	   *  this method is used for creating the getter function.
+	   * </p>
+	   * <p>
+	   *  The default getter function uses {@link ProAct.Property#addCaller} method to track the {@link ProAct.currentCaller} listener if set.
+	   *  If it is set it is added as a listener to the passed <i>property</i>.
+	   * </p>
+	   *
+	   * @memberof ProAct.Property
+	   * @static
+	   * @param {ProAct.Property} property
+	   *      The ProAct.Property instance to generate a getter function for.
+	   * @return {Function}
+	   *      The generated getter function.
+	   */
+	  defaultGetter: function (property) {
+	    return function () {
+	      property.addCaller();
+	
+	      return property.val;
+	    };
+	  },
+	
+	  /**
+	   * Generates a default setter function for a ProAct.Property instance.
+	   * <p>
+	   *  Every ProAct.Property instance has a setter and a getter, they can be passed in the constructor, but if left blank,
+	   *  this method is used for creating the setter function.
+	   * </p>
+	   * <p>
+	   *  The default setter function uses {@link ProAct.Property#update} method to update all the listeners for <i>change</i>s for the passed
+	   *  <i>property</i>.
+	   * </p>
+	   * <p>
+	   *  It updates the listeners only if the new value of the property is different from the old one (using <i>===</i> for the comparison).
+	   * </p>
+	   *
+	   * @memberof ProAct.Property
+	   * @static
+	   * @param {ProAct.Property} property
+	   *      The ProAct.Property instance to generate a setter function for.
+	   * @param {Function} setter
+	   *      A setter function for the way of setting the value. It can be skipped if the value should be set using <i>=</i>.
+	   * @return {Function}
+	   *      The generated setter function.
+	   */
+	  defaultSetter: function (property, setter) {
+	    return function (newVal) {
+	      if (property.val === newVal) {
+	        return;
+	      }
+	
+	      property.oldVal = property.val;
+	      if (setter) {
+	        property.val = setter.call(property.proObject, newVal);
+	      } else {
+	        property.val = P.Observable.transform(property, newVal);
+	      }
+	
+	      if (property.val === null || property.val === undefined) {
+	        P.P.reProb(property).update();
+	        return;
+	      }
+	
+	      property.update();
+	    };
+	  },
+	
+	  /**
+	   * Used to define the managed by a ProAct.Property instance field of the passed <i>obj</i>.
+	   * <p>
+	   *  The field is writable, enumerable and configurable.
+	   * </p>
+	   *
+	   * @memberof ProAct.Property
+	   * @static
+	   * @param {Object} obj
+	   *      The object which field should be defined as a property.
+	   * @param {String} prop
+	   *      The name of the property field to define.
+	   * @param {Function} get
+	   *      The getter that should be used to read the new property to be defined.
+	   * @param {Function} set
+	   *      The setter that should be used to update the new property to be defined.
+	   */
+	  defineProp: function (obj, prop, get, set) {
+	    Object.defineProperty(obj, prop, {
+	      get: get,
+	      set: set,
+	      enumerable: true,
+	      configurable: true
+	    });
+	  },
+	
+	  /**
+	   * Recreates a property, using its current value.
+	   * <p>
+	   *  For example if the initial value of the field was null, the property can be set to be instance of {@link ProAct.NullProperty},
+	   *  but if it changes to the number <i>3</i> it can be changed to {@link ProAct.Property} using this method.
+	   * </p>
+	   * <p>
+	   *  The re-definition works by using {@link ProAct.Property#destroy} to destroy the passed <i>property</i> first, and then the
+	   *  {@link ProAct.ObjectCore#makeProp} method is called of the {@link ProAct.ObjectCore} of the object the <i>property</i> belongs to.
+	   * </p>
+	   * <p>
+	   *  This way a new ProAct.Property instance is created to replace the passed one.
+	   * </p>
+	   *
+	   * @memberof ProAct.Property
+	   * @static
+	   * @param {ProAct.Property} property
+	   *      The ProAct.Property instance to re-define.
+	   * @return {ProAct.Property}
+	   *      The new re-defined property.
+	   */
+	  reProb: function (property) {
+	    var po = property.proObject,
+	        p = property.property,
+	        l = property.listeners.change;
+	
+	    property.destroy();
+	    return po.__pro__.makeProp(p, l);
+	  }
+	});
+	
+	ProAct.Property.prototype = P.U.ex(Object.create(P.Observable.prototype), {
+	
+	  /**
+	   * Reference to the constructor of this object.
+	   *
+	   * @memberof ProAct.Property
+	   * @instance
+	   * @constant
+	   * @default ProAct.Property
+	   */
+	  constructor: ProAct.Property,
+	
+	  /**
+	   * Retrieves the {@link ProAct.Property.Types} value of <i>this</i> property.
+	   * <p>
+	   *  For instances of the base class - ProAct.Property it is {@link ProAct.Property.Types.simple}.
+	   * </p>
+	   *
+	   * @memberof ProAct.Property
+	   * @instance
+	   * @method type
+	   * @return {Number}
+	   *      The right type of the property.
+	   */
+	  type: function () {
+	    return P.P.Types.simple;
+	  },
+	
+	  /**
+	   * Creates the <i>event</i> to be send to the listeners of this ProAct.Property on update.
+	   * <p>
+	   *  The <i>event</i> should be an instance of {@link ProAct.Event}.
+	   * </p>
+	   * <p>
+	   *  By default this method returns {@link ProAct.Event.Types.value} event with target the property name and arguments:
+	   *  <ul>
+	   *    <li>The object this ProAct.Property manages a field for.</li>
+	   *    <li>The old value of this property.</li>
+	   *    <li>The new value of this property.</li>
+	   *  </ul>
+	   * </p>
+	   *
+	   * @memberof ProAct.Property
+	   * @instance
+	   * @method makeEvent
+	   * @default {ProAct.Event} with type {@link ProAct.Event.Types.value}
+	   * @param {ProAct.Event} source
+	   *      The source event of the event. It can be null
+	   * @return {ProAct.Event}
+	   *      The event, created.
+	   */
+	  makeEvent: function (source) {
+	    return new P.E(source, this.property, P.E.Types.value, this.proObject, this.oldVal, this.val);
+	  },
+	
+	  /**
+	   * Creates the <i>listener</i> of this ProAct.Property.
+	   * <p>
+	   *  This listener turns the observable in a observer.
+	   * </p>
+	   * <p>
+	   *  The listener for ProAct.Property is an object defining the <i>call</i> method.
+	   * </p>
+	   * <p>
+	   *  It has a <i>property</i> field set to <i>this</i>.
+	   * </p>
+	   * <p>
+	   *  On value changes the <i><this</i> value is set to the new value using the {@link ProAct.Observable#transform} to transform it.
+	   * </p>
+	   *
+	   * @memberof ProAct.Property
+	   * @instance
+	   * @method makeListener
+	   * @return {Object}
+	   *      The <i>listener of this ProAct.Property</i>.
+	   */
+	  makeListener: function () {
+	    if (!this.listener) {
+	      var self = this;
+	
+	      this.listener = {
+	        property: self,
+	        call: function (newVal) {
+	          if (newVal && newVal.type !== undefined && newVal.type === P.E.Types.value && newVal.args.length === 3 && newVal.target) {
+	            newVal = newVal.args[0][newVal.target];
+	          }
+	
+	          self.oldVal = self.val;
+	          self.val = P.Observable.transform(self, newVal);
+	        }
+	      };
+	    }
+	
+	    return this.listener;
+	  },
+	
+	  /**
+	   * Initializes this property.
+	   * <p>
+	   *  This method logic is run only if the current state of <i>this</i> is {@link ProAct.States.init}.
+	   * </p>
+	   * <p>
+	   *  First the property is defined as a field in its object, using {@link ProAct.Property.defineProp}.
+	   * </p>
+	   * <p>
+	   *  Then {@link ProAct.Property#afterInit} is called to finish the initialization.
+	   * </p>
+	   *
+	   * @memberof ProAct.Property
+	   * @instance
+	   * @method init
+	   * @see {@link ProAct.Property#afterInit}
+	   */
+	  init: function () {
+	    if (this.state !== P.States.init) {
 	      return;
 	    }
 	
-	    oldLength = self._array.length;
-	    self._array.length = newLength;
+	    P.P.defineProp(this.proObject, this.property, this.get, this.set);
 	
-	    self.update(pArrayOps.setLength, -1, oldLength, newLength);
+	    this.afterInit();
+	  },
 	
-	    return newLength;
-	  };
+	  /**
+	   * Called automatically after initialization of this property.
+	   * <p>
+	   *  By default it changes the state of <i>this</i> to {@link ProAct.States.ready}.
+	   * </p>
+	   * <p>
+	   *  It can be overridden to define more complex initialization logic.
+	   * </p>
+	   *
+	   * @memberof ProAct.Property
+	   * @instance
+	   * @method afterInit
+	   */
+	  afterInit: function () {
+	    this.state = P.States.ready;
+	  },
 	
-	  Object.defineProperty(this, 'length', {
-	    configurable: false,
-	    enumerable: true,
-	    get: getLength,
-	    set: setLength
-	  });
+	  /**
+	   * Uses {@link ProAct.currentCaller} to automatically add a new listener to this property if the caller is set.
+	   * <p>
+	   *  This method is used by the default getter to make every reader of the property a listener to it.
+	   * </p>
+	   *
+	   * @memberof ProAct.Property
+	   * @instance
+	   * @method addCaller
+	   */
+	  addCaller: function () {
+	    var caller = P.currentCaller;
 	
-	  P.U.defValProp(this, '__pro__', false, false, false, {
-	    state: P.States.init
-	  });
+	    if (caller && caller.property !== this) {
+	      this.on(caller);
+	    }
+	  },
 	
-	  try {
-	    ln = this._array.length;
-	
-	    for (i = 0; i < ln; i++) {
-	      this.defineIndexProp(i);
+	  /**
+	   * Destroys this ProAct.Property instance, by making the field it manages to a normal field.
+	   * <p>
+	   *  The state of <i>this</i> is set to {@link ProAct.States.destroyed}.
+	   * </p>
+	   *
+	   * @memberof ProAct.Property
+	   * @instance
+	   * @method destroy
+	   */
+	  destroy: function () {
+	    if (this.state === P.States.destroyed) {
+	      return;
 	    }
 	
-	    this.__pro__.state = P.States.ready;
-	  } catch (e) {
-	    this.__pro__.state = P.States.error;
-	    throw e;
+	    delete this.proObject.__pro__.properties[this.property];
+	    this.listeners = undefined;
+	    this.oldVal = undefined;
+	    this.parent = undefined;
+	
+	    P.U.defValProp(this.proObject, this.property, true, true, true, this.val);
+	    this.get = this.set = this.property = this.proObject = undefined;
+	    this.g = this.s = undefined;
+	    this.val = undefined;
+	    this.state = P.States.destroyed;
+	  },
+	
+	  /**
+	   * The <b>toString()</b> method returns a string representing this ProAct.Property.
+	   * <p>
+	   *  The string representation is the value of <i>this</i> property.
+	   * </p>
+	   *
+	   * @memberof ProAct.Property
+	   * @instance
+	   * @method toString
+	   */
+	  toString: function () {
+	    return this.val;
+	  }
+	});
+	
+	/**
+	 * <p>
+	 *  Constructs a ProAct.NullProperty. The properties are simple {@link ProAct.Observable}s with state. The null/nil property
+	 *  has a state of a null or undefined value.
+	 * </p>
+	 * <p>
+	 *  Null properties are automatically re-defined if their value is set to actual object or data.
+	 * </p>
+	 * <p>
+	 *  ProAct.NullProperty is part of the properties module of ProAct.js.
+	 * </p>
+	 *
+	 * @class ProAct.NullProperty
+	 * @extends ProAct.Property
+	 * @param {Object} proObject
+	 *      A plain JavaScript object, holding a null/undefined field, this property should represent.
+	 * @param {String} property
+	 *      The name of the field of the object, this property should represent.
+	 * @see {@link ProAct.ObjectCore}
+	 */
+	ProAct.NullProperty = P.NP = function (proObject, property) {
+	  var self = this,
+	      set = P.P.defaultSetter(this),
+	      setter = function (newVal) {
+	        var result = set.call(self.proObject, newVal),
+	            types = P.P.Types,
+	            type = types.type(result);
+	
+	        if (type !== types.nil) {
+	          P.P.reProb(self);
+	        }
+	
+	        return result;
+	      };
+	
+	  P.P.call(this, proObject, property, P.P.defaultGetter(this), setter);
+	};
+	
+	ProAct.NullProperty.prototype = P.U.ex(Object.create(P.P.prototype), {
+	
+	  /**
+	   * Reference to the constructor of this object.
+	   *
+	   * @memberof ProAct.NullProperty
+	   * @instance
+	   * @constant
+	   * @default ProAct.NullProperty
+	   */
+	  constructor: ProAct.NullProperty,
+	
+	  /**
+	   * Retrieves the {@link ProAct.Property.Types} value of <i>this</i> property.
+	   * <p>
+	   *  For ProAct.NullProperty this is {@link ProAct.Property.Types.nil}
+	   * </p>
+	   *
+	   * @memberof ProAct.NullProperty
+	   * @instance
+	   * @method type
+	   * @return {Number}
+	   *      The right type of the property.
+	   */
+	  type: function () {
+	    return P.P.Types.nil;
+	  }
+	});
+	
+	/**
+	 * <p>
+	 *  Constructs a ProAct.AutoProperty. The properties are simple {@link ProAct.Observable}s with state. The auto-computed or functional property
+	 *  has a state of a Function value.
+	 * </p>
+	 * <p>
+	 *  Auto-computed properties are functions which are turned to {@link ProAct.Property}s by a {@link ProAct.ObjectCore}.
+	 * </p>
+	 * <p>
+	 *  If these functions are reading another fields of ProAct.js objects, they authomatically become dependent on them.
+	 * </p>
+	 * <p>
+	 *  For example:
+	 *  <pre>
+	 *    var obj = {
+	 *      a: 1,
+	 *      b: 2,
+	 *      c: function () {
+	 *        return this.a - this.b;
+	 *      }
+	 *    };
+	 *  </pre>
+	 *  If this object - <i>obj</i> is turned to a reactive ProAct.js object, it becomes a simple object with three fields:
+	 *  <pre>
+	 *    {
+	 *      a: 1,
+	 *      b: 2,
+	 *      c: -1
+	 *    }
+	 *  </pre>
+	 *  But now <i>c</i> is dependent on <i>a</i> and <i>b</i>, so if <i>a</i> is set to <b>4</b>, <i>obj</i> becomes:
+	 *  <pre>
+	 *    {
+	 *      a: 1,
+	 *      b: 2,
+	 *      c: 2
+	 *    }
+	 *  </pre>
+	 * </p>
+	 * <p>
+	 *  The logic is the following:
+	 *  <ul>
+	 *    <li>The property is initialized to be lazy, so its state is {@link ProAct.States.init}</li>
+	 *    <li>On its first read, the {@link ProAct.currentCaller} is set to the listener of the property, so all the properties read in the function body became observed by it. The value of the property is computed using the original function of the field.</li>
+	 *    <li>On this first read the state of the property is updated to {@link ProAct.States.ready}.</li>
+	 *    <li>On its following reads it is a simple value, computed from the first read. No re-computations on get.</li>
+	 *    <li>If a property, this auto-computed property depends changes, the value of <i>this</i> ProAct.AutoProperty is recomputed.</li>
+	 *    <li>Setting the property can be implemented easy, because on set, the original function of the property is called with the new value.</li>
+	 *  </ul>
+	 * </p>
+	 * <p>
+	 *  ProAct.AutoProperty can be depend on another ProAct.AutoProperty.
+	 * </p>
+	 * <p>
+	 *  ProAct.AutoProperty is part of the properties module of ProAct.js.
+	 * </p>
+	 *
+	 * @class ProAct.AutoProperty
+	 * @extends ProAct.Property
+	 * @param {Object} proObject
+	 *      A plain JavaScript object, holding a field, this property will represent.
+	 * @param {String} property
+	 *      The name of the field of the object, this property should represent.
+	 * @see {@link ProAct.ObjectCore}
+	 * @see {@link ProAct.States.init}
+	 * @see {@link ProAct.States.ready}
+	 */
+	ProAct.AutoProperty = P.FP = function (proObject, property) {
+	  this.func = proObject[property];
+	
+	  var self = this,
+	      getter = function () {
+	        self.addCaller();
+	        var oldCaller = P.currentCaller,
+	            get = P.P.defaultGetter(self),
+	            set = P.P.defaultSetter(self, function (newVal) {
+	              return self.func.call(self.proObject, newVal);
+	            }),
+	            args = arguments,
+	            autoFunction;
+	
+	        P.currentCaller = self.makeListener();
+	
+	        autoFunction = function () {
+	          self.val = self.func.apply(self.proObject, args);
+	        };
+	        P.flow.run(function () {
+	          P.flow.pushOnce(autoFunction);
+	        });
+	
+	        P.currentCaller = oldCaller;
+	
+	        P.P.defineProp(self.proObject, self.property, get, set);
+	
+	        self.state = P.States.ready;
+	
+	        self.val = P.Observable.transform(self, self.val);
+	        return self.val;
+	      };
+	
+	  P.P.call(this, proObject, property, getter, function () {});
+	};
+	
+	ProAct.AutoProperty.prototype = P.U.ex(Object.create(P.P.prototype), {
+	
+	  /**
+	   * Reference to the constructor of this object.
+	   *
+	   * @memberof ProAct.AutoProperty
+	   * @instance
+	   * @constant
+	   * @default ProAct.AutoProperty
+	   */
+	  constructor: ProAct.AutoProperty,
+	
+	  /**
+	   * Retrieves the {@link ProAct.Property.Types} value of <i>this</i> property.
+	   * <p>
+	   *  For ProAct.AutoProperty this is {@link ProAct.Property.Types.auto}
+	   * </p>
+	   *
+	   * @memberof ProAct.AutoProperty
+	   * @instance
+	   * @method type
+	   * @return {Number}
+	   *      The right type of the property.
+	   */
+	  type: function () {
+	    return P.P.Types.auto;
+	  },
+	
+	  /**
+	   * Creates the <i>listener</i> of this ProAct.AutoProperty.
+	   * <p>
+	   *  This listener turns the observable in a observer.
+	   * </p>
+	   * <p>
+	   *  The listener for ProAct.AutoProperty is an object defining the <i>call</i> method.
+	   * </p>
+	   * <p>
+	   *  It has a <i>property</i> field set to <i>this</i>.
+	   * </p>
+	   * <p>
+	   *  On value changes the <i><this</i> value is set to the value computed by the original function,
+	   *  using the {@link ProAct.Observable#transform} to transform it.
+	   * </p>
+	   *
+	   * @memberof ProAct.AutoProperty
+	   * @instance
+	   * @method makeListener
+	   * @return {Object}
+	   *      The <i>listener of this ProAct.AutoProperty</i>.
+	   */
+	  makeListener: function () {
+	    if (!this.listener) {
+	      var self = this;
+	
+	      this.listener = {
+	        property: self,
+	        call: function () {
+	          self.oldVal = self.val;
+	          self.val = P.Observable.transform(self, self.func.call(self.proObject));
+	        }
+	      };
+	    }
+	
+	    return this.listener;
+	  },
+	
+	  /**
+	   * Called automatically after initialization of this property.
+	   * <p>
+	   *  For ProAct.AutoProperty it does nothing - the real initialization is lazy and is performed on the first read of <i>this</i>.
+	   * </p>
+	   *
+	   * @memberof ProAct.AutoProperty
+	   * @instance
+	   * @method afterInit
+	   */
+	  afterInit: function () {}
+	});
+	
+	/**
+	 * <p>
+	 *  Constructs a ProAct.ObjectProperty. The properties are simple {@link ProAct.Observable}s with state. The object property
+	 *  has a state of a JavaScript object value.
+	 * </p>
+	 * <p>
+	 *  The value of ProAct.ObjectProperty is object, turned to reactive ProAct.js object recursively.
+	 * </p>
+	 * <p>
+	 *  On changing the object value to another object the listeners for fields with the same name in the objects, are moved from the old value's fields to the new value's fields.
+	 * </p>
+	 * <p>
+	 *  If set to null or undefined, the property is re-defined, using {@link ProAct.Property.reProb}
+	 * </p>
+	 * <p>
+	 *  ProAct.ObjectProperty is lazy - its object is made reactive on the first read of the property. Its state is set to {@link ProAct.States.ready} on the first read too.
+	 * </p>
+	 * <p>
+	 *  ProAct.ObjectProperty is part of the properties module of ProAct.js.
+	 * </p>
+	 *
+	 * @class ProAct.ObjectProperty
+	 * @extends ProAct.Property
+	 * @param {Object} proObject
+	 *      A plain JavaScript object, holding a field, this property will represent.
+	 * @param {String} property
+	 *      The name of the field of the object, this property should represent.
+	 * @see {@link ProAct.ObjectCore}
+	 * @see {@link ProAct.States.init}
+	 * @see {@link ProAct.States.ready}
+	 */
+	ProAct.ObjectProperty = P.OP = function (proObject, property) {
+	  var self = this, getter;
+	
+	  getter = function () {
+	    self.addCaller();
+	    if (!self.val.__pro__) {
+	      P.prob(self.val);
+	    }
+	
+	    var get = P.P.defaultGetter(self),
+	        set = function (newVal) {
+	          if (self.val == newVal) {
+	            return;
+	          }
+	
+	          self.oldVal = self.val;
+	          self.val = newVal;
+	
+	          if (self.val === null || self.val === undefined) {
+	            P.P.reProb(self).update();
+	            return self;
+	          }
+	
+	          if (self.oldVal) {
+	            if (!self.val.__pro__) {
+	              P.prob(self.val);
+	            }
+	
+	            var oldProps = self.oldVal.__pro__.properties,
+	                newProps = self.val.__pro__.properties,
+	                oldPropName, oldProp, newProp, oldListeners, newListeners,
+	                i, j, oldListenersLength, newListenersLength,
+	                toAdd, toRemove = [], toRemoveLength;
+	
+	            for (oldPropName in oldProps) {
+	              if (oldProps.hasOwnProperty(oldPropName)) {
+	                newProp = newProps[oldPropName];
+	                if (!newProp) {
+	                  continue;
+	                }
+	                newListeners = newProp.listeners.change;
+	
+	                oldProp = oldProps[oldPropName];
+	                oldListeners = oldProp.listeners.change;
+	                oldListenersLength = oldListeners.length;
+	
+	                for (i = 0; i < oldListenersLength; i++) {
+	                  toAdd = true;
+	                  for (j = 0; j < newListenersLength; j++) {
+	                    if (oldListeners[i] == newListeners[j]) {
+	                      toAdd = false;
+	                    }
+	                  }
+	                  if (toAdd) {
+	                    newProp.on(oldListeners[i]);
+	                    toRemove.push(i);
+	                  }
+	                }
+	
+	                toRemoveLength = toRemove.length;
+	                for (i = 0; i < toRemoveLength; i++) {
+	                  oldListeners.splice[toRemove[i], 1];
+	                }
+	                toRemove = [];
+	              }
+	            }
+	          }
+	
+	          self.update();
+	        };
+	
+	    P.P.defineProp(self.proObject, self.property, get, set);
+	
+	    self.state = P.States.ready;
+	    return self.val;
+	  };
+	
+	  P.P.call(this, proObject, property, getter, function () {});
+	};
+	
+	ProAct.ObjectProperty.prototype = P.U.ex(Object.create(P.P.prototype), {
+	
+	  /**
+	   * Reference to the constructor of this object.
+	   *
+	   * @memberof ProAct.ObjectProperty
+	   * @instance
+	   * @constant
+	   * @default ProAct.ObjectProperty
+	   */
+	  constructor: ProAct.ObjectProperty,
+	
+	  /**
+	   * Retrieves the {@link ProAct.Property.Types} value of <i>this</i> property.
+	   * <p>
+	   *  For ProAct.ObjectProperty this is {@link ProAct.Property.Types.object}
+	   * </p>
+	   *
+	   * @memberof ProAct.ObjectProperty
+	   * @instance
+	   * @method type
+	   * @return {Number}
+	   *      The right type of the property.
+	   */
+	  type: function () {
+	    return P.P.Types.object;
+	  },
+	
+	  /**
+	   * Called automatically after initialization of this property.
+	   * <p>
+	   *  For ProAct.ObjectProperty it does nothing - the real initialization is lazy and is performed on the first read of <i>this</i>.
+	   * </p>
+	   *
+	   * @memberof ProAct.ObjectProperty
+	   * @instance
+	   * @method afterInit
+	   */
+	  afterInit: function () {}
+	});
+	
+	/**
+	 * <p>
+	 *  Constructs a ProAct.ArrayProperty. The properties are simple {@link ProAct.Observable}s with state. The array property
+	 *  has a state of a JavaScript array value.
+	 * </p>
+	 * <p>
+	 *  The value of ProAct.ArrayProperty is array, turned to reactive ProAct.js array - {@link ProAct.Array}.
+	 * </p>
+	 * <p>
+	 *  On changing the array value to another array the listeners for indices/length are moved from the old value to the new value.
+	 * </p>
+	 * <p>
+	 *  If set to null or undefined, the property is re-defined, using {@link ProAct.Property.reProb}
+	 * </p>
+	 * <p>
+	 *  ProAct.ArrayProperty is lazy - its object is made reactive on the first read of the property. Its state is set to {@link ProAct.States.ready} on the first read too.
+	 * </p>
+	 * <p>
+	 *  ProAct.ArrayProperty is part of the properties module of ProAct.js.
+	 * </p>
+	 *
+	 * @class ProAct.ArrayProperty
+	 * @extends ProAct.Property
+	 * @param {Object} proObject
+	 *      A plain JavaScript object, holding a field, this property will represent.
+	 * @param {String} property
+	 *      The name of the field of the object, this property should represent.
+	 * @see {@link ProAct.ObjectCore}
+	 * @see {@link ProAct.States.init}
+	 * @see {@link ProAct.States.ready}
+	 */
+	ProAct.ArrayProperty = P.AP = function (proObject, property) {
+	  var self = this, getter;
+	
+	  getter = function () {
+	    self.addCaller();
+	    if (!P.U.isProArray(self.val)) {
+	      self.val = new P.A(self.val);
+	    }
+	
+	    var get = P.P.defaultGetter(self),
+	        set = function (newVal) {
+	          if (self.val == newVal || self.val.valueOf() == newVal) {
+	            return;
+	          }
+	
+	          self.oldVal = self.val;
+	          self.val = newVal;
+	
+	          if (self.val === null || self.val === undefined) {
+	            P.P.reProb(self).update();
+	            return self;
+	          }
+	
+	          if (!P.U.isProArray(self.val)) {
+	            self.val = new P.A(self.val);
+	          }
+	
+	          if (self.oldVal) {
+	            var i, listener,
+	                toRemove = [], toRemoveLength,
+	                oldIndListeners = self.oldVal.__pro__.listeners.index,
+	                oldIndListenersLn = oldIndListeners.length,
+	                newIndListeners = self.val.__pro__.listeners.index,
+	                oldLenListeners = self.oldVal.__pro__.listeners.length,
+	                oldLenListenersLn = oldLenListeners.length,
+	                newLenListeners = self.val.__pro__.listeners.length;
+	
+	            for (i = 0; i < oldIndListenersLn; i++) {
+	              listener = oldIndListeners[i];
+	              if (listener.property && listener.property.proObject === self.proObject) {
+	                newIndListeners.push(listener);
+	                toRemove.push(i);
+	              }
+	            }
+	            toRemoveLength = toRemove.length;
+	            for (i = 0; i < toRemoveLength; i++) {
+	              oldIndListeners.splice[toRemove[i], 1];
+	            }
+	            toRemove = [];
+	
+	            for (i = 0; i < oldLenListenersLn; i++) {
+	              listener = oldLenListeners[i];
+	              if (listener.property && listener.property.proObject === self.proObject) {
+	                newLenListeners.push(listener);
+	                toRemove.push(i);
+	              }
+	            }
+	            toRemoveLength = toRemove.length;
+	            for (i = 0; i < toRemoveLength; i++) {
+	              oldLenListeners.splice[toRemove[i], 1];
+	            }
+	            toRemove = [];
+	          }
+	
+	          self.update();
+	        };
+	
+	    P.P.defineProp(self.proObject, self.property, get, set);
+	
+	    self.state = P.States.ready;
+	    return self.val;
+	  };
+	
+	  P.P.call(this, proObject, property, getter, function () {});
+	};
+	
+	ProAct.ArrayProperty.prototype = P.U.ex(Object.create(P.P.prototype), {
+	
+	  /**
+	   * Reference to the constructor of this object.
+	   *
+	   * @memberof ProAct.ArrayProperty
+	   * @instance
+	   * @constant
+	   * @default ProAct.ArrayProperty
+	   */
+	  constructor: ProAct.ArrayProperty,
+	
+	  /**
+	   * Retrieves the {@link ProAct.Property.Types} value of <i>this</i> property.
+	   * <p>
+	   *  For ProAct.ArrayProperty this is {@link ProAct.Property.Types.array}
+	   * </p>
+	   *
+	   * @memberof ProAct.ArrayProperty
+	   * @instance
+	   * @method type
+	   * @return {Number}
+	   *      The right type of the property.
+	   */
+	  type: function () {
+	    return P.P.Types.array;
+	  },
+	
+	  /**
+	   * Called automatically after initialization of this property.
+	   * <p>
+	   *  For ProAct.ArrayProperty it does nothing - the real initialization is lazy and is performed on the first read of <i>this</i>.
+	   * </p>
+	   *
+	   * @memberof ProAct.ArrayProperty
+	   * @instance
+	   * @method afterInit
+	   */
+	  afterInit: function () {}
+	});
+	
+	/**
+	 * <p>
+	 *  Constructs a ProAct.ProxyProperty. This is a property, pointing to another {@link ProAct.Property}.
+	 * </p>
+	 * <p>
+	 *  The value of ProAct.ProxyProperty is the value of its target, if the target is updated, the proxy is updated.
+	 * </p>
+	 * <p>
+	 *  By setting the value of the proxy, the value of the target is updated, the proxy doesn't have its own value, it uses
+	 *  the value of the target.
+	 * </p>
+	 * <p>
+	 *  ProAct.ProxyProperty is part of the properties module of ProAct.js.
+	 * </p>
+	 *
+	 * @class ProAct.ProxyProperty
+	 * @extends ProAct.Property
+	 * @param {Object} proObject
+	 *      A plain JavaScript object, holding a field, this property will represent.
+	 * @param {String} property
+	 *      The name of the field of the object, this property should represent.
+	 * @param {ProAct.Property} target
+	 *      The target {@link ProAct.Property}, that will provide the value of the new ProAct.ProxyProperty.
+	 */
+	ProAct.ProxyProperty = P.PXP = function (proObject, property, target) {
+	  var self = this, getter, setter;
+	
+	  getter = function () {
+	    self.addCaller();
+	    return target.val;
+	  };
+	
+	  setter = function (newVal) {
+	    if (target.val === newVal) {
+	      return;
+	    }
+	
+	    target.oldVal = target.val;
+	    target.val = P.Observable.transform(self, newVal);
+	
+	    if (target.val === null || target.val === undefined) {
+	      P.P.reProb(target).update();
+	      return;
+	    }
+	
+	    self.update();
+	  };
+	
+	  P.P.call(this, proObject, property, getter, setter);
+	
+	  this.target = target;
+	  this.target.on(this.makeListener());
+	};
+	
+	ProAct.ProxyProperty.prototype = P.U.ex(Object.create(P.P.prototype), {
+	
+	  /**
+	   * Reference to the constructor of this object.
+	   *
+	   * @memberof ProAct.ProxyProperty
+	   * @instance
+	   * @constant
+	   * @default ProAct.ProxyProperty
+	   */
+	  constructor: ProAct.ProxyProperty,
+	
+	  /**
+	   * Retrieves the {@link ProAct.Property.Types} value of <i>this</i> property.
+	   * <p>
+	   *  For ProAct.ProxyProperty this is the type if its <i>target</i>.
+	   * </p>
+	   *
+	   * @memberof ProAct.ProxyProperty
+	   * @instance
+	   * @method type
+	   * @return {Number}
+	   *      The right type of the property.
+	   */
+	  type: function () {
+	    return this.target.type();
+	  },
+	
+	  /**
+	   * Creates the <i>listener</i> of this ProAct.ProxyProperty.
+	   * <p>
+	   *  This listener turns the observable in a observer.
+	   * </p>
+	   * <p>
+	   *  The listener for ProAct.ProxyProperty is an object defining an empty <i>call</i> method.
+	   * </p>
+	   * <p>
+	   *  It has a <i>property</i> field set to <i>this</i>.
+	   * </p>
+	   *
+	   * @memberof ProAct.ProxyProperty
+	   * @instance
+	   * @method makeListener
+	   * @return {Object}
+	   *      The <i>listener of this ProAct.ProxyProperty</i>.
+	   */
+	  makeListener: function () {
+	    if (!this.listener) {
+	      var self = this;
+	
+	      this.listener = {
+	        property: self,
+	        call: P.N
+	      };
+	    }
+	
+	    return this.listener;
+	  },
+	
+	});
+	
+	/**
+	 * <p>
+	 *  Constructor for ProAct.PropertyProvider. The ProAct.PropertyProvider is an abstract class.
+	 * </p>
+	 * <p>
+	 *  Many providers can be registered for many kinds of properties.
+	 * </p>
+	 * <p>
+	 *  When a ProAct.js object is initialized its fields are turned into properties.
+	 *  Depending on the type and the name of the field, as well as meta information the valid
+	 *  type of {@link ProAct.Property} is created and used. The PropertyProviders have 'filter'
+	 *  method and depending on it the valid kind is decided.
+	 * </p>
+	 * <p>
+	 *  ProAct.PropertyProvider is part of the properties module of ProAct.js.
+	 * </p>
+	 *
+	 * @class ProAct.PropertyProvider
+	 * @see {@link ProAct.ObjectCore}
+	 */
+	ProAct.PropertyProvider = P.PP = function () {};
+	
+	
+	(function (P) {
+	  var providers =  [];
+	
+	  P.U.ex(P.PP, {
+	
+	
+	    /**
+	     * Registers a ProAct.PropertyProvider.
+	     * <p>
+	     *  The provider is appended in the end of the list of ProAct.PropertyProviders.
+	     * </p>
+	     * <p>
+	     *  When a property must be provided if there is a ProAct.PropertyProvider registered before
+	     *  the passed <i>propertyProvider</i>, with valid filtering for the passed field, it will
+	     *  be used instead.
+	     * </p>
+	     *
+	     * @memberof ProAct.PropertyProvider
+	     * @static
+	     * @param {ProAct.PropertyProvider} propertyProvider
+	     *      The ProAct.PropertyProvider to register.
+	     */
+	    registerProvider: function (propertyProvider) {
+	      providers.push(propertyProvider);
+	    },
+	
+	    /**
+	     * Registers a ProAct.PropertyProvider.
+	     * <p>
+	     *  The provider is prepended in the beginning of the list of ProAct.PropertyProviders.
+	     * </p>
+	     * <p>
+	     *  It's filtering will be called before any other registered provider.
+	     * </p>
+	     *
+	     * @memberof ProAct.PropertyProvider
+	     * @static
+	     * @param {ProAct.PropertyProvider} propertyProvider
+	     *      The ProAct.PropertyProvider to register.
+	     */
+	    prependProvider: function (propertyProvider) {
+	      providers.unshift(propertyProvider);
+	    },
+	
+	    /**
+	     * Removes a ProAct.PropertyProvider from the list of ProAct.PropertyProviders.
+	     *
+	     * @memberof ProAct.PropertyProvider
+	     * @static
+	     * @param {ProAct.PropertyProvider} propertyProvider
+	     *      The ProAct.PropertyProvider to unregister.
+	     */
+	    unregisterProvider: function (propertyProvider) {
+	      P.U.remove(providers, propertyProvider);
+	    },
+	
+	    /**
+	     * Removes all ProAct.PropertyProviders from the list of ProAct.PropertyProviders.
+	     *
+	     * @memberof ProAct.PropertyProvider
+	     * @static
+	     */
+	    clearProviders: function () {
+	      providers = [];
+	    },
+	
+	    /**
+	     * Provides a {@link ProAct.Property} instance using the list of the registered
+	     * ProAct.PropertyProviders.
+	     * <p>
+	     *  The providers are tried in the order of their registration (the order can be changed using {@link ProAct.PropertyProvider.prependProvider}).
+	     * </p>
+	     * <p>
+	     *  The {@link ProAct.PropertyProvider#filter} method is used to check if a provider is compliant with the passed arguments.
+	     * </p>
+	     * <p>
+	     *  If a compliant provider is found, its {@link ProAct.PropertyProvider#provide} method is used to provide the {@link ProAct.Property} instance.
+	     * </p>
+	     *
+	     * @memberof ProAct.PropertyProvider
+	     * @static
+	     * @param {Object} object
+	     *      The object to provide a {@link ProAct.Property} instance for.
+	     * @param {String} property
+	     *      The field name of the <i>object</i> to turn into a {@link ProAct.Property}.
+	     * @param {String|Array} meta
+	     *      Meta information to be used for filtering and configuration of the {@link ProAct.Property} instance to be provided.
+	     * @return {ProAct.Property}
+	     *      A property provided by registered provider, or null if there is no compliant provider.
+	     */
+	    provide: function (object, property, meta) {
+	      var ln = providers.length,
+	          prop = null,
+	          provider = null,
+	          i;
+	
+	      for (i = 0; i < ln; i++) {
+	        provider = providers[i];
+	        if (provider.filter(object, property, meta)) {
+	          break;
+	        } else {
+	          provider = null;
+	        }
+	      }
+	
+	      if (provider) {
+	        prop = provider.provide(object, property, meta);
+	      }
+	
+	      return prop;
+	    }
+	  });
+	}(P));
+	
+	ProAct.PropertyProvider.prototype = {
+	
+	  /**
+	   * Reference to the constructor of this object.
+	   *
+	   * @memberof ProAct.PropertyProvider
+	   * @instance
+	   * @constant
+	   * @default ProAct.PropertyProvider
+	   */
+	  constructor: ProAct.PropertyProvider,
+	
+	  /**
+	   * Used to check if this {@link ProAct.PropertyProvider} is compliant with the field and meta data
+	   * to be used for creating a {@link ProAct.Property} instance with {@link ProAct.PropertyProvider#provide}.
+	   * <p>
+	   *  Abstract - must be implemented in an extender.
+	   * </p>
+	   *
+	   * @memberof ProAct.PropertyProvider
+	   * @abstract
+	   * @instance
+	   * @method filter
+	   * @param {Object} object
+	   *      The object to which a new {@link ProAct.Property} instance should be provided.
+	   * @param {String} property
+	   *      The field name of the <i>object</i> to turn into a {@link ProAct.Property}. Can be used in the filtering process.
+	   *      <p>
+	   *        For example field name beginning with foo. Can be turned into a FooProperty.
+	   *      </p>
+	   * @param {String|Array} meta
+	   *      Meta information to be used for filtering and configuration of the {@link ProAct.Property} instance to be provided.
+	   * @return {Boolean}
+	   *      If <i>this</i> provider is compliant with the passed arguments.
+	   */
+	  filter: function (object, property, meta) {
+	    throw new Error('Abstract! Implement!');
+	  },
+	
+	  /**
+	   * Provides an instance of {@link ProAct.Property}.
+	   * <p>
+	   *  It should be called only after <i>this</i> {@link ProAct.PropertyProvider#filter} method,
+	   *  called with the same arguments returns true.
+	   * </p>
+	   * <p>
+	   *  Abstract - must be implemented in an extender.
+	   * </p>
+	   *
+	   * @memberof ProAct.PropertyProvider
+	   * @abstract
+	   * @instance
+	   * @method provide
+	   * @param {Object} object
+	   *      The object to which a new {@link ProAct.Property} instance should be provided.
+	   * @param {String} property
+	   *      The field of the <i>object</i> to turn into a {@link ProAct.Property}. Can be used in the filtering process.
+	   * @param {String|Array} meta
+	   *      Meta information to be used for filtering and configuration of the {@link ProAct.Property} instance to be provided.
+	   * @return {ProAct.Property}
+	   *      A property provided by <i>this</i> provider.
+	   */
+	  provide: function (object, property, meta) {
+	    throw new Error('Abstract! Implement!');
 	  }
 	};
 	
-	P.U.ex(P.A, {
-	  Operations: {
-	    set: 0,
-	    add: 1,
-	    remove: 2,
-	    setLength: 3,
-	    reverse: 4,
-	    sort: 5,
-	    splice: 6,
+	/**
+	 * <p>
+	 *  Constructor for ProAct.NullPropertyProvider.
+	 * </p>
+	 * <p>
+	 *  Provides {@link ProAct.NullProperty} instances.
+	 * </p>
+	 * <p>
+	 *  ProAct.NullPropertyProvider is part of the properties module of ProAct.js.
+	 * </p>
+	 *
+	 * @class ProAct.NullPropertyProvider
+	 * @extends ProAct.PropertyProvider
+	 * @see {@link ProAct.NullProperty}
+	 */
+	ProAct.NullPropertyProvider = P.NPP = function () {
+	  P.PP.call(this);
+	};
 	
-	    isIndexOp: function (op) {
-	      return op === this.set || op === this.reverse || op === this.sort;
-	    }
+	ProAct.NullPropertyProvider.prototype = P.U.ex(Object.create(P.PP.prototype), {
+	
+	  /**
+	   * Reference to the constructor of this object.
+	   *
+	   * @memberof ProAct.NullPropertyProvider
+	   * @instance
+	   * @constant
+	   * @default ProAct.NullPropertyProvider
+	   */
+	  constructor: ProAct.NullPropertyProvider,
+	
+	  /**
+	   * Used to check if this {@link ProAct.NullPropertyProvider} is compliant with the field and meta data.
+	   *
+	   * @memberof ProAct.NullPropertyProvider
+	   * @instance
+	   * @method filter
+	   * @param {Object} object
+	   *      The object to which a new {@link ProAct.Property} instance should be provided.
+	   * @param {String} property
+	   *      The field name of the <i>object</i> to turn into a {@link ProAct.Property}. Can be used in the filtering process.
+	   * @param {String|Array} meta
+	   *      Meta information to be used for filtering and configuration of the {@link ProAct.Property} instance to be provided.
+	   * @return {Boolean}
+	   *      True if the value of <b>object[property]</b> is undefined or null.
+	   */
+	  filter: function (object, property, meta) {
+	    return object[property] === null || object[property] === undefined;
 	  },
-	  reFilter: function (original, filtered, filterArgs) {
-	    var oarr = filtered._array;
 	
-	    filtered._array = filter.apply(original._array, filterArgs);
-	    filtered.updateByDiff(oarr);
+	  /**
+	   * Provides an instance of {@link ProAct.NullProperty}.
+	   *
+	   * @memberof ProAct.NullPropertyProvider
+	   * @instance
+	   * @method provide
+	   * @param {Object} object
+	   *      The object to which a new {@link ProAct.NullProperty} instance should be provided.
+	   * @param {String} property
+	   *      The field of the <i>object</i> to turn into a {@link ProAct.NullProperty}.
+	   * @param {String|Array} meta
+	   *      Meta information to be used for filtering and configuration of the {@link ProAct.NullProperty} instance to be provided.
+	   * @return {ProAct.NullProperty}
+	   *      A {@link ProAct.NullProperty} instance provided by <i>this</i> provider.
+	   */
+	  provide: function (object, property, meta) {
+	    return new P.NP(object, property);
 	  }
 	});
-	pArrayOps = pArray.Operations;
 	
-	ProAct.Array.prototype = pArrayProto = P.U.ex(Object.create(arrayProto), {
-	  constructor: ProAct.Array,
-	  on: function (action, listener) {
-	    if (!P.U.isString(action)) {
-	      listener = action;
-	      action = 'change';
+	/**
+	 * <p>
+	 *  Constructor for ProAct.SimplePropertyProvider.
+	 * </p>
+	 * <p>
+	 *  Provides {@link ProAct.Property} instances for fields of simple types - strings, numbers, booleans.
+	 * </p>
+	 * <p>
+	 *  ProAct.SimplePropertyProvider is part of the properties module of ProAct.js.
+	 * </p>
+	 *
+	 * @class ProAct.SimplePropertyProvider
+	 * @extends ProAct.PropertyProvider
+	 * @see {@link ProAct.Property}
+	 */
+	ProAct.SimplePropertyProvider = P.SPP = function () {
+	  P.PP.call(this);
+	};
+	
+	ProAct.SimplePropertyProvider.prototype = P.U.ex(Object.create(P.PP.prototype), {
+	
+	  /**
+	   * Reference to the constructor of this object.
+	   *
+	   * @memberof ProAct.SimplePropertyProvider
+	   * @instance
+	   * @constant
+	   * @default ProAct.SimplePropertyProvider
+	   */
+	  constructor: ProAct.SimplePropertyProvider,
+	
+	  /**
+	   * Used to check if this {@link ProAct.SimplePropertyProvider} is compliant with the field and meta data.
+	   *
+	   * @memberof ProAct.SimplePropertyProvider
+	   * @instance
+	   * @method filter
+	   * @param {Object} object
+	   *      The object to which a new {@link ProAct.Property} instance should be provided.
+	   * @param {String} property
+	   *      The field name of the <i>object</i> to turn into a {@link ProAct.Property}. Can be used in the filtering process.
+	   * @param {String|Array} meta
+	   *      Meta information to be used for filtering and configuration of the {@link ProAct.Property} instance to be provided.
+	   * @return {Boolean}
+	   *      True if the value of <b>object[property]</b> not undefined or null as well as object, array ot function.
+	   */
+	  filter: function (object, property, meta) {
+	    var v = object[property];
+	    return v !== null && v !== undefined && !P.U.isFunction(v) && !P.U.isArrayObject(v) && !P.U.isObject(v);
+	  },
+	
+	  /**
+	   * Provides an instance of {@link ProAct.Property}.
+	   *
+	   * @memberof ProAct.SimplePropertyProvider
+	   * @instance
+	   * @method provide
+	   * @param {Object} object
+	   *      The object to which a new {@link ProAct.Property} instance should be provided.
+	   * @param {String} property
+	   *      The field of the <i>object</i> to turn into a {@link ProAct.Property}.
+	   * @param {String|Array} meta
+	   *      Meta information to be used for filtering and configuration of the {@link ProAct.Property} instance to be provided.
+	   * @return {ProAct.Property}
+	   *      A {@link ProAct.Property} instance provided by <i>this</i> provider.
+	   */
+	  provide: function (object, property, meta) {
+	    return new P.P(object, property);
+	  }
+	});
+	
+	/**
+	 * <p>
+	 *  Constructor for ProAct.AutoPropertyProvider.
+	 * </p>
+	 * <p>
+	 *  Provides {@link ProAct.AutoProperty} instances for fields pointing to functions.
+	 * </p>
+	 * <p>
+	 *  ProAct.AutoPropertyProvider is part of the properties module of ProAct.js.
+	 * </p>
+	 *
+	 * @class ProAct.AutoPropertyProvider
+	 * @extends ProAct.PropertyProvider
+	 * @see {@link ProAct.AutoProperty}
+	 */
+	ProAct.AutoPropertyProvider = P.FPP = function () {
+	  P.PP.call(this);
+	};
+	
+	ProAct.AutoPropertyProvider.prototype = P.U.ex(Object.create(P.PP.prototype), {
+	
+	  /**
+	   * Reference to the constructor of this object.
+	   *
+	   * @memberof ProAct.AutoPropertyProvider
+	   * @instance
+	   * @constant
+	   * @default ProAct.AutoPropertyProvider
+	   */
+	  constructor: ProAct.AutoPropertyProvider,
+	
+	  /**
+	   * Used to check if this {@link ProAct.AutoPropertyProvider} is compliant with the field and meta data.
+	   *
+	   * @memberof ProAct.AutoPropertyProvider
+	   * @instance
+	   * @method filter
+	   * @param {Object} object
+	   *      The object to which a new {@link ProAct.AutoProperty} instance should be provided.
+	   * @param {String} property
+	   *      The field name of the <i>object</i> to turn into a {@link ProAct.AutoProperty}.
+	   * @param {String|Array} meta
+	   *      Meta information to be used for filtering and configuration of the {@link ProAct.AutoProperty} instance to be provided.
+	   * @return {Boolean}
+	   *      True if the value of <b>object[property]</b> a function.
+	   */
+	  filter: function (object, property, meta) {
+	    return P.U.isFunction(object[property]);
+	  },
+	
+	  /**
+	   * Provides an instance of {@link ProAct.AutoProperty}.
+	   *
+	   * @memberof ProAct.AutoPropertyProvider
+	   * @instance
+	   * @method provide
+	   * @param {Object} object
+	   *      The object to which a new {@link ProAct.AutoProperty} instance should be provided.
+	   * @param {String} property
+	   *      The field of the <i>object</i> to turn into a {@link ProAct.AutoProperty}.
+	   * @param {String|Array} meta
+	   *      Meta information to be used for filtering and configuration of the {@link ProAct.AutoProperty} instance to be provided.
+	   * @return {ProAct.AutoProperty}
+	   *      A {@link ProAct.AutoProperty} instance provided by <i>this</i> provider.
+	   */
+	  provide: function (object, property, meta) {
+	    return new P.FP(object, property);
+	  }
+	});
+	
+	/**
+	 * <p>
+	 *  Constructor for ProAct.ArrayPropertyProvider.
+	 * </p>
+	 * <p>
+	 *  Provides {@link ProAct.ArrayProperty} instances for fields pointing to arrays.
+	 * </p>
+	 * <p>
+	 *  ProAct.ArrayPropertyProvider is part of the properties module of ProAct.js.
+	 * </p>
+	 *
+	 * @class ProAct.ArrayPropertyProvider
+	 * @extends ProAct.PropertyProvider
+	 * @see {@link ProAct.ArrayProperty}
+	 */
+	ProAct.ArrayPropertyProvider = P.APP = function () {
+	  P.PP.call(this);
+	};
+	
+	ProAct.ArrayPropertyProvider.prototype = P.U.ex(Object.create(P.PP.prototype), {
+	
+	  /**
+	   * Reference to the constructor of this object.
+	   *
+	   * @memberof ProAct.ArrayPropertyProvider
+	   * @instance
+	   * @constant
+	   * @default ProAct.ArrayPropertyProvider
+	   */
+	  constructor: ProAct.ArrayPropertyProvider,
+	
+	  /**
+	   * Used to check if this {@link ProAct.ArrayPropertyProvider} is compliant with the field and meta data.
+	   *
+	   * @memberof ProAct.ArrayPropertyProvider
+	   * @instance
+	   * @method filter
+	   * @param {Object} object
+	   *      The object to which a new {@link ProAct.ArrayProperty} instance should be provided.
+	   * @param {String} property
+	   *      The field name of the <i>object</i> to turn into a {@link ProAct.ArrayProperty}.
+	   * @param {String|Array} meta
+	   *      Meta information to be used for filtering and configuration of the {@link ProAct.ArrayProperty} instance to be provided.
+	   * @return {Boolean}
+	   *      True if the value of <b>object[property]</b> an array.
+	   */
+	  filter: function (object, property, meta) {
+	    return P.U.isArrayObject(object[property]);
+	  },
+	
+	  /**
+	   * Provides an instance of {@link ProAct.ArrayProperty}.
+	   *
+	   * @memberof ProAct.ArrayPropertyProvider
+	   * @instance
+	   * @method provide
+	   * @param {Object} object
+	   *      The object to which a new {@link ProAct.ArrayProperty} instance should be provided.
+	   * @param {String} property
+	   *      The field of the <i>object</i> to turn into a {@link ProAct.ArrayProperty}.
+	   * @param {String|Array} meta
+	   *      Meta information to be used for filtering and configuration of the {@link ProAct.ArrayProperty} instance to be provided.
+	   * @return {ProAct.ArrayProperty}
+	   *      A {@link ProAct.ArrayProperty} instance provided by <i>this</i> provider.
+	   */
+	  provide: function (object, property, meta) {
+	    return new P.AP(object, property);
+	  }
+	});
+	
+	/**
+	 * <p>
+	 *  Constructor for ProAct.ObjectPropertyProvider.
+	 * </p>
+	 * <p>
+	 *  Provides {@link ProAct.ObjectProperty} instances for fields pointing to objects, different from arrays or functions.
+	 * </p>
+	 * <p>
+	 *  ProAct.ObjectPropertyProvider is part of the properties module of ProAct.js.
+	 * </p>
+	 *
+	 * @class ProAct.ObjectPropertyProvider
+	 * @extends ProAct.PropertyProvider
+	 * @see {@link ProAct.ObjectProperty}
+	 */
+	ProAct.ObjectPropertyProvider = P.OPP = function () {
+	  P.PP.call(this);
+	};
+	
+	ProAct.ObjectPropertyProvider.prototype = P.U.ex(Object.create(P.PP.prototype), {
+	
+	  /**
+	   * Reference to the constructor of this object.
+	   *
+	   * @memberof ProAct.ObjectPropertyProvider
+	   * @instance
+	   * @constant
+	   * @default ProAct.ObjectPropertyProvider
+	   */
+	  constructor: ProAct.ObjectPropertyProvider,
+	
+	  /**
+	   * Used to check if this {@link ProAct.ObjectPropertyProvider} is compliant with the field and meta data.
+	   *
+	   * @memberof ProAct.ObjectPropertyProvider
+	   * @instance
+	   * @method filter
+	   * @param {Object} object
+	   *      The object to which a new {@link ProAct.ObjectProperty} instance should be provided.
+	   * @param {String} property
+	   *      The field name of the <i>object</i> to turn into a {@link ProAct.ObjectProperty}.
+	   * @param {String|Array} meta
+	   *      Meta information to be used for filtering and configuration of the {@link ProAct.ObjectProperty} instance to be provided.
+	   * @return {Boolean}
+	   *      True if the value of <b>object[property]</b> an object, different from array or function.
+	   */
+	  filter: function (object, property, meta) {
+	    return P.U.isObject(object[property]);
+	  },
+	
+	  /**
+	   * Provides an instance of {@link ProAct.ObjectProperty}.
+	   *
+	   * @memberof ProAct.ObjectPropertyProvider
+	   * @instance
+	   * @method provide
+	   * @param {Object} object
+	   *      The object to which a new {@link ProAct.ObjectProperty} instance should be provided.
+	   * @param {String} property
+	   *      The field of the <i>object</i> to turn into a {@link ProAct.ObjectProperty}.
+	   * @param {String|Array} meta
+	   *      Meta information to be used for filtering and configuration of the {@link ProAct.ObjectProperty} instance to be provided.
+	   * @return {ProAct.ObjectProperty}
+	   *      A {@link ProAct.ObjectProperty} instance provided by <i>this</i> provider.
+	   */
+	  provide: function (object, property, meta) {
+	    return new P.OP(object, property);
+	  }
+	});
+	
+	/**
+	 * <p>
+	 *  Constructor for ProAct.ProxyPropertyProvider.
+	 * </p>
+	 * <p>
+	 *  Provides {@link ProAct.ProxyProperty} instances for fields that should point to properties.
+	 * </p>
+	 * <p>
+	 *  ProAct.ProxyPropertyProvider is part of the properties module of ProAct.js.
+	 * </p>
+	 *
+	 * @class ProAct.ProxyPropertyProvider
+	 * @extends ProAct.PropertyProvider
+	 * @see {@link ProAct.ProxyProperty}
+	 */
+	ProAct.ProxyPropertyProvider = P.PXPP = function () {
+	  P.PP.call(this);
+	};
+	
+	ProAct.ProxyPropertyProvider.prototype = P.U.ex(Object.create(P.PP.prototype), {
+	
+	  /**
+	   * Reference to the constructor of this object.
+	   *
+	   * @memberof ProAct.ProxyPropertyProvider
+	   * @instance
+	   * @constant
+	   * @default ProAct.ProxyPropertyProvider
+	   */
+	  constructor: ProAct.ProxyPropertyProvider,
+	
+	  /**
+	   * Used to check if this {@link ProAct.ProxyPropertyProvider} is compliant with the meta data.
+	   *
+	   * @memberof ProAct.ProxyPropertyProvider
+	   * @instance
+	   * @method filter
+	   * @param {Object} object
+	   *      The object to which a new {@link ProAct.ProxyProperty} instance should be provided.
+	   * @param {String} property
+	   *      The field name of the <i>object</i> to turn into a {@link ProAct.ProxyProperty}.
+	   * @param {ProAct.Property} meta
+	   *      If the meta is present and of type {@link ProAct.Property}, it becomes the target property of the
+	   *      {@link ProAct.ProxyProperty} that will be provided.
+	   * @return {Boolean}
+	   *      True if <i>meta</i> argument is present and is instance of {@link ProAct.Property}.
+	   */
+	  filter: function (object, property, meta) {
+	    if (!meta || !(meta instanceof ProAct.Property)) {
+	      return false;
 	    }
 	
-	    if (action === 'change') {
-	      this.lengthListeners.push(listener);
-	      this.indexListeners.push(listener);
-	    } else if (action === 'lengthChange') {
-	      this.lengthListeners.push(listener);
-	    } else if (action === 'indexChange') {
-	      this.indexListeners.push(listener);
+	    return meta instanceof ProAct.Property;
+	  },
+	
+	  /**
+	   * Provides an instance of {@link ProAct.ProxyProperty}.
+	   *
+	   * @memberof ProAct.ProxyPropertyProvider
+	   * @instance
+	   * @method provide
+	   * @param {Object} object
+	   *      The object to which a new {@link ProAct.ProxyProperty} instance should be provided.
+	   * @param {String} property
+	   *      The field of the <i>object</i> to turn into a {@link ProAct.ProxyProperty}.
+	   * @param {ProAct.Property} meta
+	   *      The target {@link ProAct.Property} of the {@link ProAct.ProxyProperty} to be created.
+	   * @return {ProAct.ProxyProperty}
+	   *      A {@link ProAct.ProxyProperty} instance provided by <i>this</i> provider.
+	   */
+	  provide: function (object, property, meta) {
+	    return new P.PXP(object, property, meta);
+	  }
+	});
+	
+	P.PP.registerProvider(new P.ProxyPropertyProvider());
+	P.PP.registerProvider(new P.NullPropertyProvider());
+	P.PP.registerProvider(new P.SimplePropertyProvider());
+	P.PP.registerProvider(new P.AutoPropertyProvider());
+	P.PP.registerProvider(new P.ArrayPropertyProvider());
+	P.PP.registerProvider(new P.ObjectPropertyProvider());
+	
+	/**
+	 * <p>
+	 *  Constructs a ProAct.Core. The core is an ProAct.Observable which can be used to manage other {@link ProAct.Observable} objects or shells arround ProAct.Observable objects.
+	 * </p>
+	 * <p>
+	 *  For example a shell can be a plain old JavaScript object; The core will be in charge of creating {@link ProAct.Property} for every field of the shell.
+	 * </p>
+	 * <p>
+	 *  The idea of the core is to inject observer-observable capabilities in normal objects.
+	 * </p>
+	 * <p>
+	 *  ProAct.Core is an abstract class, that has a {@link ProAct.States} state. Its initializing logic should be implemented in an extender.
+	 * </p>
+	 * <p>
+	 *  ProAct.Core is used as a parent for the {@link ProAct.Observable}s it manages, so it can be passed as a listener object - defines a <i>call method</i>.
+	 * </p>
+	 * <p>
+	 *  ProAct.Core is part of the core module of ProAct.js.
+	 * </p>
+	 *
+	 * @class ProAct.Core
+	 * @extends ProAct.Observable
+	 * @param {Object} shell
+	 *      The shell arrounf this core. This ProAct.Core manages observer-observable behavior for this <i>shell</i> object.
+	 * @param {Object} meta
+	 *      Optional meta data to be used to define the observer-observable behavior of the <i>shell</i>.
+	 * @see {@link ProAct.States}
+	 */
+	ProAct.Core = P.C = function (shell, meta) {
+	  this.shell = shell;
+	  this.state = P.States.init;
+	  this.meta = meta || {};
+	
+	  P.Observable.call(this); // Super!
+	};
+	
+	ProAct.Core.prototype = P.U.ex(Object.create(P.Observable.prototype), {
+	
+	  /**
+	   * Reference to the constructor of this object.
+	   *
+	   * @memberof ProAct.Core
+	   * @instance
+	   * @constant
+	   * @default ProAct.Core
+	   */
+	  constructor: ProAct.Core,
+	
+	  /**
+	   * A function to be set to the <i>shell</i> object's <b>p</b> field (if it is configured in @{link ProAct.Configuration}).
+	   * <p>
+	   *  This function is the link to the this ProAct.Core of the <i>shell</i>. It can be overridden to return different aspects of
+	   *  the core depending on parameters passed.
+	   * </p>
+	   *
+	   * @memberof ProAct.Core
+	   * @instance
+	   * @method value
+	   * @default {this}
+	   * @return {Object}
+	   *      Some aspects of <i>this</i> ProAct.Core.
+	   */
+	  value: function () {
+	    return this;
+	  },
+	
+	  /**
+	   * Initializes <i>this</i> ProAct.Core. This method should be called when the core should become active.
+	   * <p>
+	   *  The main idea of the method is to change the {@link ProAct.States} state of <i>this</i> to {@link ProAct.States.ready}, by
+	   *  settuping everything needed by the shell to has observer-observable logic.
+	   * </p>
+	   * <p>
+	   *  The abstract {@link ProAct.Core#setup} method is called for the actual setup. If it throws an error, <i>this</i> state
+	   *  is set to {@link ProAct.States.error} and the core stays inactive.
+	   * </p>
+	   *
+	   * @memberof ProAct.Core
+	   * @instance
+	   * @method prob
+	   * @return {ProAct.Core}
+	   *      <i>this</i>
+	   * @see {@link ProAct.Core#setup}
+	   * @see {@link ProAct.States}
+	   */
+	  prob: function () {
+	    var self = this,
+	        conf = ProAct.Configuration,
+	        keyprops = conf.keyprops,
+	        keypropList = conf.keypropList;
+	
+	    try {
+	      this.setup();
+	
+	      if (keyprops && keypropList.indexOf('p') !== -1) {
+	        P.U.defValProp(this.shell, 'p', false, false, false, P.U.bind(this, this.value));
+	      }
+	
+	      this.state = P.States.ready;
+	    } catch (e) {
+	      this.state = P.States.error;
+	      throw e;
+	    }
+	
+	    return this;
+	  },
+	
+	  /**
+	   * Abstract method called by {@link ProAct.Core#prob} for the actual initialization of <i>this</i> core.
+	   *
+	   * @memberof ProAct.Core
+	   * @instance
+	   * @abstract
+	   * @method setup
+	   * @see {@link ProAct.Core#prob}
+	   */
+	  setup: function () {
+	    throw Error('Abstract, implement!');
+	  },
+	
+	  /**
+	   * ProAct.Core can be used as a parent listener for other {@link ProAct.Observable}s, so it defines the <i>call</i> method.
+	   * <p>
+	   *  By default this method calls {@link ProAct.Observable#update} of <i>this</i> with the passed <i>event</i>.
+	   * </p>
+	   *
+	   * @memberof ProAct.Core
+	   * @instance
+	   * @method call
+	   * @param {Object} event
+	   *      The value/event that this listener is notified for.
+	   * @see {@link ProAct.Observable#update}
+	   */
+	  call: function (event) {
+	    this.update(event);
+	  }
+	});
+	
+	
+	/**
+	 * <p>
+	 *  Constructs a ProAct.ObjectCore. ProAct.ObjectCore is a {@link ProAct.Core} that manages all the {@link ProAct.Property} instances for a reactive ProAct.js object.
+	 * </p>
+	 * <p>
+	 *  It is responsible for all the {@link ProAct.Property} instances as well initializing them and deciding which type of property corresponds to which field.
+	 * </p>
+	 * <p>
+	 *  ProAct.ObjectCore is part of the properties module of ProAct.js.
+	 * </p>
+	 *
+	 * @class ProAct.ObjectCore
+	 * @extends ProAct.Core
+	 * @param {Object} object
+	 *      The shell objec arround this core. This should be plain JavaScript object.
+	 * @param {Object} meta
+	 *      Optional meta data to be used to define the observer-observable behavior of the <i>object</i>. For example transformations for its properties.
+	 * @see {@link ProAct.Property}
+	 */
+	ProAct.ObjectCore = P.OC = function (object, meta) {
+	  this.properties = {};
+	
+	  P.C.call(this, object, meta); // Super!
+	};
+	
+	ProAct.ObjectCore.prototype = P.U.ex(Object.create(P.C.prototype), {
+	
+	  /**
+	   * Reference to the constructor of this object.
+	   *
+	   * @memberof ProAct.ObjectCore
+	   * @instance
+	   * @constant
+	   * @default ProAct.ObjectCore
+	   */
+	  constructor: ProAct.ObjectCore,
+	
+	  /**
+	   * A function to be set to the <i>shell</i> object's <b>p</b> field (if it is configured in @{link ProAct.Configuration}).
+	   * <p>
+	   *  It uses its <i>p</i> argument if it is string to return the right {@link ProAct.Property} for passed field name.
+	   * </p>
+	   * <p>
+	   *  If the <i>p</i> argument is <b>*</b> or empty <i>this</i> ProAct.ObjectCore instance is returned.
+	   * </p>
+	   *
+	   * @memberof ProAct.ObjectCore
+	   * @instance
+	   * @method value
+	   * @param {String} p
+	   *      The name of the managed {@link ProAct.Property} to retrieve. It can be set to <b>*</b> or skipped for <i>this</i> itself to be retrieved.
+	   * @return {Object}
+	   *      Managed {@link ProAct.Property} instance with field name equal to the passed <i>p</i> parameter or <i>this</i>.
+	   * @see {@link ProAct.Property}
+	   */
+	  value: function (p) {
+	    if (!p || p === '*') {
+	      return this;
+	    }
+	
+	    return this.properties[p];
+	  },
+	
+	  /**
+	   * Initializes all the {@link ProAct.Property} instances for the <i>shell</i>of <i>this</i> ProAct.ObjectCore.
+	   * <p>
+	   *  Using the types of the fields of the <i>shell</i> object the right {@link ProAct.Property} instances are created and stored
+	   *  in <i>this</i> using {@link ProAct.ObjectCore#makeProp}.
+	   * </p>
+	   *
+	   * @memberof ProAct.ObjectCore
+	   * @instance
+	   * @method setup
+	   * @see {@link ProAct.ObjectCore#makeProp}
+	   */
+	  setup: function () {
+	    var object = this.shell,
+	        property;
+	
+	    for (property in object) {
+	      this.makeProp(property, null, this.meta[property]);
 	    }
 	  },
-	  off: function (action, listener) {
-	    if (!P.U.isString(action)) {
-	      listener = action;
-	      action = 'change';
+	
+	  /**
+	   * Creates a {@link ProAct.Property} instance for <i>this</i>'s shell.
+	   *
+	   * @memberof ProAct.ObjectCore
+	   * @instance
+	   * @method makeProp
+	   * @param {String} property
+	   *      The name of the property, the name of the field in the <i>shell</i>.
+	   * @param {Array} listeners
+	   *      Initial listeners for 'change' of the property, can be skipped.
+	   * @param {String|Array} meta
+	   *      Meta information for the property to create, for example if the meta contains 'noprop', no property is created,
+	   *      and the initial value of the field is preserved. The meta is in format of the {@link ProAct.DSL}.
+	   * @return {ProAct.Property}
+	   *      The newly crated and stored in <i>this</i> property, or null if no property was created.
+	   * @throws {Error}
+	   *      If there is no field defined in the <i>shell</i> named as the passed <i>property</i>.
+	   * @see {@link ProAct.ObjectCore#setup}
+	   * @see {@link ProAct.DSL}
+	   */
+	  makeProp: function (property, listeners, meta) {
+	    var object = this.shell,
+	        conf = ProAct.Configuration,
+	        keyprops = conf.keyprops,
+	        keypropList = conf.keypropList,
+	        isF = P.U.isFunction,
+	        isA = P.U.isArrayObject,
+	        isO = P.U.isObject,
+	        result;
+	
+	    if (meta && (meta === 'noprop' || (meta.indexOf && meta.indexOf('noprop') >= 0))) {
+	      return null;
 	    }
 	
-	    if (action === 'change') {
-	      P.U.remove(listener, this.lengthListeners);
-	      P.U.remove(listener, this.indexListeners);
-	    } else if (action === 'lengthChange') {
-	      P.U.remove(listener, this.lengthListeners);
-	    } else if (action === 'indexChange') {
-	      P.U.remove(listener, this.indexListeners);
+	    if (keyprops && keypropList.indexOf(property) !== -1) {
+	      throw Error('The property name ' + property + ' is a key word for pro objects! Objects passed to ProAct.prob can not contain properties named as keyword properties.');
+	      return null;
 	    }
+	
+	    if (object.hasOwnProperty(property)) {
+	      result = P.PP.provide(object, property, meta);
+	    }
+	
+	    if (!result) {
+	      return null;
+	    }
+	
+	    if (listeners) {
+	      this.properties[property].listeners.change = this.properties[property].listeners.change.concat(listeners);
+	    }
+	
+	    if (meta && P.registry) {
+	      if (!P.U.isArray(meta)) {
+	        meta = [meta];
+	      }
+	
+	      P.registry.setup.apply(P.registry, [result].concat(meta));
+	    }
+	
+	    return result;
 	  },
+	
+	  /**
+	   * Sets the value of a managed property. The interesting thing here is that
+	   * if the property does not exist this method creates it and stores a new field in the <i>shell</i> object
+	   * with the passed <i>value</i>.
+	   * <p>
+	   *  The new field is reactive.
+	   * </p>
+	   *
+	   * @memberof ProAct.ObjectCore
+	   * @instance
+	   * @method set
+	   * @param {String} property
+	   *      The name of the property to update/create.
+	   * @param {Object} value
+	   *      The value of the property to be set.
+	   * @see {@link ProAct.ObjectCore#makeProp}
+	   */
+	  set: function (property, value) {
+	    var object = this.shell;
+	
+	    object[property] = value;
+	    if (this.properties[property]) {
+	      return;
+	    }
+	
+	    this.makeProp(property);
+	  }
+	});
+	
+	/**
+	 * <p>
+	 *  Constructs a ProAct.ArrayCore. ProAct.ArrayCore is a {@link ProAct.Core} that manages all the updates/listeners for an ProAct.Array.
+	 * </p>
+	 * <p>
+	 *  It is responsible for updating length or index listeners and adding the right ones on read.
+	 * </p>
+	 * <p>
+	 *  ProAct.ArrayCore is part of the arrays module of ProAct.js.
+	 * </p>
+	 *
+	 * @class ProAct.ArrayCore
+	 * @extends ProAct.Core
+	 * @param {Object} array
+	 *      The shell {@link ProAct.Array} arround this core.
+	 * @param {Object} meta
+	 *      Optional meta data to be used to define the observer-observable behavior of the <i>array</i>.
+	 * @see {@link ProAct.Array}
+	 */
+	ProAct.ArrayCore = P.AC = function (array, meta) {
+	  P.C.call(this, array, meta); // Super!
+	
+	  this.lastIndexCaller = null;
+	  this.lastLengthCaller = null;
+	};
+	
+	ProAct.ArrayCore.prototype = P.U.ex(Object.create(P.C.prototype), {
+	
+	  /**
+	   * Reference to the constructor of this object.
+	   *
+	   * @memberof ProAct.ArrayCore
+	   * @instance
+	   * @constant
+	   * @default ProAct.ArrayCore
+	   */
+	  constructor: ProAct.ArrayCore,
+	
+	  /**
+	   * Generates the initial listeners object.
+	   * It is used for resetting all the listeners too.
+	   * <p>
+	   *  For ProAct.ArrayCore the default listeners object is
+	   *  <pre>
+	   *    {
+	   *      index: [],
+	   *      length: []
+	   *    }
+	   *  </pre>
+	   * </p>
+	   *
+	   * @memberof ProAct.ArrayCore
+	   * @instance
+	   * @method defaultListeners
+	   * @return {Object}
+	   *      A map containing the default listeners collections (index and length type of listeners).
+	   */
+	  defaultListeners: function () {
+	    return {
+	      index: [],
+	      length: []
+	    };
+	  },
+	
+	  /**
+	   * A list of actions or action to be used when no action is passed for the methods working with actions.
+	   * <p>
+	   *  For ProAct.ArrayCore these are both 'length' and 'index' actions.
+	   * </p>
+	   *
+	   * @memberof ProAct.ArrayCore
+	   * @instance
+	   * @method defaultActions
+	   * @default ['length', 'index']
+	   * @return {Array}
+	   *      The actions to be used if no actions are provided to action related methods,
+	   *      like {@link ProAct.Observable#on}, {@link ProAct.Observable#off}, {@link ProAct.Observable#update}, {@link ProAct.Observable#willUpdate}.
+	   */
+	  defaultActions: function () {
+	    return ['length', 'index'];
+	  },
+	
+	  /**
+	   * Creates the <i>event</i> to be send to the listeners on update.
+	   * <p>
+	   *  By default this method returns {@link ProAct.Event.Types.array} event.
+	   * </p>
+	   *
+	   * @memberof ProAct.ArrayCore
+	   * @instance
+	   * @method makeEvent
+	   * @default {ProAct.Event} with type {@link ProAct.Event.Types.array}
+	   * @param {ProAct.Event} source
+	   *      The source event of the event. It can be null
+	   * @param {Array} eventData
+	   *      An array of four elements describing the changes:
+	   *      <ol>
+	   *        <li>{@link ProAct.Array.Operations} member defining the changing operation - for example {@link ProAct.Array.Operations.add}</li>
+	   *        <li>The index on which the chage occures.</li>
+	   *        <li>The old values beginning from the index.</li>
+	   *        <li>The new values beginning from the index.</li>
+	   *      </ol>
+	   * @return {ProAct.Event}
+	   *      The event.
+	   */
+	  makeEvent: function (source, eventData) {
+	    var op = eventData[0],
+	        ind = eventData[1],
+	        oldVal = eventData[2],
+	        newVal = eventData[3];
+	
+	    return new P.E(source, this.shell, P.E.Types.array, op, ind, oldVal, newVal);
+	  },
+	
+	  /**
+	   * Uses {@link ProAct.currentCaller} to automatically add a new listener to this property if the caller is set.
+	   * <p>
+	   *  This method is used by the index getters or the length getter to make every reader of the length/index a listener to it.
+	   * </p>
+	   *
+	   * @memberof ProAct.ArrayCore
+	   * @instance
+	   * @method addCaller
+	   * @param {String} type
+	   *      If the caller should be added as an 'index' listener or a 'length' listener. If skipped or null it is added as both.
+	   */
 	  addCaller: function (type) {
 	    if (!type) {
 	      this.addCaller('index');
 	      this.addCaller('length');
 	      return;
 	    }
+	
 	    var caller = P.currentCaller,
 	        capType = type.charAt(0).toUpperCase() + type.slice(1),
 	        lastCallerField = 'last' + capType + 'Caller',
-	        lastCaller = this[lastCallerField],
-	        listeners = this[type + 'Listeners'];
+	        lastCaller = this[lastCallerField];
 	
-	    if (caller && lastCaller !== caller && !P.U.contains(listeners, caller)) {
-	      this.on(type + 'Change', caller);
+	    if (caller && lastCaller !== caller) {
+	      this.on(type, caller);
 	      this[lastCallerField] = caller;
 	    }
 	  },
+	
+	  /**
+	   * Special update method for updating listeners after a {@link ProAct.Array#splice} call.
+	   * <p>
+	   *  Depending on the changes the index listeners, the length listeners or both can be notified.
+	   * </p>
+	   *
+	   * @memberof ProAct.ArrayCore
+	   * @instance
+	   * @method updateSplice
+	   * @param {Number} index
+	   *      The index of the splice operation.
+	   * @param {Array} spliced
+	   *      A list of the deleted items. Can be empty.
+	   * @param {Array} newItems
+	   *      A list of the newly added items. Can be empty.
+	   * @return {ProAct.ArrayCore}
+	   *      <i>this</i>
+	   * @see {@link ProAct.Observable#update}
+	   * @see {@link ProAct.Array#splice}
+	   */
+	  updateSplice: function (index, spliced, newItems) {
+	    var actions, op = pArrayOps.splice;
+	
+	    if (!spliced || !newItems || (spliced.length === 0 && newItems.length === 0)) {
+	      return;
+	    }
+	
+	    if (spliced.length === newItems.length) {
+	      actions = 'index';
+	    } else if (!newItems.length || !spliced.length) {
+	      actions = 'length';
+	    }
+	
+	    return this.update(null, actions, [op, index, spliced, newItems]);
+	  },
+	
+	  /**
+	   * Special update method for updating listeners by comparrison to another array.
+	   * <p>
+	   *  For every difference between <i>this shell</i>'s array and the passed one, there will be listeners notification.
+	   * </p>
+	   *
+	   * @memberof ProAct.ArrayCore
+	   * @instance
+	   * @method updateByDiff
+	   * @param {Array} array
+	   *      The array to compare to.
+	   * @return {ProAct.ArrayCore}
+	   *      <i>this</i>
+	   * @see {@link ProAct.Observable#update}
+	   * @see {@link ProAct.Utils.diff}
+	   */
+	  updateByDiff: function (array) {
+	    var j, diff = P.U.diff(array, this.shell._array), cdiff;
+	
+	    for (j in diff) {
+	      cdiff = diff[j];
+	      if (cdiff) {
+	        this.updateSplice(j, cdiff.o, cdiff.n);
+	      }
+	    }
+	
+	    return this;
+	  },
+	
+	  /**
+	   * Initializes all the index accessors and the length accessor for <i>this's shell array</i>.
+	   * <p>
+	   *  For the length on every read, the {@link ProAct.currentCaller} is added as a 'length' listener.
+	   * </p>
+	   * <p>
+	   *  For every index on every read, the {@link ProAct.currentCaller} is added as an 'index' listener.
+	   *  Listener accessors are defined using {@link ProAct.ArrayCore#defineIndexProp}.
+	   * </p>
+	   * <p>
+	   *  {@link ProAct.ArrayCore#addCaller} is used to retrieve the current caller and add it as the right listener.
+	   * </p>
+	   * <p>
+	   *  Setting values for an index or the length updates the right listeners.
+	   * </p>
+	   *
+	   * @memberof ProAct.ArrayCore
+	   * @instance
+	   * @method setup
+	   * @see {@link ProAct.ArrayCore#addCaller}
+	   * @see {@link ProAct.ArrayCore#defineIndexProp}
+	   * @see {@link ProAct.currentCaller}
+	   */
+	  setup: function () {
+	    var self = this,
+	        array = this.shell,
+	        ln = array._array.length,
+	        getLength, setLength, oldLength, i;
+	
+	    for (i = 0; i < ln; i++) {
+	      this.defineIndexProp(i);
+	    }
+	
+	    getLength = function () {
+	      self.addCaller('length');
+	
+	      return array._array.length;
+	    };
+	
+	    setLength = function (newLength) {
+	      if (array._array.length === newLength) {
+	        return;
+	      }
+	
+	      oldLength = array._array.length;
+	      array._array.length = newLength;
+	
+	      self.update(null, 'length', [pArrayOps.setLength, -1, oldLength, newLength]);
+	
+	      return newLength;
+	    };
+	
+	    Object.defineProperty(array, 'length', {
+	      configurable: false,
+	      enumerable: true,
+	      get: getLength,
+	      set: setLength
+	    });
+	  },
+	
+	  /**
+	   * Defines accessors for index of <i>this' shell array</i>.
+	   * <p>
+	   *  For an index on every read, the {@link ProAct.currentCaller} is added as an 'index' listener.
+	   * </p>
+	   * <p>
+	   *  {@link ProAct.ArrayCore#addCaller} is used to retrieve the current caller and add it as the right listener.
+	   * </p>
+	   * <p>
+	   *  Setting values for an index updates the 'index' listeners.
+	   * </p>
+	   * <p>
+	   *  If on the index is reciding an array or an object, it is turned to reactive object/array.
+	   * </p>
+	   *
+	   * @memberof ProAct.ArrayCore
+	   * @instance
+	   * @method defineIndexProp
+	   * @param {Number} i
+	   *      The index to define accessor for.
+	   * @see {@link ProAct.ArrayCore#addCaller}
+	   * @see {@link ProAct.currentCaller}
+	   */
 	  defineIndexProp: function (i) {
-	    var proArray = this,
+	    var self = this,
+	        proArray = this.shell,
 	        array = proArray._array,
 	        oldVal,
 	        isA = P.U.isArray,
@@ -3173,11 +5484,11 @@
 	      new P.ObjectProperty(array, i);
 	    }
 	
-	    Object.defineProperty(this, i, {
+	    Object.defineProperty(proArray, i, {
 	      enumerable: true,
 	      configurable: true,
 	      get: function () {
-	        proArray.addCaller('index');
+	        self.addCaller('index');
 	
 	        return array[i];
 	      },
@@ -3189,85 +5500,210 @@
 	        oldVal = array[i];
 	        array[i] = newVal;
 	
-	        proArray.update(pArrayOps.set, i, oldVal, newVal);
+	        self.update(null, 'index', [pArrayOps.set, i, oldVal, newVal]);
 	      }
 	    });
-	  },
-	  makeEvent: function (op, ind, oldVal, newVal, source) {
-	    return new P.Event(source, this,
-	                         P.Event.Types.array, op, ind, oldVal, newVal);
-	  },
-	  willUpdate: function (op, ind, oldVal, newVal) {
-	    var listeners = pArrayOps.isIndexOp(op) ? this.indexListeners : this.lengthListeners;
+	  }
+	});
 	
-	    this.willUpdateListeners(listeners, op, ind, oldVal, newVal);
+	/**
+	 * Creates a wrapper around a plain JavaScript array that is capable of tracking changes on the array and notifying listeners.
+	 * <p>
+	 *  It has a {@link ProAct.ArrayCore} which it uses to observe the array for changes or to update the array on changes.
+	 * </p>
+	 * <p>
+	 *  ProAct.Array is array-like object, it has all the methods defined in the JavaScript Array class, length property and indices.
+	 * </p>
+	 * <p>
+	 *  ProAct.Array is part of the arrays module of ProAct.js.
+	 * </p>
+	 *
+	 * @class ProAct.Array
+	 * @extends Array
+	 * @param [...]
+	 *      I can take an array as a parameter and it becomes reactive wrapper around it.
+	 *      It can take a list of arguments which become the wrapped array.
+	 *      If nothing is passed it becomes wrapper arround an empty array.
+	 * @see {@link ProAct.ArrayCore}
+	 */
+	ProAct.Array = P.A = pArray = function () {
+	  var self = this,
+	      getLength, setLength, oldLength,
+	      arr, core;
+	
+	  // Setup _array:
+	  if (arguments.length === 0) {
+	    arr = [];
+	  } else if (arguments.length === 1 && P.U.isArray(arguments[0])) {
+	    arr = arguments[0];
+	  } else {
+	    arr = slice.call(arguments);
+	  }
+	
+	  P.U.defValProp(this, '_array', false, false, true, arr);
+	
+	  // Setup core:
+	  core = new P.AC(this);
+	  P.U.defValProp(this, '__pro__', false, false, false, core);
+	  P.U.defValProp(this, 'core', false, false, false, core);
+	  core.prob();
+	};
+	
+	P.U.ex(P.A, {
+	
+	  /**
+	   * Defines a set of the possible operations over an array.
+	   *
+	   * @namespace ProAct.Array.Operations
+	   */
+	  Operations: {
+	
+	    /**
+	     * Represents setting a value to an index of an array.
+	     * <pre>
+	     *  array[3] = 12;
+	     * </pre>
+	     *
+	     * @memberof ProAct.Array.Operations
+	     * @static
+	     * @constant
+	     */
+	    set: 0,
+	
+	    /**
+	     * Represents adding values to array.
+	     * <pre>
+	     *  array.push(12);
+	     *  array.unshift(12);
+	     * </pre>
+	     *
+	     * @memberof ProAct.Array.Operations
+	     * @static
+	     * @constant
+	     */
+	    add: 1,
+	
+	    /**
+	     * Represents removing values from array.
+	     * <pre>
+	     *  array.pop();
+	     *  array.shift();
+	     * </pre>
+	     *
+	     * @memberof ProAct.Array.Operations
+	     * @static
+	     * @constant
+	     */
+	    remove: 2,
+	
+	    /**
+	     * Represents setting the length of an array.
+	     * <pre>
+	     *  array.length = 5;
+	     * </pre>
+	     *
+	     * @memberof ProAct.Array.Operations
+	     * @static
+	     * @constant
+	     */
+	    setLength: 3,
+	
+	    /**
+	     * Represents reversing the element order in an array.
+	     * <pre>
+	     *  array.reverse();
+	     * </pre>
+	     *
+	     * @memberof ProAct.Array.Operations
+	     * @static
+	     * @constant
+	     */
+	    reverse: 4,
+	
+	    /**
+	     * Represents sorting the elements in an array.
+	     * <pre>
+	     *  array.sort();
+	     * </pre>
+	     *
+	     * @memberof ProAct.Array.Operations
+	     * @static
+	     * @constant
+	     */
+	    sort: 5,
+	
+	    /**
+	     * Represents the powerful <i>splice</i> operation.
+	     * <pre>
+	     *  array.splice(2, 3, 4, 15, 6);
+	     * </pre>
+	     *
+	     * @memberof ProAct.Array.Operations
+	     * @static
+	     * @constant
+	     */
+	    splice: 6,
 	  },
-	  update: function (op, ind, oldVal, newVal) {
-	    var _this = this;
-	    if (P.flow.isRunning()) {
-	      this.willUpdate(op, ind, oldVal, newVal);
-	    } else {
-	      P.flow.run(function () {
-	        _this.willUpdate(op, ind, oldVal, newVal);
-	      });
-	    }
-	  },
-	  willUpdateSplice: function (index, spliced, newItems) {
-	    var listeners, op = pArrayOps.splice;
 	
-	    if (!spliced || !newItems || (spliced.length === 0 && newItems.length === 0)) {
-	      return;
-	    }
+	  /**
+	   * A helper method for filtering an array and notifying the right listeners of the filtered result.
+	   * <p>
+	   *  This is used if there is an ProAct.Array created by filtering another ProAct.Array. If the original is
+	   *  changed, the filtered array should be changed in some cases. So refilter does this - changes the dependent filtered array, using
+	   *  {@link ProAct.ArrayCore#updateByDiff}.
+	   * </p>
+	   *
+	   * @memberof ProAct.Array
+	   * @static
+	   * @param {ProAct.Array} original
+	   *      The original array to filter by.
+	   * @param {ProAct.Array} filtered
+	   *      The array to be filtered - changed by a filter function, applied on the original.
+	   * @param {Array} filterArgs
+	   *      Arguments of the filtering - filtering function and data.
+	   * @see {@link ProAct.ArrayCore#updateByDiff}
+	   */
+	  reFilter: function (original, filtered, filterArgs) {
+	    var oarr = filtered._array;
 	
-	    if (spliced.length === newItems.length) {
-	      listeners = this.indexListeners;
-	    } else if (!newItems.length || !spliced.length) {
-	      listeners = this.lengthListeners;
-	    } else {
-	      listeners = this.lengthListeners.concat(this.indexListeners);
-	    }
+	    filtered._array = filter.apply(original._array, filterArgs);
+	    filtered.core.updateByDiff(oarr);
+	  }
+	});
+	pArrayOps = pArray.Operations;
 	
-	    this.willUpdateListeners(listeners, op, index, spliced, newItems);
-	  },
-	  updateSplice: function (index, sliced, newItems) {
-	    var _this = this;
-	    if (P.flow.isRunning()) {
-	      this.willUpdateSplice(index, sliced, newItems);
-	    } else {
-	      P.flow.run(function () {
-	        _this.willUpdateSplice(index, sliced, newItems);
-	      });
-	    }
-	  },
-	  willUpdateListeners: function (listeners, op, ind, oldVal, newVal) {
-	    var length = listeners.length, i, listener,
-	        event = this.makeEvent(op, ind, oldVal, newVal);
+	ProAct.Array.prototype = pArrayProto = P.U.ex(Object.create(arrayProto), {
 	
-	    for (i = 0; i < length; i++) {
-	      listener = listeners[i];
+	  /**
+	   * Reference to the constructor of this object.
+	   *
+	   * @memberof ProAct.Array
+	   * @instance
+	   * @constant
+	   * @default ProAct.Array
+	   */
+	  constructor: ProAct.Array,
 	
-	      if (P.U.isFunction(listener)) {
-	        P.flow.pushOnce(listener, [event]);
-	      } else {
-	        P.flow.pushOnce(listener, listener.call, [event]);
-	      }
-	
-	      if (listener.property) {
-	        listener.property.update(event);
-	      }
-	    }
-	  },
-	  updateByDiff: function (array) {
-	    var _this = this,
-	        j, diff = P.U.diff(array, this._array), cdiff;
-	
-	    for (j in diff) {
-	      cdiff = diff[j];
-	      if (cdiff) {
-	        _this.updateSplice(j, cdiff.o, cdiff.n);
-	      }
-	    }
-	  },
+	  /**
+	   * The <b>concat()</b> method returns a new array comprised of this array joined with other array(s) and/or value(s).
+	   * <p>
+	   *  The result ProAct.Array is dependent on <i>this</i>, so if <i>this</i> changes, the concatenation resut will be updated.
+	   * </p>
+	   * <p>
+	   *  If the argument passed is another ProAct.Array the result array is dependent on it too.
+	   * </p>
+	   *
+	   * @memberof ProAct.Array
+	   * @instance
+	   * @method concat
+	   * @param [...]
+	   *      Arrays and/or values to concatenate to the resulting array.
+	   * @return {ProAct.Array}
+	   *      A new ProAct.Array consisting of the elements in the <i>this</i> object on which it is called, followed in order by,
+	   *      for each argument, the elements of that argument (if the argument is an array) or the argument itself (if the argument is not an array).
+	   * @see {@link ProAct.Array.Listeners.leftConcat}
+	   * @see {@link ProAct.Array.Listeners.rightConcat}
+	   */
 	  concat: function () {
 	    var res, rightProArray;
 	
@@ -3278,104 +5714,478 @@
 	
 	    res = new P.A(concat.apply(this._array, arguments));
 	    if (rightProArray) {
-	      this.on(pArrayLs.leftConcat(res, this, rightProArray));
-	      rightProArray.on(pArrayLs.rightConcat(res, this, rightProArray));
+	      this.core.on(pArrayLs.leftConcat(res, this, rightProArray));
+	      rightProArray.core.on(pArrayLs.rightConcat(res, this, rightProArray));
 	    } else {
-	      this.on(pArrayLs.leftConcat(res, this, slice.call(arguments, 0)));
+	      this.core.on(pArrayLs.leftConcat(res, this, slice.call(arguments, 0)));
 	    }
 	
 	    return res;
 	  },
+	
+	  /**
+	   * The <b>every()</b> method tests whether all elements in the ProAct.Array pass the test implemented by the provided function.
+	   * <p>
+	   *  This method adds the {@link ProAct.currentCaller} as a listener to both 'index' type and 'length' type of changes.
+	   * </p>
+	   *
+	   * @memberof ProAct.Array
+	   * @instance
+	   * @method every
+	   * @param {Function} callback
+	   *      Function to test for each element.
+	   * @param {Object} thisArg
+	   *      Value to use as this when executing <i>callback</i>.
+	   * @return {Boolean}
+	   *      True if all the elements in the <i>this</i> ProAct.Array pass the test implemented by the <i>callback</i>, false otherwise.
+	   * @see {@link ProAct.ArrayCore#addCaller}
+	   */
 	  every: function () {
-	    this.addCaller();
+	    this.core.addCaller();
 	
 	    return every.apply(this._array, arguments);
 	  },
+	
+	  /**
+	   * Does the same as the {@link ProAct.Array#every} method, but the result is a {@link ProAct.Val} depending on changes on the array.
+	   *
+	   * @memberof ProAct.Array
+	   * @instance
+	   * @method pevery
+	   * @param {Function} fun
+	   *      Function to test for each element.
+	   * @param {Object} thisArg
+	   *      Value to use as this when executing <i>callback</i>.
+	   * @return {ProAct.Val}
+	   *      {@link ProAct.Val} with value of true if all the elements in <i>this</i> ProAct.Array pass the test implemented by the <i>fun</i>, false otherwise.
+	   * @see {@link ProAct.ArrayCore#addCaller}
+	   * @see {@link ProAct.Val}
+	   * @see {@link ProAct.Array.Listeners.every}
+	   */
 	  pevery: function (fun, thisArg) {
 	    var val = new P.Val(every.apply(this._array, arguments));
 	
-	    this.on(pArrayLs.every(val, this, arguments));
+	    this.core.on(pArrayLs.every(val, this, arguments));
 	
 	    return val;
 	  },
+	
+	  /**
+	   * The <b>some()</b> method tests whether some element in the array passes the test implemented by the provided function.
+	   * <p>
+	   *  This method adds the {@link ProAct.currentCaller} as a listener to both 'index' type and 'length' type of changes.
+	   * </p>
+	   *
+	   * @memberof ProAct.Array
+	   * @instance
+	   * @method some
+	   * @param {Function} callback
+	   *      Function to test for each element.
+	   * @param {Object} thisArg
+	   *      Value to use as this when executing <i>callback</i>.
+	   * @return {Boolean}
+	   *      True if one or more of the elements in <i>this</i> ProAct.Array pass the test implemented by the <i>callback</i>, false otherwise.
+	   * @see {@link ProAct.ArrayCore#addCaller}
+	   */
 	  some: function () {
-	    this.addCaller();
+	    this.core.addCaller();
 	
 	    return some.apply(this._array, arguments);
 	  },
+	
+	  /**
+	   * Does the same as the {@link ProAct.Array#some} method, but the result is a {@link ProAct.Val} depending on changes on the array.
+	   *
+	   * @memberof ProAct.Array
+	   * @instance
+	   * @method psome
+	   * @param {Function} fun
+	   *      Function to test for each element.
+	   * @param {Object} thisArg
+	   *      Value to use as this when executing <i>callback</i>.
+	   * @return {ProAct.Val}
+	   *      {@link ProAct.Val} with value of true if one or more of the elements in <i>this</i> ProAct.Array pass the test implemented by the <i>fun</i>, false otherwise.
+	   * @see {@link ProAct.ArrayCore#addCaller}
+	   * @see {@link ProAct.Val}
+	   * @see {@link ProAct.Array.Listeners.some}
+	   */
 	  psome: function (fun, thisArg) {
 	    var val = new P.Val(some.apply(this._array, arguments));
 	
-	    this.on(pArrayLs.some(val, this, arguments));
+	    this.core.on(pArrayLs.some(val, this, arguments));
 	
 	    return val;
 	  },
+	
+	  /**
+	   * The <b>forEach()</b> method executes a provided function once per array element.
+	   * <p>
+	   *  This method adds the {@link ProAct.currentCaller} as a listener to both 'index' type and 'length' type of changes.
+	   * </p>
+	   *
+	   * @memberof ProAct.Array
+	   * @instance
+	   * @method forEach
+	   * @param {Function} fun
+	   *      Function to execute for each element.
+	   * @param {Object} thisArg
+	   *      Value to use as <i>this</i> when executing <i>callback</i>.
+	   * @see {@link ProAct.ArrayCore#addCaller}
+	   */
 	  forEach: function (fun /*, thisArg */) {
-	    this.addCaller();
+	    this.core.addCaller();
 	
 	    return forEach.apply(this._array, arguments);
 	  },
+	
+	  /**
+	   * The <b>filter()</b> method creates a new ProAct.Array with all elements that pass the test implemented by the provided function.
+	   * <p>
+	   *  The result ProAct.Array is dependent on <i>this</i>, so if <i>this</i> changes, the filtered resut will be updated.
+	   * </p>
+	   *
+	   * @memberof ProAct.Array
+	   * @instance
+	   * @method filter
+	   * @param {Function} fun
+	   *      Function to test for each element.
+	   * @param {Object} thisArg
+	   *      Value to use as this when executing <i>fun</i>.
+	   * @return {ProAct.Array}
+	   *      A new ProAct.Array consisting of the elements in <i>this</i> ProAct.Array that pass the test implemented by <i>fun</i>.
+	   * @see {@link ProAct.Array.Listeners.filter}
+	   * @see {@link ProAct.Array.reFilter}
+	   */
 	  filter: function (fun, thisArg) {
 	    var filtered = new P.A(filter.apply(this._array, arguments));
-	    this.on(pArrayLs.filter(filtered, this, arguments));
+	    this.core.on(pArrayLs.filter(filtered, this, arguments));
 	
 	    return filtered;
 	  },
+	
+	  /**
+	   * The <b>map()</b> method creates a new ProAct with the results of calling a provided function on every element in <i>this</i> ProAct.Array.
+	   * <p>
+	   *  The result ProAct.Array is dependent on <i>this</i>, so if <i>this</i> changes, the mapped resut will be updated.
+	   * </p>
+	   *
+	   * @memberof ProAct.Array
+	   * @instance
+	   * @method map
+	   * @param {Function} fun
+	   *      Function that produces an element of the new ProAct.Array, taking three arguments:
+	   *      <ol>
+	   *        <li><b>currentValue</b> : The current element being processed in the array.</li>
+	   *        <li><b>index</b> : The index of the current element being processed in the array.</li>
+	   *        <li><b>array</b> : The array map was called upon.</li>
+	   *      </ol>
+	   * @param {Object} thisArg
+	   *      Value to use as this when executing <i>fun</i>.
+	   * @return {ProAct.Array}
+	   *      A new ProAct.Array consisting of the elements in <i>this</i> ProAct.Array transformed by <i>fun</i>.
+	   * @see {@link ProAct.Array.Listeners.map}
+	   */
 	  map: function (fun, thisArg) {
 	    var mapped = new P.A(map.apply(this._array, arguments));
-	    this.on(pArrayLs.map(mapped, this, arguments));
+	    this.core.on(pArrayLs.map(mapped, this, arguments));
 	
 	    return mapped;
 	  },
+	
+	  /**
+	   * The <b>reduce()</b> method applies a function against an accumulator and each value of the ProAct.Array (from left-to-right) has to reduce it to a single value.
+	   * <p>
+	   *  This method adds the {@link ProAct.currentCaller} as a listener to both 'index' type and 'length' type of changes.
+	   * </p>
+	   *
+	   * @memberof ProAct.Array
+	   * @instance
+	   * @method reduce
+	   * @param {Function} fun
+	   *      Function to execute on each value in the array, taking four arguments:
+	   *      <ol>
+	   *        <li><b>previousValue</b> : The value previously returned in the last invocation of the <i>fun</i>, or <i>initialValue</i>, if supplied.</li>
+	   *        <li><b>currentValue</b> : The current element being processed in the ProAct.Array.</li>
+	   *        <li><b>index</b> : The index of the current element being processed in the ProAct.Array.</li>
+	   *        <li><b>array</b> : The array reduce was called upon.</li>
+	   *      </ol>
+	   * @param {Object} initialValue
+	   *      Object to use as the first argument to the first call of the <i>fun</i> .
+	   * @return {Object}
+	   *      The value of the last <i>fun</i> invocation.
+	   * @see {@link ProAct.ArrayCore#addCaller}
+	   */
 	  reduce: function (fun /*, initialValue */) {
-	    this.addCaller();
+	    this.core.addCaller();
 	
 	    return reduce.apply(this._array, arguments);
 	  },
+	
+	  /**
+	   * Does the same as the {@link ProAct.Array#reduce} method, but the result is a {@link ProAct.Val} depending on changes on <i>this</i> ProAct.Array.
+	   *
+	   * @memberof ProAct.Array
+	   * @instance
+	   * @method preduce
+	   * @param {Function} fun
+	   *      Function to execute on each value in the array, taking four arguments:
+	   *      <ol>
+	   *        <li><b>previousValue</b> : The value previously returned in the last invocation of the <i>fun</i>, or <i>initialValue</i>, if supplied.</li>
+	   *        <li><b>currentValue</b> : The current element being processed in the ProAct.Array.</li>
+	   *        <li><b>index</b> : The index of the current element being processed in the ProAct.Array.</li>
+	   *        <li><b>array</b> : The array reduce was called upon.</li>
+	   *      </ol>
+	   * @param {Object} initialValue
+	   *      Object to use as the first argument to the first call of the <i>fun</i> .
+	   * @return {ProAct.Val}
+	   *      {@link ProAct.Val} with value of the last <i>fun</i> invocation.
+	   * @see {@link ProAct.ArrayCore#addCaller}
+	   * @see {@link ProAct.Val}
+	   * @see {@link ProAct.Array.Listeners.reduce}
+	   */
 	  preduce: function (fun /*, initialValue */) {
 	    var val = new P.Val(reduce.apply(this._array, arguments));
-	    this.on(pArrayLs.reduce(val, this, arguments));
+	    this.core.on(pArrayLs.reduce(val, this, arguments));
 	
 	    return val;
 	  },
+	
+	  /**
+	   * The <b>reduceRight()</b> method applies a function against an accumulator and each value of the ProAct.Array (from right-to-left) as to reduce it to a single value.
+	   * <p>
+	   *  This method adds the {@link ProAct.currentCaller} as a listener to both 'index' type and 'length' type of changes.
+	   * </p>
+	   *
+	   * @memberof ProAct.Array
+	   * @instance
+	   * @method reduceRight
+	   * @param {Function} fun
+	   *      Function to execute on each value in the array, taking four arguments:
+	   *      <ol>
+	   *        <li><b>previousValue</b> : The value previously returned in the last invocation of the <i>fun</i>, or <i>initialValue</i>, if supplied.</li>
+	   *        <li><b>currentValue</b> : The current element being processed in the ProAct.Array.</li>
+	   *        <li><b>index</b> : The index of the current element being processed in the ProAct.Array.</li>
+	   *        <li><b>array</b> : The array reduce was called upon.</li>
+	   *      </ol>
+	   * @param {Object} initialValue
+	   *      Object to use as the first argument to the first call of the <i>fun</i> .
+	   * @return {Object}
+	   *      The value of the last <i>fun</i> invocation.
+	   * @see {@link ProAct.ArrayCore#addCaller}
+	   */
 	  reduceRight: function (fun /*, initialValue */) {
-	    this.addCaller();
+	    this.core.addCaller();
 	
 	    return reduceRight.apply(this._array, arguments);
 	  },
+	
+	  /**
+	   * Does the same as the {@link ProAct.Array#reduceRight} method, but the result is a {@link ProAct.Val} depending on changes on <i>this</i> ProAct.Array.
+	   *
+	   * @memberof ProAct.Array
+	   * @instance
+	   * @method preduceRight
+	   * @param {Function} fun
+	   *      Function to execute on each value in the array, taking four arguments:
+	   *      <ol>
+	   *        <li><b>previousValue</b> : The value previously returned in the last invocation of the <i>fun</i>, or <i>initialValue</i>, if supplied.</li>
+	   *        <li><b>currentValue</b> : The current element being processed in the ProAct.Array.</li>
+	   *        <li><b>index</b> : The index of the current element being processed in the ProAct.Array.</li>
+	   *        <li><b>array</b> : The array reduce was called upon.</li>
+	   *      </ol>
+	   * @param {Object} initialValue
+	   *      Object to use as the first argument to the first call of the <i>fun</i> .
+	   * @return {ProAct.Val}
+	   *      {@link ProAct.Val} with value of the last <i>fun</i> invocation.
+	   * @see {@link ProAct.ArrayCore#addCaller}
+	   * @see {@link ProAct.Val}
+	   * @see {@link ProAct.Array.Listeners.reduceRight}
+	   */
 	  preduceRight: function (fun /*, initialValue */) {
 	    var val = new P.Val(reduceRight.apply(this._array, arguments));
-	    this.on(pArrayLs.reduceRight(val, this, arguments));
+	    this.core.on(pArrayLs.reduceRight(val, this, arguments));
 	
 	    return val;
 	  },
+	
+	  /**
+	   * The <b>indexOf()</b> method returns the first index at which a given element can be found in the ProAct.Array, or -1 if it is not present.
+	   * <p>
+	   *  This method adds the {@link ProAct.currentCaller} as a listener to both 'index' type and 'length' type of changes.
+	   * </p>
+	   *
+	   * @memberof ProAct.Array
+	   * @instance
+	   * @method indexOf
+	   * @param {Object} searchElement
+	   *      Element to locate in the ProAct.Array.
+	   * @param {Number} fromIndex
+	   *      Default: 0 (Entire array is searched)
+	   *      <p>
+	   *        The index to start the search at.
+	   *        If the index is greater than or equal to the ProAct.Array's length, -1 is returned,
+	   *        which means the array will not be searched.
+	   *        If the provided index value is a negative number,
+	   *        it is taken as the offset from the end of the ProAct.Array.
+	   *      </p>
+	   *      <p>
+	   *        Note: if the provided index is negative, the ProAct.Array is still searched from front to back.
+	   *        If the calculated index is less than 0, then the whole ProAct.Array will be searched.
+	   *      </p>
+	   * @return {Number}
+	   *      The index of the searched element or '-1' if it is not found in <i>this</i> ProAct.Array.
+	   * @see {@link ProAct.ArrayCore#addCaller}
+	   */
 	  indexOf: function () {
-	    this.addCaller();
+	    this.core.addCaller();
 	
 	    return indexOf.apply(this._array, arguments);
 	  },
+	
+	  /**
+	   * Does the same as the {@link ProAct.Array#indexOf} method, but the result is a {@link ProAct.Val} depending on changes on <i>this</i> ProAct.Array.
+	   *
+	   * @memberof ProAct.Array
+	   * @instance
+	   * @method pindexOf
+	   * @param {Object} searchElement
+	   *      Element to locate in the ProAct.Array.
+	   * @param {Number} fromIndex
+	   *      Default: 0 (Entire array is searched)
+	   *      <p>
+	   *        The index to start the search at.
+	   *        If the index is greater than or equal to the ProAct.Array's length, -1 is returned,
+	   *        which means the array will not be searched.
+	   *        If the provided index value is a negative number,
+	   *        it is taken as the offset from the end of the ProAct.Array.
+	   *      </p>
+	   *      <p>
+	   *        Note: if the provided index is negative, the ProAct.Array is still searched from front to back.
+	   *        If the calculated index is less than 0, then the whole ProAct.Array will be searched.
+	   *      </p>
+	   * @return {ProAct.Val}
+	   *      A {@link ProAct.Val} instance with value, the index of the searched element or '-1' if it is not found in <i>this</i> ProAct.Array.
+	   * @see {@link ProAct.ArrayCore#addCaller}
+	   * @see {@link ProAct.Val}
+	   * @see {@link ProAct.Array.Listeners.indexOf}
+	   */
 	  pindexOf: function () {
 	    var val = new P.Val(indexOf.apply(this._array, arguments));
-	    this.on(pArrayLs.indexOf(val, this, arguments));
+	    this.core.on(pArrayLs.indexOf(val, this, arguments));
 	
 	    return val;
 	  },
+	
+	  /**
+	   * The <b>lastIndexOf()</b> method returns the last index at which a given element can be found in the ProAct.Array, or -1 if it is not present.
+	   * The ProAct.Array is searched backwards, starting at <i>fromIndex</i>.
+	   * <p>
+	   *  This method adds the {@link ProAct.currentCaller} as a listener to both 'index' type and 'length' type of changes.
+	   * </p>
+	   *
+	   * @memberof ProAct.Array
+	   * @instance
+	   * @method lastIndexOf
+	   * @param {Object} searchElement
+	   *      Element to locate in the ProAct.Array.
+	   * @param {Number} fromIndex
+	   *      <p>
+	   *        The index at which to start searching backwards.
+	   *        Defaults to the ProAct.Array's length, i.e. the whole array will be searched.
+	   *        If the index is greater than or equal to the length of the ProAct.Array, the whole ProAct.Array will be searched.
+	   *        If negative, it is taken as the offset from the end of the ProAct.Array.
+	   *      </p>
+	   *      <p>
+	   *        Note that even when the index is negative,
+	   *        the ProAct.Array is still searched from back to front.
+	   *        If the calculated index is less than 0, -1 is returned, i.e. the ProAct.Array will not be searched.
+	   *      </p>
+	   * @return {Number}
+	   *      The index of the searched backwards element or '-1' if it is not found in <i>this</i> ProAct.Array.
+	   * @see {@link ProAct.ArrayCore#addCaller}
+	   */
 	  lastIndexOf: function () {
-	    this.addCaller();
+	    this.core.addCaller();
 	
 	    return lastIndexOf.apply(this._array, arguments);
 	  },
+	
+	  /**
+	   * Does the same as the {@link ProAct.Array#lastIndexOf} method, but the result is a {@link ProAct.Val} depending on changes on <i>this</i> ProAct.Array.
+	   *
+	   * @memberof ProAct.Array
+	   * @instance
+	   * @method plastindexOf
+	   * @param {Object} searchElement
+	   *      Element to locate in the ProAct.Array.
+	   * @param {Number} fromIndex
+	   *      <p>
+	   *        The index at which to start searching backwards.
+	   *        Defaults to the ProAct.Array's length, i.e. the whole array will be searched.
+	   *        If the index is greater than or equal to the length of the ProAct.Array, the whole ProAct.Array will be searched.
+	   *        If negative, it is taken as the offset from the end of the ProAct.Array.
+	   *      </p>
+	   *      <p>
+	   *        Note that even when the index is negative,
+	   *        the ProAct.Array is still searched from back to front.
+	   *        If the calculated index is less than 0, -1 is returned, i.e. the ProAct.Array will not be searched.
+	   *      </p>
+	   * @return {ProAct.Val}
+	   *      A {@link ProAct.Val} instance with value, the index of the backwards searched element or '-1' if it is not found in <i>this</i> ProAct.Array.
+	   * @see {@link ProAct.ArrayCore#addCaller}
+	   * @see {@link ProAct.Val}
+	   * @see {@link ProAct.Array.Listeners.lastIndexOf}
+	   */
 	  plastindexOf: function () {
 	    var val = new P.Val(lastIndexOf.apply(this._array, arguments));
-	    this.on(pArrayLs.lastIndexOf(val, this, arguments));
+	    this.core.on(pArrayLs.lastIndexOf(val, this, arguments));
 	
 	    return val;
 	  },
+	
+	  /**
+	   * The <b>join()</b> method joins all elements of an ProAct.Array into a string.
+	   * <p>
+	   *  This method adds the {@link ProAct.currentCaller} as a listener to both 'index' type and 'length' type of changes.
+	   * </p>
+	   *
+	   * @memberof ProAct.Array
+	   * @instance
+	   * @method join
+	   * @param {String} separator
+	   *      Specifies a string to separate each element of the ProAct.
+	   *      The separator is converted to a string if necessary.
+	   *      <p>
+	   *       If omitted, the ProAct.Array elements are separated with a comma.
+	   *      </p>
+	   * @return {String}
+	   *      A string representation of all the elements in <i>this</i> ProAct.Array, separated by the provided <i>separator</i>.
+	   * @see {@link ProAct.ArrayCore#addCaller}
+	   */
 	  join: function () {
-	    this.addCaller();
+	    this.core.addCaller();
 	
 	    return join.apply(this._array, arguments);
 	  },
+	
+	  /**
+	   * Does the same as the {@link ProAct.Array#join} method, but the result is a {@link ProAct.Val} depending on changes on <i>this</i> ProAct.Array.
+	   *
+	   * @memberof ProAct.Array
+	   * @instance
+	   * @method pjoin
+	   * @param {String} separator
+	   *      Specifies a string to separate each element of the ProAct.
+	   *      The separator is converted to a string if necessary.
+	   *      <p>
+	   *       If omitted, the ProAct.Array elements are separated with a comma.
+	   *      </p>
+	   * @return {ProAct.Val}
+	   *      A {@link ProAct.Val} instance with value : string representation of all the elements in <i>this</i> ProAct.Array, separated by the provided <i>separator</i>.
+	   * @see {@link ProAct.ArrayCore#addCaller}
+	   * @see {@link ProAct.ArrayCore#preduce}
+	   * @see {@link ProAct.Val}
+	   */
 	  pjoin: function (separator) {
 	    var reduced = this.preduce(function (i, el) {
 	      return i + separator + el;
@@ -3387,49 +6197,171 @@
 	    });
 	    return res;
 	  },
+	
+	  /**
+	   * The <b>toLocaleString()</b> method returns a string representing the elements of the ProAct.Array.
+	   * The elements are converted to Strings using their toLocaleString methods and these Strings are separated by a locale-specific String (such as a comma ",").
+	   * <p>
+	   *  This method adds the {@link ProAct.currentCaller} as a listener to both 'index' type and 'length' type of changes.
+	   * </p>
+	   *
+	   * @memberof ProAct.Array
+	   * @instance
+	   * @method toLocaleString
+	   * @return {String}
+	   *      Locale-specific string representing the elements of <i>this</i> ProAct.Array.
+	   * @see {@link ProAct.ArrayCore#addCaller}
+	   */
 	  toLocaleString: function () {
-	    this.addCaller();
+	    this.core.addCaller();
 	
 	    return toLocaleString.apply(this._array, arguments);
 	  },
+	
+	  /**
+	   * The <b>toString()</b> method returns a string representing the specified ProAct.Array and its elements.
+	   * The elements are converted to Strings using their toLocaleString methods and these Strings are separated by a locale-specific String (such as a comma ",").
+	   * <p>
+	   *  This method adds the {@link ProAct.currentCaller} as a listener to both 'index' type and 'length' type of changes.
+	   * </p>
+	   *
+	   * @memberof ProAct.Array
+	   * @instance
+	   * @method toString
+	   * @return {String}
+	   *      A string representing the elements of <i>this</i> ProAct.Array.
+	   * @see {@link ProAct.ArrayCore#addCaller}
+	   */
 	  toString: function () {
-	    this.addCaller();
+	    this.core.addCaller();
 	
 	    return toString.apply(this._array, arguments);
 	  },
+	
+	  /**
+	   * Returns the result of {@link ProAct.Array#toArray}.
+	   *
+	   * @memberof ProAct.Array
+	   * @instance
+	   * @method valueOf
+	   * @return {Array}
+	   *        This ProAct.Array converted to plain JavaScript array.
+	   * @see {@link ProAct.Array#toArray}
+	   */
 	  valueOf: function () {
 	    return this.toArray();
 	  },
+	
+	  /**
+	   * The <b>slice()</b> method returns a shallow copy of a portion of <i>this</i> ProAct.Array into a new ProAct.Array object.
+	   * <p>
+	   *  The result ProAct.Array is dependent on <i>this</i>, so if <i>this</i> changes, the slice resut will be updated.
+	   * </p>
+	   *
+	   * @memberof ProAct.Array
+	   * @instance
+	   * @method slice
+	   * @param {Number} begin
+	   *      Zero-based index at which to begin extraction.
+	   *      As a negative index, begin indicates an offset from the end of the sequence. slice(-2) extracts the last two elements in the sequence.
+	   *      If begin is omitted, slice begins from index 0.
+	   * @param {Number} end
+	   *      Zero-based index at which to end extraction. slice extracts up to but not including end.
+	   *      slice(1,4) extracts the second element up to the fourth element (elements indexed 1, 2, and 3).
+	   *      As a negative index, end indicates an offset from the end of the sequence. slice(2,-1) extracts the third element through the second-to-last element in the sequence.
+	   *      If end is omitted, slice extracts to the end of the sequence.
+	   * @return {ProAct.Array}
+	   *      A portion of <i>this</i> ProAct.Array, dependent on it.
+	   * @see {@link ProAct.Array.Listeners#slice}
+	   */
 	  slice: function () {
 	    var sliced = new P.A(slice.apply(this._array, arguments));
-	    this.on(pArrayLs.slice(sliced, this, arguments));
+	    this.core.on(pArrayLs.slice(sliced, this, arguments));
 	
 	    return sliced;
 	  },
+	
+	  /**
+	   * The <b>reverse()</b> method reverses an ProAct.Array in place. The first array element becomes the last and the last becomes the first.
+	   * <p>
+	   *  This method notifies the 'index' listeners attached to <i>this</i>' {@link ProAct.ArrayCore}.
+	   * </p>
+	   *
+	   * @memberof ProAct.Array
+	   * @instance
+	   * @method reverse
+	   * @see {@link ProAct.ArrayCore#update}
+	   */
 	  reverse: function () {
 	    if (this._array.length === 0) {
 	      return;
 	    }
-	    var reversed = reverse.apply(this._array, arguments), _this = this;
+	    var reversed = reverse.apply(this._array, arguments);
 	
-	    _this.update(pArrayOps.reverse, -1, null, null);
+	    this.core.update(null, 'index', [pArrayOps.reverse, -1, null, null]);
 	    return reversed;
 	  },
+	
+	  /**
+	   * The <b>sort()</b> method sorts the elements of <i>this</i> ProAct.Array in place and returns the <i>this</i>. The sort is not necessarily stable.
+	   * The default sort order is according to string Unicode code points.
+	   * <p>
+	   *  This method notifies the 'index' listeners attached to <i>this</i>' {@link ProAct.ArrayCore}.
+	   * </p>
+	   *
+	   * @memberof ProAct.Array
+	   * @instance
+	   * @method sort
+	   * @return {ProAct.Array}
+	   *      <i>this</i>
+	   * @see {@link ProAct.ArrayCore#update}
+	   */
 	  sort: function () {
 	    if (this._array.length === 0) {
 	      return;
 	    }
-	    var sorted = sort.apply(this._array, arguments), _this = this,
+	    var sorted = sort.apply(this._array, arguments),
 	        args = arguments;
 	
-	    _this.update(pArrayOps.sort, -1, null, args);
-	    return sorted;
+	    this.core.update(null, 'index', [pArrayOps.sort, -1, null, args]);
+	    return this;
 	  },
+	
+	  /**
+	   * The <b>splice()</b> method changes the content of <i>this</i> ProAct.Array, adding new elements while removing old elements.
+	   * <p>
+	   *  This method may notify the 'index' listeners or the 'length' listeners, or even the both types of listeners, attached to <i>this</i>' {@link ProAct.ArrayCore}, depending
+	   *  on what the splicing does - removing, adding or changing elements (removing and adding).
+	   * </p>
+	   *
+	   * @memberof ProAct.Array
+	   * @instance
+	   * @method splice
+	   * @param {Number} index
+	   *      Index at which to start changing the ProAct.Array.
+	   *      If greater than the length of the ProAct.Array, actual starting index will be set to the length of the <i>this</i>.
+	   *      If negative, will begin that many elements from the end.
+	   * @param {Number} howMany
+	   *      An integer indicating the number of old ProAct.Array elements to remove.
+	   *      If howMany is 0, no elements are removed. In this case, you should specify at least one new element.
+	   *      If howMany is greater than the number of elements left in the ProAct.Array starting at index,
+	   *      then all of the elements through the end of the ProAct.Array will be deleted.
+	   * @param [...]
+	   *      <b>element1, ..., elementN</b>:
+	   *      <p>
+	   *        The elements to add to the ProAct.Array. If you don't specify any elements, splice simply removes elements from the ProAct.Array.
+	   *      </p>
+	   * @return {ProAct.Array}
+	   *      An ProAct.Array containing the removed elements.
+	   *      If only one element is removed, an ProAct.Array of one element is returned.
+	   *      If no elements are removed, an empty ProAct.Array is returned.
+	   * @see {@link ProAct.ArrayCore#updateSplice}
+	   */
 	  splice: function (index, howMany) {
 	    var oldLn = this._array.length,
 	        spliced = splice.apply(this._array, arguments),
 	        ln = this._array.length, delta,
-	        _this = this, newItems = slice.call(arguments, 2);
+	        newItems = slice.call(arguments, 2);
 	
 	    index = !~index ? ln - index : index
 	    howMany = (howMany == null ? ln - index : howMany) || 0;
@@ -3437,7 +6369,7 @@
 	    if (newItems.length > howMany) {
 	      delta = newItems.length - howMany;
 	      while (delta--) {
-	        this.defineIndexProp(oldLn++);
+	        this.core.defineIndexProp(oldLn++);
 	      }
 	    } else if (howMany > newItems.length) {
 	      delta = howMany - newItems.length;
@@ -3446,60 +6378,149 @@
 	      }
 	    }
 	
-	    _this.updateSplice(index, spliced, newItems);
+	    this.core.updateSplice(index, spliced, newItems);
 	    return new P.A(spliced);
 	  },
+	
+	  /**
+	   * The <b>pop()</b> method removes the last element from an ProAct.Array and returns that element.
+	   * <p>
+	   *  This method notifies the 'length' listeners, attached to <i>this</i>' {@link ProAct.ArrayCore}.
+	   * </p>
+	   * <p>
+	   *  This method removes the special index accessor of the deleted element's index - the last index.
+	   * </p>
+	   *
+	   * @memberof ProAct.Array
+	   * @instance
+	   * @method pop
+	   * @return {Object}
+	   *      The removed element. If <i>this</i> ProAct.Array is empty the result is undefined.
+	   * @see {@link ProAct.ArrayCore#update}
+	   */
 	  pop: function () {
 	    if (this._array.length === 0) {
 	      return;
 	    }
 	    var popped = pop.apply(this._array, arguments),
-	        _this = this, index = this._array.length;
+	        index = this._array.length;
 	
 	    delete this[index];
-	    _this.update(pArrayOps.remove, _this._array.length, popped, null);
+	    this.core.update(null, 'length', [pArrayOps.remove, this._array.length, popped, null]);
 	
 	    return popped;
 	  },
+	
+	  /**
+	   * The <b>push()</b> method adds one or more elements to the end of an ProAct.Array and returns the new length of the ProAct.Array.
+	   * <p>
+	   *  This method notifies the 'length' listeners, attached to <i>this</i>' {@link ProAct.ArrayCore}.
+	   * </p>
+	   * <p>
+	   *  This method defines new index accessors for the elements on the new indexes. So these indexes can be set and read, and
+	   *  will attatch listeners to the {@link ProAct.ArrayCore} or update them.
+	   * </p>
+	   *
+	   * @memberof ProAct.Array
+	   * @instance
+	   * @method push
+	   * @param [...]
+	   *      <b>element1, ..., elementN</b> : The elements to add to the end of the array.
+	   * @return {Object}
+	   *      The new length property of the <i>this</i>.
+	   * @see {@link ProAct.ArrayCore#update}
+	   * @see {@link ProAct.ArrayCore#defineIndexProp}
+	   */
 	  push: function () {
-	    var vals = arguments, i, ln = arguments.length, index,
-	        _this = this;
+	    var vals = arguments, i, ln = arguments.length, index;
 	
 	    for (i = 0; i < ln; i++) {
 	      index = this._array.length;
 	      push.call(this._array, arguments[i]);
-	      this.defineIndexProp(index);
+	      this.core.defineIndexProp(index);
 	    }
 	
-	    _this.update(pArrayOps.add, _this._array.length - 1, null, slice.call(vals, 0));
+	    this.core.update(null, 'length', [pArrayOps.add, this._array.length - 1, null, slice.call(vals, 0)]);
 	
 	    return this._array.length;
 	  },
+	
+	  /**
+	   * The <b>shift()</b> method removes the first element from an ProAct.Array and returns that element. This method changes the length of the ProAct.Array.
+	   * <p>
+	   *  This method notifies the 'length' listeners, attached to <i>this</i>' {@link ProAct.ArrayCore}.
+	   * </p>
+	   * <p>
+	   *  This method removes the special index accessor of the deleted element's index - the zero index.
+	   * </p>
+	   *
+	   * @memberof ProAct.Array
+	   * @instance
+	   * @method shift
+	   * @return {Object}
+	   *      The removed element. If <i>this</i> ProAct.Array is empty the result is undefined.
+	   * @see {@link ProAct.ArrayCore#update}
+	   */
 	  shift: function () {
 	    if (this._array.length === 0) {
 	      return;
 	    }
 	    var shifted = shift.apply(this._array, arguments),
-	        _this = this, index = this._array.length;
+	        index = this._array.length;
 	
 	    delete this[index];
-	    _this.update(pArrayOps.remove, 0, shifted, null);
+	    this.core.update(null, 'length', [pArrayOps.remove, 0, shifted, null]);
 	
 	    return shifted;
 	  },
+	
+	  /**
+	   * The <b>unshift()</b> method adds one or more elements to the beginning of an ProAct.Array and returns the new length of the ProAct.Array.
+	   * <p>
+	   *  This method notifies the 'length' listeners, attached to <i>this</i>' {@link ProAct.ArrayCore}.
+	   * </p>
+	   * <p>
+	   *  This method defines new index accessors for the elements on the new indexes. So these indexes can be set and read, and
+	   *  will attatch listeners to the {@link ProAct.ArrayCore} or update them.
+	   * </p>
+	   *
+	   * @memberof ProAct.Array
+	   * @instance
+	   * @method unshift
+	   * @param [...]
+	   *      <b>element1, ..., elementN</b> : The elements to add to the front of the array.
+	   * @return {Object}
+	   *      The new length property of the <i>this</i>.
+	   * @see {@link ProAct.ArrayCore#update}
+	   * @see {@link ProAct.ArrayCore#defineIndexProp}
+	   */
 	  unshift: function () {
 	    var vals = slice.call(arguments, 0), i, ln = arguments.length,
-	        array = this._array,
-	        _this = this;
+	        array = this._array;
+	
 	    for (var i = 0; i < ln; i++) {
 	      array.splice(i, 0, arguments[i]);
-	      this.defineIndexProp(array.length - 1);
+	      this.core.defineIndexProp(array.length - 1);
 	    }
 	
-	    _this.update(pArrayOps.add, 0, null, vals);
+	    this.core.update(null, 'length', [pArrayOps.add, 0, null, vals]);
 	
 	    return array.length;
 	  },
+	
+	  /**
+	   * Generates an plain array representation of <i>this</i>.
+	   * <p>
+	   *  The returned array is shallow copy of <i>this</i>' content, so if modified with methods like 'push' or 'pop',
+	   *  <i>this</i> content will not be modified
+	   * </p>
+	   *
+	   * @memberof ProAct.Array
+	   * @instance
+	   * @method toArray
+	   * @return {Array}
+	   *      An plain JavaScript array representation of <i>this</i>.
+	   */
 	  toArray: function () {
 	    var result = [], i, ar = this._array, ln = ar.length, el,
 	        isPA = P.U.isProArray;
@@ -3515,17 +6536,83 @@
 	
 	    return result;
 	  },
+	
+	  /**
+	   * Generates a JSON representation of <i>this</i>.
+	   *
+	   * @memberof ProAct.Array
+	   * @instance
+	   * @method toJSON
+	   * @return {String}
+	   *      A JSON array representing <i>this</i>.
+	   */
 	  toJSON: function () {
 	    return JSON.stringify(this._array);
 	  }
 	});
 	
-	Pro.Array.Listeners = pArrayLs = Pro.Array.Listeners || {
+	/**
+	 * Defines a set of special listeners used to trak {@link ProAct.Array} changes and updating dependent {@link ProAct.Array}s in an optimal way.
+	 *
+	 * @namespace ProAct.Array.Listeners
+	 */
+	ProAct.Array.Listeners = P.A.L = pArrayLs = {
+	
+	  /**
+	   * Checks the validity of an event.
+	   *
+	   * @memberof ProAct.Array.Listeners
+	   * @static
+	   * @constant
+	   * @param {ProAct.Event} event
+	   *      The event to check.
+	   * @throws {Error}
+	   *      If the event is not {@link ProAct.Event.Types.array}
+	   */
 	  check: function(event) {
-	    if (event.type !== Pro.Event.Types.array) {
+	    if (event.type !== P.E.Types.array) {
 	      throw Error('Not implemented for non array events');
 	    }
 	  },
+	
+	  /**
+	   * Generates a listener that can be attached to an {@link ProAct.Array} on which
+	   * the method {@link ProAct.Array#concat} is invoked.
+	   * <p>
+	   *  The result of the {@link ProAct.Array#concat} method is another {@link ProAct.Array}, dependent on the <i>original</i> one.
+	   * </p>
+	   * <p>
+	   *  For example if the original was:
+	   *  <pre>
+	   *    var a = new ProAct.Array([1, 3, 5]);
+	   *  </pre>
+	   *  and we invoked {@link ProAct.Array#concat} on it like this:
+	   *  <pre>
+	   *    var b = a.concat(7, 9); // b is [1, 3, 5, 7, 9]
+	   *  </pre>
+	   *  The new array - <b>b</b> is dependent on <b>a</b>, so if for example we push something to <b>a</b>, <b>b</b> should be updated:
+	   *  <pre>
+	   *    a.push(11); // b authomatically should become [1, 3, 5, 11, 7, 9]
+	   *  </pre>
+	   * </p>
+	   * <p>
+	   *  The generated listener by this method does this - updates the <i>transformed</i> {@link ProAct.Array}, when the <i>original</i> changes
+	   *  and it does it in an optimal way.
+	   * </p>
+	   *
+	   * @memberof ProAct.Array.Listeners
+	   * @static
+	   * @constant
+	   * @param {ProAct.Array} transformed
+	   *      The array created as a result of invoking {@link ProAct.Array#concat} on the <i>original</i> {@link ProAct.Array}.
+	   * @param {ProAct.Array} original
+	   *      The {@link ProAct.Array} on which {@link ProAct.Array#concat} was invoked.
+	   * @param {Array} args
+	   *      The arguments passed to {@link ProAct.Array#concat}, when it was invoked on the <i>original</i> {@link ProAct.Array}
+	   * @return {Function}
+	   *      A listener for events from the <i>original</i> {@link ProAct.Array}, updating the <i>transformed</i> {@link ProAct.Array} on
+	   *      every new event, if it is necessary.
+	   */
 	  leftConcat: function (transformed, original, args) {
 	    return function (event) {
 	      pArrayLs.check(event);
@@ -3561,19 +6648,60 @@
 	        }
 	      } else if (op === pArrayOps.reverse || op === pArrayOps.sort) {
 	        nvs = transformed._array;
-	        if (Pro.Utils.isProArray(args)) {
+	        if (P.U.isProArray(args)) {
 	          toAdd = args._array;
 	        } else {
 	          toAdd = args;
 	        }
 	        transformed._array.length = 0;
 	        push.apply(transformed._array, concat.apply(original._array, toAdd));
-	        transformed.updateByDiff(nvs);
+	        transformed.core.updateByDiff(nvs);
 	      } else if (op === pArrayOps.splice) {
 	        pArrayProto.splice.apply(transformed, [ind, ov.length].concat(nv));
 	      }
 	    };
 	  },
+	
+	  /**
+	   * Generates a listener that can be attached to an {@link ProAct.Array} on which
+	   * the method {@link ProAct.Array#concat} is invoked with argument, another {@link ProAct.Array}.
+	   * <p>
+	   *  The result of the {@link ProAct.Array#concat} method is another {@link ProAct.Array},
+	   *  dependent on both the <i>original</i> and the passed as an argument one.
+	   * </p>
+	   * <p>
+	   *  For example if the original was:
+	   *  <pre>
+	   *    var a = new ProAct.Array([1, 3, 5]);
+	   *  </pre>
+	   *  and we invoked {@link ProAct.Array#concat} on it like this:
+	   *  <pre>
+	   *    var x = new ProAct.Array(7, 9);
+	   *    var b = a.concat(x); // b is [1, 3, 5, 7, 9]
+	   *  </pre>
+	   *  The new array - <b>b</b> is dependent on <b>x</b>, so if for example we push something to <b>x</b>, <b>b</b> should be updated:
+	   *  <pre>
+	   *    x.push(13); // b authomatically should become [1, 3, 5, 7, 9, 13]
+	   *  </pre>
+	   * </p>
+	   * <p>
+	   *  The generated listener by this method does this - updates the <i>transformed</i> {@link ProAct.Array}, when the <i>original</i> changes
+	   *  and it does it in an optimal way.
+	   * </p>
+	   *
+	   * @memberof ProAct.Array.Listeners
+	   * @static
+	   * @constant
+	   * @param {ProAct.Array} transformed
+	   *      The array created as a result of invoking {@link ProAct.Array#concat} on the <i>original</i> {@link ProAct.Array}.
+	   * @param {ProAct.Array} original
+	   *      The {@link ProAct.Array} on which {@link ProAct.Array#concat} was invoked.
+	   * @param {ProAct.Array} right
+	   *      The {@link ProAct.Array} passed as an argument to {@link ProAct.Array#concat}.
+	   * @return {Function}
+	   *      A listener for events from the <i>right</i> {@link ProAct.Array}, updating the <i>transformed</i> {@link ProAct.Array} on
+	   *      every new event, if it is necessary.
+	   */
 	  rightConcat: function (transformed, original, right) {
 	    return function (event) {
 	      pArrayLs.check(event);
@@ -3603,12 +6731,53 @@
 	        nvs = transformed._array;
 	        transformed._array.length = 0;
 	        push.apply(transformed._array, concat.apply(original._array, right._array));
-	        transformed.updateByDiff(nvs);
+	        transformed.core.updateByDiff(nvs);
 	      } else if (op === pArrayOps.splice) {
 	        pArrayProto.splice.apply(transformed, [ind + oln, ov.length].concat(nv));
 	      }
 	    };
 	  },
+	
+	  /**
+	   * Generates a listener that can be attached to an {@link ProAct.Array} on which
+	   * the method {@link ProAct.Array#pevery} is invoked.
+	   * <p>
+	   *  The result of the {@link ProAct.Array#pevery} method is a {@link ProAct.Val}, dependent on the <i>original</i> array.
+	   * </p>
+	   * <p>
+	   *  For example if the original was:
+	   *  <pre>
+	   *    var a = new ProAct.Array([1, 3, 5]);
+	   *  </pre>
+	   *  and we invoked {@link ProAct.Array#pevery} on it like this:
+	   *  <pre>
+	   *    var val = a.pevery(function (el) {
+	   *      return el % 2 === 1;
+	   *    }); // val.v is true.
+	   *  </pre>
+	   *  The new value - <b>val</b> is dependent on <b>a</b>, so if for example we push something to <b>a</b>, <b>val</b> should be updated:
+	   *  <pre>
+	   *    a.push(2); // val.v authomatically should become false.
+	   *  </pre>
+	   * </p>
+	   * <p>
+	   *  The generated listener by this method does this - updates the <i>val</i> {@link ProAct.Val}, when the <i>original</i> array changes
+	   *  and it does it in an optimal way.
+	   * </p>
+	   *
+	   * @memberof ProAct.Array.Listeners
+	   * @static
+	   * @constant
+	   * @param {ProAct.Val} val
+	   *      The result of invoking {@link ProAct.Array#pevery} on the <i>original</i> {@link ProAct.Array}.
+	   * @param {ProAct.Array} original
+	   *      The {@link ProAct.Array} on which {@link ProAct.Array#pevery} was invoked.
+	   * @param {Array} args
+	   *      The arguments passed to {@link ProAct.Array#pevery}, when it was invoked on the <i>original</i> {@link ProAct.Array}
+	   * @return {Function}
+	   *      A listener for events from the <i>original</i> {@link ProAct.Array}, updating the <i>val</i> {@link ProAct.Val} on
+	   *      every new event, if it is necessary.
+	   */
 	  every: function (val, original, args) {
 	    var fun = args[0], thisArg = args[1];
 	    return function (event) {
@@ -3646,6 +6815,47 @@
 	      }
 	    };
 	  },
+	
+	  /**
+	   * Generates a listener that can be attached to an {@link ProAct.Array} on which
+	   * the method {@link ProAct.Array#psome} is invoked.
+	   * <p>
+	   *  The result of the {@link ProAct.Array#psome} method is a {@link ProAct.Val}, dependent on the <i>original</i> array.
+	   * </p>
+	   * <p>
+	   *  For example if the original was:
+	   *  <pre>
+	   *    var a = new ProAct.Array([1, 3, 5]);
+	   *  </pre>
+	   *  and we invoked {@link ProAct.Array#psome} on it like this:
+	   *  <pre>
+	   *    var val = a.psome(function (el) {
+	   *      return el % 2 === 0;
+	   *    }); // val.v is false.
+	   *  </pre>
+	   *  The new value - <b>val</b> is dependent on <b>a</b>, so if for example we push something to <b>a</b>, <b>val</b> should be updated:
+	   *  <pre>
+	   *    a.push(2); // val.v authomatically should become true
+	   *  </pre>
+	   * </p>
+	   * <p>
+	   *  The generated listener by this method does this - updates the <i>val</i> {@link ProAct.Val}, when the <i>original</i> array changes
+	   *  and it does it in an optimal way.
+	   * </p>
+	   *
+	   * @memberof ProAct.Array.Listeners
+	   * @static
+	   * @constant
+	   * @param {ProAct.Val} val
+	   *      The result of invoking {@link ProAct.Array#psome} on the <i>original</i> {@link ProAct.Array}.
+	   * @param {ProAct.Array} original
+	   *      The {@link ProAct.Array} on which {@link ProAct.Array#psome} was invoked.
+	   * @param {Array} args
+	   *      The arguments passed to {@link ProAct.Array#psome}, when it was invoked on the <i>original</i> {@link ProAct.Array}
+	   * @return {Function}
+	   *      A listener for events from the <i>original</i> {@link ProAct.Array}, updating the <i>val</i> {@link ProAct.Val} on
+	   *      every new event, if it is necessary.
+	   */
 	  some: function (val, original, args) {
 	    var fun = args[0], thisArg = args[1];
 	    return function (event) {
@@ -3683,6 +6893,47 @@
 	      }
 	    };
 	  },
+	
+	  /**
+	   * Generates a listener that can be attached to an {@link ProAct.Array} on which
+	   * the method {@link ProAct.Array#filter} is invoked.
+	   * <p>
+	   *  The result of the {@link ProAct.Array#filter} method is another {@link ProAct.Array}, dependent on the <i>original</i> one.
+	   * </p>
+	   * <p>
+	   *  For example if the original was:
+	   *  <pre>
+	   *    var a = new ProAct.Array([1, 3, 5]);
+	   *  </pre>
+	   *  and we invoked {@link ProAct.Array#filter} on it like this:
+	   *  <pre>
+	   *    var b = a.filter(function (el) {
+	   *      return el % 2 === 0;
+	   *    }); // b is []
+	   *  </pre>
+	   *  The new array - <b>b</b> is dependent on <b>a</b>, so if for example we unshift something to <b>a</b>, <b>b</b> should be updated:
+	   *  <pre>
+	   *    a.unshift(4); // b authomatically should become [4]
+	   *  </pre>
+	   * </p>
+	   * <p>
+	   *  The generated listener by this method does this - updates the <i>filtered</i> {@link ProAct.Array}, when the <i>original</i> changes
+	   *  and it does it in an optimal way.
+	   * </p>
+	   *
+	   * @memberof ProAct.Array.Listeners
+	   * @static
+	   * @constant
+	   * @param {ProAct.Array} filtered
+	   *      The array created as a result of invoking {@link ProAct.Array#filter} on the <i>original</i> {@link ProAct.Array}.
+	   * @param {ProAct.Array} original
+	   *      The {@link ProAct.Array} on which {@link ProAct.Array#filter} was invoked.
+	   * @param {Array} args
+	   *      The arguments passed to {@link ProAct.Array#filter}, when it was invoked on the <i>original</i> {@link ProAct.Array}
+	   * @return {Function}
+	   *      A listener for events from the <i>original</i> {@link ProAct.Array}, updating the <i>filtered</i> {@link ProAct.Array} on
+	   *      every new event, if it is necessary.
+	   */
 	  filter: function (filtered, original, args) {
 	    var fun = args[0], thisArg = args[1];
 	    return function (event) {
@@ -3749,6 +7000,47 @@
 	      }
 	    };
 	  },
+	
+	  /**
+	   * Generates a listener that can be attached to an {@link ProAct.Array} on which
+	   * the method {@link ProAct.Array#map} is invoked.
+	   * <p>
+	   *  The result of the {@link ProAct.Array#map} method is another {@link ProAct.Array}, dependent on the <i>original</i> one.
+	   * </p>
+	   * <p>
+	   *  For example if the original was:
+	   *  <pre>
+	   *    var a = new ProAct.Array([1, 3, 5]);
+	   *  </pre>
+	   *  and we invoked {@link ProAct.Array#map} on it like this:
+	   *  <pre>
+	   *    var b = a.map(function (el) {
+	   *      return el * el;
+	   *    }); // b is [1, 9, 25]
+	   *  </pre>
+	   *  The new array - <b>b</b> is dependent on <b>a</b>, so if for example we pop from <b>a</b>, <b>b</b> should be updated:
+	   *  <pre>
+	   *    a.pop(); // b authomatically should become [1, 9]
+	   *  </pre>
+	   * </p>
+	   * <p>
+	   *  The generated listener by this method does this - updates the <i>mapped</i> {@link ProAct.Array}, when the <i>original</i> changes
+	   *  and it does it in an optimal way.
+	   * </p>
+	   *
+	   * @memberof ProAct.Array.Listeners
+	   * @static
+	   * @constant
+	   * @param {ProAct.Array} mapped
+	   *      The array created as a result of invoking {@link ProAct.Array#map} on the <i>original</i> {@link ProAct.Array}.
+	   * @param {ProAct.Array} original
+	   *      The {@link ProAct.Array} on which {@link ProAct.Array#map} was invoked.
+	   * @param {Array} args
+	   *      The arguments passed to {@link ProAct.Array#map}, when it was invoked on the <i>original</i> {@link ProAct.Array}
+	   * @return {Function}
+	   *      A listener for events from the <i>original</i> {@link ProAct.Array}, updating the <i>mapped</i> {@link ProAct.Array} on
+	   *      every new event, if it is necessary.
+	   */
 	  map: function (mapped, original, args) {
 	    var fun = args[0], thisArg = args[1];
 	    return function (event) {
@@ -3808,6 +7100,47 @@
 	      }
 	    };
 	  },
+	
+	  /**
+	   * Generates a listener that can be attached to an {@link ProAct.Array} on which
+	   * the method {@link ProAct.Array#preduce} is invoked.
+	   * <p>
+	   *  The result of the {@link ProAct.Array#preduce} method is a {@link ProAct.Val}, dependent on the <i>original</i> array.
+	   * </p>
+	   * <p>
+	   *  For example if the original was:
+	   *  <pre>
+	   *    var a = new ProAct.Array([1, 3, 5]);
+	   *  </pre>
+	   *  and we invoked {@link ProAct.Array#preduce} on it like this:
+	   *  <pre>
+	   *    var val = a.preduce(function (pel, el) {
+	   *      return pel + el;
+	   *    }, 0); // val.v is 0 + 1 + 3 + 5 = 9.
+	   *  </pre>
+	   *  The new value - <b>val</b> is dependent on <b>a</b>, so if for example we shift from <b>a</b>, <b>val</b> should be updated:
+	   *  <pre>
+	   *    a.shift(); // val.v authomatically should become 0 + 3 + 5 = 8.
+	   *  </pre>
+	   * </p>
+	   * <p>
+	   *  The generated listener by this method does this - updates the <i>val</i> {@link ProAct.Val}, when the <i>original</i> array changes
+	   *  and it does it in an optimal way.
+	   * </p>
+	   *
+	   * @memberof ProAct.Array.Listeners
+	   * @static
+	   * @constant
+	   * @param {ProAct.Val} val
+	   *      The result of invoking {@link ProAct.Array#preduce} on the <i>original</i> {@link ProAct.Array}.
+	   * @param {ProAct.Array} original
+	   *      The {@link ProAct.Array} on which {@link ProAct.Array#preduce} was invoked.
+	   * @param {Array} args
+	   *      The arguments passed to {@link ProAct.Array#preduce}, when it was invoked on the <i>original</i> {@link ProAct.Array}
+	   * @return {Function}
+	   *      A listener for events from the <i>original</i> {@link ProAct.Array}, updating the <i>val</i> {@link ProAct.Val} on
+	   *      every new event, if it is necessary.
+	   */
 	  reduce: function (val, original, args) {
 	    var oldLn = original._array.length, fun = args[0];
 	    return function (event) {
@@ -3825,6 +7158,47 @@
 	      oldLn = original._array.length;
 	    };
 	  },
+	
+	  /**
+	   * Generates a listener that can be attached to an {@link ProAct.Array} on which
+	   * the method {@link ProAct.Array#preduceRight} is invoked.
+	   * <p>
+	   *  The result of the {@link ProAct.Array#preduceRight} method is a {@link ProAct.Val}, dependent on the <i>original</i> array.
+	   * </p>
+	   * <p>
+	   *  For example if the original was:
+	   *  <pre>
+	   *    var a = new ProAct.Array([1, 3, 5]);
+	   *  </pre>
+	   *  and we invoked {@link ProAct.Array#preduceRight} on it like this:
+	   *  <pre>
+	   *    var val = a.preduceRight(function (pel, el) {
+	   *      return pel + el;
+	   *    }, 0); // val.v is 0 + 5 + 3 + 1 = 9.
+	   *  </pre>
+	   *  The new value - <b>val</b> is dependent on <b>a</b>, so if for example we splice <b>a</b>, <b>val</b> should be updated:
+	   *  <pre>
+	   *    a.splice(1, 2, 4, 5); // val.v authomatically should become 0 + 5 + 4 + 1 = 10.
+	   *  </pre>
+	   * </p>
+	   * <p>
+	   *  The generated listener by this method does this - updates the <i>val</i> {@link ProAct.Val}, when the <i>original</i> array changes
+	   *  and it does it in an optimal way.
+	   * </p>
+	   *
+	   * @memberof ProAct.Array.Listeners
+	   * @static
+	   * @constant
+	   * @param {ProAct.Val} val
+	   *      The result of invoking {@link ProAct.Array#preduceRight} on the <i>original</i> {@link ProAct.Array}.
+	   * @param {ProAct.Array} original
+	   *      The {@link ProAct.Array} on which {@link ProAct.Array#preduceRight} was invoked.
+	   * @param {Array} args
+	   *      The arguments passed to {@link ProAct.Array#preduceRight}, when it was invoked on the <i>original</i> {@link ProAct.Array}
+	   * @return {Function}
+	   *      A listener for events from the <i>original</i> {@link ProAct.Array}, updating the <i>val</i> {@link ProAct.Val} on
+	   *      every new event, if it is necessary.
+	   */
 	  reduceRight: function (val, original, args) {
 	    var fun = args[0];
 	    return function (event) {
@@ -3841,6 +7215,45 @@
 	      }
 	    };
 	  },
+	
+	  /**
+	   * Generates a listener that can be attached to an {@link ProAct.Array} on which
+	   * the method {@link ProAct.Array#pindexOf} is invoked.
+	   * <p>
+	   *  The result of the {@link ProAct.Array#pindexOf} method is a {@link ProAct.Val}, dependent on the <i>original</i> array.
+	   * </p>
+	   * <p>
+	   *  For example if the original was:
+	   *  <pre>
+	   *    var a = new ProAct.Array([1, 3, 5]);
+	   *  </pre>
+	   *  and we invoked {@link ProAct.Array#pindexOf} on it like this:
+	   *  <pre>
+	   *    var val = a.pindexOf(5); // val.v is 2.
+	   *  </pre>
+	   *  The new value - <b>val</b> is dependent on <b>a</b>, so if for example we reverse <b>a</b>, <b>val</b> should be updated:
+	   *  <pre>
+	   *    a.reverse(); // val.v authomatically should become 0.
+	   *  </pre>
+	   * </p>
+	   * <p>
+	   *  The generated listener by this method does this - updates the <i>val</i> {@link ProAct.Val}, when the <i>original</i> array changes
+	   *  and it does it in an optimal way.
+	   * </p>
+	   *
+	   * @memberof ProAct.Array.Listeners
+	   * @static
+	   * @constant
+	   * @param {ProAct.Val} val
+	   *      The result of invoking {@link ProAct.Array#pindexOf} on the <i>original</i> {@link ProAct.Array}.
+	   * @param {ProAct.Array} original
+	   *      The {@link ProAct.Array} on which {@link ProAct.Array#pindexOf} was invoked.
+	   * @param {Array} args
+	   *      The arguments passed to {@link ProAct.Array#pindexOf}, when it was invoked on the <i>original</i> {@link ProAct.Array}
+	   * @return {Function}
+	   *      A listener for events from the <i>original</i> {@link ProAct.Array}, updating the <i>val</i> {@link ProAct.Val} on
+	   *      every new event, if it is necessary.
+	   */
 	  indexOf: function (val, original, args) {
 	    var what = args[0], fromIndex = args[1], hasFrom = !!fromIndex;
 	    return function (event) {
@@ -3909,6 +7322,45 @@
 	      }
 	    };
 	  },
+	
+	  /**
+	   * Generates a listener that can be attached to an {@link ProAct.Array} on which
+	   * the method {@link ProAct.Array#plastIndexOf} is invoked.
+	   * <p>
+	   *  The result of the {@link ProAct.Array#plastIndexOf} method is a {@link ProAct.Val}, dependent on the <i>original</i> array.
+	   * </p>
+	   * <p>
+	   *  For example if the original was:
+	   *  <pre>
+	   *    var a = new ProAct.Array([5, 4, 5, 3]);
+	   *  </pre>
+	   *  and we invoked {@link ProAct.Array#plastIndexOf} on it like this:
+	   *  <pre>
+	   *    var val = a.plastIndexOf(5); // val.v is 2.
+	   *  </pre>
+	   *  The new value - <b>val</b> is dependent on <b>a</b>, so if for example we sort <b>a</b>, <b>val</b> should be updated:
+	   *  <pre>
+	   *    a.sort(); // val.v authomatically should become 3.
+	   *  </pre>
+	   * </p>
+	   * <p>
+	   *  The generated listener by this method does this - updates the <i>val</i> {@link ProAct.Val}, when the <i>original</i> array changes
+	   *  and it does it in an optimal way.
+	   * </p>
+	   *
+	   * @memberof ProAct.Array.Listeners
+	   * @static
+	   * @constant
+	   * @param {ProAct.Val} val
+	   *      The result of invoking {@link ProAct.Array#plastIndexOf} on the <i>original</i> {@link ProAct.Array}.
+	   * @param {ProAct.Array} original
+	   *      The {@link ProAct.Array} on which {@link ProAct.Array#plastIndexOf} was invoked.
+	   * @param {Array} args
+	   *      The arguments passed to {@link ProAct.Array#plastIndexOf}, when it was invoked on the <i>original</i> {@link ProAct.Array}
+	   * @return {Function}
+	   *      A listener for events from the <i>original</i> {@link ProAct.Array}, updating the <i>val</i> {@link ProAct.Val} on
+	   *      every new event, if it is necessary.
+	   */
 	  lastIndexOf: function (val, original, args) {
 	    var what = args[0], fromIndex = args[1], hasFrom = !!fromIndex;
 	    return function (event) {
@@ -3950,6 +7402,45 @@
 	      }
 	    };
 	  },
+	
+	  /**
+	   * Generates a listener that can be attached to an {@link ProAct.Array} on which
+	   * the method {@link ProAct.Array#slice} is invoked.
+	   * <p>
+	   *  The result of the {@link ProAct.Array#slice} method is another {@link ProAct.Array}, dependent on the <i>original</i> one.
+	   * </p>
+	   * <p>
+	   *  For example if the original was:
+	   *  <pre>
+	   *    var a = new ProAct.Array([1, 3, 5]);
+	   *  </pre>
+	   *  and we invoked {@link ProAct.Array#slice} on it like this:
+	   *  <pre>
+	   *    var b = a.slice(1); // b is [3, 5]
+	   *  </pre>
+	   *  The new array - <b>b</b> is dependent on <b>a</b>, so if for example we push to <b>a</b>, <b>b</b> should be updated:
+	   *  <pre>
+	   *    a.push(32); // b authomatically should become [3, 5, 32]
+	   *  </pre>
+	   * </p>
+	   * <p>
+	   *  The generated listener by this method does this - updates the <i>sliced</i> {@link ProAct.Array}, when the <i>original</i> changes
+	   *  and it does it in an optimal way.
+	   * </p>
+	   *
+	   * @memberof ProAct.Array.Listeners
+	   * @static
+	   * @constant
+	   * @param {ProAct.Array} sliced
+	   *      The array created as a result of invoking {@link ProAct.Array#slice} on the <i>original</i> {@link ProAct.Array}.
+	   * @param {ProAct.Array} original
+	   *      The {@link ProAct.Array} on which {@link ProAct.Array#slice} was invoked.
+	   * @param {Array} args
+	   *      The arguments passed to {@link ProAct.Array#slice}, when it was invoked on the <i>original</i> {@link ProAct.Array}
+	   * @return {Function}
+	   *      A listener for events from the <i>original</i> {@link ProAct.Array}, updating the <i>sliced</i> {@link ProAct.Array} on
+	   *      every new event, if it is necessary.
+	   */
 	  slice: function (sliced, original, args) {
 	    var s = args[0], e = args[1], hasEnd = !!e;
 	    return function (event) {
@@ -3967,540 +7458,40 @@
 	        osl = sliced._array;
 	        sliced._array.length = 0;
 	        push.apply(sliced._array, slice.apply(original._array, args));
-	        sliced.updateByDiff(osl);
+	        sliced.core.updateByDiff(osl);
 	      }
 	    };
 	  }
 	};
 	
-	Pro.Property = function (proObject, property, getter, setter) {
-	  var _this = this;
-	
-	  Object.defineProperty(this, 'proObject', {
-	    enumerable: false,
-	    configurable: true,
-	    writeble: true,
-	    value: proObject
-	  });
-	  this.property = property;
-	
-	  if (!this.proObject['__pro__']) {
-	    this.proObject['__pro__'] = {};
-	  }
-	  this.proObject['__pro__'].properties = this.proObject['__pro__'].properties || {};
-	  this.proObject['__pro__'].properties[property] = this;
-	
-	  this.get = getter || Pro.Property.DEFAULT_GETTER(this);
-	  this.set = setter || Pro.Property.DEFAULT_SETTER(this);
-	
-	  this.oldVal = null;
-	  this.val = proObject[property];
-	
-	  this.state = Pro.States.init;
-	  this.g = this.get;
-	  this.s = this.set;
-	
-	  Pro.Observable.call(this); // Super!
-	  this.parent = this.proObject.__pro__;
-	
-	  this.init();
-	};
-	
-	Pro.U.ex(Pro.Property, {
-	  Types: {
-	    simple: 0, // strings, booleans and numbers
-	    auto: 1, // functions - dependent
-	    object: 2, // references Pro objects
-	    array: 3, // arrays
-	    nil: 4, // nulls
-	
-	    type: function (value) {
-	      if (value === null) {
-	        return Pro.Property.Types.nil;
-	      } else if (Pro.U.isFunction(value)) {
-	        return Pro.Property.Types.auto;
-	      } else if (Pro.U.isArray(value)) {
-	        return Pro.Property.Types.array;
-	      } else if (Pro.U.isObject(value)) {
-	        return Pro.Property.Types.object;
-	      } else {
-	        return Pro.Property.Types.simple;
-	      }
-	    }
-	  },
-	  DEFAULT_GETTER: function (property) {
-	    return function () {
-	      property.addCaller();
-	
-	      return property.val;
-	    };
-	  },
-	  DEFAULT_SETTER: function (property, setter) {
-	    return function (newVal) {
-	      if (property.val === newVal) {
-	        return;
-	      }
-	
-	      property.oldVal = property.val;
-	      if (setter) {
-	        property.val = setter.call(property.proObject, newVal);
-	      } else {
-	        property.val = Pro.Observable.transform(property, newVal);
-	      }
-	
-	      if (property.val === null || property.val === undefined) {
-	        Pro.Property.reProb(property).update();
-	        return;
-	      }
-	
-	      property.update();
-	    };
-	  },
-	  defineProp: function (obj, prop, get, set) {
-	    Object.defineProperty(obj, prop, {
-	      get: get,
-	      set: set,
-	      enumerable: true,
-	      configurable: true
-	    });
-	  },
-	  reProb: function (property) {
-	    var po = property.proObject,
-	        p = property.property,
-	        l = property.listeners.change;
-	
-	    property.destroy();
-	    return po.__pro__.makeProp(p, l);
-	  }
-	});
-	
-	Pro.Property.prototype = Pro.U.ex(Object.create(Pro.Observable.prototype), {
-	  constructor: Pro.Property,
-	  type: function () {
-	    return Pro.Property.Types.simple;
-	  },
-	  makeEvent: function (source) {
-	    return new Pro.Event(source, this.property, Pro.Event.Types.value, this.proObject, this.oldVal, this.val);
-	  },
-	  makeListener: function () {
-	    if (!this.listener) {
-	      var _this = this;
-	      this.listener = {
-	        property: _this,
-	        call: function (newVal) {
-	          if (newVal && newVal.type !== undefined && newVal.type === Pro.Event.Types.value && newVal.args.length === 3 && newVal.target) {
-	            newVal = newVal.args[0][newVal.target];
-	          }
-	
-	          _this.oldVal = _this.val;
-	          _this.val = Pro.Observable.transform(_this, newVal);
-	        }
-	      };
-	    }
-	
-	    return this.listener;
-	  },
-	  init: function () {
-	    if (this.state !== Pro.States.init) {
-	      return;
-	    }
-	
-	    Pro.Property.defineProp(this.proObject, this.property, this.get, this.set);
-	
-	    this.afterInit();
-	  },
-	  afterInit: function () {
-	    this.state = Pro.States.ready;
-	  },
-	  addCaller: function () {
-	    var _this = this,
-	        caller = Pro.currentCaller;
-	
-	    if (caller && caller.property !== this) {
-	      this.on(caller);
-	    }
-	  },
-	  destroy: function () {
-	    if (this.state === Pro.States.destroyed) {
-	      return;
-	    }
-	
-	    delete this.proObject['__pro__'].properties[this.property];
-	    this.listeners = undefined;
-	    this.oldVal = undefined;
-	    this.parent = undefined;
-	
-	    Object.defineProperty(this.proObject, this.property, {
-	      value: this.val,
-	      enumerable: true,
-	      configurable: true
-	    });
-	    this.get = this.set = this.property = this.proObject = undefined;
-	    this.g = this.s = undefined;
-	    this.val = undefined;
-	    this.state = Pro.States.destroyed;
-	  },
-	  toString: function () {
-	    return this.val;
-	  }
-	});
-	
-	Pro.NullProperty = function (proObject, property) {
-	  var _this = this,
-	      set = Pro.Property.DEFAULT_SETTER(this),
-	      setter = function (newVal) {
-	        var result = set.call(_this.proObject, newVal),
-	            types = Pro.Property.Types,
-	            type = types.type(result);
-	
-	        if (type !== types.nil) {
-	          Pro.Property.reProb(_this);
-	        }
-	
-	        return result;
-	      };
-	
-	  Pro.Property.call(this, proObject, property, Pro.Property.DEFAULT_GETTER(this), setter);
-	};
-	
-	Pro.NullProperty.prototype = Pro.U.ex(Object.create(Pro.Property.prototype), {
-	  constructor: Pro.NullProperty,
-	
-	  type: function () {
-	    return Pro.Property.Types.nil;
-	  }
-	});
-	
-	Pro.AutoProperty = function (proObject, property) {
-	  this.func = proObject[property];
-	
-	  var _this = this,
-	      getter = function () {
-	        _this.addCaller();
-	        var oldCaller = Pro.currentCaller,
-	            get = Pro.Property.DEFAULT_GETTER(_this),
-	            set = Pro.Property.DEFAULT_SETTER(_this, function (newVal) {
-	              return _this.func.call(_this.proObject, newVal);
-	            }),
-	            args = arguments,
-	            autoFunction;
-	
-	        Pro.currentCaller = _this.makeListener();
-	
-	        autoFunction = function () {
-	          _this.val = _this.func.apply(_this.proObject, args);
-	        };
-	        Pro.flow.run(function () {
-	          Pro.flow.pushOnce(autoFunction);
-	        });
-	
-	        Pro.currentCaller = oldCaller;
-	
-	        Pro.Property.defineProp(_this.proObject, _this.property, get, set);
-	
-	        _this.state = Pro.States.ready;
-	
-	        _this.val = Pro.Observable.transform(_this, _this.val);
-	        return _this.val;
-	      };
-	
-	  Pro.Property.call(this, proObject, property, getter, function () {});
-	};
-	
-	Pro.AutoProperty.prototype = Pro.U.ex(Object.create(Pro.Property.prototype), {
-	  constructor: Pro.AutoProperty,
-	  type: function () {
-	    return Pro.Property.Types.auto;
-	  },
-	  makeListener: function () {
-	    if (!this.listener) {
-	      var _this = this;
-	      this.listener = {
-	        property: _this,
-	        call: function () {
-	          _this.oldVal = _this.val;
-	          _this.val = Pro.Observable.transform(_this, _this.func.call(_this.proObject));
-	        }
-	      };
-	    }
-	
-	    return this.listener;
-	  },
-	  afterInit: function () {}
-	});
-	
-	Pro.ObjectProperty = function (proObject, property) {
-	  var _this = this, getter;
-	
-	  getter = function () {
-	    _this.addCaller();
-	    if (!_this.val.__pro__) {
-	      Pro.prob(_this.val);
-	    }
-	
-	    var get = Pro.Property.DEFAULT_GETTER(_this),
-	        set = function (newVal) {
-	          if (_this.val == newVal) {
-	            return;
-	          }
-	
-	          _this.oldVal = _this.val;
-	          _this.val = newVal;
-	
-	          if (_this.val === null || _this.val === undefined) {
-	            Pro.Property.reProb(_this).update();
-	            return _this;
-	          }
-	
-	          if (_this.oldVal) {
-	            if (!_this.val.__pro__) {
-	              Pro.prob(_this.val);
-	            }
-	
-	            var oldProps = _this.oldVal.__pro__.properties,
-	                newProps = _this.val.__pro__.properties,
-	                oldPropName, oldProp, newProp, oldListeners, newListeners,
-	                i, j, oldListenersLength, newListenersLength,
-	                toAdd, toRemove = [], toRemoveLength;
-	
-	            for (oldPropName in oldProps) {
-	              if (oldProps.hasOwnProperty(oldPropName)) {
-	                newProp = newProps[oldPropName];
-	                if (!newProp) {
-	                  continue;
-	                }
-	                newListeners = newProp.listeners.change;
-	
-	                oldProp = oldProps[oldPropName];
-	                oldListeners = oldProp.listeners.change;
-	                oldListenersLength = oldListeners.length;
-	
-	                for (i = 0; i < oldListenersLength; i++) {
-	                  toAdd = true;
-	                  for (j = 0; j < newListenersLength; j++) {
-	                    if (oldListeners[i] == newListeners[j]) {
-	                      toAdd = false;
-	                    }
-	                  }
-	                  if (toAdd) {
-	                    newProp.on(oldListeners[i]);
-	                    toRemove.push(i);
-	                  }
-	                }
-	
-	                toRemoveLength = toRemove.length;
-	                for (i = 0; i < toRemoveLength; i++) {
-	                  oldListeners.splice[toRemove[i], 1];
-	                }
-	                toRemove = [];
-	              }
-	            }
-	          }
-	
-	          _this.update();
-	        };
-	
-	    Pro.Property.defineProp(_this.proObject, _this.property, get, set);
-	
-	    _this.state = Pro.States.ready;
-	    return _this.val;
-	  };
-	
-	  Pro.Property.call(this, proObject, property, getter, function () {});
-	};
-	
-	Pro.ObjectProperty.prototype = Pro.U.ex(Object.create(Pro.Property.prototype), {
-	  constructor: Pro.ObjectProperty,
-	  type: function () {
-	    return Pro.Property.Types.object;
-	  },
-	  afterInit: function () {}
-	});
-	
-	Pro.ArrayProperty = function (proObject, property) {
-	  var _this = this, getter;
-	
-	  getter = function () {
-	    _this.addCaller();
-	    if (!Pro.Utils.isProArray(_this.val)) {
-	      _this.val = new Pro.Array(_this.val);
-	    }
-	
-	    var get = Pro.Property.DEFAULT_GETTER(_this),
-	        set = function (newVal) {
-	          if (_this.val == newVal || _this.val.valueOf() == newVal) {
-	            return;
-	          }
-	
-	          _this.oldVal = _this.val;
-	          _this.val = newVal;
-	
-	          if (_this.val === null || _this.val === undefined) {
-	            Pro.Property.reProb(_this).update();
-	            return _this;
-	          }
-	
-	          if (!Pro.Utils.isProArray(_this.val)) {
-	            _this.val = new Pro.Array(_this.val);
-	          }
-	
-	          if (_this.oldVal) {
-	            var i, listener,
-	                toRemove = [], toRemoveLength,
-	                oldIndListeners = _this.oldVal.indexListeners,
-	                oldIndListenersLn = oldIndListeners.length,
-	                newIndListeners = _this.val.indexListeners,
-	                oldLenListeners = _this.oldVal.lengthListeners,
-	                oldLenListenersLn = oldLenListeners.length,
-	                newLenListeners = _this.val.lengthListeners;
-	
-	            for (i = 0; i < oldIndListenersLn; i++) {
-	              listener = oldIndListeners[i];
-	              if (listener.property && listener.property.proObject === _this.proObject) {
-	                newIndListeners.push(listener);
-	                toRemove.push(i);
-	              }
-	            }
-	            toRemoveLength = toRemove.length;
-	            for (i = 0; i < toRemoveLength; i++) {
-	              oldIndListeners.splice[toRemove[i], 1];
-	            }
-	            toRemove = [];
-	
-	            for (i = 0; i < oldLenListenersLn; i++) {
-	              listener = oldLenListeners[i];
-	              if (listener.property && listener.property.proObject === _this.proObject) {
-	                newLenListeners.push(listener);
-	                toRemove.push(i);
-	              }
-	            }
-	            toRemoveLength = toRemove.length;
-	            for (i = 0; i < toRemoveLength; i++) {
-	              oldLenListeners.splice[toRemove[i], 1];
-	            }
-	            toRemove = [];
-	          }
-	
-	          _this.update();
-	        };
-	
-	    Pro.Property.defineProp(_this.proObject, _this.property, get, set);
-	
-	    _this.state = Pro.States.ready;
-	    return _this.val;
-	  };
-	
-	  Pro.Property.call(this, proObject, property, getter, function () {});
-	};
-	
-	Pro.ArrayProperty.prototype = Pro.U.ex(Object.create(Pro.Property.prototype), {
-	  constructor: Pro.ArrayProperty,
-	  type: function () {
-	    return Pro.Property.Types.array;
-	  },
-	  afterInit: function () {}
-	});
-	
-	ProAct.Core = function (object, meta) {
-	  this.object = object;
-	  this.properties = {};
-	  this.state = Pro.States.init;
-	  this.meta = meta || {};
-	
-	  Pro.Observable.call(this); // Super!
-	};
-	
-	Pro.Core.prototype = Pro.U.ex(Object.create(Pro.Observable.prototype), {
-	  constructor: Pro.Core,
-	  prob: function () {
-	    var _this = this, object = this.object,
-	        conf = Pro.Configuration,
-	        keyprops = conf.keyprops,
-	        keypropList = conf.keypropList;
-	
-	    try {
-	      for (property in object) {
-	        this.makeProp(property, null, this.meta[property]);
-	      }
-	
-	      if (keyprops && keypropList.indexOf('p') !== -1) {
-	        Pro.U.defValProp(object, 'p', false, false, false, function (p) {
-	          if (!p || p === '*') {
-	            return _this;
-	          }
-	
-	          return _this.properties[p];
-	        });
-	      }
-	
-	      this.state = Pro.States.ready;
-	    } catch (e) {
-	      this.state = Pro.States.error;
-	      throw e;
-	    }
-	
-	    return this;
-	  },
-	  call: function (event) {
-	    this.update(event);
-	  },
-	  makeProp: function (property, listeners, meta) {
-	    var object = this.object,
-	        conf = Pro.Configuration,
-	        keyprops = conf.keyprops,
-	        keypropList = conf.keypropList,
-	        isF = Pro.Utils.isFunction,
-	        isA = Pro.Utils.isArrayObject,
-	        isO = Pro.Utils.isObject, result;
-	
-	    if (meta && (meta === 'noprop' || (meta.indexOf && meta.indexOf('noprop') >= 0))) {
-	      return;
-	    }
-	
-	    if (keyprops && keypropList.indexOf(property) !== -1) {
-	      throw Error('The property name ' + property + ' is a key word for pro objects! Objects passed to Pro.prob can not contain properties named as keyword properties.');
-	      return;
-	    }
-	
-	    if (object.hasOwnProperty(property) && (object[property] === null || object[property] === undefined)) {
-	      result = new Pro.NullProperty(object, property);
-	    } else if (object.hasOwnProperty(property) && !isF(object[property]) && !isA(object[property]) && !isO(object[property])) {
-	      result = new Pro.Property(object, property);
-	    } else if (object.hasOwnProperty(property) && isF(object[property])) {
-	      result = new Pro.AutoProperty(object, property);
-	    } else if (object.hasOwnProperty(property) && isA(object[property])) {
-	      result = new Pro.ArrayProperty(object, property);
-	    } else if (object.hasOwnProperty(property) && isO(object[property])) {
-	      result = new Pro.ObjectProperty(object, property);
-	    }
-	
-	    if (listeners) {
-	      this.properties[property].listeners.change = this.properties[property].listeners.change.concat(listeners);
-	    }
-	
-	    if (meta && Pro.registry) {
-	      if (!Pro.U.isArray(meta)) {
-	        meta = [meta];
-	      }
-	
-	      Pro.registry.setup.apply(Pro.registry, [result].concat(meta));
-	    }
-	
-	    return result;
-	  },
-	  set: function (property, value) {
-	    var object = this.object;
-	
-	    object[property] = value;
-	    if (this.properties[property]) {
-	      return;
-	    }
-	
-	    this.makeProp(property);
-	  }
-	});
-	
-	Pro.Val = function (val, meta) {
+	/**
+	 * <p>
+	 *  Constructs a ProAct.Val. The ProAct.Vals are the simplest ProAct.js reactive objects, they have only one property - 'v' and all their methods,
+	 *  extended from {@link ProAct.Observable} delegate to it.
+	 * </p>
+	 * <p>
+	 *  Like every object turned to ProAct.js reactive one, the ProAct.Val has a {@link ProAct.ObjectCore} managing its single {@link ProAct.Property}.
+	 * </p>
+	 * <p>
+	 *  The core can be accessed via:
+	 *  <pre>
+	 *    var core = v.p();
+	 *  </pre>
+	 * </p>
+	 * <p>
+	 *  ProAct.Val is part of the properties module of ProAct.js.
+	 * </p>
+	 *
+	 * @class ProAct.Val
+	 * @extends ProAct.Observable
+	 * @param {Object} val
+	 *      The value that will be wrapped and tracked by the ProAct.Val being created.
+	 * @param {String} meta
+	 *      Meta-data passed to the {@link ProAct.Property} construction logic.
+	 * @see {@link ProAct.ObjectCore}
+	 * @see {@link ProAct.Property}
+	 */
+	ProAct.Val = P.V = function (val, meta) {
 	  this.v = val;
 	
 	  if (meta && (P.U.isString(meta) || P.U.isArray(meta))) {
@@ -4509,88 +7500,419 @@
 	    };
 	  }
 	
-	  Pro.prob(this, meta);
+	  P.prob(this, meta);
 	};
 	
-	Pro.Val.prototype = Pro.U.ex(Object.create(Pro.Observable.prototype), {
+	ProAct.Val.prototype = P.U.ex(Object.create(P.Observable.prototype), {
+	
+	  /**
+	   * Reference to the constructor of this object.
+	   *
+	   * @memberof ProAct.Val
+	   * @instance
+	   * @constant
+	   * @default ProAct.Val
+	   */
+	  constructor: ProAct.Val,
+	
+	  /**
+	   * Retrieves the {@link ProAct.Property.Types} value of <i>this</i> {@link ProAct.Property} managing the 'v' field.
+	   *
+	   * @memberof ProAct.Val
+	   * @instance
+	   * @method type
+	   * @return {Number}
+	   *      The right type of the 'v' field's property.
+	   * @see {@link ProAct.Property.Types}
+	   * @see {@link ProAct.Property#type}
+	   */
 	  type: function () {
 	    return this.__pro__.properties.v.type();
 	  },
+	
+	  /**
+	   * Attaches a new listener to the {@link ProAct.Property} managing the 'v' field of <i>this</i>.
+	   * The listener may be function or object that defines a <i>call</i> method.
+	   *
+	   * @memberof ProAct.Val
+	   * @instance
+	   * @method on
+	   * @param {Array|String} actions
+	   *      The action/actions to listen for. If this parameter is skipped or null/undefined, the actions from {@link ProAct.Observable#defaultActions} are used.
+	   *      <p>
+	   *        The actions can be skipped and on their place as first parameter to be passed the <i>listener</i>.
+	   *      </p>
+	   * @param {Object} listener
+	   *      The listener to attach. It must be instance of Function or object with a <i>call</i> method.
+	   * @return {ProAct.Val}
+	   *      <b>this</b>
+	   * @see {@link ProAct.Observable#defaultActions}
+	   * @see {@link ProAct.Property}
+	   */
 	  on: function (action, listener) {
 	    this.__pro__.properties.v.on(action, listener);
 	    return this;
 	  },
+	
+	  /**
+	   * Removes a <i>listener</i> from the {@link ProAct.Property} managing the 'v' field of <i>this</i> for passed <i>action</i>.
+	   * <p>
+	   *  If this method is called without parameters, all the listeners for all the actions are removed.
+	   *  The listeners are reset using {@link ProAct.Observable#defaultListeners}.
+	   * </p>
+	   *
+	   * @memberof ProAct.Val
+	   * @instance
+	   * @method off
+	   * @param {Array|String} actions
+	   *      The action/actions to stop listening for. If this parameter is skipped or null/undefined, the actions from {@link ProAct.Observable#defaultActions} are used.
+	   *      <p>
+	   *        The actions can be skipped and on their place as first parameter to be passed the <i>listener</i>.
+	   *      </p>
+	   * @param {Object} listener
+	   *      The listener to detach. If it is skipped, null or undefined all the listeners are removed.
+	   * @return {ProAct.Val}
+	   *      <b>this</b>
+	   * @see {@link ProAct.Observable#defaultActions}
+	   * @see {@link ProAct.Property}
+	   */
 	  off: function (action, listener) {
 	    this.__pro__.properties.v.off(action, listener);
 	    return this;
 	  },
-	  onErr: function (action, listener) {
-	    this.__pro__.properties.v.onErr(action, listener);
+	
+	  /**
+	   * Attaches a new error listener to the {@link ProAct.Property} managing the 'v' field of <i>this</i>.
+	   * The listener may be function or object that defines a <i>call</i> method.
+	   *
+	   * @memberof ProAct.Val
+	   * @instance
+	   * @method onErr
+	   * @param {Object} listener
+	   *      The listener to attach. It must be instance of Function or object with a <i>call</i> method.
+	   * @return {ProAct.Val}
+	   *      <b>this</b>
+	   * @see {@link ProAct.Val#on}
+	   */
+	  onErr: function (listener) {
+	    this.__pro__.properties.v.onErr(listener);
 	    return this;
 	  },
-	  offErr: function (action, listener) {
-	    this.__pro__.properties.v.offErr(action, listener);
+	
+	  /**
+	   * Removes an error <i>listener</i> from the {@link ProAct.Property} managing the 'v' field of <i>this</i>.
+	   *
+	   * @memberof ProAct.Val
+	   * @instance
+	   * @method offErr
+	   * @param {Object} listener
+	   *      The listener to detach. If it is skipped, null or undefined all the listeners are removed.
+	   * @return {ProAct.Val}
+	   *      <b>this</b>
+	   * @see {@link ProAct.Val#onErr}
+	   */
+	  offErr: function (listener) {
+	    this.__pro__.properties.v.offErr(listener);
 	    return this;
 	  },
+	
+	  /**
+	   * Adds a new <i>transformation</i> to the list of transformations
+	   * of the {@link ProAct.Property} managing the 'v' field of <i>this</i>.
+	   * <p>
+	   *  A transformation is a function or an object that has a <i>call</i> method defined.
+	   *  This function or call method should have one argument and to return a transformed version of it.
+	   *  If the returned value is {@link ProAct.Observable.BadValue}, the next transformations are skipped and the updating
+	   *  value/event becomes - bad value.
+	   * </p>
+	   * <p>
+	   *  Every value/event that updates the {@link ProAct.Property} managing the 'v' field of <i>this</i> will be transformed using the new transformation.
+	   * </p>
+	   *
+	   * @memberof ProAct.Val
+	   * @instance
+	   * @method transform
+	   * @param {Object} transformation
+	   *      The transformation to add.
+	   * @return {ProAct.Val}
+	   *      <b>this</b>
+	   * @see {@link ProAct.Observable.transform}
+	   */
 	  transform: function (transformation) {
 	    this.__pro__.properties.v.transform(transformation);
 	    return this;
 	  },
-	  into: function (observable) {
-	    this.__pro__.properties.v.into(observable);
+	
+	  /**
+	   * Links source {@link ProAct.Observable}s into the {@link ProAct.Property} managing the 'v' field of <i>this</i>.
+	   * This means that the property is listening for changes from the <i>sources</i>.
+	   *
+	   * @memberof ProAct.Val
+	   * @instance
+	   * @method into
+	   * @param [...]
+	   *      Zero or more source {@link ProAct.Observables} to set as sources.
+	   * @return {ProAct.Val}
+	   *      <b>this</b>
+	   */
+	  into: function () {
+	    this.__pro__.properties.v.into.apply(this.__pro__.properties.v, arguments);
 	    return this;
 	  },
-	  out: function (observable) {
-	    this.__pro__.properties.v.out(observable);
+	
+	  /**
+	   * The reverse of {@link ProAct.Val#into} - sets the {@link ProAct.Property} managing the 'v' field of <i>this</i> as a source
+	   * to the passed <i>destination</i> observable.
+	   *
+	   * @memberof ProAct.Val
+	   * @instance
+	   * @method out
+	   * @param {ProAct.Observable} destination
+	   *      The observable to set as source the {@link ProAct.Property} managing the 'v' field of <i>this</i> to.
+	   * @return {ProAct.Val}
+	   *      <b>this</b>
+	   * @see {@link ProAct.Val#into}
+	   */
+	  out: function (destination) {
+	    this.__pro__.properties.v.out(destination);
 	    return this;
 	  },
-	  update: function (source) {
-	    this.__pro__.properties.v.update(source);
+	
+	  /**
+	   * Update notifies all the observers of the {@link ProAct.Property} managing the 'v' field of <i>this</i>.
+	   *
+	   * @memberof ProAct.Val
+	   * @instance
+	   * @method update
+	   * @param {Object} source
+	   *      The source of the update, for example update of {@link ProAct.Observable},
+	   *      that the {@link ProAct.Property} managing the 'v' field of <i>this</i> is observing.
+	   *      <p>
+	   *        Can be null - no source.
+	   *      </p>
+	   *      <p>
+	   *        In the most cases {@link ProAct.Event} is the source.
+	   *      </p>
+	   * @param {Array|String} actions
+	   *      A list of actions or a single action to update the listeners that listen to it.
+	   * @param {Array} eventData
+	   *      Data to be passed to the event to be created.
+	   * @return {ProAct.Val}
+	   *      <i>this</i>
+	   * @see {@link ProAct.Observable#update}
+	   * @see {@link ProAct.Property#makeEvent}
+	   * @see {@link ProAct.flow}
+	   */
+	  update: function (source, actions, eventData) {
+	    this.__pro__.properties.v.update(source, actions, eventData);
 	    return this;
 	  },
-	  willUpdate: function (source) {
-	    this.__pro__.properties.v.willUpdate(source);
+	
+	  /**
+	   * <b>willUpdate()</b> is the method used to notify observers that the {@link ProAct.Property} managing the 'v' field of <i>this</i> will be updated.
+	   * <p>
+	   *  It uses the {@link ProAct.Observable#defer} to defer the listeners of the listening {@link ProAct.Observable}s.
+	   *  The idea is that everything should be executed in a running {@link ProAct.Flow}, so there will be no repetative
+	   *  updates.
+	   * </p>
+	   * <p>
+	   *  The update value will come from the {@link ProAct.Property#makeEvent} method and the <i>source</i>
+	   *  parameter will be passed to it.
+	   * </p>
+	   *
+	   * @memberof ProAct.Val
+	   * @instance
+	   * @method willUpdate
+	   * @param {Object} source
+	   *      The source of the update, for example update of {@link ProAct.Observable},
+	   *      that the {@link ProAct.Property} managing the 'v' field of <i>this</i> is observing.
+	   *      <p>
+	   *        Can be null - no source.
+	   *      </p>
+	   *      <p>
+	   *        In the most cases {@link ProAct.Event} is the source.
+	   *      </p>
+	   * @param {Array|String} actions
+	   *      A list of actions or a single action to update the listeners that listen to it.
+	   *      If there is no action provided, the actions from {@link ProAct.Observable#defaultActions} are used.
+	   * @param {Array} eventData
+	   *      Data to be passed to the event to be created.
+	   * @return {ProAct.Val}
+	   *      <i>this</i>
+	   * @see {@link ProAct.Observable#defer}
+	   * @see {@link ProAct.Property#makeEvent}
+	   * @see {@link ProAct.Observable#defaultActions}
+	   * @see {@link ProAct.flow}
+	   */
+	  willUpdate: function (source, actions, eventData) {
+	    this.__pro__.properties.v.willUpdate(source, actions, eventData);
 	    return this;
 	  },
+	
+	  /**
+	   * The value set to <i>this</i>' 'v' property. By reaing it using this method, no listeners set to
+	   * {@link ProAct.currentCaller} are attached.
+	   *
+	   * @memberof ProAct.Val
+	   * @instance
+	   * @method valueOf
+	   * @return {Object}
+	   *      The actual value set in <i>this</i>.
+	   */
 	  valueOf: function () {
 	    return this.__pro__.properties.v.val;
 	  },
+	
+	  /**
+	   * A string representation of the value set to <i>this</i>' 'v' property.
+	   * By reaing it using this method, no listeners set to {@link ProAct.currentCaller} are attached.
+	   *
+	   * @memberof ProAct.Val
+	   * @instance
+	   * @method toString
+	   * @return {Object}
+	   *      A string representation of the actual value set in <i>this</i>.
+	   */
 	  toString: function () {
 	    return this.valueOf().toString();
 	  }
 	});
 	
-	Pro.prob = function (object, meta) {
+	/**
+	 * The {@link ProAct.prob} method is the entry point for creating reactive values in ProAct.js
+	 * <p>
+	 *  If the value is Number/String/Boolean/null/undefined or Function a new {@link ProAct.Val} is created woth value, set
+	 *  to the passed <i>object</i> value. The <i>meta</i>-data passed is used in the creation process.
+	 * </p>
+	 * <p>
+	 *  If the passed <i>object</i> is an array, the result of this method is a new {@link ProAct.Array} with content,
+	 *  the passed array <i>object</i>
+	 * </p>
+	 * <p>
+	 *  If the <i>object</i> passed is a plain JavaScript object the result of this function is reactive version of the
+	 *  <i>object</i> with {@link ProAct.ObjectCore} holding its {@link ProAct.Property}s.
+	 * </p>
+	 *
+	 * @method prob
+	 * @memberof ProAct
+	 * @static
+	 * @param {Object} object
+	 *      The object/value to make reactive.
+	 * @param {Object|String} meta
+	 *      Meta-data used to help in the reactive object creation.
+	 * @return {Object}
+	 *      Reactive representation of the passed <i>object</i>.
+	 */
+	ProAct.prob = function (object, meta) {
 	  var core, property,
-	      isAr = Pro.Utils.isArray;
+	      isAr = P.U.isArray;
 	
-	  if (object === null || (!Pro.U.isObject(object) && !isAr(object))) {
-	    return new Pro.Val(object, meta);
+	  if (object === null || (!P.U.isObject(object) && !isAr(object))) {
+	    return new P.V(object, meta);
 	  }
 	
-	  if (isAr(object)) {
-	    return new Pro.Array(object);
+	  if (P.U.isArray(object)) {
+	    return new P.A(object);
 	  }
 	
-	  core = new Pro.Core(object, meta);
-	  Object.defineProperty(object, '__pro__', {
-	    enumerable: false,
-	    configurable: false,
-	    writeble: false,
-	    value: core
-	  });
+	  core = new P.OC(object, meta);
+	  P.U.defValProp(object, '__pro__', false, false, false, core);
 	
 	  core.prob();
 	
 	  return object;
 	};
 	
-	Pro.Registry = Pro.R = function () {
+	/**
+	 * The {@link ProAct.proxy} creates proxies or decorators to ProAct.js objects.
+	 * <p>
+	 *  The decorators extend the <i>target</i> and can add new properties which depend on the extended ones.
+	 * </p>
+	 *
+	 * @method proxy
+	 * @memberof ProAct
+	 * @static
+	 * @param {Object} object
+	 *      The object/value to make decorator to the <i>target</i>.
+	 * @param {Object} object
+	 *      The object to decorate.
+	 * @param {Object|String} meta
+	 *      Meta-data used to help in the reactive object creation for the proxy.
+	 * @param {Object|String} targetMeta
+	 *      Meta-data used to help in the reactive object creation for the target, if it is not reactive.
+	 * @return {Object}
+	 *      Reactive representation of the passed <i>object</i>, decorating the passed <i>target</i>.
+	 */
+	ProAct.proxy = function (object, target, meta, targetMeta) {
+	  if (!object || !target) {
+	    return null;
+	  }
+	
+	  if (!P.U.isProObject(target)) {
+	    target = ProAct.prob(target, targetMeta);
+	  }
+	
+	  if (!meta || !P.U.isObject(meta)) {
+	    meta = {};
+	  }
+	
+	  var properties = target.__pro__.properties,
+	      property;
+	
+	  for (property in properties) {
+	    if (!object.hasOwnProperty(property)) {
+	      object[property] = null;
+	      meta[property] = properties[property];
+	    }
+	  }
+	
+	  object = ProAct.prob(object, meta);
+	
+	  return object;
+	};
+	
+	/**
+	 * <p>
+	 *  Constructs a ProAct.Registry. It is used to store/create objects that can be referenced or configured using the {@link ProAct.DSL}.
+	 * </p>
+	 * <p>
+	 *  ProAct.Registry is part og the DSL module of ProAct.js.
+	 * </p>
+	 *
+	 * @class ProAct.Registry
+	 */
+	ProAct.Registry = P.R = function () {
 	  this.providers = {};
 	};
 	
-	Pro.Registry.prototype = rProto = {
-	  constructor: Pro.Registry,
+	ProAct.Registry.prototype = rProto = {
+	
+	  /**
+	   * Reference to the constructor of this object.
+	   *
+	   * @memberof ProAct.Registry
+	   * @instance
+	   * @constant
+	   * @default ProAct.Registry
+	   */
+	  constructor: ProAct.Registry,
+	
+	  /**
+	   * Registers a {@link ProAct.Registry.Provider} for the passed <i>namespace</i> in the registry.
+	   *
+	   * @memberof ProAct.Registry
+	   * @instance
+	   * @method register
+	   * @param {String} namespace
+	   *      The namespace to register the <i>provider</i> in.
+	   * @param {ProAct.Registry.Provider} provider
+	   *      The {@link ProAct.Registry.Provider} to register.
+	   * @return {ProAct.Registers}
+	   *      <i>this</i>
+	   * @throws {Error}
+	   *      If a {@link ProAct.Registry.Provider} is already registered for the passed <i>namespace</i>.
+	   * @see {@link ProAct.Registry.Provider}
+	   */
 	  register: function (namespace, provider) {
 	    if (this.providers[namespace]) {
 	      throw new Error(namespace + 'is already registered in this registry.');
@@ -4601,6 +7923,123 @@
 	    }
 	    return this;
 	  },
+	
+	  /**
+	   * Retrieves the right {@link ProAct.Registry.Provider} using the <i>name</i> of stored
+	   * in <i>this</i> ProAct.Registry object, or the <i>name</i> of an object to be stored
+	   *
+	   * @memberof ProAct.Registry
+	   * @instance
+	   * @method getProviderByName
+	   * @param {String} name
+	   *      The name of storable object.
+	   *      <p>
+	   *        It must be in the format '{namespace}:{key}'.
+	   *      </p>
+	   *      <p>
+	   *        Here the namespace is the namespace the {@link ProAct.Registry.Provider} manages.
+	   *      </p>
+	   * @return {Array}
+	   *      The first element in the result is the {@link ProAct.Registry.Provider} or undefined if not found.
+	   *      <p>
+	   *        The second one is the <b>key</b> at which an object is stored or will be stored in the provider.
+	   *      </p>
+	   *      <p>
+	   *        The third element is an array with options for storing/creating an object passed to the provider using
+	   *        the <i>name</i> string.
+	   *      </p>
+	   * @see {@link ProAct.Registry.Provider}
+	   */
+	  getProviderByName: function (name) {
+	    var parts = name.split(':');
+	
+	    return [this.providers[parts[0]], parts[1], parts.slice(2)];
+	  },
+	
+	  /**
+	   * Configures an object to be stored using {@link ProAct.DSL} passed through <i>options</i> and DSL arguments.
+	   * <p>
+	   *  Example usage:
+	   * </p>
+	   * <p>
+	   *  A {@link ProAct.Stream} is passed to the registry for setup with DSL data.
+	   * </p>
+	   * <p>
+	   *  The data passed through the <i>options</i> parameter is
+	   *  <pre>
+	   *    '<<(s:foo)|map(-)|filter($1)'
+	   *  </pre>
+	   * </p>
+	   * <p>
+	   *  And the arguments for the DSL machine passed through the <i>args</i> parameter are
+	   *  <pre>
+	   *    [function (v) {
+	   *      return v % 2 === 0;
+	   *    }]
+	   *  </pre>
+	   * </p>
+	   * <p>
+	   *  This means that a {@link ProAct.Stream} stored in <i>this</i> registry by the key 'foo' should be set
+	   *  as a source to the passed as the <i>object</i> parameter simple {@link ProAct.Stream}.
+	   * </p>
+	   * <p>
+	   *  It also means that for every value comming in the <i>object</i> parameter's stream there should be mapping of negativity and
+	   *  only even values should be passed to it.
+	   * </p>
+	   * <p>
+	   *  So if we trigger in the 'foo' stream the value of <b>4</b> in our stream we will get <b>-4</b>, and if we trigger 5, we won't get anything.
+	   * </p>
+	   *
+	   * @memberof ProAct.Registry
+	   * @instance
+	   * @method setup
+	   * @param {Object} object
+	   *      The object to setup.
+	   * @param {String|Object} options
+	   *      A {@link ProAct.DSL} data object or string used to setup the object.
+	   * @param {Array} args
+	   *      Arguments to be used by the {@link ProAct.DSL#run} method while configuring the passed <i>object</i>.
+	   * @return {Object}
+	   *      Ready to strore object.
+	   * @see {@link ProAct.DSL}
+	   * @see {@link ProAct.DSL#run}
+	   */
+	  setup: function (object, options, args) {
+	    return dsl.run.apply(null, [object, options, this].concat(args));
+	  },
+	
+	  /**
+	   * Creates a new object and stores it in <i>this</i> registry, using the right provider for the creation
+	   * and configuring it using the DSL passed through the <i>options</i> parameter.
+	   * <p>
+	   *  {@link ProAct.Registry#getProviderByName} is used to locate the right provider to create the object with.
+	   * </p>
+	   * <p>
+	   *  {@link ProAct.Registry#setup} is used to setup the newly created object using the {@link ProAct.DSL}
+	   * </p>
+	   * <p>
+	   *  The idea of this method is to create and configure {@link ProAct.Observable} objects.
+	   * </p>
+	   *
+	   * @memberof ProAct.Registry
+	   * @instance
+	   * @method make
+	   * @param {String} name
+	   *      Name of the object to create and store.
+	   *      <p>
+	   *        It must be in the format '{namespace}:{key}'
+	   *      </p>
+	   * @param {String|Object} options
+	   *      A {@link ProAct.DSL} data object or string used to setup the object to be created.
+	   * @param [...]
+	   *      <b>Arguments</b> to be used by the {@link ProAct.DSL#run} method while configuring the newly created <i>object</i>.
+	   * @return {Object}
+	   *      The newly created, stored and configured object, or null if there was no {@link ProAct.Registry.Provider} register for its type.
+	   * @see {@link ProAct.DSL}
+	   * @see {@link ProAct.Registry#getProviderByName}
+	   * @see {@link ProAct.Registry#setup}
+	   * @see {@link ProAct.Observable}
+	   */
 	  make: function (name, options) {
 	    var args = slice.call(arguments, 2),
 	        p = this.getProviderByName(name),
@@ -4612,9 +8051,32 @@
 	    }
 	    return null;
 	  },
-	  setup: function (object, options, args) {
-	    return dsl.run.apply(null, [object, options, this].concat(args));
-	  },
+	
+	  /**
+	   * Stores an object  in <i>this</i> registry, using the right provider to configure it using the DSL passed through the <i>options</i> parameter.
+	   * <p>
+	   *  {@link ProAct.Registry#getProviderByName} is used to locate the right provider to store the object to.
+	   * </p>
+	   *
+	   * @memberof ProAct.Registry
+	   * @instance
+	   * @method store
+	   * @param {String} name
+	   *      Name of the object to store.
+	   *      <p>
+	   *        It must be in the format '{namespace}:{key}'
+	   *      </p>
+	   * @param {Object} object
+	   *      The object to store.
+	   * @param {String|Object} options
+	   *      A {@link ProAct.DSL} data object or string used to setup the object to be stored (optional).
+	   * @param [...]
+	   *      <b>Arguments</b> to be used by the {@link ProAct.DSL#run} method while configuring the <i>object</i>.
+	   * @return {Object}
+	   *      The stored and configured object, or null if there was no {@link ProAct.Registry.Provider} register for its type.
+	   * @see {@link ProAct.DSL}
+	   * @see {@link ProAct.Registry#getProviderByName}
+	   */
 	  store: function (name, object, options) {
 	    var args = slice.call(arguments, 2),
 	        p = this.getProviderByName(name);
@@ -4624,6 +8086,25 @@
 	    }
 	    return null;
 	  },
+	
+	  /**
+	   * Retrieves an object, stored <i>this</i> registry.
+	   * <p>
+	   *  {@link ProAct.Registry#getProviderByName} is used to locate the right provider to retrieve the object from.
+	   * </p>
+	   *
+	   * @memberof ProAct.Registry
+	   * @instance
+	   * @method get
+	   * @param {String} name
+	   *      Name of the object to find.
+	   *      <p>
+	   *        It must be in the format '{namespace}:{key}'
+	   *      </p>
+	   * @return {Object}
+	   *      The stored object, or null if there was no {@link ProAct.Registry.Provider} register for its type or no object registered for the passed <i>name</i>.
+	   * @see {@link ProAct.Registry#getProviderByName}
+	   */
 	  get: function (name) {
 	    var p = this.getProviderByName(name);
 	
@@ -4632,22 +8113,58 @@
 	    }
 	    return null;
 	  },
-	  getProviderByName: function (name) {
-	    var parts = name.split(':');
 	
-	    return [this.providers[parts[0]], parts[1], parts.slice(2)];
-	  },
+	  /**
+	   * Helper method for transforming an array of keys of stored items in <i>this</i> ProAct.Registry to an array of the actual items.
+	   * <p>
+	   *  Mainly used by the {@link ProAct.DSL} logic.
+	   * </p>
+	   *
+	   * @memberof ProAct.Registry
+	   * @instance
+	   * @method toObjectArray
+	   * @param {Array} array
+	   *      Array of string keys to objects stored in <i>this</i> registry to be retrieved using {@link ProAct.Registry#toObject}.
+	   *      <p>
+	   *        If object is not stored on some key, the key itself is returned in the same possition in the result array.
+	   *      </p>
+	   * @return {Array}
+	   *      Of the retrieved objects, in the same order as the keys.
+	   * @see {@link ProAct.Registry#toObject}
+	   * @see {@link ProAct.DSL}
+	   */
 	  toObjectArray: function (array) {
-	    var _this = this;
-	    if (!Pro.U.isArray(array)) {
+	    var self = this;
+	    if (!P.U.isArray(array)) {
 	      return this.toObject(array);
 	    }
 	    return map.call(array, function (el) {
-	      return _this.toObject(el);
+	      return self.toObject(el);
 	    });
 	  },
+	
+	  /**
+	   * Helper method for transforming a key of stored item in <i>this</i> ProAct.Registry to the actual item or returning the key, if
+	   * the item is not found in the ProAct.Registry.
+	   * <p>
+	   *  Mainly used by the {@link ProAct.DSL} logic.
+	   * </p>
+	   *
+	   * @memberof ProAct.Registry
+	   * @instance
+	   * @method toObject
+	   * @param {String|Object} data
+	   *      Key of strored object or something else. If the key is valid and there is something stored on it, the stored object is retrieved.
+	   *      <p>
+	   *        If there is nothing stored for this <i>data</i>, the <i>data</i> itself is returned.
+	   *      </p>
+	   * @return {Object}
+	   *      Stored object, if found using the passed <i>data</i> or the <i>data</i> itself.
+	   * @see {@link ProAct.DSL}
+	   * @see {@link ProAct.Registry#get}
+	   */
 	  toObject: function (data) {
-	    if (Pro.U.isString(data)) {
+	    if (P.U.isString(data)) {
 	      var result = this.get(data);
 	      return result ? result : data;
 	    }
@@ -4656,8 +8173,68 @@
 	  }
 	};
 	
-	Pro.OpStore = {
+	/**
+	 * Contains {@link ProAct.DSl} operation logic definitions.
+	 * <p>
+	 *  Every operation has
+	 *  <ol>
+	 *    <li><b>sym</b> - A symbol used to identify the right operation in a DSL string or object.</li>
+	 *    <li><b>match method</b> - A method used for identifying the operation, usually it uses the <i>sym</i></li>
+	 *    <li>
+	 *      <b>toOptions</b> - A method which is able to turn a DSL string with the operation,
+	 *      into an actual array of options containing all the functions to be executed by the DSL and their arguments.
+	 *    </li>
+	 *    <li><b>action</b> - The operation logic. The options object of the above method should be passed to it, as well as the targed on which the DSL should be run.</li>
+	 *  </ol>
+	 * </p>
+	 *
+	 * @namespace ProAct.OpStore
+	 */
+	ProAct.OpStore = {
+	
+	  /**
+	   * Default operation definitions, that can be used by most of the operations to be defined.
+	   *
+	   * @memberof ProAct.OpStore
+	   * @static
+	   * @constant
+	   */
 	  all: {
+	
+	    /**
+	     * Can generate a simple operation definition.
+	     * <p>
+	     *  It is used for defining all the simple operations, like <i>map</i> or <i>filter</i>.
+	     * </p>
+	     *
+	     * @memberof ProAct.OpStore.all
+	     * @static
+	     * @param {String} name
+	     *      The name of the operation to define.
+	     * @param {String} sym
+	     *      The symbol of the operation that shoul dbe used to identify it from within a DSL string.
+	     * @return {Object}
+	     *      <ol>
+	     *        <li><b>sym</b> - The symbol used to identify the operation in a DSL string or object.</li>
+	     *        <li><b>match method</b> - A method using the <i>sym</i> for identifying the operation in a DSL string.</li>
+	     *        <li>
+	     *          <b>toOptions</b> - A method which is able to turn a DSL string with the operation,
+	     *          into the actual array of options containing all the functions to be executed by the DSL and their arguments.
+	     *          <p>
+	     *            This method is able to fetch predefined operation functions.
+	     *          </p>
+	     *        </li>
+	     *        <li>
+	     *          <b>action</b> - The operation logic.
+	     *          The options object of the above method should be passed to it, as well as the targed on which the DSL should be run.
+	     *          <p>
+	     *            It just calls method named as the passed <i>name</i> parameter on the targed <i>object</i>, passing it as arguments,
+	     *            the argument array generated from the <i>toOptions</i> method.
+	     *          </p>
+	     *        </li>
+	     *      </ol>
+	     * @see {@link ProAct.DSl.predefined}
+	     */
 	    simpleOp: function(name, sym) {
 	      return {
 	        sym: sym,
@@ -4692,7 +8269,7 @@
 	              } else if (predefined && predefined[arg]) {
 	                arg = predefined[arg];
 	
-	                if (Pro.U.isArray(arg)) {
+	                if (P.U.isArray(arg)) {
 	                  opArguments = opArguments.concat(arg);
 	                  arg = undefined;
 	                }
@@ -4715,7 +8292,7 @@
 	          }
 	
 	          var args = actionObject[name];
-	          if (!Pro.U.isArray(args)) {
+	          if (!P.U.isArray(args)) {
 	            args = [args];
 	          }
 	
@@ -4725,30 +8302,335 @@
 	    }
 	  }
 	};
-	opStoreAll = Pro.OpStore.all;
+	opStoreAll = P.OpStore.all;
 	
-	Pro.DSL = {
+	/**
+	 * Contains implementation of the ProAct.js DSL.
+	 * <p>
+	 *  The idea of the DSL is to define {@link ProAct.Observable}s and their dependencies on each other in a declarative and simple way.
+	 * </p>
+	 * <p>
+	 *  The {@link ProAct.Registry} is used to store these observables.
+	 * </p>
+	 * <p>
+	 *  For example if we want to have a stream configured to write in a property, it is very easy done using the DSL:
+	 *  <pre>
+	 *    ProAct.registry.prob('val', 0, '<<(s:data)');
+	 *  </pre>
+	 *  This tells the {@link ProAct.Registry} to create a {@link ProAct.Val} with the value of zero, and to point the previously,
+	 *  stored 'data' stream to it.
+	 * </p>
+	 *
+	 * @namespace ProAct.DSL
+	 */
+	ProAct.DSL = {
+	
+	  /**
+	   * A separator which can be used to separate multiple DSL expressions in one string.
+	   *
+	   * @memberof ProAct.DSL
+	   * @static
+	   * @constant
+	   */
 	  separator: '|',
+	
+	  /**
+	   * The operation definitions of the DSL.
+	   * <p>
+	   *  All of the available and executable operations defined in the ProAct.DSL.
+	   * </p>
+	   * <p>
+	   *  Users of ProAct.js can add their own operation to it.
+	   *  <pre>
+	   *    ProAct.DSL.ops.myOp = ProAct.OpStore.all.simpleOp('foo', 'foo');
+	   *  </pre>
+	   * </p>
+	   *
+	   * @namespace ProAct.DSL.ops
+	   * @memberof ProAct.DSL
+	   * @static
+	   * @see {@link ProAct.OpStore}
+	   */
 	  ops: {
+	
+	    /**
+	     * DSL operation for defining sources of {@link ProAct.Observable}s.
+	     * <p>
+	     *  For example
+	     *  <pre>
+	     *    '<<(s:bla)'
+	     *  </pre>
+	     *  means that the source of the targed of the DSL should be a stream stored in the {@link ProAct.Registry} by the key 'bla'.
+	     * </p>
+	     * <p>
+	     *  or
+	     *  <pre>
+	     *    '<<($1)'
+	     *  </pre>
+	     *  means that the source of the targed of the DSL should be an {@link ProAct.Observable} passed to the {@link ProAct.Dsl.run}
+	     *  method as the first argument after the targed object, the DSL data and the registry.
+	     * </p>
+	     *
+	     * @memberof ProAct.DSL.ops
+	     * @static
+	     * @constant
+	     * @see {@link ProAct.OpStore}
+	     * @see {@link ProAct.Registry}
+	     * @see {@link ProAct.Observable}
+	     * @see {@link ProAct.DSL.run}
+	     */
 	    into: opStoreAll.simpleOp('into', '<<'),
+	
+	    /**
+	     * DSL operation for setting the targed of the DSL as sources of another {@link ProAct.Observable}s.
+	     * <p>
+	     *  For example
+	     *  <pre>
+	     *    '>>(s:bla)'
+	     *  </pre>
+	     *  means that the targed of the DSL should become a source for a stream stored in the {@link ProAct.Registry} by the key 'bla'.
+	     * </p>
+	     * <p>
+	     *  or
+	     *  <pre>
+	     *    '>>($1)'
+	     *  </pre>
+	     *  means that the targed of the DSL should become a source for an {@link ProAct.Observable} passed to the {@link ProAct.Dsl.run}
+	     *  method as the first argument after the targed object, the DSL data and the registry.
+	     * </p>
+	     *
+	     * @memberof ProAct.DSL.ops
+	     * @static
+	     * @constant
+	     * @see {@link ProAct.OpStore}
+	     * @see {@link ProAct.Registry}
+	     * @see {@link ProAct.Observable}
+	     * @see {@link ProAct.DSL.run}
+	     */
 	    out: opStoreAll.simpleOp('out', '>>'),
+	
+	    /**
+	     * DSL operation for attaching listener to the target {@link ProAct.Observable} of the DSL.
+	     * <p>
+	     *  For example
+	     *  <pre>
+	     *    '@(f:bla)'
+	     *  </pre>
+	     *  means that listener function, stored in the {@link ProAct.Registry} as 'bla'
+	     *  should be attached as a listener to the targed {@link ProAct.Observable} of the DSL.
+	     * </p>
+	     *
+	     * @memberof ProAct.DSL.ops
+	     * @static
+	     * @constant
+	     * @see {@link ProAct.OpStore}
+	     * @see {@link ProAct.Registry}
+	     * @see {@link ProAct.Observable}
+	     * @see {@link ProAct.DSL.run}
+	     */
 	    on: opStoreAll.simpleOp('on', '@'),
+	
+	    /**
+	     * DSL operation for adding mapping to the target {@link ProAct.Observable} of the DSL.
+	     * <p>
+	     *  For example
+	     *  <pre>
+	     *    'map(f:bla)'
+	     *  </pre>
+	     *  means that mapping function, stored in the {@link ProAct.Registry} as 'bla'
+	     *  should be mapped to the targed {@link ProAct.Observable} of the DSL.
+	     * </p>
+	     * <p>
+	     *  or
+	     *  <pre>
+	     *    'map($2)'
+	     *  </pre>
+	     *  means that mapping function passed to the {@link ProAct.Dsl.run}
+	     *  method as the second argument after the targed object, the DSL data and the registry
+	     *  should be mapped to the targed {@link ProAct.Observable} of the DSL.
+	     * </p>
+	     *
+	     * @memberof ProAct.DSL.ops
+	     * @static
+	     * @constant
+	     * @see {@link ProAct.OpStore}
+	     * @see {@link ProAct.Registry}
+	     * @see {@link ProAct.Observable}
+	     * @see {@link ProAct.DSL.run}
+	     */
 	    mapping: opStoreAll.simpleOp('mapping', 'map'),
+	
+	    /**
+	     * DSL operation for adding filters to the target {@link ProAct.Observable} of the DSL.
+	     * <p>
+	     *  For example
+	     *  <pre>
+	     *    'filter(f:bla)'
+	     *  </pre>
+	     *  means that filtering function, stored in the {@link ProAct.Registry} as 'bla'
+	     *  should be add as filter to the targed {@link ProAct.Observable} of the DSL.
+	     * </p>
+	     * <p>
+	     *  or
+	     *  <pre>
+	     *    'filter($1)'
+	     *  </pre>
+	     *  means that filtering function passed to the {@link ProAct.Dsl.run}
+	     *  method as the first argument after the targed object, the DSL data and the registry
+	     *  should be added as filter to the targed {@link ProAct.Observable} of the DSL.
+	     * </p>
+	     *
+	     * @memberof ProAct.DSL.ops
+	     * @static
+	     * @constant
+	     * @see {@link ProAct.OpStore}
+	     * @see {@link ProAct.Registry}
+	     * @see {@link ProAct.Observable}
+	     * @see {@link ProAct.DSL.run}
+	     */
 	    filtering: opStoreAll.simpleOp('filtering', 'filter'),
+	
+	    /**
+	     * DSL operation for adding accumulation to the target {@link ProAct.Observable} of the DSL.
+	     * <p>
+	     *  For example
+	     *  <pre>
+	     *    'acc($1, f:bla)'
+	     *  </pre>
+	     *  means that accumulating function, stored in the {@link ProAct.Registry} as 'bla'
+	     *  should be added as accumulation to the targed {@link ProAct.Observable} of the DSL,
+	     *  and the first argument passed to {@link ProAct.DSL.run} after the targed object, the DSL data and the registry should
+	     *  be used as initial value for the accumulation.
+	     * </p>
+	     *
+	     * @memberof ProAct.DSL.ops
+	     * @static
+	     * @constant
+	     * @see {@link ProAct.OpStore}
+	     * @see {@link ProAct.Registry}
+	     * @see {@link ProAct.Observable}
+	     * @see {@link ProAct.DSL.run}
+	     */
 	    accumulation: opStoreAll.simpleOp('accumulation', 'acc')
 	  },
+	
+	  /**
+	   * A set of predefined operations to be used by the DSL.
+	   *
+	   * @namespace ProAct.DSL.predefined
+	   * @memberof ProAct.DSL
+	   * @static
+	   * @see {@link ProAct.DSL.ops}
+	   */
 	  predefined: {
+	
+	    /**
+	     * A set of predefined mapping operations to be used by the DSL.
+	     *
+	     * @namespace ProAct.DSL.predefined.mapping
+	     * @memberof ProAct.DSL.predefined
+	     * @static
+	     * @see {@link ProAct.DSL.ops.mapping}
+	     */
 	    mapping: {
+	
+	      /**
+	       * Mapping operation for changing the sign of a number to the oposite.
+	       * <p>
+	       *  For example 4 becomes -4 and -5 becomes 5.
+	       * </p>
+	       * <p>
+	       *  Usage in a DSL expression:
+	       *  <pre>
+	       *    map(-)
+	       *  </pre>
+	       * </p>
+	       *
+	       * @memberof ProAct.DSL.predefined.mapping
+	       * @static
+	       * @method
+	       * @see {@link ProAct.DSL.ops.map}
+	       */
 	      '-': function (el) { return -el; },
+	
+	      /**
+	       * Mapping operation for computing the square of a number.
+	       * <p>
+	       *  For example 4 becomes 16.
+	       * </p>
+	       * <p>
+	       *  Usage in a DSL expression:
+	       *  <pre>
+	       *    map(pow)
+	       *  </pre>
+	       * </p>
+	       *
+	       * @memberof ProAct.DSL.predefined.mapping
+	       * @static
+	       * @method
+	       * @see {@link ProAct.DSL.ops.map}
+	       */
 	      'pow': function (el) { return el * el; },
+	
+	      /**
+	       * Mapping operation for computing the square root of a number.
+	       * <p>
+	       *  For example 4 becomes 2.
+	       * </p>
+	       * <p>
+	       *  Usage in a DSL expression:
+	       *  <pre>
+	       *    map(sqrt)
+	       *  </pre>
+	       * </p>
+	       *
+	       * @memberof ProAct.DSL.predefined.mapping
+	       * @static
+	       * @method
+	       * @see {@link ProAct.DSL.ops.map}
+	       */
 	      'sqrt': function (el) { return Math.sqrt(el); },
+	
+	      /**
+	       * Mapping operation for turning an object to a decimal Number - integer.
+	       * <p>
+	       *  For example '4' becomes 4.
+	       * </p>
+	       * <p>
+	       *  Usage in a DSL expression:
+	       *  <pre>
+	       *    map(int)
+	       *  </pre>
+	       * </p>
+	       *
+	       * @memberof ProAct.DSL.predefined.mapping
+	       * @static
+	       * @method
+	       * @see {@link ProAct.DSL.ops.map}
+	       */
 	      'int': function (el) { return parseInt(el, 10); },
+	
+	      /**
+	       * Mapping operation for calling a method of an object.
+	       * <p>
+	       *  Usage in a DSL expression:
+	       *  <pre>
+	       *    map(&.&go)
+	       *  </pre>
+	       *  This will call the 'target.go' method and use its result.
+	       * </p>
+	       *
+	       * @memberof ProAct.DSL.predefined.mapping
+	       * @static
+	       * @method
+	       * @see {@link ProAct.DSL.ops.map}
+	       */
 	      '&.': function (arg) {
 	        return function (el) {
 	          var p = el[arg];
 	          if (!p) {
 	            return el;
-	          } else if (Pro.U.isFunction(p)) {
+	          } else if (P.U.isFunction(p)) {
 	            return p.call(el);
 	          } else {
 	            return p;
@@ -4756,28 +8638,219 @@
 	        };
 	      }
 	    },
+	
+	    /**
+	     * A set of predefined filtering operations to be used by the DSL.
+	     *
+	     * @namespace ProAct.DSL.predefined.filtering
+	     * @memberof ProAct.DSL.predefined
+	     * @static
+	     * @see {@link ProAct.DSL.ops.filtering}
+	     */
 	    filtering: {
+	
+	      /**
+	       * Filtering operation for filtering only odd Numbers.
+	       * <p>
+	       *  Usage in a DSL expression:
+	       *  <pre>
+	       *    filter(odd)
+	       *  </pre>
+	       * </p>
+	       *
+	       * @memberof ProAct.DSL.predefined.filtering
+	       * @static
+	       * @method
+	       * @see {@link ProAct.DSL.ops.filter}
+	       */
 	      'odd': function (el) { return el % 2 !== 0; },
+	
+	      /**
+	       * Filtering operation for filtering only even Numbers.
+	       * <p>
+	       *  Usage in a DSL expression:
+	       *  <pre>
+	       *    filter(even)
+	       *  </pre>
+	       * </p>
+	       *
+	       * @memberof ProAct.DSL.predefined.filtering
+	       * @static
+	       * @method
+	       * @see {@link ProAct.DSL.ops.filter}
+	       */
 	      'even': function (el) { return el % 2 === 0; },
+	
+	      /**
+	       * Filtering operation for filtering only positive Numbers.
+	       * <p>
+	       *  Usage in a DSL expression:
+	       *  <pre>
+	       *    filter(+)
+	       *  </pre>
+	       * </p>
+	       *
+	       * @memberof ProAct.DSL.predefined.filtering
+	       * @static
+	       * @method
+	       * @see {@link ProAct.DSL.ops.filter}
+	       */
 	      '+': function (el) { return el >= 0; },
+	
+	      /**
+	       * Filtering operation for filtering only negative Numbers.
+	       * <p>
+	       *  Usage in a DSL expression:
+	       *  <pre>
+	       *    filter(-)
+	       *  </pre>
+	       * </p>
+	       *
+	       * @memberof ProAct.DSL.predefined.filtering
+	       * @static
+	       * @method
+	       * @see {@link ProAct.DSL.ops.filter}
+	       */
 	      '-': function (el) { return el <= 0; }
 	    },
+	
+	    /**
+	     * A set of predefined accumulation operations to be used by the DSL.
+	     *
+	     * @namespace ProAct.DSL.predefined.accumulation
+	     * @memberof ProAct.DSL.predefined
+	     * @static
+	     * @see {@link ProAct.DSL.ops.accumulation}
+	     */
 	    accumulation: {
+	
+	      /**
+	       * Accumulation operation representing a sum of numbers.
+	       * <p>
+	       *  Usage in a DSL expression:
+	       *  <pre>
+	       *    acc(+)
+	       *  </pre>
+	       * </p>
+	       *
+	       * @memberof ProAct.DSL.predefined.accumulation
+	       * @static
+	       * @constant
+	       * @see {@link ProAct.DSL.ops.accumulation}
+	       */
 	      '+': [0, function (x, y) { return x + y; }],
+	
+	      /**
+	       * Accumulation operation representing a product of numbers.
+	       * <p>
+	       *  Usage in a DSL expression:
+	       *  <pre>
+	       *    acc(*)
+	       *  </pre>
+	       * </p>
+	       *
+	       * @memberof ProAct.DSL.predefined.accumulation
+	       * @static
+	       * @constant
+	       * @see {@link ProAct.DSL.ops.accumulation}
+	       */
 	      '*': [1, function (x, y) { return x * y; }],
+	
+	      /**
+	       * Accumulation operation representing string concatenation.
+	       * <p>
+	       *  Usage in a DSL expression:
+	       *  <pre>
+	       *    acc(+str)
+	       *  </pre>
+	       * </p>
+	       *
+	       * @memberof ProAct.DSL.predefined.accumulation
+	       * @static
+	       * @constant
+	       * @see {@link ProAct.DSL.ops.accumulation}
+	       */
 	      '+str': ['', function (x, y) { return x + y; }],
 	    }
 	  },
+	
+	  /**
+	   * Extracts DSL actions and options from a string.
+	   * <p>
+	   *  Splits the passed <i>optionString</i> using {@link ProAct.DSL.separator} as saparator and calls {@link ProAct.DSL.optionsFromArray} on
+	   *  the result.
+	   * </p>
+	   *
+	   * @memberof ProAct.DSL
+	   * @static
+	   * @method
+	   * @param {String} optionString
+	   *      The string to use to extract options from.
+	   * @param [...]
+	   *      Parameters for the extracted actions/functions/operations.
+	   *      <p>
+	   *        For example if the string contains 'map($1)', the first argument passed after the <i>optionString</i> argument
+	   *        is passed to the 'map' operation.
+	   *      </p>
+	   * @return {Object}
+	   *      Object containing operations as fields and options(arguments) for these operations as values.
+	   *      <p>
+	   *        'map($1)|filter(+)|@($2)' becomes:
+	   *        <pre>
+	   *          {
+	   *            mapping: {first-argument-to-this-function-after-the-optionString-arg},
+	   *            filtering: {@link ProAct.DSL.predefined.filtering['+']},
+	   *            on: {second-argument-to-this-function-after-the-optionString-arg}
+	   *          }
+	   *        </pre>
+	   *      </p>
+	   * @see {@link ProAct.DSL.run}
+	   * @see {@link ProAct.DSL.optionsFromArray}
+	   * @see {@link ProAct.DSL.separator}
+	   */
 	  optionsFromString: function (optionString) {
 	    return dsl.optionsFromArray.apply(null, [optionString.split(dsl.separator)].concat(slice.call(arguments, 1)));
 	  },
+	
+	  /**
+	   * Extracts DSL actions and options from an array of strings.
+	   * <p>
+	   *  Example <i>optionArray</i> is ['map($1)', 'filter(+)', @($2)'] and it will become options object of functions and arguments to
+	   *  be applied on a target {@link ProAct.Observable} passed to the {@link ProAct.DSL.run} method.
+	   * </p>
+	   *
+	   * @memberof ProAct.DSL
+	   * @static
+	   * @method
+	   * @param {Array} optionArray
+	   *      The array of strings to use to extract options from.
+	   * @param [...]
+	   *      Parameters for the extracted actions/functions/operations.
+	   *      <p>
+	   *        For example if the array contains 'map($1)', the first argument passed after the <i>optionArray</i> argument
+	   *        is passed to the 'map' operation.
+	   *      </p>
+	   * @return {Object}
+	   *      Object containing operations as fields and options(arguments) for these operations as values.
+	   *      <p>
+	   *        ['map($1)', 'filter(+)', @($2)'] becomes:
+	   *        <pre>
+	   *          {
+	   *            mapping: {first-argument-to-this-function-after-the-optionString-arg},
+	   *            filtering: {@link ProAct.DSL.predefined.filtering['+']},
+	   *            on: {second-argument-to-this-function-after-the-optionString-arg}
+	   *          }
+	   *        </pre>
+	   *      </p>
+	   * @see {@link ProAct.DSL.run}
+	   */
 	  optionsFromArray: function (optionArray) {
 	    var result = {}, i, ln = optionArray.length,
-	        ops = Pro.R.ops, op, opType;
+	        ops = P.R.ops, op, opType;
 	    for (i = 0; i < ln; i++) {
 	      op = optionArray[i];
-	      for (opType in Pro.DSL.ops) {
-	        opType = Pro.DSL.ops[opType];
+	      for (opType in P.DSL.ops) {
+	        opType = P.DSL.ops[opType];
 	        if (opType.match(op)) {
 	          opType.toOptions.apply(opType, [result, op].concat(slice.call(arguments, 1)));
 	          break;
@@ -4786,8 +8859,58 @@
 	    }
 	    return result;
 	  },
+	
+	  /**
+	   * Configures an {@link ProAct.Observable} using the DSL passed with the <i>options</i> argument.
+	   * <p>
+	   *  Uses the passed {@link ProAct.Registry} to read stored values from.
+	   * </p>
+	   *
+	   * @memberof ProAct.DSL
+	   * @static
+	   * @method
+	   * @param {ProAct.Observable} observable
+	   *      The target of the DSL operations.
+	   * @param {ProAct.Observable|String|Object} options
+	   *      The DSL formatted options to be used for the configuration.
+	   *      <p>
+	   *        If the value of this parameter is instance of {@link ProAct.Observable} it is set as a source to the <i>target observable</i>.
+	   *      </p>
+	   *      <p>
+	   *        If the value ot this parameter is String - {@link ProAct.DSL.optionsFromString} is used to be turned to an options object.
+	   *      </p>
+	   *      <p>
+	   *        If the values of this parameter is object, it is used to configure the <i>targed observable</i>.
+	   *      </p>
+	   *      <p>
+	   *        The format of the object should be something like:
+	   *        <pre>
+	   *          {
+	   *            dsl-operation: function|array-of-functions-and-arguments,
+	   *            dsl-operation: function|array-of-functions-and-arguments,
+	   *            dsl-operation: function|array-of-functions-and-arguments,
+	   *            ...
+	   *          }
+	   *        </pre>
+	   *      </p>
+	   * @param {ProAct.Registry} registry
+	   *      The registry to read stored values for the DSL operations.
+	   *      <p>
+	   *        For example if there is 'map(f:foo)', the mapping function is read from the registry at the key 'foo'.
+	   *      </p>
+	   * @param [...]
+	   *      Parameters for the DSL operations.
+	   *      <p>
+	   *        For example if the array contains 'map($1)', the first argument passed after the <i>observable</i>, <i>options</i> and <i>registry</i> arguments
+	   *        is passed to the 'map' operation.
+	   *      </p>
+	   * @return {ProAct.Observable}
+	   *      The configured observable.
+	   * @see {@link ProAct.DSL.optionsFromString}
+	   * @see {@link ProAct.Observable}
+	   */
 	  run: function (observable, options, registry) {
-	    var isS = Pro.U.isString,
+	    var isS = P.U.isString,
 	        args = slice.call(arguments, 3),
 	        option, i, ln, opType;
 	
@@ -4795,7 +8918,7 @@
 	      options = dsl.optionsFromString.apply(null, [options].concat(args));
 	    }
 	
-	    if (options && options instanceof Pro.Observable) {
+	    if (options && options instanceof P.Observable) {
 	      options = {into: options};
 	    }
 	
@@ -4826,42 +8949,215 @@
 	  }
 	};
 	
-	dsl = Pro.DSL;
+	dsl = P.DSL;
 	dslOps = dsl.ops;
 	
-	Pro.U.ex(Pro.Registry, {
+	P.U.ex(ProAct.Registry, {
+	
+	  /**
+	   * Constructs a ProAct.Registry.Provider. The {@link ProAct.Registry} uses registered providers as storage for different objects.
+	   * <p>
+	   *  Every provider has one or more namespaces in the {@link ProAct.Registry} it is registered to.
+	   * </p>
+	   * <p>
+	   *  Every provider knows how to store its type of obects, how to make them, or delete them.
+	   * </p>
+	   *
+	   * @class ProAct.Registry.Provider
+	   * @memberof ProAct.Registry
+	   * @static
+	   * @see {@link ProAct.Registry}
+	   */
 	  Provider: function () {
 	    this.stored = {};
 	  },
+	
+	  /**
+	   * Constructs a ProAct.Registry.StreamProvider. The {@link ProAct.Registry} uses registered stream providers as storage for {@link ProAct.Stream}s.
+	   *
+	   * @class ProAct.Registry.StreamProvider
+	   * @extends ProAct.Registry.Provider
+	   * @memberof ProAct.Registry
+	   * @static
+	   * @see {@link ProAct.Registry}
+	   */
 	  StreamProvider: function () {
-	    Pro.Registry.Provider.call(this);
+	    P.R.Provider.call(this);
 	  },
+	
+	  /**
+	   * Constructs a ProAct.Registry.FunctionProvider. The {@link ProAct.Registry} uses registered function providers as storage for Functions.
+	   * <p>
+	   *  The function provider doesn't have implementation for creation of new functions, only for storing, readin and removing them.
+	   * </p>
+	   *
+	   * @class ProAct.Registry.FunctionProvider
+	   * @extends ProAct.Registry.Provider
+	   * @memberof ProAct.Registry
+	   * @static
+	   * @see {@link ProAct.Registry}
+	   */
 	  FunctionProvider: function () {
-	    Pro.Registry.Provider.call(this);
+	    P.R.Provider.call(this);
 	  },
+	
+	  /**
+	   * Constructs a ProAct.Registry.ProObjectProvider.
+	   * The {@link ProAct.Registry} uses registered function providers as storage for objects with reactive {@link ProAct.Property} instances.
+	   *
+	   * @class ProAct.Registry.ProObjectProvider
+	   * @extends ProAct.Registry.Provider
+	   * @memberof ProAct.Registry
+	   * @static
+	   * @see {@link ProAct.Registry}
+	   * @see {@link ProAct.Property}
+	   */
 	  ProObjectProvider: function () {
-	    Pro.Registry.Provider.call(this);
+	    P.R.Provider.call(this);
 	  }
 	});
 	
-	Pro.Registry.Provider.prototype = {
-	  constructor: Pro.Registry.Provider,
+	ProAct.Registry.Provider.prototype = {
+	
+	  /**
+	   * Reference to the constructor of this object.
+	   *
+	   * @memberof ProAct.Registry.Provider
+	   * @instance
+	   * @constant
+	   * @default ProAct.Registry.Provider
+	   */
+	  constructor: ProAct.Registry.Provider,
+	
+	  /**
+	   * Creates and stores an instance of the object this ProAct.Registry.Provider manages.
+	   * <p>
+	   *  For the creation is used the {@link ProAct.Registry.Provider#provide} method.
+	   * </p>
+	   *
+	   * @memberof ProAct.Registry.Provider
+	   * @instance
+	   * @method make
+	   * @param {String} key
+	   *      The key on which the new instance will be stored.
+	   * @param {Array} options
+	   *      Array containing options for the creation process. For example the exact sub-type of the object to create (optional).
+	   * @param [...]
+	   *      Parameters passed to the constructor when the new instance is created.
+	   * @return {Object}
+	   *      The newly created and stored object.
+	   * @see {@link ProAct.Registry.Provider#provide}
+	   */
 	  make: function (key, options) {
 	    var provided, args = slice.call(arguments, 1);
 	    this.stored[key] = provided = this.provide.apply(this, args);
 	    return provided;
 	  },
-	  store: function (key, func, options) { return this.stored[key] = func; },
+	
+	  /**
+	   * Stores an instance of an object this ProAct.Registry.Provider manages.
+	   *
+	   * @memberof ProAct.Registry.Provider
+	   * @instance
+	   * @method store
+	   * @param {String} key
+	   *      The key on which the <i>object</i> will be stored.
+	   * @param {Object} object
+	   *      The object to store.
+	   * @return {Object}
+	   *      The stored object.
+	   */
+	  store: function (key, object) { return this.stored[key] = object; },
+	
+	  /**
+	   * Reads a stored instance.
+	   *
+	   * @memberof ProAct.Registry.Provider
+	   * @instance
+	   * @method get
+	   * @param {String} key
+	   *      The key to read.
+	   * @return {Object}
+	   *      The stored object corresponding to the passed <i>key</i> or undefined if there is no such object.
+	   */
 	  get: function (key) { return this.stored[key]; },
+	
+	  /**
+	   * Deletes a stored instance.
+	   *
+	   * @memberof ProAct.Registry.Provider
+	   * @instance
+	   * @method delete
+	   * @param {String} key
+	   *      The key to delete.
+	   * @return {Object}
+	   *      The stored object corresponding to the passed <i>key</i> or undefined if there is no such object.
+	   */
 	  del: function(key) {
 	    var deleted = this.get(key);
 	    delete this.stored[key];
 	    return deleted;
 	  },
+	
+	  /**
+	   * A callback called by the {@link ProAct.Registry} when <i>this</i> ProAct.Registry.Provider is registered.
+	   *
+	   * @memberof ProAct.Registry.Provider
+	   * @instance
+	   * @abstract
+	   * @method registered
+	   * @param {ProAct.Registry} registery
+	   *      The registry in which <i>this</i> is being registered.
+	   */
 	  registered: function (registry) {},
+	
+	  /**
+	   * An object containing all the available sub-types constructions of the managed by <i>this</i> class.
+	   * <p>
+	   *  Should always have a 'basic' field for the default construction operation.
+	   * </p>
+	   *
+	   * @namespace ProAct.Registry.Provider.types
+	   * @memberof ProAct.Registry.Provider
+	   * @static
+	   */
 	  types: {
+	
+	    /**
+	     * Defines default construction logic for the managed object.
+	     * <p>
+	     *  For example if we have a 'FooProvider', this method will be something like:
+	     *  <pre>
+	     *    return new Foo();
+	     *  </pre>
+	     * </p>
+	     * <p>
+	     *  It is abstract and must be overridden by the extenders, or an Error will be thrown.
+	     * </p>
+	     *
+	     * @memberof ProAct.Registry.Provider.types
+	     * @instance
+	     * @abstract
+	     * @method basic
+	     * @return {Object}
+	     *      An isntance of the managed class of objects.
+	     */
 	    basic: function () { throw new Error('Abstract: implement!'); }
 	  },
+	
+	  /**
+	   * Provides a new instance of the managed by <i>this</i> ProAct.Registry.Provider object.
+	   *
+	   * @memberof ProAct.Registry.Provider
+	   * @instance
+	   * @method provide
+	   * @param {Array} options
+	   *      An array containing the key of the object to create and store. It may contain data to pass to the constructor of the object.
+	   * @param [...]
+	   *      Arguments that should be passed to the constructor.
+	   * @return {Object}
+	   *      An isntance of the managed class of objects.
+	   */
 	  provide: function (options) {
 	    if (options) {
 	      var type = options[0],
@@ -4885,44 +9181,245 @@
 	  }
 	};
 	
-	Pro.Registry.StreamProvider.prototype = Pro.U.ex(Object.create(Pro.Registry.Provider.prototype), {
-	  constructor: Pro.Registry.StreamProvider,
+	ProAct.Registry.StreamProvider.prototype = P.U.ex(Object.create(P.R.Provider.prototype), {
+	
+	  /**
+	   * Reference to the constructor of this object.
+	   *
+	   * @memberof ProAct.Registry.StreamProvider
+	   * @instance
+	   * @constant
+	   * @default ProAct.Registry.StreamProvider
+	   */
+	  constructor: ProAct.Registry.StreamProvider,
+	
+	  /**
+	   * A callback called by the {@link ProAct.Registry} when <i>this</i> ProAct.Registry.StreamProvider is registered.
+	   * <p>
+	   *  It adds the methods <i>s</i> and <i>stream</i> to the {@link ProAct.Registry}, which are aliases of <i>this</i>' {@link ProAct.Registry.StreamProvider#get} method.
+	   * </p>
+	   *
+	   * @memberof ProAct.Registry.StreamProvider
+	   * @instance
+	   * @method registered
+	   * @param {ProAct.Registry} registery
+	   *      The registry in which <i>this</i> is being registered.
+	   */
 	  registered: function (registry) {
-	    registry.s = registry.stream = Pro.U.bind(this, this.get);
+	    registry.s = registry.stream = P.U.bind(this, this.get);
 	  },
+	
+	  /**
+	   * An object containing all the available sub-types constructions of the managed by <i>this</i> class.
+	   *
+	   * @namespace ProAct.Registry.StreamProvider.types
+	   * @memberof ProAct.Registry.StreamProvider
+	   * @static
+	   */
 	  types: {
-	    basic: function () { return new Pro.Stream(); },
-	    delayed: function (args) { return new Pro.DelayedStream(parseInt(args[0], 10)); },
-	    size: function (args) { return new Pro.SizeBufferedStream(parseInt(args[0], 10)); },
-	    debouncing: function (args) { return new Pro.DebouncingStream(parseInt(args[0], 10)); },
-	    throttling: function (args) { return new Pro.ThrottlingStream(parseInt(args[0], 10)); }
+	
+	    /**
+	     * Constructs a simple {@link ProAct.Stream}
+	     * <p>
+	     *  <pre>
+	     *    return new ProAct.Stream();
+	     *  </pre>
+	     * </p>
+	     *
+	     * @memberof ProAct.Registry.StreamProvider.types
+	     * @instance
+	     * @method basic
+	     * @return {ProAct.Stream}
+	     *      An isntance of {@link ProAct.Stream}.
+	     * @see {@link ProAct.Stream}
+	     */
+	    basic: function () { return new P.S(); },
+	
+	    /**
+	     * Constructs a {@link ProAct.DelayedStream}
+	     * <p>
+	     *  <pre>
+	     *    return new ProAct.DelayedStream(delay);
+	     *  </pre>
+	     * </p>
+	     *
+	     * @memberof ProAct.Registry.StreamProvider.types
+	     * @instance
+	     * @method delayed
+	     * @param {Array} args
+	     *      An array of arguments - the first element of which is the <i>delay</i> of the stream to construct.
+	     * @return {ProAct.DelayedStream}
+	     *      An isntance of {@link ProAct.DelayedStream}.
+	     * @see {@link ProAct.DelayedStream}
+	     */
+	    delayed: function (args) { return new P.DBS(parseInt(args[0], 10)); },
+	
+	    /**
+	     * Constructs a {@link ProAct.SizeBufferedStream}
+	     * <p>
+	     *  <pre>
+	     *    return new ProAct.SizeBufferedStream(size);
+	     *  </pre>
+	     * </p>
+	     *
+	     * @memberof ProAct.Registry.StreamProvider.types
+	     * @instance
+	     * @method size
+	     * @param {Array} args
+	     *      An array of arguments - the first element of which is the <i>size</i> of the stream to construct.
+	     * @return {ProAct.SizeBufferedStream}
+	     *      An isntance of {@link ProAct.SizeBufferedStream}.
+	     * @see {@link ProAct.SizeBufferedStream}
+	     */
+	    size: function (args) { return new P.SBS(parseInt(args[0], 10)); },
+	
+	    /**
+	     * Constructs a {@link ProAct.DebouncingStream}
+	     * <p>
+	     *  <pre>
+	     *    return new ProAct.DebouncingStream(delay);
+	     *  </pre>
+	     * </p>
+	     *
+	     * @memberof ProAct.Registry.StreamProvider.types
+	     * @instance
+	     * @method debouncing
+	     * @param {Array} args
+	     *      An array of arguments - the first element of which is the <i>delay</i> of the stream to construct.
+	     * @return {ProAct.DebouncingStream}
+	     *      An isntance of {@link ProAct.DebouncingStream}.
+	     * @see {@link ProAct.DebouncingStream}
+	     */
+	    debouncing: function (args) { return new P.DDS(parseInt(args[0], 10)); },
+	
+	    /**
+	     * Constructs a {@link ProAct.ThrottlingStream}
+	     * <p>
+	     *  <pre>
+	     *    return new ProAct.ThrottlingStream(delay);
+	     *  </pre>
+	     * </p>
+	     *
+	     * @memberof ProAct.Registry.StreamProvider.types
+	     * @instance
+	     * @method throttling
+	     * @param {Array} args
+	     *      An array of arguments - the first element of which is the <i>delay</i> of the stream to construct.
+	     * @return {ProAct.ThrottlingStream}
+	     *      An isntance of {@link ProAct.ThrottlingStream}.
+	     * @see {@link ProAct.ThrottlingStream}
+	     */
+	    throttling: function (args) { return new P.TDS(parseInt(args[0], 10)); }
 	  }
 	});
 	
-	Pro.Registry.FunctionProvider.prototype = Pro.U.ex(Object.create(Pro.Registry.Provider.prototype), {
-	  constructor: Pro.Registry.FunctionProvider
+	ProAct.Registry.FunctionProvider.prototype = P.U.ex(Object.create(P.R.Provider.prototype), {
+	
+	  /**
+	   * Reference to the constructor of this object.
+	   *
+	   * @memberof ProAct.Registry.FunctionProvider
+	   * @instance
+	   * @constant
+	   * @default ProAct.Registry.FunctionProvider
+	   */
+	  constructor: ProAct.Registry.FunctionProvider
 	});
 	
-	Pro.Registry.ProObjectProvider.prototype = Pro.U.ex(Object.create(Pro.Registry.Provider.prototype), {
-	  constructor: Pro.Registry.ProObjectProvider,
+	ProAct.Registry.ProObjectProvider.prototype = P.U.ex(Object.create(P.R.Provider.prototype), {
+	
+	  /**
+	   * Reference to the constructor of this object.
+	   *
+	   * @memberof ProAct.Registry.ProObjectProvider
+	   * @instance
+	   * @constant
+	   * @default ProAct.Registry.ProObjectProvider
+	   */
+	  constructor: ProAct.Registry.ProObjectProvider,
+	
+	  /**
+	   * A callback called by the {@link ProAct.Registry} when <i>this</i> ProAct.Registry.ProObjectProvider is registered.
+	   * <p>
+	   *  It adds the methods <i>po</i> and <i>proObject</i> to the {@link ProAct.Registry}, which are aliases of <i>this</i>' {@link ProAct.Registry.ProObjectProvider#get} method.
+	   * </p>
+	   * <p>
+	   *  It adds the method <i>prob</i> to the {@link ProAct.Registry}, which is alias of <i>this</i>' {@link ProAct.Registry.ProObjectProvider#make} method.
+	   * </p>
+	   *
+	   * @memberof ProAct.Registry.StreamProvider
+	   * @instance
+	   * @method registered
+	   * @param {ProAct.Registry} registery
+	   *      The registry in which <i>this</i> is being registered.
+	   */
 	  registered: function (registry) {
-	    registry.po = registry.proObject = Pro.U.bind(this, this.get);
+	    registry.po = registry.proObject = P.U.bind(this, this.get);
 	    registry.prob = P.U.bind(this, function (key, val, meta) {
 	      return this.make(key, null, val, meta);
 	    });
 	  },
+	
+	  /**
+	   * An object containing all the available sub-types constructions of the managed by <i>this</i> class.
+	   *
+	   * @namespace ProAct.Registry.ProObjectProvider.types
+	   * @memberof ProAct.Registry.ProObjectProvider
+	   * @static
+	   */
 	  types: {
+	
+	    /**
+	     * Constructs a ProAct.js reactive object from original one, using {@link ProAct.prob}
+	     * <p>
+	     *  <pre>
+	     *    return new ProAct.prob(value, meta);
+	     *  </pre>
+	     * </p>
+	     *
+	     * @memberof ProAct.Registry.ProObjectProvider.types
+	     * @instance
+	     * @method basic
+	     * @param {Array} options
+	     *      Array containing options for the creation process.
+	     * @param {Object} value
+	     *      The object/value to make reactive.
+	     * @param {Object|String} meta
+	     *      Meta-data used to help in the reactive object creation.
+	     * @return {Object}
+	     *      A ractive object.
+	     * @see {@link ProAct.prob}
+	     */
 	    basic: function (options, value, meta) {
-	      return Pro.prob(value, meta);
+	      return P.prob(value, meta);
 	    }
 	  }
 	});
 	
-	streamProvider = new Pro.Registry.StreamProvider();
-	functionProvider = new Pro.Registry.FunctionProvider();
-	proObjectProvider = new Pro.Registry.ProObjectProvider();
+	streamProvider = new P.R.StreamProvider();
+	functionProvider = new P.R.FunctionProvider();
+	proObjectProvider = new P.R.ProObjectProvider();
 	
-	Pro.registry = new Pro.Registry()
+	/**
+	 * The {@link ProAct.Registry} instance used by ProAct's by default.
+	 * <p>
+	 *  It has a {@link ProAct.Registry.StreamProvider} registered on the <i>s</i> namespace.
+	 * </p>
+	 * <p>
+	 *  It has a {@link ProAct.Registry.ProObjectProvider} registered on the <i>po</i> and <i>obj</i> namespaces.
+	 * </p>
+	 * <p>
+	 *  It has a {@link ProAct.Registry.FunctionProvider} registered on the <i>f</i> and <i>l</i> namespaces.
+	 * </p>
+	 * <p>
+	 *  Override this instance or register your own providers in it to extend the ProAct.js DSL.
+	 * </p>
+	 *
+	 * @type ProAct.Registry
+	 * @memberof ProAct
+	 * @static
+	 */
+	ProAct.registry = new P.R()
 	  .register('s', streamProvider)
 	  .register('po', proObjectProvider)
 	  .register('obj', proObjectProvider)

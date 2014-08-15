@@ -6,7 +6,7 @@
  *
  * So ProAct.js can turn every vanilla JavaScript value to a set of reactive properties, and this generates a dependency graph between them.
  * The data flow in this oriented graph is determined by its edges. So if we should receive data from the outside of this dependency system we'll need
- * a powerful but easy to use tool to turn every user or server generated action into a data event, common to the graph. Enter the Pro.Stream - the functional
+ * a powerful but easy to use tool to turn every user or server generated action into a data event, common to the graph. Enter the ProAct.Stream - the functional
  * part of ProAct.js
  *
  * ProAct.js can be used to define bindings, to separate views from models (mv*), for performance optimizations... It is a tool.
@@ -19,7 +19,7 @@
  *
  * @namespace ProAct
  * @license MIT
- * @version 0.4.3
+ * @version 1.0.0
  * @author meddle0x53
  */
 var ProAct = Pro = P = {},
@@ -60,7 +60,7 @@ var ProAct = Pro = P = {},
  * @static
  * @constant
  */
-ProAct.VERSION = '0.4.3';
+ProAct.VERSION = '1.0.0';
 
 /**
  * Defines the possible states of the ProAct objects.
@@ -164,64 +164,64 @@ ProAct.Utils = Pro.U = {
    * @return {Boolean}
    */
   isArray: function (value) {
-    return Pro.U.isObject(value) && Object.prototype.toString.call(value) === '[object Array]';
+    return P.U.isObject(value) && Object.prototype.toString.call(value) === '[object Array]';
   },
 
   /**
-   * Checks if the passed value is instance of the Pro.Array type or not.
+   * Checks if the passed value is instance of the {@link ProAct.Array} type or not.
    *
    * @memberof ProAct.Utils
    * @function isProArray
    * @param {Object} value
    * @return {Boolean}
-   * @see {@link Pro.Array}
+   * @see {@link ProAct.Array}
    */
   isProArray: function (value) {
-    return value !== null && Pro.U.isObject(value) && Pro.U.isArray(value._array) && value.length !== undefined;
+    return value !== null && P.U.isObject(value) && P.U.isArray(value._array) && value.length !== undefined;
   },
 
   /**
    * Checks if the passed value is a valid array-like object or not.
-   * Array like objects in ProAct.js are plain JavaScript arrays and Pro.Arrays.
+   * Array like objects in ProAct.js are plain JavaScript arrays and {@link ProAct.Array}s.
    *
    * @memberof ProAct.Utils
    * @function isArrayObject
    * @param {Object} value
    * @return {Boolean}
-   * @see {@link Pro.Array}
+   * @see {@link ProAct.Array}
    */
   isArrayObject: function (value) {
-    return Pro.U.isArray(value) || Pro.U.isProArray(value);
+    return P.U.isArray(value) || P.U.isProArray(value);
   },
 
   /**
    * Checks if the passed value is a valid ProAct.js object or not.
-   * ProAct.js object have a special '__pro__' object that is hidden in them, which should be instance of Pro.Core.
+   * ProAct.js object have a special '__pro__' object that is hidden in them, which should be instance of {@link ProAct.Core}.
    *
    * @memberof ProAct.Utils
    * @function isProObject
    * @param {Object} value
    * @return {Boolean}
-   * @see {@link Pro.Array}
-   * @see {@link Pro.Value}
-   * @see {@link Pro.Core}
+   * @see {@link ProAct.Array}
+   * @see {@link ProAct.Value}
+   * @see {@link ProAct.Core}
    */
   isProObject: function (value) {
-    return value && Pro.U.isObject(value) && value.__pro__ !== undefined && Pro.U.isObject(value.__pro__.properties);
+    return value && ProAct.U.isObject(value) && value.__pro__ !== undefined && ProAct.U.isObject(value.__pro__.properties);
   },
 
   /**
-   * Checks if the passed value is a valid Pro.Value or not.
-   * Pro.Value is a simple ProAct.js object that has only one reactive property - 'v'.
+   * Checks if the passed value is a valid {@link ProAct.Value} or not.
+   * {@link ProAct.Value} is a simple ProAct.js object that has only one reactive property - 'v'.
    *
    * @memberof ProAct.Utils
    * @function isProVal
    * @param {Object} value
    * @return {Boolean}
-   * @see {@link Pro.Value}
+   * @see {@link ProAct.Value}
    */
   isProVal: function (value) {
-    return Pro.U.isProObject(value) && value.__pro__.properties.v !== undefined;
+    return P.U.isProObject(value) && value.__pro__.properties.v !== undefined;
   },
 
   /**
@@ -359,7 +359,7 @@ ProAct.Utils = Pro.U = {
         diff[index].o.push(e1);
       }
     } else {
-      diff = Pro.U.diff(array2, array1);
+      diff = P.U.diff(array2, array1);
       for (i in diff) {
         el1 = diff[i];
         el2 = el1.n;
@@ -409,7 +409,7 @@ ProAct.Utils = Pro.U = {
  *
  * @namespace ProAct.Configuration
  */
-ProAct.Configuration = P.Conf = {
+ProAct.Configuration = {
   /**
    * If this option is set to true, when a ProAct.js object is created and has properties named
    * as one or more of the properties listed in <i>ProAct.Configuration.keypropList</i> an Error will be thrown.

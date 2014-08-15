@@ -218,7 +218,7 @@ ProAct.Stream.prototype = P.U.ex(Object.create(P.Observable.prototype), {
    * @see {@link ProAct.Observable#update}
    */
   triggerErr: function (err) {
-    return this.update(err, this.listeners.error);
+    return this.update(err, 'error');
   },
 
   // private

@@ -1,6 +1,6 @@
 'use strict';
 
-describe('Pro.AutoProperty', function () {
+describe('ProAct.AutoProperty', function () {
   var obj;
   beforeEach(function () {
     obj = {
@@ -12,23 +12,23 @@ describe('Pro.AutoProperty', function () {
 
   it('is lazy', function () {
     var original = obj.ap,
-        property = new Pro.AutoProperty(obj, 'ap'),
+        property = new ProAct.AutoProperty(obj, 'ap'),
         value = null;
 
     expect(typeof(property.val)).toBe('function');
     expect(property.val).toBe(original);
-    expect(property.state).toBe(Pro.States.init);
+    expect(property.state).toBe(ProAct.States.init);
 
     value = obj.ap;
-    expect(property.state).toBe(Pro.States.ready);
+    expect(property.state).toBe(ProAct.States.ready);
     expect(typeof(property.val)).not.toBe('function');
-    expect(property.type()).toBe(Pro.Property.Types.auto);
+    expect(property.type()).toBe(ProAct.Property.Types.auto);
     expect(property.val).toEqual(obj.a);
   });
 
   it('changes when a sub-prop changes', function () {
-    var property = new Pro.Property(obj, 'a'),
-        autoProperty = new Pro.AutoProperty(obj, 'ap');
+    var property = new ProAct.Property(obj, 'a'),
+        autoProperty = new ProAct.AutoProperty(obj, 'ap');
 
     expect(obj.a).toEqual(obj.ap);
 
@@ -37,8 +37,8 @@ describe('Pro.AutoProperty', function () {
   });
 
   it('changes when a sub-prop changes using the transformators added to it using #transform', function () {
-    var property = new Pro.Property(obj, 'a'),
-        autoProperty = new Pro.AutoProperty(obj, 'ap');
+    var property = new ProAct.Property(obj, 'a'),
+        autoProperty = new ProAct.AutoProperty(obj, 'ap');
     autoProperty.transform(function (val) {
       return val + 5;
     });
@@ -50,9 +50,9 @@ describe('Pro.AutoProperty', function () {
   });
 
   it('changes when an auto sub-prop changes', function () {
-    var property = new Pro.Property(obj, 'a'),
-        autoProperty = new Pro.AutoProperty(obj, 'ap'),
-        autoPProperty = new Pro.AutoProperty(obj, 'app');
+    var property = new ProAct.Property(obj, 'a'),
+        autoProperty = new ProAct.AutoProperty(obj, 'ap'),
+        autoPProperty = new ProAct.AutoProperty(obj, 'app');
 
     expect(obj.a).toEqual(obj.ap);
     expect(obj.ap + 1).toEqual(obj.app);
@@ -87,10 +87,10 @@ describe('Pro.AutoProperty', function () {
           d: 1
 
         },
-        propertyA = new Pro.Property(object, 'a'),
-        propertyB = new Pro.AutoProperty(object, 'b'),
-        propertyC = new Pro.AutoProperty(object, 'c'),
-        propertyD = new Pro.Property(object, 'd');
+        propertyA = new ProAct.Property(object, 'a'),
+        propertyB = new ProAct.AutoProperty(object, 'b'),
+        propertyC = new ProAct.AutoProperty(object, 'c'),
+        propertyD = new ProAct.Property(object, 'd');
 
     expect(object.a).toEqual(0);
     expect(object.c).toEqual(6);
@@ -137,9 +137,9 @@ describe('Pro.AutoProperty', function () {
               return this.ep;
             }
           },
-          p = new Pro.Property(obj, 'p'),
-          ep = new Pro.AutoProperty(obj, 'ep'),
-          op = new Pro.AutoProperty(obj, 'op');
+          p = new ProAct.Property(obj, 'p'),
+          ep = new ProAct.AutoProperty(obj, 'ep'),
+          op = new ProAct.AutoProperty(obj, 'op');
 
       expect(obj.op).toBe(3);
 
@@ -154,7 +154,7 @@ describe('Pro.AutoProperty', function () {
   });
 
   describe('#set', function () {
-    it ('can be set like a normal Pro.Property', function () {
+    it ('can be set like a normal ProAct.Property', function () {
       var obj = {
             ap: function (v) {
               if (v !== undefined) {
@@ -164,7 +164,7 @@ describe('Pro.AutoProperty', function () {
             }
           };
 
-      new Pro.AutoProperty(obj, 'ap');
+      new ProAct.AutoProperty(obj, 'ap');
       expect(obj.ap).toEqual(9);
 
       obj.ap = 5;

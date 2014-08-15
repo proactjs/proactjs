@@ -16,7 +16,7 @@
  * @param [...] args
  *      Arguments of the event, for example for value event, these are the old value and the new value.
  */
-ProAct.Event = function (source, target, type) {
+ProAct.Event = P.E = function (source, target, type) {
   this.source = source;
   this.target = target;
   this.type = type;
