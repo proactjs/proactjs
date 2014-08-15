@@ -4109,6 +4109,30 @@
 	  afterInit: function () {}
 	});
 	
+	/**
+	 * <p>
+	 *  Constructs a ProAct.ProxyProperty. This is a property, pointing to another {@link ProAct.Property}.
+	 * </p>
+	 * <p>
+	 *  The value of ProAct.ProxyProperty is the value of its target, if the target is updated, the proxy is updated.
+	 * </p>
+	 * <p>
+	 *  By setting the value of the proxy, the value of the target is updated, the proxy doesn't have its own value, it uses
+	 *  the value of the target.
+	 * </p>
+	 * <p>
+	 *  ProAct.ProxyProperty is part of the properties module of ProAct.js.
+	 * </p>
+	 *
+	 * @class ProAct.ProxyProperty
+	 * @extends ProAct.Property
+	 * @param {Object} proObject
+	 *      A plain JavaScript object, holding a field, this property will represent.
+	 * @param {String} property
+	 *      The name of the field of the object, this property should represent.
+	 * @param {ProAct.Property} target
+	 *      The target {@link ProAct.Property}, that will provide the value of the new ProAct.ProxyProperty.
+	 */
 	ProAct.ProxyProperty = P.PXP = function (proObject, property, target) {
 	  var self = this, getter, setter;
 	
@@ -4140,18 +4164,58 @@
 	};
 	
 	ProAct.ProxyProperty.prototype = P.U.ex(Object.create(P.P.prototype), {
+	
+	  /**
+	   * Reference to the constructor of this object.
+	   *
+	   * @memberof ProAct.ProxyProperty
+	   * @instance
+	   * @constant
+	   * @default ProAct.ProxyProperty
+	   */
 	  constructor: ProAct.ProxyProperty,
+	
+	  /**
+	   * Retrieves the {@link ProAct.Property.Types} value of <i>this</i> property.
+	   * <p>
+	   *  For ProAct.ProxyProperty this is the type if its <i>target</i>.
+	   * </p>
+	   *
+	   * @memberof ProAct.ProxyProperty
+	   * @instance
+	   * @method type
+	   * @return {Number}
+	   *      The right type of the property.
+	   */
 	  type: function () {
 	    return this.target.type();
 	  },
 	
+	  /**
+	   * Creates the <i>listener</i> of this ProAct.ProxyProperty.
+	   * <p>
+	   *  This listener turns the observable in a observer.
+	   * </p>
+	   * <p>
+	   *  The listener for ProAct.ProxyProperty is an object defining an empty <i>call</i> method.
+	   * </p>
+	   * <p>
+	   *  It has a <i>property</i> field set to <i>this</i>.
+	   * </p>
+	   *
+	   * @memberof ProAct.ProxyProperty
+	   * @instance
+	   * @method makeListener
+	   * @return {Object}
+	   *      The <i>listener of this ProAct.ProxyProperty</i>.
+	   */
 	  makeListener: function () {
 	    if (!this.listener) {
 	      var self = this;
 	
 	      this.listener = {
 	        property: self,
-	        call: function () {}
+	        call: P.N
 	      };
 	    }
 	
@@ -4715,13 +4779,53 @@
 	  }
 	});
 	
+	/**
+	 * <p>
+	 *  Constructor for ProAct.ProxyPropertyProvider.
+	 * </p>
+	 * <p>
+	 *  Provides {@link ProAct.ProxyProperty} instances for fields that should point to properties.
+	 * </p>
+	 * <p>
+	 *  ProAct.ProxyPropertyProvider is part of the properties module of ProAct.js.
+	 * </p>
+	 *
+	 * @class ProAct.ProxyPropertyProvider
+	 * @extends ProAct.PropertyProvider
+	 * @see {@link ProAct.ProxyProperty}
+	 */
 	ProAct.ProxyPropertyProvider = P.PXPP = function () {
 	  P.PP.call(this);
 	};
 	
 	ProAct.ProxyPropertyProvider.prototype = P.U.ex(Object.create(P.PP.prototype), {
+	
+	  /**
+	   * Reference to the constructor of this object.
+	   *
+	   * @memberof ProAct.ProxyPropertyProvider
+	   * @instance
+	   * @constant
+	   * @default ProAct.ProxyPropertyProvider
+	   */
 	  constructor: ProAct.ProxyPropertyProvider,
 	
+	  /**
+	   * Used to check if this {@link ProAct.ProxyPropertyProvider} is compliant with the meta data.
+	   *
+	   * @memberof ProAct.ProxyPropertyProvider
+	   * @instance
+	   * @method filter
+	   * @param {Object} object
+	   *      The object to which a new {@link ProAct.ProxyProperty} instance should be provided.
+	   * @param {String} property
+	   *      The field name of the <i>object</i> to turn into a {@link ProAct.ProxyProperty}.
+	   * @param {ProAct.Property} meta
+	   *      If the meta is present and of type {@link ProAct.Property}, it becomes the target property of the
+	   *      {@link ProAct.ProxyProperty} that will be provided.
+	   * @return {Boolean}
+	   *      True if <i>meta</i> argument is present and is instance of {@link ProAct.Property}.
+	   */
 	  filter: function (object, property, meta) {
 	    if (!meta || !(meta instanceof ProAct.Property)) {
 	      return false;
@@ -4730,6 +4834,21 @@
 	    return meta instanceof ProAct.Property;
 	  },
 	
+	  /**
+	   * Provides an instance of {@link ProAct.ProxyProperty}.
+	   *
+	   * @memberof ProAct.ProxyPropertyProvider
+	   * @instance
+	   * @method provide
+	   * @param {Object} object
+	   *      The object to which a new {@link ProAct.ProxyProperty} instance should be provided.
+	   * @param {String} property
+	   *      The field of the <i>object</i> to turn into a {@link ProAct.ProxyProperty}.
+	   * @param {ProAct.Property} meta
+	   *      The target {@link ProAct.Property} of the {@link ProAct.ProxyProperty} to be created.
+	   * @return {ProAct.ProxyProperty}
+	   *      A {@link ProAct.ProxyProperty} instance provided by <i>this</i> provider.
+	   */
 	  provide: function (object, property, meta) {
 	    return new P.PXP(object, property, meta);
 	  }
@@ -7704,6 +7823,26 @@
 	  return object;
 	};
 	
+	/**
+	 * The {@link ProAct.proxy} creates proxies or decorators to ProAct.js objects.
+	 * <p>
+	 *  The decorators extend the <i>target</i> and can add new properties which depend on the extended ones.
+	 * </p>
+	 *
+	 * @method proxy
+	 * @memberof ProAct
+	 * @static
+	 * @param {Object} object
+	 *      The object/value to make decorator to the <i>target</i>.
+	 * @param {Object} object
+	 *      The object to decorate.
+	 * @param {Object|String} meta
+	 *      Meta-data used to help in the reactive object creation for the proxy.
+	 * @param {Object|String} targetMeta
+	 *      Meta-data used to help in the reactive object creation for the target, if it is not reactive.
+	 * @return {Object}
+	 *      Reactive representation of the passed <i>object</i>, decorating the passed <i>target</i>.
+	 */
 	ProAct.proxy = function (object, target, meta, targetMeta) {
 	  if (!object || !target) {
 	    return null;

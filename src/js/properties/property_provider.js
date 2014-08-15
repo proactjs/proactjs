@@ -553,13 +553,53 @@ ProAct.ObjectPropertyProvider.prototype = P.U.ex(Object.create(P.PP.prototype), 
   }
 });
 
+/**
+ * <p>
+ *  Constructor for ProAct.ProxyPropertyProvider.
+ * </p>
+ * <p>
+ *  Provides {@link ProAct.ProxyProperty} instances for fields that should point to properties.
+ * </p>
+ * <p>
+ *  ProAct.ProxyPropertyProvider is part of the properties module of ProAct.js.
+ * </p>
+ *
+ * @class ProAct.ProxyPropertyProvider
+ * @extends ProAct.PropertyProvider
+ * @see {@link ProAct.ProxyProperty}
+ */
 ProAct.ProxyPropertyProvider = P.PXPP = function () {
   P.PP.call(this);
 };
 
 ProAct.ProxyPropertyProvider.prototype = P.U.ex(Object.create(P.PP.prototype), {
+
+  /**
+   * Reference to the constructor of this object.
+   *
+   * @memberof ProAct.ProxyPropertyProvider
+   * @instance
+   * @constant
+   * @default ProAct.ProxyPropertyProvider
+   */
   constructor: ProAct.ProxyPropertyProvider,
 
+  /**
+   * Used to check if this {@link ProAct.ProxyPropertyProvider} is compliant with the meta data.
+   *
+   * @memberof ProAct.ProxyPropertyProvider
+   * @instance
+   * @method filter
+   * @param {Object} object
+   *      The object to which a new {@link ProAct.ProxyProperty} instance should be provided.
+   * @param {String} property
+   *      The field name of the <i>object</i> to turn into a {@link ProAct.ProxyProperty}.
+   * @param {ProAct.Property} meta
+   *      If the meta is present and of type {@link ProAct.Property}, it becomes the target property of the
+   *      {@link ProAct.ProxyProperty} that will be provided.
+   * @return {Boolean}
+   *      True if <i>meta</i> argument is present and is instance of {@link ProAct.Property}.
+   */
   filter: function (object, property, meta) {
     if (!meta || !(meta instanceof ProAct.Property)) {
       return false;
@@ -568,6 +608,21 @@ ProAct.ProxyPropertyProvider.prototype = P.U.ex(Object.create(P.PP.prototype), {
     return meta instanceof ProAct.Property;
   },
 
+  /**
+   * Provides an instance of {@link ProAct.ProxyProperty}.
+   *
+   * @memberof ProAct.ProxyPropertyProvider
+   * @instance
+   * @method provide
+   * @param {Object} object
+   *      The object to which a new {@link ProAct.ProxyProperty} instance should be provided.
+   * @param {String} property
+   *      The field of the <i>object</i> to turn into a {@link ProAct.ProxyProperty}.
+   * @param {ProAct.Property} meta
+   *      The target {@link ProAct.Property} of the {@link ProAct.ProxyProperty} to be created.
+   * @return {ProAct.ProxyProperty}
+   *      A {@link ProAct.ProxyProperty} instance provided by <i>this</i> provider.
+   */
   provide: function (object, property, meta) {
     return new P.PXP(object, property, meta);
   }

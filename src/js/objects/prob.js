@@ -43,6 +43,26 @@ ProAct.prob = function (object, meta) {
   return object;
 };
 
+/**
+ * The {@link ProAct.proxy} creates proxies or decorators to ProAct.js objects.
+ * <p>
+ *  The decorators extend the <i>target</i> and can add new properties which depend on the extended ones.
+ * </p>
+ *
+ * @method proxy
+ * @memberof ProAct
+ * @static
+ * @param {Object} object
+ *      The object/value to make decorator to the <i>target</i>.
+ * @param {Object} object
+ *      The object to decorate.
+ * @param {Object|String} meta
+ *      Meta-data used to help in the reactive object creation for the proxy.
+ * @param {Object|String} targetMeta
+ *      Meta-data used to help in the reactive object creation for the target, if it is not reactive.
+ * @return {Object}
+ *      Reactive representation of the passed <i>object</i>, decorating the passed <i>target</i>.
+ */
 ProAct.proxy = function (object, target, meta, targetMeta) {
   if (!object || !target) {
     return null;
