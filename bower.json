@@ -1,6 +1,6 @@
 {
   "name": "proact.js",
-  "version": "0.5.0",
+  "version": "1.0.0",
   "main": "dist/js/proact.min.js",
   "description": "Reactive JavaScript Objects Properties.",
   "license": "MIT",
