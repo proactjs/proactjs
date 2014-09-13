@@ -27,7 +27,42 @@ describe('ProAct.Observable', function () {
 
       observable.update(null);
       expect(res.length).toBe(0);
+    });
+  });
 
+  describe('#update', function () {
+    it ('notifies only the passed types of actions', function () {
+      var observable = new ProAct.Observable(), res = [];
+
+      observable.on('one', function () {
+        res.push('1');
+      });
+
+      observable.on('two', function () {
+        res.push('2');
+      });
+
+      observable.on('three', function () {
+        res.push('3');
+      });
+
+      observable.update(null, ['one', 'three']);
+
+      expect(res.length).toBe(2);
+      expect(res).toEqual(['1', '3']);
+    });
+
+    it ('it notifies only for defined actions', function () {
+      var observable = new ProAct.Observable(), res = [];
+
+      observable.on('one', function () {
+        res.push('1');
+      });
+
+      observable.update(null, ['one', 'two']);
+
+      expect(res.length).toBe(1);
+      expect(res).toEqual(['1']);
     });
   });
 });

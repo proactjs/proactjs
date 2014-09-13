@@ -664,7 +664,11 @@ P.Observable.prototype = {
       }
 
       for (i = 0; i < ln; i++) {
-        listeners = listeners.concat(this.listeners[actions[i]]);
+        listenersForAction = this.listeners[actions[i]];
+
+        if (listenersForAction) {
+          listeners = listeners.concat(listenersForAction);
+        }
       }
     }
 
@@ -719,5 +723,5 @@ P.Observable.prototype = {
       P.flow.pushOnce(listener, listener.call, [event]);
     }
     return this;
-  }
+  },
 };
