@@ -90,6 +90,24 @@ ProAct.States = {
 ProAct.Utils = Pro.U = {
 
   /**
+   * Generates an unique id.
+   * The idea is to be used as keynames in the {@link ProAct.Registry}.
+   *
+   * @memberof ProAct.Utils
+   * @function uuid
+   * @return {String}
+   *      Unique string.
+   */
+  uuid: function () {
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+      var r = Math.random() * 16 | 0,
+          v = c === 'x' ? r : (r & 0x3 | 0x8);
+
+      return v.toString(16);
+    });
+  },
+
+  /**
    * Checks if the passed value is a function or not.
    *
    * @memberof ProAct.Utils
@@ -225,6 +243,28 @@ ProAct.Utils = Pro.U = {
   },
 
   /**
+   * Clones the passed object. It creates a deep copy of it.
+   * For now it clones only arrays.
+   *
+   * @memberof ProAct.Utils
+   * @function clone
+   * @param {Object} obj
+   *      The object to clone.
+   * @return {Object}
+   *      Clone of the passed object.
+   */
+  clone: function (obj) {
+    if (P.U.isArray(obj)) {
+      var i, ln = obj.length, copy = [];
+      for (i = 0; i < ln; i++) {
+        copy.push(P.U.clone(obj[i]));
+      }
+      return copy;
+    }
+    return obj;
+  },
+
+  /**
    * Extends the destination object with the properties and methods of the source object.
    *
    * @memberof ProAct.Utils
@@ -235,15 +275,56 @@ ProAct.Utils = Pro.U = {
    *      The source holding the properties and the functions to extend destination with.
    * @return {Object}
    *      The changed destination object.
+   * @see {@link ProAct.Utils.clone}
    */
   ex: function(destination, source) {
     var p;
+
     for (p in source) {
       if (source.hasOwnProperty(p)) {
-        destination[p] = source[p];
+        destination[p] = P.U.clone(source[p]);
       }
     }
     return destination;
+  },
+
+  /**
+   * Used for extending of classes.
+   * Example is:
+   * <pre>
+   *  var Bar = ProAct.Utils.extendClass.call(Foo, {
+   *    a: 1,
+   *    b: 2,
+   *    c: function () {}
+   *  });
+   * </pre>
+   *
+   * @memberof ProAct.Utils
+   * @function extendClass
+   * @param {Object} data
+   *      Data to add new properties to the new class or override old ones.
+   * @return {Object}
+   *      Child class.
+   * @see {@link ProAct.Utils.ex}
+   */
+  extendClass: function (data) {
+    var parent = this,
+        child = function () {
+          parent.apply(this, slice.call(arguments));
+        };
+
+    P.U.ex(child, parent);
+
+    child.initData = {};
+    P.U.ex(child.initData, parent.initData);
+
+    P.U.ex(child.prototype, parent.prototype);
+    P.U.ex(child.initData, data);
+
+    child.uuid = P.U.uuid();
+    child.prototype.constructor = child;
+
+    return child;
   },
 
   /**

@@ -1,7 +1,7 @@
 'use strict';
 
 describe('ProAct.Utils', function () {
-  describe('#remove', function () {
+  describe('.remove', function () {
     it ('removes element from array', function () {
       var arr = [1], obj = {a: 2}, a = [5];
 
@@ -15,7 +15,93 @@ describe('ProAct.Utils', function () {
     });
   });
 
-  describe('#diff' , function () {
+  describe('.clone', function () {
+    it ('can clones arrays', function () {
+      var toClone = [1, 2, 3],
+          clone = ProAct.Utils.clone(toClone);
+
+      expect(clone).toNotBe(null);
+      expect(clone).toEqual(toClone);
+      expect(clone).toNotBe(toClone);
+    });
+
+    it ('can clone arrays of arrays', function () {
+      var toClone = [1, 2, 3, [4, 5]],
+          clone = ProAct.Utils.clone(toClone);
+
+      expect(clone).toNotBe(null);
+      expect(clone).toEqual(toClone);
+      expect(clone).toNotBe(toClone);
+      expect(clone[3]).toNotBe(toClone[3]);
+    });
+  });
+
+  describe('.uuid', function () {
+    it ('is valid', function () {
+      var reg = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i,
+          i, ln = 100,
+          uuid;
+
+      for (i = 0; i < ln; i++) {
+        uuid = ProAct.Utils.uuid();
+        expect(reg.test(uuid)).toBe(true);
+      }
+    });
+  });
+
+  describe('.extendClass', function () {
+
+    var Foo;
+    beforeEach(function() {
+      Foo = function () {
+        ProAct.Utils.ex(this, this.constructor.initData);
+      };
+      Foo.initData = {};
+      Foo.extend = ProAct.Utils.extendClass;
+      Foo.prototype = {
+        constructor: Foo,
+        a: 1,
+        b: function () {
+          return this.a + 1;
+        }
+      };
+    });
+
+    it ('creates a new class using its new properties but the old class\' properties too', function () {
+      var Bar = Foo.extend({
+            c: 2
+          }),
+          bar = new Bar();
+
+      expect(bar.hasOwnProperty('c')).toBe(true);
+      expect(bar.hasOwnProperty('b')).toBe(false);
+      expect(bar.hasOwnProperty('a')).toBe(false);
+
+      expect(bar.c).toEqual(2);
+      expect(bar.b()).toEqual(2);
+      expect(bar.a).toEqual(1);
+    });
+
+    it ('creates a new class overridding the parent\'s properties', function () {
+      var Bar = Foo.extend({
+            c: 2,
+            b: function () {
+              return this.a + this.c;
+            }
+          }),
+          bar = new Bar();
+
+      expect(bar.hasOwnProperty('c')).toBe(true);
+      expect(bar.hasOwnProperty('b')).toBe(true);
+      expect(bar.hasOwnProperty('a')).toBe(false);
+
+      expect(bar.c).toEqual(2);
+      expect(bar.b()).toEqual(3);
+      expect(bar.a).toEqual(1);
+    });
+  });
+
+  describe('.diff' , function () {
     it ('creates a diff between sub-array and array', function () {
       var a1 = [1, 2, 3],
           a2 = [1, 2],
