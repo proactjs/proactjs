@@ -138,7 +138,9 @@ ProAct.ObjectCore.prototype = P.U.ex(Object.create(P.C.prototype), {
         meta = [meta];
       }
 
-      P.registry.setup.apply(P.registry, [result].concat(meta));
+      if (!(meta[0] instanceof ProAct.Property)) {
+        P.registry.setup.apply(P.registry, [result].concat(meta));
+      }
     }
 
     return result;

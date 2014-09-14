@@ -361,8 +361,7 @@ ProAct.Property.prototype = P.U.ex(Object.create(P.Observable.prototype), {
             newVal = newVal.args[0][newVal.target];
           }
 
-          self.oldVal = self.val;
-          self.val = P.Observable.transform(self, newVal);
+          self.set(newVal);
         }
       };
     }

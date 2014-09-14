@@ -57,6 +57,11 @@ ProAct.ObjectProperty = P.OP = function (proObject, property) {
               P.prob(self.val);
             }
 
+            if (P.U.isArray(this)) {
+              self.update();
+              return;
+            }
+
             var oldProps = self.oldVal.__pro__.properties,
                 newProps = self.val.__pro__.properties,
                 oldPropName, oldProp, newProp, oldListeners, newListeners,

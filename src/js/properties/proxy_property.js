@@ -43,7 +43,7 @@ ProAct.ProxyProperty = P.PXP = function (proObject, property, target) {
       return;
     }
 
-    self.update();
+    target.update();
   };
 
   P.P.call(this, proObject, property, getter, setter);
