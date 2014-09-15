@@ -384,6 +384,12 @@ ProAct.Array.Listeners = P.A.L = pArrayLs = {
   filter: function (filtered, original, args) {
     var fun = args[0], thisArg = args[1];
     return function (event) {
+      if (P.U.isFunction(event)) {
+        args[0] = fun = event;
+        pArray.reFilter(original, filtered, args);
+        return;
+      }
+
       pArrayLs.check(event);
       var op  = event.args[0],
           ind = event.args[1],

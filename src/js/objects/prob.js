@@ -54,7 +54,7 @@ ProAct.prob = function (object, meta) {
  * @static
  * @param {Object} object
  *      The object/value to make decorator to the <i>target</i>.
- * @param {Object} object
+ * @param {Object} target
  *      The object to decorate.
  * @param {Object|String} meta
  *      Meta-data used to help in the reactive object creation for the proxy.

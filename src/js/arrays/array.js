@@ -232,10 +232,13 @@ ProAct.Array.prototype = pArrayProto = P.U.ex(Object.create(arrayProto), {
    *      True if all the elements in the <i>this</i> ProAct.Array pass the test implemented by the <i>callback</i>, false otherwise.
    * @see {@link ProAct.ArrayCore#addCaller}
    */
-  every: function () {
+  every: function (fun, thisArg) {
     this.core.addCaller();
+    if (this.core.isComplex) {
+      fun = this.core.actionFunction(fun);
+    }
 
-    return every.apply(this._array, arguments);
+    return every.call(this._array, fun, thisArg);
   },
 
   /**
@@ -348,9 +351,16 @@ ProAct.Array.prototype = pArrayProto = P.U.ex(Object.create(arrayProto), {
    * @see {@link ProAct.Array.Listeners.filter}
    * @see {@link ProAct.Array.reFilter}
    */
-  filter: function (fun, thisArg) {
-    var filtered = new P.A(filter.apply(this._array, arguments));
-    this.core.on(pArrayLs.filter(filtered, this, arguments));
+  filter: function (fun, thisArg, isComplex) {
+    if (this.core.isComplex || isComplex) {
+      fun = this.core.actionFunction(fun);
+    }
+
+    var filtered = new P.A(filter.apply(this._array, arguments)),
+        listener = pArrayLs.filter(filtered, this, arguments);
+    this.core.on(listener);
+
+    filtered.core.filteringListener = listener;
 
     return filtered;
   },

@@ -1614,4 +1614,36 @@ describe('ProAct.Array', function () {
     expect(array[0].a).toEqual(array[0].b);
   });
 
+  describe ('complex', function () {
+    var array;
+    beforeEach(function() {
+      array = new ProAct.Array(
+        {
+          a: 1,
+          b: 2
+        },
+        {
+          a: 1,
+          c: 3,
+          d: 5
+        }
+      );
+    });
+
+    it ('means to contain ProAct.js objects', function () {
+      expect(array.core.isComplex).toBe(true);
+    });
+
+    it ('filtering by property of element can be listened to', function () {
+      var filtered = array.filter(function (el) {
+        return el.a === 1;
+      });
+
+      expect(filtered.length).toBe(2);
+
+      array[0].a = 2;
+      expect(filtered.length).toBe(1);
+    });
+  });
+
 });

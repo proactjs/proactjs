@@ -37,6 +37,164 @@ ProAct.ArrayCore.prototype = P.U.ex(Object.create(P.C.prototype), {
   constructor: ProAct.ArrayCore,
 
   /**
+   * Generates function wrapper around a normal function which sets
+   * the {@link ProAct.ArrayCore#indexListener} of the index calling the function.
+   * <p>
+   *  This is used if the array is complex - contains other ProAct.js objects, and there should be special
+   *  updates for their elements/properties.
+   * </p>
+   *
+   * @memberof ProAct.ArrayCore
+   * @instance
+   * @method actionFunction
+   * @param {Function} fun
+   *      The source function.
+   * @return {Function}
+   *      The action function wrapper.
+   * @see {@link ProAct.ArrayCore#indexListener}
+   */
+  actionFunction: function (fun) {
+    var core = this;
+    return function () {
+      var oldCaller = P.currentCaller,
+          i = arguments[1], res;
+
+      P.currentCaller = core.indexListener(i);
+      res = fun.apply(this, slice.call(arguments, 0));
+      P.currentCaller = oldCaller;
+
+      return res;
+    };
+  },
+
+  /**
+   * Generates listener for given index or reuses already generated one.
+   * <p>
+   *  This listener mimics a property listener, the idea is - if anything is listening to
+   *  index changes in this' shell (array) and the shell is complex - has elements that are ProAct.js objects,
+   *  if some of this element has property change, its notification should be dispatched to all the objects,
+   *  listening to index changes in the array.
+   * </p>
+   * <p>
+   *  So this way we can listen for stuff like array.[].foo - the foo property change for every element in the array.
+   * </p>
+   *
+   * @memberof ProAct.ArrayCore
+   * @instance
+   * @method indexListener
+   * @param {Number} i
+   *      The index.
+   * @return {Object}
+   *      A listener mimicing a property one.
+   */
+  indexListener: function (i) {
+    if (!this.indexListeners) {
+      this.indexListeners = {};
+    }
+
+    var core = this,
+        shell = core.shell;
+    if (!this.indexListeners[i]) {
+      this.indexListeners[i] = {
+        call: function (source) {
+          core.makeListener(new P.E(source, shell, P.E.Types.array, [
+            P.A.Operations.set, i, shell._array[i], shell._array[i]
+          ]));
+        },
+        property: core
+      };
+    }
+
+    return this.indexListeners[i];
+  },
+
+  /**
+   * Creates the <i>listener</i> of this ProAct.ArrayCore.
+   * <p>
+   *  The right array typed events can change this' shell (array).
+   * </p>
+   * <p>
+   *  If a non-event element is passed to the listener, the element is pushed
+   *  to the shell.
+   * </p>
+   * <p>
+   *  If a value event is passed to the listener, the new value is pushed
+   *  to the shell.
+   * </p>
+   *
+   * @memberof ProAct.Observable
+   * @instance
+   * @method makeListener
+   * @return {Object}
+   *      The <i>listener of this ArrayCore</i>.
+   */
+  makeListener: function () {
+    if (!this.listener) {
+      var self = this.shell;
+      this.listener =  function (event) {
+        if (!event || !(event instanceof P.E)) {
+          self.push(event);
+          return;
+        }
+
+        if (event.type === P.E.Types.value) {
+          self.push(event.args[2]);
+          return;
+        }
+
+        var op    = event.args[0],
+            ind   = event.args[1],
+            ov    = event.args[2],
+            nv    = event.args[3],
+            nvs,
+            operations = P.Array.Operations;
+
+        if (op === operations.set) {
+          self[ind] = nv;
+        } else if (op === operations.add) {
+          nvs = slice.call(nv, 0);
+          if (ind === 0) {
+            pArrayProto.unshift.apply(self, nvs);
+          } else {
+            pArrayProto.push.apply(self, nvs);
+          }
+        } else if (op === operations.remove) {
+          if (ind === 0) {
+            self.shift();
+          } else {
+            self.pop();
+          }
+        } else if (op === operations.setLength) {
+          self.length = nv;
+        } else if (op === operations.reverse) {
+          self.reverse();
+        } else if (op === operations.sort) {
+          if (P.U.isFunction(nv)) {
+            self.sort(nv);
+          } else {
+            self.sort();
+          }
+        } else if (op === operations.splice) {
+          if (nv) {
+            nvs = slice.call(nv, 0);
+          } else {
+            nvs = [];
+          }
+          if (ind === null || ind === undefined) {
+            ind = self.indexOf(ov[0]);
+            if (ind === -1) {
+              return;
+            }
+          }
+          pArrayProto.splice.apply(self, [ind, ov.length].concat(nvs));
+        }
+      };
+    }
+
+    return this.listener;
+  },
+
+  /**
    * Generates the initial listeners object.
    * It is used for resetting all the listeners too.
    * <p>
@@ -100,10 +258,15 @@ ProAct.ArrayCore.prototype = P.U.ex(Object.create(P.C.prototype), {
    *        <li>The old values beginning from the index.</li>
    *        <li>The new values beginning from the index.</li>
    *      </ol>
+   *      Can be null. If null an empty (unchanging) event is created.
    * @return {ProAct.Event}
    *      The event.
    */
   makeEvent: function (source, eventData) {
+    if (!eventData) {
+      return new P.E(source, this.shell, P.E.Types.array, pArrayOps.setLength, -1, this.shell.length, this.shell.length);
+    }
+
     var op = eventData[0],
         ind = eventData[1],
         oldVal = eventData[2],
@@ -304,6 +467,7 @@ ProAct.ArrayCore.prototype = P.U.ex(Object.create(P.C.prototype), {
     } else if (isF(array[i])) {
     } else if (array[i] === null) {
     } else if (isO(array[i])) {
+      this.isComplex = true;
       new P.ObjectProperty(array, i);
     }
 
