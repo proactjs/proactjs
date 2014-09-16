@@ -106,7 +106,15 @@ ProAct.OpStore = {
             }
           }
 
-          actionObject[name] = opArguments;
+          if (!actionObject[name]) {
+            actionObject[name] = opArguments;
+          } else {
+            if (!P.U.isArray(actionObject[name][0])) {
+              actionObject[name] = [actionObject[name], opArguments];
+            } else {
+              actionObject[name].push(opArguments);
+            }
+          }
 
           actionObject.order = actionObject.order || [];
           actionObject.order.push(name);
@@ -461,6 +469,80 @@ ProAct.DSL = {
             return p;
           }
         };
+      },
+
+      /**
+       * Mapping operation for turning value in an
+       * ProAct.Array pop event.
+       * <p>
+       *  Usage in a DSL expression:
+       *  <pre>
+       *    map(pop)
+       *  </pre>
+       * </p>
+       *
+       * @memberof ProAct.DSL.predefined.mapping
+       * @static
+       * @method
+       * @see {@link ProAct.DSL.ops.map}
+       */
+      pop: function () {
+        return P.E.simple('array', 'pop');
+      },
+
+      /**
+       * Mapping operation for turning value in an
+       * ProAct.Array shift event.
+       * <p>
+       *  Usage in a DSL expression:
+       *  <pre>
+       *    map(shift)
+       *  </pre>
+       * </p>
+       *
+       * @memberof ProAct.DSL.predefined.mapping
+       * @static
+       * @method
+       * @see {@link ProAct.DSL.ops.map}
+       */
+      shift: function () {
+        return P.E.simple('array', 'shift');
+      },
+
+      /**
+       * Mapping operation for turning value event in its value.
+       * <p>
+       *  Usage in a DSL expression:
+       *  <pre>
+       *    map(eventToVal)
+       *  </pre>
+       * </p>
+       *
+       * @memberof ProAct.DSL.predefined.mapping
+       * @static
+       * @method
+       * @see {@link ProAct.DSL.ops.map}
+       */
+      eventToVal: function (event) {
+        return event.args[0][event.target];
+      },
+
+      /**
+       * Maps anything to the constant true.
+       * <p>
+       *  Usage in a DSL expression:
+       *  <pre>
+       *    map(true)
+       *  </pre>
+       * </p>
+       *
+       * @memberof ProAct.DSL.predefined.mapping
+       * @static
+       * @method
+       * @see {@link ProAct.DSL.ops.map}
+       */
+      'true': function (event) {
+        return true;
       }
     },
 
@@ -536,7 +618,44 @@ ProAct.DSL = {
        * @method
        * @see {@link ProAct.DSL.ops.filter}
        */
-      '-': function (el) { return el <= 0; }
+      '-': function (el) { return el <= 0; },
+
+      /**
+       * Filtering operation for filtering only values different from undefined.
+       * <p>
+       *  Usage in a DSL expression:
+       *  <pre>
+       *    filter(defined)
+       *  </pre>
+       * </p>
+       *
+       * @memberof ProAct.DSL.predefined.filtering
+       * @static
+       * @method
+       * @see {@link ProAct.DSL.ops.filter}
+       */
+      defined: function (event) {
+        return event.args[0][event.target] !== undefined;
+      },
+
+      /**
+       * Filtering operation for filtering only events
+       * that have null/undefined as a source.
+       * <p>
+       *  Usage in a DSL expression:
+       *  <pre>
+       *    filter(originalEvent)
+       *  </pre>
+       * </p>
+       *
+       * @memberof ProAct.DSL.predefined.filtering
+       * @static
+       * @method
+       * @see {@link ProAct.DSL.ops.filter}
+       */
+      originalEvent: function (event) {
+        return event.source === undefined || event.source === null;
+      }
     },
 
     /**
@@ -597,6 +716,20 @@ ProAct.DSL = {
        */
       '+str': ['', function (x, y) { return x + y; }],
     }
+  },
+
+  defPredefined: function(type, operation) {
+    if (type === 'm' || type === 'map') {
+      type = 'mapping';
+    }
+    if (type === 'f' || type === 'filter') {
+      type = 'filtering';
+    }
+    if (type === 'a' || type === 'acc' || type === 'accumulate') {
+      type = 'accumulation';
+    }
+
+    ProAct.DSL.predefined[type] = operation;
   },
 
   /**
@@ -737,7 +870,8 @@ ProAct.DSL = {
   run: function (observable, options, registry) {
     var isS = P.U.isString,
         args = slice.call(arguments, 3),
-        option, i, ln, opType;
+        option, i, ln, opType, oldOption,
+        multiple = {};
 
     if (options && isS(options)) {
       options = dsl.optionsFromString.apply(null, [options].concat(args));
@@ -753,11 +887,28 @@ ProAct.DSL = {
         option = options.order[i];
         if (opType = dslOps[option]) {
           if (registry) {
+            if (options.order.indexOf(option) !== options.order.lastIndexOf(option)) {
+              if (multiple[option] === undefined) {
+                multiple[option] = -1;
+              }
+              multiple[option] = multiple[option] + 1;
+              oldOption = options[option];
+              options[option] = options[option][multiple[option]];
+            }
             options[option] = registry.toObjectArray(options[option]);
           }
 
           opType.action(observable, options);
-          delete options[option];
+          if (oldOption) {
+            options[option] = oldOption;
+            oldOption = undefined;
+
+            if (multiple[option] >= options[option].length - 1) {
+              delete options[option];
+            }
+          } else {
+            delete options[option];
+          }
         }
       }
     }
