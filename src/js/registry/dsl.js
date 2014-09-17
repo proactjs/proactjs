@@ -718,7 +718,7 @@ ProAct.DSL = {
     }
   },
 
-  defPredefined: function(type, operation) {
+  defPredefined: function(type, id, operation) {
     if (type === 'm' || type === 'map') {
       type = 'mapping';
     }
@@ -729,7 +729,7 @@ ProAct.DSL = {
       type = 'accumulation';
     }
 
-    ProAct.DSL.predefined[type] = operation;
+    ProAct.DSL.predefined[type][id] = operation;
   },
 
   /**
