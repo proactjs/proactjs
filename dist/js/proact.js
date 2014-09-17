@@ -26,7 +26,7 @@
 	 *
 	 * @namespace ProAct
 	 * @license MIT
-	 * @version 1.0.0
+	 * @version 1.1.0
 	 * @author meddle0x53
 	 */
 	var ProAct = Pro = P = {},
@@ -67,7 +67,7 @@
 	 * @static
 	 * @constant
 	 */
-	ProAct.VERSION = '1.0.0';
+	ProAct.VERSION = '1.1.0';
 	
 	/**
 	 * Defines the possible states of the ProAct objects.
@@ -95,6 +95,24 @@
 	 * @namespace ProAct.Utils
 	 */
 	ProAct.Utils = Pro.U = {
+	
+	  /**
+	   * Generates an unique id.
+	   * The idea is to be used as keynames in the {@link ProAct.Registry}.
+	   *
+	   * @memberof ProAct.Utils
+	   * @function uuid
+	   * @return {String}
+	   *      Unique string.
+	   */
+	  uuid: function () {
+	    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+	      var r = Math.random() * 16 | 0,
+	          v = c === 'x' ? r : (r & 0x3 | 0x8);
+	
+	      return v.toString(16);
+	    });
+	  },
 	
 	  /**
 	   * Checks if the passed value is a function or not.
@@ -232,6 +250,28 @@
 	  },
 	
 	  /**
+	   * Clones the passed object. It creates a deep copy of it.
+	   * For now it clones only arrays.
+	   *
+	   * @memberof ProAct.Utils
+	   * @function clone
+	   * @param {Object} obj
+	   *      The object to clone.
+	   * @return {Object}
+	   *      Clone of the passed object.
+	   */
+	  clone: function (obj) {
+	    if (P.U.isArray(obj)) {
+	      var i, ln = obj.length, copy = [];
+	      for (i = 0; i < ln; i++) {
+	        copy.push(P.U.clone(obj[i]));
+	      }
+	      return copy;
+	    }
+	    return obj;
+	  },
+	
+	  /**
 	   * Extends the destination object with the properties and methods of the source object.
 	   *
 	   * @memberof ProAct.Utils
@@ -242,15 +282,56 @@
 	   *      The source holding the properties and the functions to extend destination with.
 	   * @return {Object}
 	   *      The changed destination object.
+	   * @see {@link ProAct.Utils.clone}
 	   */
 	  ex: function(destination, source) {
 	    var p;
+	
 	    for (p in source) {
 	      if (source.hasOwnProperty(p)) {
-	        destination[p] = source[p];
+	        destination[p] = P.U.clone(source[p]);
 	      }
 	    }
 	    return destination;
+	  },
+	
+	  /**
+	   * Used for extending of classes.
+	   * Example is:
+	   * <pre>
+	   *  var Bar = ProAct.Utils.extendClass.call(Foo, {
+	   *    a: 1,
+	   *    b: 2,
+	   *    c: function () {}
+	   *  });
+	   * </pre>
+	   *
+	   * @memberof ProAct.Utils
+	   * @function extendClass
+	   * @param {Object} data
+	   *      Data to add new properties to the new class or override old ones.
+	   * @return {Object}
+	   *      Child class.
+	   * @see {@link ProAct.Utils.ex}
+	   */
+	  extendClass: function (data) {
+	    var parent = this,
+	        child = function () {
+	          parent.apply(this, slice.call(arguments));
+	        };
+	
+	    P.U.ex(child, parent);
+	
+	    child.initData = {};
+	    P.U.ex(child.initData, parent.initData);
+	
+	    P.U.ex(child.prototype, parent.prototype);
+	    P.U.ex(child.initData, data);
+	
+	    child.uuid = P.U.uuid();
+	    child.prototype.constructor = child;
+	
+	    return child;
 	  },
 	
 	  /**
@@ -2109,7 +2190,11 @@
 	      }
 	
 	      for (i = 0; i < ln; i++) {
-	        listeners = listeners.concat(this.listeners[actions[i]]);
+	        listenersForAction = this.listeners[actions[i]];
+	
+	        if (listenersForAction) {
+	          listeners = listeners.concat(listenersForAction);
+	        }
 	      }
 	    }
 	
@@ -2164,7 +2249,7 @@
 	      P.flow.pushOnce(listener, listener.call, [event]);
 	    }
 	    return this;
-	  }
+	  },
 	};
 	
 	/**
@@ -2191,6 +2276,131 @@
 	  this.type = type;
 	  this.args = slice.call(arguments, 3);
 	};
+	
+	P.U.ex(ProAct.Event, {
+	
+	  /**
+	   * Factory method for creating of new ProAct.Events with ease.
+	   * <p>
+	   *  NOTE: For now only works with arrays, because creating array events required a lot of code.
+	   * </p>
+	   *
+	   * @memberof ProAct.Event
+	   * @static
+	   * @param {ProAct.Event} source
+	   *      If there is an event that coused this event - it is the source. Can be null - no source.
+	   * @param {Object} target
+	   *      The thing that triggered this event.
+	   * @param {ProAct.Event.Types|String} type
+	   *      The type of the event. Can be string for ease.
+	   *      For now this method supports only {@link ProAct.Event.Types.array} events.
+	   *      It is possible to pass the string 'array' for type.
+	   * @param {Array} data
+	   *      Arguments of the event.
+	   * @return {ProAct.Event}
+	   *      The new event.
+	   * @see {@link ProAct.Event.makeArray}
+	   */
+	  make: function (source, target, type, data) {
+	    if (type === 'array' || type === P.E.Types.array) {
+	      return P.E.makeArray(data[0], data.slice(1));
+	    }
+	  },
+	
+	  /**
+	   * Factory method for creating of new ProAct.Events of type ProAct.Event.Types.array  with ease.
+	   * <p>
+	   *  NOTE: For now only array modifying events can be created - remove and splice (you can trigger a value for add).
+	   * </p>
+	   *
+	   * @memberof ProAct.Event
+	   * @static
+	   * @param {ProAct.Event} source
+	   *      If there is an event that coused this event - it is the source. Can be null - no source.
+	   * @param {Object} target
+	   *      The thing that triggered this event.
+	   * @param {ProAct.Array.Operations|String} subType
+	   *      The operation type of the event to create. Can be string or instance of
+	   *      {@link ProAct.Array.Operations}.
+	   *      Prossible string values are - 'remove' and 'splice' for now.
+	   * @param {Array} data
+	   *      Arguments of the event.
+	   * @return {ProAct.Event}
+	   *      The new event.
+	   */
+	  makeArray: function (source, target, subType, data) {
+	    var eventType = P.E.Types.array, arr;
+	    if (subType === 'remove' || subType === P.A.Operations.remove) {
+	      return new P.E(source, target, eventType, P.A.Operations.remove, data[0], data[1], data[2]);
+	    }
+	
+	    if (subType === 'splice' || subType === P.A.Operations.splice) {
+	      if (!P.U.isArray(data[1])) {
+	        data[1] = new Array(data[1]);
+	      }
+	
+	      return new P.E(source, target, eventType, P.A.Operations.splice, data[0], data[1], data[2]);
+	    }
+	  },
+	
+	  /**
+	   * Factory method for creating of new ProAct.Events without target and source with ease.
+	   * <p>
+	   *  NOTE: For now only array modifying events can be created - remove and splice (you can trigger a value for add).
+	   * </p>
+	   *
+	   * Using this method we can create for example an event for removing the i-th element from ProAct.Array like this:
+	   * <pre>
+	   *  ProAct.Event.simple('array', 'del', el, array);
+	   * </pre>
+	   * This event can be passed to the ProAct.ArrayCore#update method of the core of a ProAct.Array and it will delete
+	   * the element in it.
+	   *
+	   * @memberof ProAct.Event
+	   * @static
+	   * @param {ProAct.Event.Types|String} eventType
+	   *      The type of the event. Can be string for ease.
+	   *      For now this method supports only {@link ProAct.Event.Types.array} events.
+	   *      It is possible to pass the string 'array' or 'a' for type.
+	   * @param {ProAct.Array.Operations|String} subType
+	   *      The operation type of the event to create. Can be string or instance of
+	   *      {@link ProAct.Array.Operations}.
+	   *      Prossible string values are - 'pop', 'shift', 'deleteElement' or 'del' (at index) and 'splice' for now.
+	   * @param {Object} value
+	   *      Used a value of the event.
+	   *      For array events this is for example the value to be added or to be removed.
+	   *      It can be index too.
+	   * @param {Array} array
+	   *      Optional parameter for array events - the array target of the event.
+	   *      It will be set as target.
+	   *      Can be used for determining event's parameters too.
+	   * @return {ProAct.Event}
+	   *      The new event.
+	   */
+	  simple: function (eventType, subType, value, array) {
+	    if ((eventType === 'array' || eventType === 'a') && (subType === 'pop' || subType === 'shift')) {
+	      return P.E.makeArray(null, array, 'remove', [subType === 'shift' ? 0 : 1]);
+	    }
+	
+	    if ((eventType === 'array' || eventType === 'a') && (subType === 'splice')) {
+	      return P.E.makeArray(null, array, 'splice', [value, 1]);
+	    }
+	
+	    if ((eventType === 'array' || eventType === 'a') && (subType === 'deleteElement' || subType === 'del')) {
+	      if (array) {
+	        var index = array.indexOf(value);
+	
+	        if (index !== -1) {
+	          return P.E.makeArray(null, array, 'splice', [index, 1]);
+	        }
+	      } else {
+	        return P.E.makeArray(null, array, 'splice', [null, [value]]);
+	      }
+	    }
+	
+	    return null;
+	  }
+	});
 	
 	/**
 	 * Defines the possible types of the ProAct.Events.
@@ -3447,8 +3657,7 @@
 	            newVal = newVal.args[0][newVal.target];
 	          }
 	
-	          self.oldVal = self.val;
-	          self.val = P.Observable.transform(self, newVal);
+	          self.set(newVal);
 	        }
 	      };
 	    }
@@ -3868,6 +4077,11 @@
 	              P.prob(self.val);
 	            }
 	
+	            if (P.U.isArray(this)) {
+	              self.update();
+	              return;
+	            }
+	
 	            var oldProps = self.oldVal.__pro__.properties,
 	                newProps = self.val.__pro__.properties,
 	                oldPropName, oldProp, newProp, oldListeners, newListeners,
@@ -4154,7 +4368,7 @@
 	      return;
 	    }
 	
-	    self.update();
+	    target.update();
 	  };
 	
 	  P.P.call(this, proObject, property, getter, setter);
@@ -5140,7 +5354,9 @@
 	        meta = [meta];
 	      }
 	
-	      P.registry.setup.apply(P.registry, [result].concat(meta));
+	      if (!(meta[0] instanceof ProAct.Property)) {
+	        P.registry.setup.apply(P.registry, [result].concat(meta));
+	      }
 	    }
 	
 	    return result;
@@ -5214,6 +5430,164 @@
 	  constructor: ProAct.ArrayCore,
 	
 	  /**
+	   * Generates function wrapper around a normal function which sets
+	   * the {@link ProAct.ArrayCore#indexListener} of the index calling the function.
+	   * <p>
+	   *  This is used if the array is complex - contains other ProAct.js objects, and there should be special
+	   *  updates for their elements/properties.
+	   * </p>
+	   *
+	   * @memberof ProAct.ArrayCore
+	   * @instance
+	   * @method actionFunction
+	   * @param {Function} fun
+	   *      The source function.
+	   * @return {Function}
+	   *      The action function wrapper.
+	   * @see {@link ProAct.ArrayCore#indexListener}
+	   */
+	  actionFunction: function (fun) {
+	    var core = this;
+	    return function () {
+	      var oldCaller = P.currentCaller,
+	          i = arguments[1], res;
+	
+	      P.currentCaller = core.indexListener(i);
+	      res = fun.apply(this, slice.call(arguments, 0));
+	      P.currentCaller = oldCaller;
+	
+	      return res;
+	    };
+	  },
+	
+	  /**
+	   * Generates listener for given index or reuses already generated one.
+	   * <p>
+	   *  This listener mimics a property listener, the idea is - if anything is listening to
+	   *  index changes in this' shell (array) and the shell is complex - has elements that are ProAct.js objects,
+	   *  if some of this element has property change, its notification should be dispatched to all the objects,
+	   *  listening to index changes in the array.
+	   * </p>
+	   * <p>
+	   *  So this way we can listen for stuff like array.[].foo - the foo property change for every element in the array.
+	   * </p>
+	   *
+	   * @memberof ProAct.ArrayCore
+	   * @instance
+	   * @method indexListener
+	   * @param {Number} i
+	   *      The index.
+	   * @return {Object}
+	   *      A listener mimicing a property one.
+	   */
+	  indexListener: function (i) {
+	    if (!this.indexListeners) {
+	      this.indexListeners = {};
+	    }
+	
+	    var core = this,
+	        shell = core.shell;
+	    if (!this.indexListeners[i]) {
+	      this.indexListeners[i] = {
+	        call: function (source) {
+	          core.makeListener(new P.E(source, shell, P.E.Types.array, [
+	            P.A.Operations.set, i, shell._array[i], shell._array[i]
+	          ]));
+	        },
+	        property: core
+	      };
+	    }
+	
+	    return this.indexListeners[i];
+	  },
+	
+	  /**
+	   * Creates the <i>listener</i> of this ProAct.ArrayCore.
+	   * <p>
+	   *  The right array typed events can change this' shell (array).
+	   * </p>
+	   * <p>
+	   *  If a non-event element is passed to the listener, the element is pushed
+	   *  to the shell.
+	   * </p>
+	   * <p>
+	   *  If a value event is passed to the listener, the new value is pushed
+	   *  to the shell.
+	   * </p>
+	   *
+	   * @memberof ProAct.Observable
+	   * @instance
+	   * @method makeListener
+	   * @return {Object}
+	   *      The <i>listener of this ArrayCore</i>.
+	   */
+	  makeListener: function () {
+	    if (!this.listener) {
+	      var self = this.shell;
+	      this.listener =  function (event) {
+	        if (!event || !(event instanceof P.E)) {
+	          self.push(event);
+	          return;
+	        }
+	
+	        if (event.type === P.E.Types.value) {
+	          self.push(event.args[2]);
+	          return;
+	        }
+	
+	        var op    = event.args[0],
+	            ind   = event.args[1],
+	            ov    = event.args[2],
+	            nv    = event.args[3],
+	            nvs,
+	            operations = P.Array.Operations;
+	
+	        if (op === operations.set) {
+	          self[ind] = nv;
+	        } else if (op === operations.add) {
+	          nvs = slice.call(nv, 0);
+	          if (ind === 0) {
+	            pArrayProto.unshift.apply(self, nvs);
+	          } else {
+	            pArrayProto.push.apply(self, nvs);
+	          }
+	        } else if (op === operations.remove) {
+	          if (ind === 0) {
+	            self.shift();
+	          } else {
+	            self.pop();
+	          }
+	        } else if (op === operations.setLength) {
+	          self.length = nv;
+	        } else if (op === operations.reverse) {
+	          self.reverse();
+	        } else if (op === operations.sort) {
+	          if (P.U.isFunction(nv)) {
+	            self.sort(nv);
+	          } else {
+	            self.sort();
+	          }
+	        } else if (op === operations.splice) {
+	          if (nv) {
+	            nvs = slice.call(nv, 0);
+	          } else {
+	            nvs = [];
+	          }
+	          if (ind === null || ind === undefined) {
+	            ind = self.indexOf(ov[0]);
+	            if (ind === -1) {
+	              return;
+	            }
+	          }
+	          pArrayProto.splice.apply(self, [ind, ov.length].concat(nvs));
+	        }
+	      };
+	    }
+	
+	    return this.listener;
+	  },
+	
+	  /**
 	   * Generates the initial listeners object.
 	   * It is used for resetting all the listeners too.
 	   * <p>
@@ -5277,10 +5651,15 @@
 	   *        <li>The old values beginning from the index.</li>
 	   *        <li>The new values beginning from the index.</li>
 	   *      </ol>
+	   *      Can be null. If null an empty (unchanging) event is created.
 	   * @return {ProAct.Event}
 	   *      The event.
 	   */
 	  makeEvent: function (source, eventData) {
+	    if (!eventData) {
+	      return new P.E(source, this.shell, P.E.Types.array, pArrayOps.setLength, -1, this.shell.length, this.shell.length);
+	    }
+	
 	    var op = eventData[0],
 	        ind = eventData[1],
 	        oldVal = eventData[2],
@@ -5481,6 +5860,7 @@
 	    } else if (isF(array[i])) {
 	    } else if (array[i] === null) {
 	    } else if (isO(array[i])) {
+	      this.isComplex = true;
 	      new P.ObjectProperty(array, i);
 	    }
 	
@@ -5740,10 +6120,13 @@
 	   *      True if all the elements in the <i>this</i> ProAct.Array pass the test implemented by the <i>callback</i>, false otherwise.
 	   * @see {@link ProAct.ArrayCore#addCaller}
 	   */
-	  every: function () {
+	  every: function (fun, thisArg) {
 	    this.core.addCaller();
+	    if (this.core.isComplex) {
+	      fun = this.core.actionFunction(fun);
+	    }
 	
-	    return every.apply(this._array, arguments);
+	    return every.call(this._array, fun, thisArg);
 	  },
 	
 	  /**
@@ -5856,9 +6239,16 @@
 	   * @see {@link ProAct.Array.Listeners.filter}
 	   * @see {@link ProAct.Array.reFilter}
 	   */
-	  filter: function (fun, thisArg) {
-	    var filtered = new P.A(filter.apply(this._array, arguments));
-	    this.core.on(pArrayLs.filter(filtered, this, arguments));
+	  filter: function (fun, thisArg, isComplex) {
+	    if (this.core.isComplex || isComplex) {
+	      fun = this.core.actionFunction(fun);
+	    }
+	
+	    var filtered = new P.A(filter.apply(this._array, arguments)),
+	        listener = pArrayLs.filter(filtered, this, arguments);
+	    this.core.on(listener);
+	
+	    filtered.core.filteringListener = listener;
 	
 	    return filtered;
 	  },
@@ -6937,6 +7327,12 @@
 	  filter: function (filtered, original, args) {
 	    var fun = args[0], thisArg = args[1];
 	    return function (event) {
+	      if (P.U.isFunction(event)) {
+	        args[0] = fun = event;
+	        pArray.reFilter(original, filtered, args);
+	        return;
+	      }
+	
 	      pArrayLs.check(event);
 	      var op  = event.args[0],
 	          ind = event.args[1],
@@ -7834,7 +8230,7 @@
 	 * @static
 	 * @param {Object} object
 	 *      The object/value to make decorator to the <i>target</i>.
-	 * @param {Object} object
+	 * @param {Object} target
 	 *      The object to decorate.
 	 * @param {Object|String} meta
 	 *      Meta-data used to help in the reactive object creation for the proxy.
@@ -8281,7 +8677,15 @@
 	            }
 	          }
 	
-	          actionObject[name] = opArguments;
+	          if (!actionObject[name]) {
+	            actionObject[name] = opArguments;
+	          } else {
+	            if (!P.U.isArray(actionObject[name][0])) {
+	              actionObject[name] = [actionObject[name], opArguments];
+	            } else {
+	              actionObject[name].push(opArguments);
+	            }
+	          }
 	
 	          actionObject.order = actionObject.order || [];
 	          actionObject.order.push(name);
@@ -8636,6 +9040,80 @@
 	            return p;
 	          }
 	        };
+	      },
+	
+	      /**
+	       * Mapping operation for turning value in an
+	       * ProAct.Array pop event.
+	       * <p>
+	       *  Usage in a DSL expression:
+	       *  <pre>
+	       *    map(pop)
+	       *  </pre>
+	       * </p>
+	       *
+	       * @memberof ProAct.DSL.predefined.mapping
+	       * @static
+	       * @method
+	       * @see {@link ProAct.DSL.ops.map}
+	       */
+	      pop: function () {
+	        return P.E.simple('array', 'pop');
+	      },
+	
+	      /**
+	       * Mapping operation for turning value in an
+	       * ProAct.Array shift event.
+	       * <p>
+	       *  Usage in a DSL expression:
+	       *  <pre>
+	       *    map(shift)
+	       *  </pre>
+	       * </p>
+	       *
+	       * @memberof ProAct.DSL.predefined.mapping
+	       * @static
+	       * @method
+	       * @see {@link ProAct.DSL.ops.map}
+	       */
+	      shift: function () {
+	        return P.E.simple('array', 'shift');
+	      },
+	
+	      /**
+	       * Mapping operation for turning value event in its value.
+	       * <p>
+	       *  Usage in a DSL expression:
+	       *  <pre>
+	       *    map(eventToVal)
+	       *  </pre>
+	       * </p>
+	       *
+	       * @memberof ProAct.DSL.predefined.mapping
+	       * @static
+	       * @method
+	       * @see {@link ProAct.DSL.ops.map}
+	       */
+	      eventToVal: function (event) {
+	        return event.args[0][event.target];
+	      },
+	
+	      /**
+	       * Maps anything to the constant true.
+	       * <p>
+	       *  Usage in a DSL expression:
+	       *  <pre>
+	       *    map(true)
+	       *  </pre>
+	       * </p>
+	       *
+	       * @memberof ProAct.DSL.predefined.mapping
+	       * @static
+	       * @method
+	       * @see {@link ProAct.DSL.ops.map}
+	       */
+	      'true': function (event) {
+	        return true;
 	      }
 	    },
 	
@@ -8711,7 +9189,44 @@
 	       * @method
 	       * @see {@link ProAct.DSL.ops.filter}
 	       */
-	      '-': function (el) { return el <= 0; }
+	      '-': function (el) { return el <= 0; },
+	
+	      /**
+	       * Filtering operation for filtering only values different from undefined.
+	       * <p>
+	       *  Usage in a DSL expression:
+	       *  <pre>
+	       *    filter(defined)
+	       *  </pre>
+	       * </p>
+	       *
+	       * @memberof ProAct.DSL.predefined.filtering
+	       * @static
+	       * @method
+	       * @see {@link ProAct.DSL.ops.filter}
+	       */
+	      defined: function (event) {
+	        return event.args[0][event.target] !== undefined;
+	      },
+	
+	      /**
+	       * Filtering operation for filtering only events
+	       * that have null/undefined as a source.
+	       * <p>
+	       *  Usage in a DSL expression:
+	       *  <pre>
+	       *    filter(originalEvent)
+	       *  </pre>
+	       * </p>
+	       *
+	       * @memberof ProAct.DSL.predefined.filtering
+	       * @static
+	       * @method
+	       * @see {@link ProAct.DSL.ops.filter}
+	       */
+	      originalEvent: function (event) {
+	        return event.source === undefined || event.source === null;
+	      }
 	    },
 	
 	    /**
@@ -8772,6 +9287,20 @@
 	       */
 	      '+str': ['', function (x, y) { return x + y; }],
 	    }
+	  },
+	
+	  defPredefined: function(type, id, operation) {
+	    if (type === 'm' || type === 'map') {
+	      type = 'mapping';
+	    }
+	    if (type === 'f' || type === 'filter') {
+	      type = 'filtering';
+	    }
+	    if (type === 'a' || type === 'acc' || type === 'accumulate') {
+	      type = 'accumulation';
+	    }
+	
+	    ProAct.DSL.predefined[type][id] = operation;
 	  },
 	
 	  /**
@@ -8912,7 +9441,8 @@
 	  run: function (observable, options, registry) {
 	    var isS = P.U.isString,
 	        args = slice.call(arguments, 3),
-	        option, i, ln, opType;
+	        option, i, ln, opType, oldOption,
+	        multiple = {};
 	
 	    if (options && isS(options)) {
 	      options = dsl.optionsFromString.apply(null, [options].concat(args));
@@ -8928,11 +9458,28 @@
 	        option = options.order[i];
 	        if (opType = dslOps[option]) {
 	          if (registry) {
+	            if (options.order.indexOf(option) !== options.order.lastIndexOf(option)) {
+	              if (multiple[option] === undefined) {
+	                multiple[option] = -1;
+	              }
+	              multiple[option] = multiple[option] + 1;
+	              oldOption = options[option];
+	              options[option] = options[option][multiple[option]];
+	            }
 	            options[option] = registry.toObjectArray(options[option]);
 	          }
 	
 	          opType.action(observable, options);
-	          delete options[option];
+	          if (oldOption) {
+	            options[option] = oldOption;
+	            oldOption = undefined;
+	
+	            if (multiple[option] >= options[option].length - 1) {
+	              delete options[option];
+	            }
+	          } else {
+	            delete options[option];
+	          }
 	        }
 	      }
 	    }
