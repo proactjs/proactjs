@@ -1,6 +1,6 @@
 /**
  * <p>
- *  Constructs a ProAct.Core. The core is an ProAct.Observable which can be used to manage other {@link ProAct.Observable} objects or shells arround ProAct.Observable objects.
+ *  Constructs a ProAct.Core. The core is an ProAct.ProActor which can be used to manage other {@link ProAct.ProActor} objects or shells arround ProAct.ProActor objects.
  * </p>
  * <p>
  *  For example a shell can be a plain old JavaScript object; The core will be in charge of creating {@link ProAct.Property} for every field of the shell.
@@ -12,14 +12,14 @@
  *  ProAct.Core is an abstract class, that has a {@link ProAct.States} state. Its initializing logic should be implemented in an extender.
  * </p>
  * <p>
- *  ProAct.Core is used as a parent for the {@link ProAct.Observable}s it manages, so it can be passed as a listener object - defines a <i>call method</i>.
+ *  ProAct.Core is used as a parent for the {@link ProAct.ProActor}s it manages, so it can be passed as a listener object - defines a <i>call method</i>.
  * </p>
  * <p>
  *  ProAct.Core is part of the core module of ProAct.js.
  * </p>
  *
  * @class ProAct.Core
- * @extends ProAct.Observable
+ * @extends ProAct.ProActor
  * @param {Object} shell
  *      The shell arrounf this core. This ProAct.Core manages observer-observable behavior for this <i>shell</i> object.
  * @param {Object} meta
@@ -31,10 +31,10 @@ ProAct.Core = P.C = function (shell, meta) {
   this.state = P.States.init;
   this.meta = meta || {};
 
-  P.Observable.call(this); // Super!
+  P.ProActor.call(this); // Super!
 };
 
-ProAct.Core.prototype = P.U.ex(Object.create(P.Observable.prototype), {
+ProAct.Core.prototype = P.U.ex(Object.create(P.ProActor.prototype), {
 
   /**
    * Reference to the constructor of this object.
@@ -119,9 +119,9 @@ ProAct.Core.prototype = P.U.ex(Object.create(P.Observable.prototype), {
   },
 
   /**
-   * ProAct.Core can be used as a parent listener for other {@link ProAct.Observable}s, so it defines the <i>call</i> method.
+   * ProAct.Core can be used as a parent listener for other {@link ProAct.ProActor}s, so it defines the <i>call</i> method.
    * <p>
-   *  By default this method calls {@link ProAct.Observable#update} of <i>this</i> with the passed <i>event</i>.
+   *  By default this method calls {@link ProAct.ProActor#update} of <i>this</i> with the passed <i>event</i>.
    * </p>
    *
    * @memberof ProAct.Core
@@ -129,7 +129,7 @@ ProAct.Core.prototype = P.U.ex(Object.create(P.Observable.prototype), {
    * @method call
    * @param {Object} event
    *      The value/event that this listener is notified for.
-   * @see {@link ProAct.Observable#update}
+   * @see {@link ProAct.ProActor#update}
    */
   call: function (event) {
     this.update(event);

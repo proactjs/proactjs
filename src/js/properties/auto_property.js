@@ -1,6 +1,6 @@
 /**
  * <p>
- *  Constructs a ProAct.AutoProperty. The properties are simple {@link ProAct.Observable}s with state. The auto-computed or functional property
+ *  Constructs a ProAct.AutoProperty. The properties are simple {@link ProAct.ProActor}s with state. The auto-computed or functional property
  *  has a state of a Function value.
  * </p>
  * <p>
@@ -94,7 +94,7 @@ ProAct.AutoProperty = P.FP = function (proObject, property) {
 
         self.state = P.States.ready;
 
-        self.val = P.Observable.transform(self, self.val);
+        self.val = P.ProActor.transform(self, self.val);
         return self.val;
       };
 
@@ -142,7 +142,7 @@ ProAct.AutoProperty.prototype = P.U.ex(Object.create(P.P.prototype), {
    * </p>
    * <p>
    *  On value changes the <i><this</i> value is set to the value computed by the original function,
-   *  using the {@link ProAct.Observable#transform} to transform it.
+   *  using the {@link ProAct.ProActor#transform} to transform it.
    * </p>
    *
    * @memberof ProAct.AutoProperty
@@ -159,7 +159,7 @@ ProAct.AutoProperty.prototype = P.U.ex(Object.create(P.P.prototype), {
         property: self,
         call: function () {
           self.oldVal = self.val;
-          self.val = P.Observable.transform(self, self.func.call(self.proObject));
+          self.val = P.ProActor.transform(self, self.func.call(self.proObject));
         }
       };
     }

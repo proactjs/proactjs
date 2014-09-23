@@ -1,7 +1,7 @@
 /**
  * <p>
  *  Constructs a ProAct.Val. The ProAct.Vals are the simplest ProAct.js reactive objects, they have only one property - 'v' and all their methods,
- *  extended from {@link ProAct.Observable} delegate to it.
+ *  extended from {@link ProAct.ProActor} delegate to it.
  * </p>
  * <p>
  *  Like every object turned to ProAct.js reactive one, the ProAct.Val has a {@link ProAct.ObjectCore} managing its single {@link ProAct.Property}.
@@ -17,7 +17,7 @@
  * </p>
  *
  * @class ProAct.Val
- * @extends ProAct.Observable
+ * @extends ProAct.ProActor
  * @param {Object} val
  *      The value that will be wrapped and tracked by the ProAct.Val being created.
  * @param {String} meta
@@ -37,7 +37,7 @@ ProAct.Val = P.V = function (val, meta) {
   P.prob(this, meta);
 };
 
-ProAct.Val.prototype = P.U.ex(Object.create(P.Observable.prototype), {
+ProAct.Val.prototype = P.U.ex(Object.create(P.ProActor.prototype), {
 
   /**
    * Reference to the constructor of this object.
@@ -72,7 +72,7 @@ ProAct.Val.prototype = P.U.ex(Object.create(P.Observable.prototype), {
    * @instance
    * @method on
    * @param {Array|String} actions
-   *      The action/actions to listen for. If this parameter is skipped or null/undefined, the actions from {@link ProAct.Observable#defaultActions} are used.
+   *      The action/actions to listen for. If this parameter is skipped or null/undefined, the actions from {@link ProAct.ProActor#defaultActions} are used.
    *      <p>
    *        The actions can be skipped and on their place as first parameter to be passed the <i>listener</i>.
    *      </p>
@@ -80,7 +80,7 @@ ProAct.Val.prototype = P.U.ex(Object.create(P.Observable.prototype), {
    *      The listener to attach. It must be instance of Function or object with a <i>call</i> method.
    * @return {ProAct.Val}
    *      <b>this</b>
-   * @see {@link ProAct.Observable#defaultActions}
+   * @see {@link ProAct.ProActor#defaultActions}
    * @see {@link ProAct.Property}
    */
   on: function (action, listener) {
@@ -92,14 +92,14 @@ ProAct.Val.prototype = P.U.ex(Object.create(P.Observable.prototype), {
    * Removes a <i>listener</i> from the {@link ProAct.Property} managing the 'v' field of <i>this</i> for passed <i>action</i>.
    * <p>
    *  If this method is called without parameters, all the listeners for all the actions are removed.
-   *  The listeners are reset using {@link ProAct.Observable#defaultListeners}.
+   *  The listeners are reset using {@link ProAct.ProActor#defaultListeners}.
    * </p>
    *
    * @memberof ProAct.Val
    * @instance
    * @method off
    * @param {Array|String} actions
-   *      The action/actions to stop listening for. If this parameter is skipped or null/undefined, the actions from {@link ProAct.Observable#defaultActions} are used.
+   *      The action/actions to stop listening for. If this parameter is skipped or null/undefined, the actions from {@link ProAct.ProActor#defaultActions} are used.
    *      <p>
    *        The actions can be skipped and on their place as first parameter to be passed the <i>listener</i>.
    *      </p>
@@ -107,7 +107,7 @@ ProAct.Val.prototype = P.U.ex(Object.create(P.Observable.prototype), {
    *      The listener to detach. If it is skipped, null or undefined all the listeners are removed.
    * @return {ProAct.Val}
    *      <b>this</b>
-   * @see {@link ProAct.Observable#defaultActions}
+   * @see {@link ProAct.ProActor#defaultActions}
    * @see {@link ProAct.Property}
    */
   off: function (action, listener) {
@@ -156,7 +156,7 @@ ProAct.Val.prototype = P.U.ex(Object.create(P.Observable.prototype), {
    * <p>
    *  A transformation is a function or an object that has a <i>call</i> method defined.
    *  This function or call method should have one argument and to return a transformed version of it.
-   *  If the returned value is {@link ProAct.Observable.BadValue}, the next transformations are skipped and the updating
+   *  If the returned value is {@link ProAct.ProActor.BadValue}, the next transformations are skipped and the updating
    *  value/event becomes - bad value.
    * </p>
    * <p>
@@ -170,7 +170,7 @@ ProAct.Val.prototype = P.U.ex(Object.create(P.Observable.prototype), {
    *      The transformation to add.
    * @return {ProAct.Val}
    *      <b>this</b>
-   * @see {@link ProAct.Observable.transform}
+   * @see {@link ProAct.ProActor.transform}
    */
   transform: function (transformation) {
     this.__pro__.properties.v.transform(transformation);
@@ -178,14 +178,14 @@ ProAct.Val.prototype = P.U.ex(Object.create(P.Observable.prototype), {
   },
 
   /**
-   * Links source {@link ProAct.Observable}s into the {@link ProAct.Property} managing the 'v' field of <i>this</i>.
+   * Links source {@link ProAct.ProActor}s into the {@link ProAct.Property} managing the 'v' field of <i>this</i>.
    * This means that the property is listening for changes from the <i>sources</i>.
    *
    * @memberof ProAct.Val
    * @instance
    * @method into
    * @param [...]
-   *      Zero or more source {@link ProAct.Observables} to set as sources.
+   *      Zero or more source {@link ProAct.ProActors} to set as sources.
    * @return {ProAct.Val}
    *      <b>this</b>
    */
@@ -201,7 +201,7 @@ ProAct.Val.prototype = P.U.ex(Object.create(P.Observable.prototype), {
    * @memberof ProAct.Val
    * @instance
    * @method out
-   * @param {ProAct.Observable} destination
+   * @param {ProAct.ProActor} destination
    *      The observable to set as source the {@link ProAct.Property} managing the 'v' field of <i>this</i> to.
    * @return {ProAct.Val}
    *      <b>this</b>
@@ -219,7 +219,7 @@ ProAct.Val.prototype = P.U.ex(Object.create(P.Observable.prototype), {
    * @instance
    * @method update
    * @param {Object} source
-   *      The source of the update, for example update of {@link ProAct.Observable},
+   *      The source of the update, for example update of {@link ProAct.ProActor},
    *      that the {@link ProAct.Property} managing the 'v' field of <i>this</i> is observing.
    *      <p>
    *        Can be null - no source.
@@ -233,7 +233,7 @@ ProAct.Val.prototype = P.U.ex(Object.create(P.Observable.prototype), {
    *      Data to be passed to the event to be created.
    * @return {ProAct.Val}
    *      <i>this</i>
-   * @see {@link ProAct.Observable#update}
+   * @see {@link ProAct.ProActor#update}
    * @see {@link ProAct.Property#makeEvent}
    * @see {@link ProAct.flow}
    */
@@ -245,7 +245,7 @@ ProAct.Val.prototype = P.U.ex(Object.create(P.Observable.prototype), {
   /**
    * <b>willUpdate()</b> is the method used to notify observers that the {@link ProAct.Property} managing the 'v' field of <i>this</i> will be updated.
    * <p>
-   *  It uses the {@link ProAct.Observable#defer} to defer the listeners of the listening {@link ProAct.Observable}s.
+   *  It uses the {@link ProAct.ProActor#defer} to defer the listeners of the listening {@link ProAct.ProActor}s.
    *  The idea is that everything should be executed in a running {@link ProAct.Flow}, so there will be no repetative
    *  updates.
    * </p>
@@ -258,7 +258,7 @@ ProAct.Val.prototype = P.U.ex(Object.create(P.Observable.prototype), {
    * @instance
    * @method willUpdate
    * @param {Object} source
-   *      The source of the update, for example update of {@link ProAct.Observable},
+   *      The source of the update, for example update of {@link ProAct.ProActor},
    *      that the {@link ProAct.Property} managing the 'v' field of <i>this</i> is observing.
    *      <p>
    *        Can be null - no source.
@@ -268,14 +268,14 @@ ProAct.Val.prototype = P.U.ex(Object.create(P.Observable.prototype), {
    *      </p>
    * @param {Array|String} actions
    *      A list of actions or a single action to update the listeners that listen to it.
-   *      If there is no action provided, the actions from {@link ProAct.Observable#defaultActions} are used.
+   *      If there is no action provided, the actions from {@link ProAct.ProActor#defaultActions} are used.
    * @param {Array} eventData
    *      Data to be passed to the event to be created.
    * @return {ProAct.Val}
    *      <i>this</i>
-   * @see {@link ProAct.Observable#defer}
+   * @see {@link ProAct.ProActor#defer}
    * @see {@link ProAct.Property#makeEvent}
-   * @see {@link ProAct.Observable#defaultActions}
+   * @see {@link ProAct.ProActor#defaultActions}
    * @see {@link ProAct.flow}
    */
   willUpdate: function (source, actions, eventData) {

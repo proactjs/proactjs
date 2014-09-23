@@ -1,6 +1,6 @@
 /**
  * <p>
- *  Constructs a ProAct.Property. The properties are simple {@link ProAct.Observable}s with state. The basic property
+ *  Constructs a ProAct.Property. The properties are simple {@link ProAct.ProActor}s with state. The basic property
  *  has a state of a simple value - number/string/boolean.
  * </p>
  * <p>
@@ -25,7 +25,7 @@
  * </p>
  *
  * @class ProAct.Property
- * @extends ProAct.Observable
+ * @extends ProAct.ProActor
  * @param {Object} proObject
  *      A plain JavaScript object, holding a field, this property will represent.
  * @param {String} property
@@ -61,7 +61,7 @@ ProAct.Property = P.P = function (proObject, property, getter, setter) {
   this.g = this.get;
   this.s = this.set;
 
-  P.Observable.call(this); // Super!
+  P.ProActor.call(this); // Super!
   this.parent = this.proObject.__pro__;
 
   this.init();
@@ -205,7 +205,7 @@ P.U.ex(ProAct.Property, {
       if (setter) {
         property.val = setter.call(property.proObject, newVal);
       } else {
-        property.val = P.Observable.transform(property, newVal);
+        property.val = P.ProActor.transform(property, newVal);
       }
 
       if (property.val === null || property.val === undefined) {
@@ -274,7 +274,7 @@ P.U.ex(ProAct.Property, {
   }
 });
 
-ProAct.Property.prototype = P.U.ex(Object.create(P.Observable.prototype), {
+ProAct.Property.prototype = P.U.ex(Object.create(P.ProActor.prototype), {
 
   /**
    * Reference to the constructor of this object.
@@ -341,7 +341,7 @@ ProAct.Property.prototype = P.U.ex(Object.create(P.Observable.prototype), {
    *  It has a <i>property</i> field set to <i>this</i>.
    * </p>
    * <p>
-   *  On value changes the <i><this</i> value is set to the new value using the {@link ProAct.Observable#transform} to transform it.
+   *  On value changes the <i><this</i> value is set to the new value using the {@link ProAct.ProActor#transform} to transform it.
    * </p>
    *
    * @memberof ProAct.Property

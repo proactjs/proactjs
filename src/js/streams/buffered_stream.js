@@ -18,7 +18,7 @@
  *
  * @class ProAct.BufferedStream
  * @extends ProAct.Stream
- * @param {ProAct.Observable} source
+ * @param {ProAct.ProActor} source
  *      A default source of the stream, can be null.
  * @param {Array} transforms
  *      A list of transformation to be used on all incoming chages.
