@@ -1,6 +1,6 @@
 /**
  * <p>
- *  Constructs a ProAct.NullProperty. The properties are simple {@link ProAct.ProActor}s with state. The null/nil property
+ *  Constructs a ProAct.NullProperty. The properties are simple {@link ProAct.Actor}s with state. The null/nil property
  *  has a state of a null or undefined value.
  * </p>
  * <p>

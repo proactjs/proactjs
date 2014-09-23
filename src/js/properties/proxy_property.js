@@ -36,7 +36,7 @@ ProAct.ProxyProperty = P.PXP = function (proObject, property, target) {
     }
 
     target.oldVal = target.val;
-    target.val = P.ProActor.transform(self, newVal);
+    target.val = P.Actor.transform(self, newVal);
 
     if (target.val === null || target.val === undefined) {
       P.P.reProb(target).update();

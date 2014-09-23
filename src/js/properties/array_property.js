@@ -1,6 +1,6 @@
 /**
  * <p>
- *  Constructs a ProAct.ArrayProperty. The properties are simple {@link ProAct.ProActor}s with state. The array property
+ *  Constructs a ProAct.ArrayProperty. The properties are simple {@link ProAct.Actor}s with state. The array property
  *  has a state of a JavaScript array value.
  * </p>
  * <p>

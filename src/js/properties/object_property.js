@@ -1,6 +1,6 @@
 /**
  * <p>
- *  Constructs a ProAct.ObjectProperty. The properties are simple {@link ProAct.ProActor}s with state. The object property
+ *  Constructs a ProAct.ObjectProperty. The properties are simple {@link ProAct.Actor}s with state. The object property
  *  has a state of a JavaScript object value.
  * </p>
  * <p>

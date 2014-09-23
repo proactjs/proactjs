@@ -140,7 +140,7 @@ opStoreAll = P.OpStore.all;
 /**
  * Contains implementation of the ProAct.js DSL.
  * <p>
- *  The idea of the DSL is to define {@link ProAct.ProActor}s and their dependencies on each other in a declarative and simple way.
+ *  The idea of the DSL is to define {@link ProAct.Actor}s and their dependencies on each other in a declarative and simple way.
  * </p>
  * <p>
  *  The {@link ProAct.Registry} is used to store these observables.
@@ -187,7 +187,7 @@ ProAct.DSL = {
   ops: {
 
     /**
-     * DSL operation for defining sources of {@link ProAct.ProActor}s.
+     * DSL operation for defining sources of {@link ProAct.Actor}s.
      * <p>
      *  For example
      *  <pre>
@@ -200,7 +200,7 @@ ProAct.DSL = {
      *  <pre>
      *    '<<($1)'
      *  </pre>
-     *  means that the source of the targed of the DSL should be an {@link ProAct.ProActor} passed to the {@link ProAct.Dsl.run}
+     *  means that the source of the targed of the DSL should be an {@link ProAct.Actor} passed to the {@link ProAct.Dsl.run}
      *  method as the first argument after the targed object, the DSL data and the registry.
      * </p>
      *
@@ -209,13 +209,13 @@ ProAct.DSL = {
      * @constant
      * @see {@link ProAct.OpStore}
      * @see {@link ProAct.Registry}
-     * @see {@link ProAct.ProActor}
+     * @see {@link ProAct.Actor}
      * @see {@link ProAct.DSL.run}
      */
     into: opStoreAll.simpleOp('into', '<<'),
 
     /**
-     * DSL operation for setting the targed of the DSL as sources of another {@link ProAct.ProActor}s.
+     * DSL operation for setting the targed of the DSL as sources of another {@link ProAct.Actor}s.
      * <p>
      *  For example
      *  <pre>
@@ -228,7 +228,7 @@ ProAct.DSL = {
      *  <pre>
      *    '>>($1)'
      *  </pre>
-     *  means that the targed of the DSL should become a source for an {@link ProAct.ProActor} passed to the {@link ProAct.Dsl.run}
+     *  means that the targed of the DSL should become a source for an {@link ProAct.Actor} passed to the {@link ProAct.Dsl.run}
      *  method as the first argument after the targed object, the DSL data and the registry.
      * </p>
      *
@@ -237,20 +237,20 @@ ProAct.DSL = {
      * @constant
      * @see {@link ProAct.OpStore}
      * @see {@link ProAct.Registry}
-     * @see {@link ProAct.ProActor}
+     * @see {@link ProAct.Actor}
      * @see {@link ProAct.DSL.run}
      */
     out: opStoreAll.simpleOp('out', '>>'),
 
     /**
-     * DSL operation for attaching listener to the target {@link ProAct.ProActor} of the DSL.
+     * DSL operation for attaching listener to the target {@link ProAct.Actor} of the DSL.
      * <p>
      *  For example
      *  <pre>
      *    '@(f:bla)'
      *  </pre>
      *  means that listener function, stored in the {@link ProAct.Registry} as 'bla'
-     *  should be attached as a listener to the targed {@link ProAct.ProActor} of the DSL.
+     *  should be attached as a listener to the targed {@link ProAct.Actor} of the DSL.
      * </p>
      *
      * @memberof ProAct.DSL.ops
@@ -258,20 +258,20 @@ ProAct.DSL = {
      * @constant
      * @see {@link ProAct.OpStore}
      * @see {@link ProAct.Registry}
-     * @see {@link ProAct.ProActor}
+     * @see {@link ProAct.Actor}
      * @see {@link ProAct.DSL.run}
      */
     on: opStoreAll.simpleOp('on', '@'),
 
     /**
-     * DSL operation for adding mapping to the target {@link ProAct.ProActor} of the DSL.
+     * DSL operation for adding mapping to the target {@link ProAct.Actor} of the DSL.
      * <p>
      *  For example
      *  <pre>
      *    'map(f:bla)'
      *  </pre>
      *  means that mapping function, stored in the {@link ProAct.Registry} as 'bla'
-     *  should be mapped to the targed {@link ProAct.ProActor} of the DSL.
+     *  should be mapped to the targed {@link ProAct.Actor} of the DSL.
      * </p>
      * <p>
      *  or
@@ -280,7 +280,7 @@ ProAct.DSL = {
      *  </pre>
      *  means that mapping function passed to the {@link ProAct.Dsl.run}
      *  method as the second argument after the targed object, the DSL data and the registry
-     *  should be mapped to the targed {@link ProAct.ProActor} of the DSL.
+     *  should be mapped to the targed {@link ProAct.Actor} of the DSL.
      * </p>
      *
      * @memberof ProAct.DSL.ops
@@ -288,20 +288,20 @@ ProAct.DSL = {
      * @constant
      * @see {@link ProAct.OpStore}
      * @see {@link ProAct.Registry}
-     * @see {@link ProAct.ProActor}
+     * @see {@link ProAct.Actor}
      * @see {@link ProAct.DSL.run}
      */
     mapping: opStoreAll.simpleOp('mapping', 'map'),
 
     /**
-     * DSL operation for adding filters to the target {@link ProAct.ProActor} of the DSL.
+     * DSL operation for adding filters to the target {@link ProAct.Actor} of the DSL.
      * <p>
      *  For example
      *  <pre>
      *    'filter(f:bla)'
      *  </pre>
      *  means that filtering function, stored in the {@link ProAct.Registry} as 'bla'
-     *  should be add as filter to the targed {@link ProAct.ProActor} of the DSL.
+     *  should be add as filter to the targed {@link ProAct.Actor} of the DSL.
      * </p>
      * <p>
      *  or
@@ -310,7 +310,7 @@ ProAct.DSL = {
      *  </pre>
      *  means that filtering function passed to the {@link ProAct.Dsl.run}
      *  method as the first argument after the targed object, the DSL data and the registry
-     *  should be added as filter to the targed {@link ProAct.ProActor} of the DSL.
+     *  should be added as filter to the targed {@link ProAct.Actor} of the DSL.
      * </p>
      *
      * @memberof ProAct.DSL.ops
@@ -318,20 +318,20 @@ ProAct.DSL = {
      * @constant
      * @see {@link ProAct.OpStore}
      * @see {@link ProAct.Registry}
-     * @see {@link ProAct.ProActor}
+     * @see {@link ProAct.Actor}
      * @see {@link ProAct.DSL.run}
      */
     filtering: opStoreAll.simpleOp('filtering', 'filter'),
 
     /**
-     * DSL operation for adding accumulation to the target {@link ProAct.ProActor} of the DSL.
+     * DSL operation for adding accumulation to the target {@link ProAct.Actor} of the DSL.
      * <p>
      *  For example
      *  <pre>
      *    'acc($1, f:bla)'
      *  </pre>
      *  means that accumulating function, stored in the {@link ProAct.Registry} as 'bla'
-     *  should be added as accumulation to the targed {@link ProAct.ProActor} of the DSL,
+     *  should be added as accumulation to the targed {@link ProAct.Actor} of the DSL,
      *  and the first argument passed to {@link ProAct.DSL.run} after the targed object, the DSL data and the registry should
      *  be used as initial value for the accumulation.
      * </p>
@@ -341,7 +341,7 @@ ProAct.DSL = {
      * @constant
      * @see {@link ProAct.OpStore}
      * @see {@link ProAct.Registry}
-     * @see {@link ProAct.ProActor}
+     * @see {@link ProAct.Actor}
      * @see {@link ProAct.DSL.run}
      */
     accumulation: opStoreAll.simpleOp('accumulation', 'acc')
@@ -774,7 +774,7 @@ ProAct.DSL = {
    * Extracts DSL actions and options from an array of strings.
    * <p>
    *  Example <i>optionArray</i> is ['map($1)', 'filter(+)', @($2)'] and it will become options object of functions and arguments to
-   *  be applied on a target {@link ProAct.ProActor} passed to the {@link ProAct.DSL.run} method.
+   *  be applied on a target {@link ProAct.Actor} passed to the {@link ProAct.DSL.run} method.
    * </p>
    *
    * @memberof ProAct.DSL
@@ -819,7 +819,7 @@ ProAct.DSL = {
   },
 
   /**
-   * Configures an {@link ProAct.ProActor} using the DSL passed with the <i>options</i> argument.
+   * Configures an {@link ProAct.Actor} using the DSL passed with the <i>options</i> argument.
    * <p>
    *  Uses the passed {@link ProAct.Registry} to read stored values from.
    * </p>
@@ -827,12 +827,12 @@ ProAct.DSL = {
    * @memberof ProAct.DSL
    * @static
    * @method
-   * @param {ProAct.ProActor} observable
+   * @param {ProAct.Actor} observable
    *      The target of the DSL operations.
-   * @param {ProAct.ProActor|String|Object} options
+   * @param {ProAct.Actor|String|Object} options
    *      The DSL formatted options to be used for the configuration.
    *      <p>
-   *        If the value of this parameter is instance of {@link ProAct.ProActor} it is set as a source to the <i>target observable</i>.
+   *        If the value of this parameter is instance of {@link ProAct.Actor} it is set as a source to the <i>target observable</i>.
    *      </p>
    *      <p>
    *        If the value ot this parameter is String - {@link ProAct.DSL.optionsFromString} is used to be turned to an options object.
@@ -862,10 +862,10 @@ ProAct.DSL = {
    *        For example if the array contains 'map($1)', the first argument passed after the <i>observable</i>, <i>options</i> and <i>registry</i> arguments
    *        is passed to the 'map' operation.
    *      </p>
-   * @return {ProAct.ProActor}
+   * @return {ProAct.Actor}
    *      The configured observable.
    * @see {@link ProAct.DSL.optionsFromString}
-   * @see {@link ProAct.ProActor}
+   * @see {@link ProAct.Actor}
    */
   run: function (observable, options, registry) {
     var isS = P.U.isString,
@@ -877,7 +877,7 @@ ProAct.DSL = {
       options = dsl.optionsFromString.apply(null, [options].concat(args));
     }
 
-    if (options && options instanceof P.ProActor) {
+    if (options && options instanceof P.Actor) {
       options = {into: options};
     }
 

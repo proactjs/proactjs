@@ -9,7 +9,7 @@
  *
  * @class ProAct.DebouncingStream
  * @extends ProAct.DelayedStream
- * @param {ProAct.ProActor} source
+ * @param {ProAct.Actor} source
  *      A default source of the stream, can be null.
  *      <p>
  *        If this is the only one passed argument and it is a number - it becomes the delay of the stream.

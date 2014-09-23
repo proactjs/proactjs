@@ -1,6 +1,6 @@
 /**
  * <p>
- *  Constructs a ProAct.Stream. The stream is a simple {@link ProAct.ProActor}, without state.
+ *  Constructs a ProAct.Stream. The stream is a simple {@link ProAct.Actor}, without state.
  * </p>
  * <p>
  *  The streams are ment to emit values, events, changes and can be plugged into another observables.
@@ -19,21 +19,21 @@
  * </p>
  *
  * @class ProAct.Stream
- * @extends ProAct.ProActor
- * @param {ProAct.ProActor} source
+ * @extends ProAct.Actor
+ * @param {ProAct.Actor} source
  *      A default source of the stream, can be null.
  * @param {Array} transforms
  *      A list of transformation to be used on all incoming chages.
  */
 ProAct.Stream = ProAct.S = function (source, transforms) {
-  P.ProActor.call(this, transforms);
+  P.Actor.call(this, transforms);
 
   if (source) {
     this.into(source);
   }
 };
 
-ProAct.Stream.prototype = P.U.ex(Object.create(P.ProActor.prototype), {
+ProAct.Stream.prototype = P.U.ex(Object.create(P.Actor.prototype), {
 
   /**
    * Reference to the constructor of this object.
@@ -111,10 +111,10 @@ ProAct.Stream.prototype = P.U.ex(Object.create(P.ProActor.prototype), {
   },
 
   /**
-   * Defers a ProAct.ProActor listener.
+   * Defers a ProAct.Actor listener.
    * <p>
    *  For streams this means pushing it to active flow using {@link ProAct.Flow#push}.
-   *  If the listener is object with 'property' field, it is done using {@link ProAct.ProActor#defer}.
+   *  If the listener is object with 'property' field, it is done using {@link ProAct.Actor#defer}.
    *  That way the reactive environment is updated only once, but the streams are not part of it.
    * </p>
    *
@@ -125,15 +125,15 @@ ProAct.Stream.prototype = P.U.ex(Object.create(P.ProActor.prototype), {
    *      The event/value to pass to the listener.
    * @param {Object} listener
    *      The listener to defer. It should be a function or object defining the <i>call</i> method.
-   * @return {ProAct.ProActor}
+   * @return {ProAct.Actor}
    *      <i>this</i>
-   * @see {@link ProAct.ProActor#willUpdate}
-   * @see {@link ProAct.ProActor#makeListener}
+   * @see {@link ProAct.Actor#willUpdate}
+   * @see {@link ProAct.Actor#makeListener}
    * @see {@link ProAct.flow}
    */
   defer: function (event, listener) {
     if (listener.property) {
-      P.ProActor.prototype.defer.call(this, event, listener);
+      P.Actor.prototype.defer.call(this, event, listener);
       return;
     }
 
@@ -162,7 +162,7 @@ ProAct.Stream.prototype = P.U.ex(Object.create(P.ProActor.prototype), {
    *      If the stream should transform the triggered value. By default it is true (if not passed)
    * @return {ProAct.Stream}
    *      <i>this</i>
-   * @see {@link ProAct.ProActor#update}
+   * @see {@link ProAct.Actor#update}
    */
   trigger: function (event, useTransformations) {
     if (useTransformations === undefined) {
@@ -213,9 +213,9 @@ ProAct.Stream.prototype = P.U.ex(Object.create(P.ProActor.prototype), {
    * @method triggerErr
    * @param {Error} err
    *      The error to trigger.
-   * @return {ProAct.ProActor}
+   * @return {ProAct.Actor}
    *      <i>this</i>
-   * @see {@link ProAct.ProActor#update}
+   * @see {@link ProAct.Actor#update}
    */
   triggerErr: function (err) {
     return this.update(err, 'error');
@@ -227,14 +227,14 @@ ProAct.Stream.prototype = P.U.ex(Object.create(P.ProActor.prototype), {
 
     if (useTransformations) {
       try {
-        event = P.ProActor.transform(this, event);
+        event = P.Actor.transform(this, event);
       } catch (e) {
         this.triggerErr(e);
         return this;
       }
     }
 
-    if (event === P.ProActor.BadValue) {
+    if (event === P.Actor.BadValue) {
       return this;
     }
 
@@ -252,7 +252,7 @@ ProAct.Stream.prototype = P.U.ex(Object.create(P.ProActor.prototype), {
    *      Function or object with a <i>call method</i> to use as map function.
    * @return {ProAct.Stream}
    *      A new ProAct.Stream instance with the <i>mapping</i> applied.
-   * @see {@link ProAct.ProActor#mapping}
+   * @see {@link ProAct.Actor#mapping}
    */
   map: function (mappingFunction) {
     return new P.S(this).mapping(mappingFunction);
@@ -269,7 +269,7 @@ ProAct.Stream.prototype = P.U.ex(Object.create(P.ProActor.prototype), {
    *      The filtering function or object with a call method, should return boolean.
    * @return {ProAct.Stream}
    *      A new ProAct.Stream instance with the <i>filtering</i> applied.
-   * @see {@link ProAct.ProActor#filtering}
+   * @see {@link ProAct.Actor#filtering}
    */
   filter: function (filteringFunction) {
     return new P.S(this).filtering(filteringFunction);
@@ -288,7 +288,7 @@ ProAct.Stream.prototype = P.U.ex(Object.create(P.ProActor.prototype), {
    *      The function to accumulate.
    * @return {ProAct.Stream}
    *      A new ProAct.Stream instance with the <i>accumulation</i> applied.
-   * @see {@link ProAct.ProActor#accumulation}
+   * @see {@link ProAct.Actor#accumulation}
    */
   accumulate: function (initVal, accumulationFunction) {
     return new P.S(this).accumulation(initVal, accumulationFunction);

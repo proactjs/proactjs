@@ -145,7 +145,7 @@ ProAct.Registry.prototype = rProto = {
    *  {@link ProAct.Registry#setup} is used to setup the newly created object using the {@link ProAct.DSL}
    * </p>
    * <p>
-   *  The idea of this method is to create and configure {@link ProAct.ProActor} objects.
+   *  The idea of this method is to create and configure {@link ProAct.Actor} objects.
    * </p>
    *
    * @memberof ProAct.Registry
@@ -165,7 +165,7 @@ ProAct.Registry.prototype = rProto = {
    * @see {@link ProAct.DSL}
    * @see {@link ProAct.Registry#getProviderByName}
    * @see {@link ProAct.Registry#setup}
-   * @see {@link ProAct.ProActor}
+   * @see {@link ProAct.Actor}
    */
   make: function (name, options) {
     var args = slice.call(arguments, 2),

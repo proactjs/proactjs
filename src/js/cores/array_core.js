@@ -122,7 +122,7 @@ ProAct.ArrayCore.prototype = P.U.ex(Object.create(P.C.prototype), {
    *  to the shell.
    * </p>
    *
-   * @memberof ProAct.ProActor
+   * @memberof ProAct.Actor
    * @instance
    * @method makeListener
    * @return {Object}
@@ -232,7 +232,7 @@ ProAct.ArrayCore.prototype = P.U.ex(Object.create(P.C.prototype), {
    * @default ['length', 'index']
    * @return {Array}
    *      The actions to be used if no actions are provided to action related methods,
-   *      like {@link ProAct.ProActor#on}, {@link ProAct.ProActor#off}, {@link ProAct.ProActor#update}, {@link ProAct.ProActor#willUpdate}.
+   *      like {@link ProAct.Actor#on}, {@link ProAct.Actor#off}, {@link ProAct.Actor#update}, {@link ProAct.Actor#willUpdate}.
    */
   defaultActions: function () {
     return ['length', 'index'];
@@ -322,7 +322,7 @@ ProAct.ArrayCore.prototype = P.U.ex(Object.create(P.C.prototype), {
    *      A list of the newly added items. Can be empty.
    * @return {ProAct.ArrayCore}
    *      <i>this</i>
-   * @see {@link ProAct.ProActor#update}
+   * @see {@link ProAct.Actor#update}
    * @see {@link ProAct.Array#splice}
    */
   updateSplice: function (index, spliced, newItems) {
@@ -354,7 +354,7 @@ ProAct.ArrayCore.prototype = P.U.ex(Object.create(P.C.prototype), {
    *      The array to compare to.
    * @return {ProAct.ArrayCore}
    *      <i>this</i>
-   * @see {@link ProAct.ProActor#update}
+   * @see {@link ProAct.Actor#update}
    * @see {@link ProAct.Utils.diff}
    */
   updateByDiff: function (array) {

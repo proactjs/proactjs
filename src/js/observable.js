@@ -1,6 +1,6 @@
 /**
  * <p>
- *  Constructs a ProAct.ProActor. It can be used both as observer and observable.
+ *  Constructs a ProAct.Actor. It can be used both as observer and observable.
  * </p>
  * <p>
  *  The observables in ProAct.js form the dependency graph.
@@ -14,14 +14,14 @@
  *  on the child-observable, it is something as special observer.
  * </p>
  * <p>
- *  ProAct.ProActor is part of the core module of ProAct.js.
+ *  ProAct.Actor is part of the core module of ProAct.js.
  * </p>
  *
- * @class ProAct.ProActor
+ * @class ProAct.Actor
  * @param {Array} transforms
  *      A list of transformation to be used on all incoming chages.
  */
-ProAct.ProActor = P.Observable = P.Pro = function (transforms) {
+ProAct.Actor = P.Observable = P.Pro = function (transforms) {
   P.U.defValProp(this, 'listeners', false, false, true, this.defaultListeners());
   this.sources = [];
 
@@ -33,12 +33,12 @@ ProAct.ProActor = P.Observable = P.Pro = function (transforms) {
   this.parent = null;
 };
 
-P.U.ex(P.ProActor, {
+P.U.ex(P.Actor, {
 
   /**
    * A constant defining bad values or bad events.
    *
-   * @memberof ProAct.ProActor
+   * @memberof ProAct.Actor
    * @type Object
    * @static
    * @constant
@@ -46,13 +46,13 @@ P.U.ex(P.ProActor, {
   BadValue: {},
 
   /**
-   * Transforms the passed <i>val</i> using the ProAct.ProActor#transforms of the passed <i>observable</i>.
+   * Transforms the passed <i>val</i> using the ProAct.Actor#transforms of the passed <i>observable</i>.
    *
    * @function transforms
-   * @memberof ProAct.ProActor
+   * @memberof ProAct.Actor
    * @static
-   * @param {ProAct.ProActor} observable
-   *      The ProAct.ProActor which transformations should be used.
+   * @param {ProAct.Actor} observable
+   *      The ProAct.Actor which transformations should be used.
    * @param {Object} val
    *      The value to transform.
    * @return {Object}
@@ -62,7 +62,7 @@ P.U.ex(P.ProActor, {
     var i, t = observable.transforms, ln = t.length;
     for (i = 0; i < ln; i++) {
       val = t[i].call(observable, val);
-      if (val === P.ProActor.BadValue) {
+      if (val === P.Actor.BadValue) {
         break;
       }
     }
@@ -71,23 +71,23 @@ P.U.ex(P.ProActor, {
   }
 });
 
-P.ProActor.prototype = {
+P.Actor.prototype = {
 
   /**
    * Reference to the constructor of this object.
    *
-   * @memberof ProAct.ProActor
+   * @memberof ProAct.Actor
    * @instance
    * @constant
-   * @default ProAct.ProActor
+   * @default ProAct.Actor
    */
-  constructor: ProAct.ProActor,
+  constructor: ProAct.Actor,
 
   /**
    * Generates the initial listeners object. It can be overridden for alternative listeners collections.
    * It is used for resetting all the listeners too.
    *
-   * @memberof ProAct.ProActor
+   * @memberof ProAct.Actor
    * @instance
    * @method defaultListeners
    * @return {Object}
@@ -103,13 +103,13 @@ P.ProActor.prototype = {
   /**
    * A list of actions or action to be used when no action is passed for the methods working with actions.
    *
-   * @memberof ProAct.ProActor
+   * @memberof ProAct.Actor
    * @instance
    * @method defaultActions
    * @default 'change'
    * @return {Array|String}
    *      The actions to be used if no actions are provided to action related methods,
-   *      like {@link ProAct.ProActor#on}, {@link ProAct.ProActor#off}, {@link ProAct.ProActor#update}, {@link ProAct.ProActor#willUpdate}.
+   *      like {@link ProAct.Actor#on}, {@link ProAct.Actor#off}, {@link ProAct.Actor#update}, {@link ProAct.Actor#willUpdate}.
    */
   defaultActions: function () {
     return 'change';
@@ -125,7 +125,7 @@ P.ProActor.prototype = {
    *  Should be overriden with specific listener, by default it returns null.
    * </p>
    *
-   * @memberof ProAct.ProActor
+   * @memberof ProAct.Actor
    * @instance
    * @abstract
    * @method makeListener
@@ -145,7 +145,7 @@ P.ProActor.prototype = {
    *  Should be overriden with specific listener, by default it returns null.
    * </p>
    *
-   * @memberof ProAct.ProActor
+   * @memberof ProAct.Actor
    * @instance
    * @abstract
    * @method makeErrListener
@@ -164,7 +164,7 @@ P.ProActor.prototype = {
    *  By default this method returns {@link ProAct.Event.Types.value} event.
    * </p>
    *
-   * @memberof ProAct.ProActor
+   * @memberof ProAct.Actor
    * @instance
    * @method makeEvent
    * @default {ProAct.Event} with type {@link ProAct.Event.Types.value}
@@ -178,22 +178,22 @@ P.ProActor.prototype = {
   },
 
   /**
-   * Attaches a new listener to this ProAct.ProActor.
+   * Attaches a new listener to this ProAct.Actor.
    * The listener may be function or object that defines a <i>call</i> method.
    *
-   * @memberof ProAct.ProActor
+   * @memberof ProAct.Actor
    * @instance
    * @method on
    * @param {Array|String} actions
-   *      The action/actions to listen for. If this parameter is skipped or null/undefined, the actions from {@link ProAct.ProActor#defaultActions} are used.
+   *      The action/actions to listen for. If this parameter is skipped or null/undefined, the actions from {@link ProAct.Actor#defaultActions} are used.
    *      <p>
    *        The actions can be skipped and on their place as first parameter to be passed the <i>listener</i>.
    *      </p>
    * @param {Object} listener
    *      The listener to attach. It must be instance of Function or object with a <i>call</i> method.
-   * @return {ProAct.ProActor}
+   * @return {ProAct.Actor}
    *      <b>this</b>
-   * @see {@link ProAct.ProActor#defaultActions}
+   * @see {@link ProAct.Actor#defaultActions}
    */
   on: function (actions, listener) {
     if (!P.U.isString(actions) && !P.U.isArray(actions)) {
@@ -225,24 +225,24 @@ P.ProActor.prototype = {
    * Removes a <i>listener</i> from the passed <i>action</i>.
    * <p>
    *  If this method is called without parameters, all the listeners for all the actions are removed.
-   *  The listeners are reset using {@link ProAct.ProActor#defaultListeners}.
+   *  The listeners are reset using {@link ProAct.Actor#defaultListeners}.
    * </p>
    *
-   * @memberof ProAct.ProActor
+   * @memberof ProAct.Actor
    * @instance
    * @method off
    * @param {Array|String} actions
-   *      The action/actions to stop listening for. If this parameter is skipped or null/undefined, the actions from {@link ProAct.ProActor#defaultActions} are used.
+   *      The action/actions to stop listening for. If this parameter is skipped or null/undefined, the actions from {@link ProAct.Actor#defaultActions} are used.
    *      <p>
    *        The actions can be skipped and on their place as first parameter to be passed the <i>listener</i>.
    *      </p>
    * @param {Object} listener
    *      The listener to detach. If it is skipped, null or undefined all the listeners are removed from this observable.
-   * @return {ProAct.ProActor}
+   * @return {ProAct.Actor}
    *      <b>this</b>
-   * @see {@link ProAct.ProActor#on}
-   * @see {@link ProAct.ProActor#defaultActions}
-   * @see {@link ProAct.ProActor#defaultListeners}
+   * @see {@link ProAct.Actor#on}
+   * @see {@link ProAct.Actor#defaultActions}
+   * @see {@link ProAct.Actor#defaultListeners}
    */
   off: function (actions, listener) {
     if (!actions && !listener) {
@@ -274,17 +274,17 @@ P.ProActor.prototype = {
   },
 
   /**
-   * Attaches a new error listener to this ProAct.ProActor.
+   * Attaches a new error listener to this ProAct.Actor.
    * The listener may be function or object that defines a <i>call</i> method.
    *
-   * @memberof ProAct.ProActor
+   * @memberof ProAct.Actor
    * @instance
    * @method onErr
    * @param {Object} listener
    *      The listener to attach. It must be instance of Function or object with a <i>call</i> method.
-   * @return {ProAct.ProActor}
+   * @return {ProAct.Actor}
    *      <b>this</b>
-   * @see {@link ProAct.ProActor#on}
+   * @see {@link ProAct.Actor#on}
    */
   onErr: function (listener) {
     return this.on('error', listener);
@@ -293,14 +293,14 @@ P.ProActor.prototype = {
   /**
    * Removes an error <i>listener</i> from the passed <i>action</i>.
    *
-   * @memberof ProAct.ProActor
+   * @memberof ProAct.Actor
    * @instance
    * @method offErr
    * @param {Object} listener
    *      The listener to detach. If it is skipped, null or undefined all the listeners are removed from this observable.
-   * @return {ProAct.ProActor}
+   * @return {ProAct.Actor}
    *      <b>this</b>
-   * @see {@link ProAct.ProActor#onErr}
+   * @see {@link ProAct.Actor#onErr}
    */
   offErr: function (listener) {
     return this.off('error', listener);
@@ -314,18 +314,18 @@ P.ProActor.prototype = {
    *  stream, it is passed to the listening too. That way the source stream is plugged <b>into</b> the listening one.
    * </p>
    * <p>
-   *  The listeners from {@link ProAct.ProActor#makeListener} and {@link ProAct.ProActor#makeErrListener} are used.
+   *  The listeners from {@link ProAct.Actor#makeListener} and {@link ProAct.Actor#makeErrListener} are used.
    * </p>
    *
-   * @memberof ProAct.ProActor
+   * @memberof ProAct.Actor
    * @instance
    * @method into
    * @param [...]
-   *      Zero or more source ProAct.ProActors to set as sources.
-   * @return {ProAct.ProActor}
+   *      Zero or more source ProAct.Actors to set as sources.
+   * @return {ProAct.Actor}
    *      <b>this</b>
-   * @see {@link ProAct.ProActor#makeListener}
-   * @see {@link ProAct.ProActor#makeErrListener}
+   * @see {@link ProAct.Actor#makeListener}
+   * @see {@link ProAct.Actor#makeErrListener}
    */
   into: function () {
     var args = slice.call(arguments),
@@ -341,17 +341,17 @@ P.ProActor.prototype = {
   },
 
   /**
-   * The reverse of {@link ProAct.ProActor#into} - sets <i>this observable</i> as a source
+   * The reverse of {@link ProAct.Actor#into} - sets <i>this observable</i> as a source
    * to the passed <i>destination</i> observable.
    *
-   * @memberof ProAct.ProActor
+   * @memberof ProAct.Actor
    * @instance
    * @method out
-   * @param {ProAct.ProActor} destination
+   * @param {ProAct.Actor} destination
    *      The observable to set as source <i>this</i> to.
-   * @return {ProAct.ProActor}
+   * @return {ProAct.Actor}
    *      <b>this</b>
-   * @see {@link ProAct.ProActor#into}
+   * @see {@link ProAct.Actor#into}
    */
   out: function (destination) {
     destination.into(this);
@@ -362,14 +362,14 @@ P.ProActor.prototype = {
   /**
    * Removes a <i>source observable</i> from <i>this</i>.
    *
-   * @memberof ProAct.ProActor
+   * @memberof ProAct.Actor
    * @instance
    * @method offSource
-   * @param {ProAct.ProActor} source
-   *      The ProAct.ProActor to remove as <i>source</i>.
-   * @return {ProAct.ProActor}
+   * @param {ProAct.Actor} source
+   *      The ProAct.Actor to remove as <i>source</i>.
+   * @return {ProAct.Actor}
    *      <b>this</b>
-   * @see {@link ProAct.ProActor#into}
+   * @see {@link ProAct.Actor#into}
    */
   offSource: function (source) {
     P.U.remove(this.sources, source);
@@ -385,21 +385,21 @@ P.ProActor.prototype = {
    * <p>
    *  A transformation is a function or an object that has a <i>call</i> method defined.
    *  This function or call method should have one argument and to return a transformed version of it.
-   *  If the returned value is {@link ProAct.ProActor.BadValue}, the next transformations are skipped and the updating
+   *  If the returned value is {@link ProAct.Actor.BadValue}, the next transformations are skipped and the updating
    *  value/event becomes - bad value.
    * </p>
    * <p>
    *  Every value/event that updates <i>this observable</i> will be transformed using the new transformation.
    * </p>
    *
-   * @memberof ProAct.ProActor
+   * @memberof ProAct.Actor
    * @instance
    * @method transform
    * @param {Object} transformation
    *      The transformation to add.
-   * @return {ProAct.ProActor}
+   * @return {ProAct.Actor}
    *      <b>this</b>
-   * @see {@link ProAct.ProActor.transform}
+   * @see {@link ProAct.Actor.transform}
    */
   transform: function (transformation) {
     this.transforms.push(transformation);
@@ -414,14 +414,14 @@ P.ProActor.prototype = {
    *  we'll get <i>9</i> as actual updating value.
    * </p>
    *
-   * @memberof ProAct.ProActor
+   * @memberof ProAct.Actor
    * @instance
    * @method mapping
    * @param {Object} mappingFunction
    *      Function or object with a <i>call method</i> to use as map function.
-   * @return {ProAct.ProActor}
+   * @return {ProAct.Actor}
    *      <b>this</b>
-   * @see {@link ProAct.ProActor#transform}
+   * @see {@link ProAct.Actor#transform}
    */
   mapping: function (mappingFunction) {
     return this.transform(mappingFunction)
@@ -434,14 +434,14 @@ P.ProActor.prototype = {
    *  filter by only odd numbers as update values.
    * </p>
    *
-   * @memberof ProAct.ProActor
+   * @memberof ProAct.Actor
    * @instance
    * @method filtering
    * @param {Object} filteringFunction
    *      The filtering function or object with a call method, should return boolean.
-   * @return {ProAct.ProActor}
+   * @return {ProAct.Actor}
    *      <b>this</b>
-   * @see {@link ProAct.ProActor#transform}
+   * @see {@link ProAct.Actor#transform}
    */
   filtering: function(filteringFunction) {
     var _this = this;
@@ -449,7 +449,7 @@ P.ProActor.prototype = {
       if (filteringFunction.call(_this, val)) {
         return val;
       }
-      return P.ProActor.BadValue;
+      return P.Actor.BadValue;
     });
   },
 
@@ -459,16 +459,16 @@ P.ProActor.prototype = {
    *  Accumulation is used to compute a value based on the previous one.
    * </p>
    *
-   * @memberof ProAct.ProActor
+   * @memberof ProAct.Actor
    * @instance
    * @method accumulation
    * @param {Object} initVal
    *      Initial value for the accumulation. For example '0' for sum.
    * @param {Object} accumulationFunction
    *      The function to accumulate.
-   * @return {ProAct.ProActor}
+   * @return {ProAct.Actor}
    *      <b>this</b>
-   * @see {@link ProAct.ProActor#transform}
+   * @see {@link ProAct.Actor#transform}
    */
   accumulation: function (initVal, accumulationFunction) {
     var _this = this, val = initVal;
@@ -479,51 +479,51 @@ P.ProActor.prototype = {
   },
 
   /**
-   * Creates a new ProAct.ProActor instance with source <i>this</i> and mapping
+   * Creates a new ProAct.Actor instance with source <i>this</i> and mapping
    * the passed <i>mapping function</i>.
    * <p>
    *  Should be overridden with creating the right observable.
    * </p>
    *
-   * @memberof ProAct.ProActor
+   * @memberof ProAct.Actor
    * @instance
    * @abstract
    * @method map
    * @param {Object} mappingFunction
    *      Function or object with a <i>call method</i> to use as map function.
-   * @return {ProAct.ProActor}
-   *      A new ProAct.ProActor instance with the <i>mapping</i> applied.
-   * @see {@link ProAct.ProActor#mapping}
+   * @return {ProAct.Actor}
+   *      A new ProAct.Actor instance with the <i>mapping</i> applied.
+   * @see {@link ProAct.Actor#mapping}
    */
   map: P.N,
 
   /**
-   * Creates a new ProAct.ProActor instance with source <i>this</i> and filtering
+   * Creates a new ProAct.Actor instance with source <i>this</i> and filtering
    * the passed <i>filtering function</i>.
    * <p>
    *  Should be overridden with creating the right observable.
    * </p>
    *
-   * @memberof ProAct.ProActor
+   * @memberof ProAct.Actor
    * @instance
    * @abstract
    * @method filter
    * @param {Object} filteringFunction
    *      The filtering function or object with a call method, should return boolean.
-   * @return {ProAct.ProActor}
-   *      A new ProAct.ProActor instance with the <i>filtering</i> applied.
-   * @see {@link ProAct.ProActor#filtering}
+   * @return {ProAct.Actor}
+   *      A new ProAct.Actor instance with the <i>filtering</i> applied.
+   * @see {@link ProAct.Actor#filtering}
    */
   filter: P.N,
 
   /**
-   * Creates a new ProAct.ProActor instance with source <i>this</i> and accumulation
+   * Creates a new ProAct.Actor instance with source <i>this</i> and accumulation
    * the passed <i>accumulation function</i>.
    * <p>
    *  Should be overridden with creating the right observable.
    * </p>
    *
-   * @memberof ProAct.ProActor
+   * @memberof ProAct.Actor
    * @instance
    * @abstract
    * @method accumulate
@@ -531,9 +531,9 @@ P.ProActor.prototype = {
    *      Initial value for the accumulation. For example '0' for sum.
    * @param {Object} accumulationFunction
    *      The function to accumulate.
-   * @return {ProAct.ProActor}
-   *      A new ProAct.ProActor instance with the <i>accumulation</i> applied.
-   * @see {@link ProAct.ProActor#accumulation}
+   * @return {ProAct.Actor}
+   *      A new ProAct.Actor instance with the <i>accumulation</i> applied.
+   * @see {@link ProAct.Actor#accumulation}
    */
   accumulate: P.N,
 
@@ -543,7 +543,7 @@ P.ProActor.prototype = {
    *  The value will be updated with every update coming to this observable.
    * </p>
    *
-   * @memberof ProAct.ProActor
+   * @memberof ProAct.Actor
    * @instance
    * @method reduce
    * @param {Object} initVal
@@ -552,7 +552,7 @@ P.ProActor.prototype = {
    *      The function to accumulate.
    * @return {ProAct.Val}
    *      A {@link ProAct.Val} instance observing <i>this</i> with the accumulation applied.
-   * @see {@link ProAct.ProActor#accumulate}
+   * @see {@link ProAct.Actor#accumulate}
    * @see {@link ProAct.Val}
    */
   reduce: function (initVal, accumulationFunction) {
@@ -560,21 +560,21 @@ P.ProActor.prototype = {
   },
 
   /**
-   * Update notifies all the observers of this ProAct.ProActor.
+   * Update notifies all the observers of this ProAct.Actor.
    * <p>
    *  If there is running {@link ProAct.flow} instance it uses it to call the
-   *  {@link ProAct.ProActor.willUpdate} action with the passed <i>parameters</i>.
+   *  {@link ProAct.Actor.willUpdate} action with the passed <i>parameters</i>.
    * </p>
    * <p>
    *  If {@link ProAct.flow} is not running, a new instance is created and the
-   *  {@link ProAct.ProActor.willUpdate} action of <i>this</i> is called in it.
+   *  {@link ProAct.Actor.willUpdate} action of <i>this</i> is called in it.
    * </p>
    *
-   * @memberof ProAct.ProActor
+   * @memberof ProAct.Actor
    * @instance
    * @method update
    * @param {Object} source
-   *      The source of the update, for example update of ProAct.ProActor, that <i>this</i> is observing.
+   *      The source of the update, for example update of ProAct.Actor, that <i>this</i> is observing.
    *      <p>
    *        Can be null - no source.
    *      </p>
@@ -585,10 +585,10 @@ P.ProActor.prototype = {
    *      A list of actions or a single action to update the listeners that listen to it.
    * @param {Array} eventData
    *      Data to be passed to the event to be created.
-   * @return {ProAct.ProActor}
+   * @return {ProAct.Actor}
    *      <i>this</i>
-   * @see {@link ProAct.ProActor#willUpdate}
-   * @see {@link ProAct.ProActor#makeEvent}
+   * @see {@link ProAct.Actor#willUpdate}
+   * @see {@link ProAct.Actor#makeEvent}
    * @see {@link ProAct.flow}
    */
   update: function (source, actions, eventData) {
@@ -604,26 +604,26 @@ P.ProActor.prototype = {
   },
 
   /**
-   * <b>willUpdate()</b> is the method used to notify observers that <i>this</i> ProAct.ProActor will be updated.
+   * <b>willUpdate()</b> is the method used to notify observers that <i>this</i> ProAct.Actor will be updated.
    * <p>
-   *  It uses the {@link ProAct.ProActor#defer} to defer the listeners of the listening ProAct.ProActors.
+   *  It uses the {@link ProAct.Actor#defer} to defer the listeners of the listening ProAct.Actors.
    *  The idea is that everything should be executed in a running {@link ProAct.Flow}, so there will be no repetative
    *  updates.
    * </p>
    * <p>
-   *  The update value will come from the {@link ProAct.ProActor#makeEvent} method and the <i>source</i>
+   *  The update value will come from the {@link ProAct.Actor#makeEvent} method and the <i>source</i>
    *  parameter will be passed to it.
    * </p>
    * <p>
-   *  If <i>this</i> ProAct.ProActor has a <i>parent</i> ProAct.ProActor it will be notified in the running flow
+   *  If <i>this</i> ProAct.Actor has a <i>parent</i> ProAct.Actor it will be notified in the running flow
    *  as well.
    * </p>
    *
-   * @memberof ProAct.ProActor
+   * @memberof ProAct.Actor
    * @instance
    * @method willUpdate
    * @param {Object} source
-   *      The source of the update, for example update of ProAct.ProActor, that <i>this</i> is observing.
+   *      The source of the update, for example update of ProAct.Actor, that <i>this</i> is observing.
    *      <p>
    *        Can be null - no source.
    *      </p>
@@ -632,14 +632,14 @@ P.ProActor.prototype = {
    *      </p>
    * @param {Array|String} actions
    *      A list of actions or a single action to update the listeners that listen to it.
-   *      If there is no action provided, the actions from {@link ProAct.ProActor#defaultActions} are used.
+   *      If there is no action provided, the actions from {@link ProAct.Actor#defaultActions} are used.
    * @param {Array} eventData
    *      Data to be passed to the event to be created.
-   * @return {ProAct.ProActor}
+   * @return {ProAct.Actor}
    *      <i>this</i>
-   * @see {@link ProAct.ProActor#defer}
-   * @see {@link ProAct.ProActor#makeEvent}
-   * @see {@link ProAct.ProActor#defaultActions}
+   * @see {@link ProAct.Actor#defer}
+   * @see {@link ProAct.Actor#makeEvent}
+   * @see {@link ProAct.Actor#defaultActions}
    * @see {@link ProAct.flow}
    */
   willUpdate: function (source, actions, eventData) {
@@ -697,23 +697,23 @@ P.ProActor.prototype = {
   },
 
   /**
-   * Defers a ProAct.ProActor listener.
+   * Defers a ProAct.Actor listener.
    * <p>
    *  By default this means that the listener is put into active {@link ProAct.Flow} using it's
    *  {@link ProAct.Flow#pushOnce} method, but it can be overridden.
    * </p>
    *
-   * @memberof ProAct.ProActor
+   * @memberof ProAct.Actor
    * @instance
    * @method defer
    * @param {Object} event
    *      The event/value to pass to the listener.
    * @param {Object} listener
    *      The listener to defer. It should be a function or object defining the <i>call</i> method.
-   * @return {ProAct.ProActor}
+   * @return {ProAct.Actor}
    *      <i>this</i>
-   * @see {@link ProAct.ProActor#willUpdate}
-   * @see {@link ProAct.ProActor#makeListener}
+   * @see {@link ProAct.Actor#willUpdate}
+   * @see {@link ProAct.Actor#makeListener}
    * @see {@link ProAct.flow}
    */
   defer: function (event, listener) {
