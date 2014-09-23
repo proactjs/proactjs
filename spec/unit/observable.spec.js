@@ -1,9 +1,9 @@
 'use strict';
 
-describe('ProAct.Observable', function () {
+describe('ProAct.Actor', function () {
   describe('#on', function () {
     it ('adds observer to the observable', function () {
-      var observable = new ProAct.Observable(), res = [];
+      var observable = new ProAct.Actor(), res = [];
 
       observable.on(function (event) {
         res.push(event);
@@ -18,7 +18,7 @@ describe('ProAct.Observable', function () {
 
   describe('#off', function () {
     it ('removes observer from the observable', function () {
-      var observable = new ProAct.Observable(), res = [],
+      var observable = new ProAct.Actor(), res = [],
           observer = function (event) {
             res.push(event);
           };
@@ -32,7 +32,7 @@ describe('ProAct.Observable', function () {
 
   describe('#update', function () {
     it ('notifies only the passed types of actions', function () {
-      var observable = new ProAct.Observable(), res = [];
+      var observable = new ProAct.Actor(), res = [];
 
       observable.on('one', function () {
         res.push('1');
@@ -53,7 +53,7 @@ describe('ProAct.Observable', function () {
     });
 
     it ('it notifies only for defined actions', function () {
-      var observable = new ProAct.Observable(), res = [];
+      var observable = new ProAct.Actor(), res = [];
 
       observable.on('one', function () {
         res.push('1');

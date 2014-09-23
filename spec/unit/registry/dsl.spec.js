@@ -61,7 +61,7 @@ describe('ProAct.DSL', function () {
       });
       describe('#action', function () {
         it ('calls on method on observable with ["change", <callback>]', function () {
-          var observable = new ProAct.Observable(), listener = function () {};
+          var observable = new ProAct.Actor(), listener = function () {};
 
           spyOn(observable, 'on');
           ProAct.DSL.ops.on.action(observable, {on: ['change', listener]});
