@@ -1,7 +1,7 @@
 'use strict';
 
 describe('ProAct.ObjectCore', function () {
-  it ('is observable for all the properties it manages', function () {
+  it ('is actor for all the properties it manages', function () {
       var obj = {
             a:1,
             b:2

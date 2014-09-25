@@ -1,17 +1,17 @@
 /**
  * <p>
- *  Constructs a ProAct.Actor. It can be used both as observer and observable.
+ *  Constructs a ProAct.Actor. It can be used both as observer and actor.
  * </p>
  * <p>
- *  The observables in ProAct.js form the dependency graph.
- *  If some observable listens to changes from another - it depends on it.
+ *  The actors in ProAct.js form the dependency graph.
+ *  If some actor listens to changes from another - it depends on it.
  * </p>
  * <p>
- *  The observables can transform the values or events incoming to them.
+ *  The actors can transform the values or events incoming to them.
  * </p>
  * <p>
- *  Every observable can have a parent observable, that will be notified for all the changes
- *  on the child-observable, it is something as special observer.
+ *  Every actor can have a parent actor, that will be notified for all the changes
+ *  on the child-actor, it is something as special observer.
  * </p>
  * <p>
  *  ProAct.Actor is part of the core module of ProAct.js.
@@ -46,22 +46,22 @@ P.U.ex(P.Actor, {
   BadValue: {},
 
   /**
-   * Transforms the passed <i>val</i> using the ProAct.Actor#transforms of the passed <i>observable</i>.
+   * Transforms the passed <i>val</i> using the ProAct.Actor#transforms of the passed <i>actor</i>.
    *
    * @function transforms
    * @memberof ProAct.Actor
    * @static
-   * @param {ProAct.Actor} observable
+   * @param {ProAct.Actor} actor
    *      The ProAct.Actor which transformations should be used.
    * @param {Object} val
    *      The value to transform.
    * @return {Object}
    *      The transformed value.
    */
-  transform: function (observable, val) {
-    var i, t = observable.transforms, ln = t.length;
+  transform: function (actor, val) {
+    var i, t = actor.transforms, ln = t.length;
     for (i = 0; i < ln; i++) {
-      val = t[i].call(observable, val);
+      val = t[i].call(actor, val);
       if (val === P.Actor.BadValue) {
         break;
       }
@@ -116,10 +116,10 @@ P.Actor.prototype = {
   },
 
   /**
-   * Creates the <i>listener</i> of this observable.
-   * Every observable should have one listener that should pass to other observables.
+   * Creates the <i>listener</i> of this actor.
+   * Every actor should have one listener that should pass to other actors.
    * <p>
-   *  This listener turns the observable in a observer.
+   *  This listener turns the actor in a observer.
    * </p>
    * <p>
    *  Should be overriden with specific listener, by default it returns null.
@@ -136,10 +136,10 @@ P.Actor.prototype = {
   makeListener: P.N,
 
   /**
-   * Creates the <i>error listener</i> of this observable.
-   * Every observable should have one error listener that should pass to other observables.
+   * Creates the <i>error listener</i> of this actor.
+   * Every actor should have one error listener that should pass to other actors.
    * <p>
-   *  This listener turns the observable in a observer for errors.
+   *  This listener turns the actor in a observer for errors.
    * </p>
    * <p>
    *  Should be overriden with specific listener, by default it returns null.
@@ -237,7 +237,7 @@ P.Actor.prototype = {
    *        The actions can be skipped and on their place as first parameter to be passed the <i>listener</i>.
    *      </p>
    * @param {Object} listener
-   *      The listener to detach. If it is skipped, null or undefined all the listeners are removed from this observable.
+   *      The listener to detach. If it is skipped, null or undefined all the listeners are removed from this actor.
    * @return {ProAct.Actor}
    *      <b>this</b>
    * @see {@link ProAct.Actor#on}
@@ -297,7 +297,7 @@ P.Actor.prototype = {
    * @instance
    * @method offErr
    * @param {Object} listener
-   *      The listener to detach. If it is skipped, null or undefined all the listeners are removed from this observable.
+   *      The listener to detach. If it is skipped, null or undefined all the listeners are removed from this actor.
    * @return {ProAct.Actor}
    *      <b>this</b>
    * @see {@link ProAct.Actor#onErr}
@@ -307,7 +307,7 @@ P.Actor.prototype = {
   },
 
   /**
-   * Links source observables into this observable. This means that <i>this observable</i>
+   * Links source actors into this actor. This means that <i>this actor</i>
    * is listening for changes from the <i>sources</i>.
    * <p>
    *  A good example is one stream to have another as as source -> if data comes into the source
@@ -341,14 +341,14 @@ P.Actor.prototype = {
   },
 
   /**
-   * The reverse of {@link ProAct.Actor#into} - sets <i>this observable</i> as a source
-   * to the passed <i>destination</i> observable.
+   * The reverse of {@link ProAct.Actor#into} - sets <i>this actor</i> as a source
+   * to the passed <i>destination</i> actor.
    *
    * @memberof ProAct.Actor
    * @instance
    * @method out
    * @param {ProAct.Actor} destination
-   *      The observable to set as source <i>this</i> to.
+   *      The actor to set as source <i>this</i> to.
    * @return {ProAct.Actor}
    *      <b>this</b>
    * @see {@link ProAct.Actor#into}
@@ -360,7 +360,7 @@ P.Actor.prototype = {
   },
 
   /**
-   * Removes a <i>source observable</i> from <i>this</i>.
+   * Removes a <i>source actor</i> from <i>this</i>.
    *
    * @memberof ProAct.Actor
    * @instance
@@ -381,7 +381,7 @@ P.Actor.prototype = {
 
   /**
    * Adds a new <i>transformation</i> to the list of transformations
-   * of <i>this observable</i>.
+   * of <i>this actor</i>.
    * <p>
    *  A transformation is a function or an object that has a <i>call</i> method defined.
    *  This function or call method should have one argument and to return a transformed version of it.
@@ -389,7 +389,7 @@ P.Actor.prototype = {
    *  value/event becomes - bad value.
    * </p>
    * <p>
-   *  Every value/event that updates <i>this observable</i> will be transformed using the new transformation.
+   *  Every value/event that updates <i>this actor</i> will be transformed using the new transformation.
    * </p>
    *
    * @memberof ProAct.Actor
@@ -407,7 +407,7 @@ P.Actor.prototype = {
   },
 
   /**
-   * Adds a mapping transformation to <i>this observable</i>.
+   * Adds a mapping transformation to <i>this actor</i>.
    * <p>
    *  Mapping transformations just transform one value into another. For example if we get update with
    *  the value of <i>3</i> and we have mapping transformation that returns the updating value powered by <i>2</i>,
@@ -428,7 +428,7 @@ P.Actor.prototype = {
   },
 
   /**
-   * Adds a filtering transformation to <i>this observable</i>.
+   * Adds a filtering transformation to <i>this actor</i>.
    * <p>
    *  Filtering can be used to filter the incoming update values. For example you can
    *  filter by only odd numbers as update values.
@@ -454,7 +454,7 @@ P.Actor.prototype = {
   },
 
   /**
-   * Adds an accumulation transformation to <i>this observable</i>.
+   * Adds an accumulation transformation to <i>this actor</i>.
    * <p>
    *  Accumulation is used to compute a value based on the previous one.
    * </p>
@@ -482,7 +482,7 @@ P.Actor.prototype = {
    * Creates a new ProAct.Actor instance with source <i>this</i> and mapping
    * the passed <i>mapping function</i>.
    * <p>
-   *  Should be overridden with creating the right observable.
+   *  Should be overridden with creating the right actor.
    * </p>
    *
    * @memberof ProAct.Actor
@@ -501,7 +501,7 @@ P.Actor.prototype = {
    * Creates a new ProAct.Actor instance with source <i>this</i> and filtering
    * the passed <i>filtering function</i>.
    * <p>
-   *  Should be overridden with creating the right observable.
+   *  Should be overridden with creating the right actor.
    * </p>
    *
    * @memberof ProAct.Actor
@@ -520,7 +520,7 @@ P.Actor.prototype = {
    * Creates a new ProAct.Actor instance with source <i>this</i> and accumulation
    * the passed <i>accumulation function</i>.
    * <p>
-   *  Should be overridden with creating the right observable.
+   *  Should be overridden with creating the right actor.
    * </p>
    *
    * @memberof ProAct.Actor
@@ -540,7 +540,7 @@ P.Actor.prototype = {
   /**
    * Generates a new {@link ProAct.Val} containing the state of an accumulations.
    * <p>
-   *  The value will be updated with every update coming to this observable.
+   *  The value will be updated with every update coming to this actor.
    * </p>
    *
    * @memberof ProAct.Actor
@@ -592,13 +592,13 @@ P.Actor.prototype = {
    * @see {@link ProAct.flow}
    */
   update: function (source, actions, eventData) {
-    var observable = this;
+    var actor = this;
     if (!P.flow.isRunning()) {
       P.flow.run(function () {
-        observable.willUpdate(source, actions, eventData);
+        actor.willUpdate(source, actions, eventData);
       });
     } else {
-      observable.willUpdate(source, actions, eventData);
+      actor.willUpdate(source, actions, eventData);
     }
     return this;
   },

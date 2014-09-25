@@ -143,7 +143,7 @@ opStoreAll = P.OpStore.all;
  *  The idea of the DSL is to define {@link ProAct.Actor}s and their dependencies on each other in a declarative and simple way.
  * </p>
  * <p>
- *  The {@link ProAct.Registry} is used to store these observables.
+ *  The {@link ProAct.Registry} is used to store these actors.
  * </p>
  * <p>
  *  For example if we want to have a stream configured to write in a property, it is very easy done using the DSL:
@@ -827,18 +827,18 @@ ProAct.DSL = {
    * @memberof ProAct.DSL
    * @static
    * @method
-   * @param {ProAct.Actor} observable
+   * @param {ProAct.Actor} actor
    *      The target of the DSL operations.
    * @param {ProAct.Actor|String|Object} options
    *      The DSL formatted options to be used for the configuration.
    *      <p>
-   *        If the value of this parameter is instance of {@link ProAct.Actor} it is set as a source to the <i>target observable</i>.
+   *        If the value of this parameter is instance of {@link ProAct.Actor} it is set as a source to the <i>target actor</i>.
    *      </p>
    *      <p>
    *        If the value ot this parameter is String - {@link ProAct.DSL.optionsFromString} is used to be turned to an options object.
    *      </p>
    *      <p>
-   *        If the values of this parameter is object, it is used to configure the <i>targed observable</i>.
+   *        If the values of this parameter is object, it is used to configure the <i>targed actor</i>.
    *      </p>
    *      <p>
    *        The format of the object should be something like:
@@ -859,15 +859,15 @@ ProAct.DSL = {
    * @param [...]
    *      Parameters for the DSL operations.
    *      <p>
-   *        For example if the array contains 'map($1)', the first argument passed after the <i>observable</i>, <i>options</i> and <i>registry</i> arguments
+   *        For example if the array contains 'map($1)', the first argument passed after the <i>actor</i>, <i>options</i> and <i>registry</i> arguments
    *        is passed to the 'map' operation.
    *      </p>
    * @return {ProAct.Actor}
-   *      The configured observable.
+   *      The configured actor.
    * @see {@link ProAct.DSL.optionsFromString}
    * @see {@link ProAct.Actor}
    */
-  run: function (observable, options, registry) {
+  run: function (actor, options, registry) {
     var isS = P.U.isString,
         args = slice.call(arguments, 3),
         option, i, ln, opType, oldOption,
@@ -898,7 +898,7 @@ ProAct.DSL = {
             options[option] = registry.toObjectArray(options[option]);
           }
 
-          opType.action(observable, options);
+          opType.action(actor, options);
           if (oldOption) {
             options[option] = oldOption;
             oldOption = undefined;
@@ -918,10 +918,10 @@ ProAct.DSL = {
         options[opType] = registry.toObjectArray(option);
       }
       opType = dslOps[opType];
-      opType.action(observable, options);
+      opType.action(actor, options);
     }
 
-    return observable;
+    return actor;
   }
 };
 

@@ -60,12 +60,12 @@ describe('ProAct.DSL', function () {
         });
       });
       describe('#action', function () {
-        it ('calls on method on observable with ["change", <callback>]', function () {
-          var observable = new ProAct.Actor(), listener = function () {};
+        it ('calls on method on actor with ["change", <callback>]', function () {
+          var actor = new ProAct.Actor(), listener = function () {};
 
-          spyOn(observable, 'on');
-          ProAct.DSL.ops.on.action(observable, {on: ['change', listener]});
-          expect(observable.on).toHaveBeenCalledWith('change', listener);
+          spyOn(actor, 'on');
+          ProAct.DSL.ops.on.action(actor, {on: ['change', listener]});
+          expect(actor.on).toHaveBeenCalledWith('change', listener);
         });
       });
     });

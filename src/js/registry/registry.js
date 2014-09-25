@@ -170,11 +170,11 @@ ProAct.Registry.prototype = rProto = {
   make: function (name, options) {
     var args = slice.call(arguments, 2),
         p = this.getProviderByName(name),
-        observable;
+        actor;
 
     if (p[0]) {
-      observable = p[0].make.apply(p[0], [p[1], p[2]].concat(args));
-      return this.setup(observable, options, args);
+      actor = p[0].make.apply(p[0], [p[1], p[2]].concat(args));
+      return this.setup(actor, options, args);
     }
     return null;
   },

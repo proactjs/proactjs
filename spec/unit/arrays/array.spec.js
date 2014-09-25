@@ -113,7 +113,7 @@ describe('ProAct.Array', function () {
     expect(ProAct.Utils.isArray(array)).toBe(false);
   });
 
-  it('is observable by index', function () {
+  it('is actor by index', function () {
     var array = new ProAct.Array(1, 2, 3, 4, 5),
         op, i, ov, nv;
 

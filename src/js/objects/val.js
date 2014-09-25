@@ -196,13 +196,13 @@ ProAct.Val.prototype = P.U.ex(Object.create(P.Actor.prototype), {
 
   /**
    * The reverse of {@link ProAct.Val#into} - sets the {@link ProAct.Property} managing the 'v' field of <i>this</i> as a source
-   * to the passed <i>destination</i> observable.
+   * to the passed <i>destination</i> actor.
    *
    * @memberof ProAct.Val
    * @instance
    * @method out
    * @param {ProAct.Actor} destination
-   *      The observable to set as source the {@link ProAct.Property} managing the 'v' field of <i>this</i> to.
+   *      The actor to set as source the {@link ProAct.Property} managing the 'v' field of <i>this</i> to.
    * @return {ProAct.Val}
    *      <b>this</b>
    * @see {@link ProAct.Val#into}

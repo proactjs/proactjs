@@ -3,7 +3,7 @@
  *  Constructs a ProAct.Stream. The stream is a simple {@link ProAct.Actor}, without state.
  * </p>
  * <p>
- *  The streams are ment to emit values, events, changes and can be plugged into another observables.
+ *  The streams are ment to emit values, events, changes and can be plugged into another actor.
  *  For example you can connect many streams, to merge them and to divide them, to plug them into properties.
  * </p>
  * <p>
