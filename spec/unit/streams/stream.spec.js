@@ -255,6 +255,4 @@ describe('ProAct.Stream', function () {
 
   });
 
-  describe('ProAct.mainStream', function () {
-  });
 });

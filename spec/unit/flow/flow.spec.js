@@ -168,7 +168,6 @@ describe('ProAct.Flow', function () {
         flow.pushOnce(obj1, obj1.f2, [3, 2]);
         flow.pushOnce('pro', obj1, obj2.f1);
         flow.pushOnce(obj1, obj2.f2, [2, 3, 4.0]);
-
       });
 
       expect(fnOrder.length).toBe(6);
@@ -229,4 +228,46 @@ describe('ProAct.Flow', function () {
     });
   });
 
+  describe('ProAct.flow', function () {
+    it ('is defined', function () {
+      expect(ProAct.flow).toNotBe(null);
+      expect(ProAct.flow instanceof ProAct.Flow).toBe(true);
+    });
+
+    it ('has error stream', function () {
+      expect(ProAct.flow.errStream()).toNotBe(null);
+      expect(ProAct.flow.errStream() instanceof ProAct.Stream).toBe(true);
+    });
+
+    it ('the #errStream stream dispatches errors in the flow', function () {
+      var res = [];
+
+      ProAct.flow.errStream().onErr(function (e) {
+        res.push(e);
+      });
+
+      ProAct.flow.run(function () {
+        var c = a + 4; // a is non existent.
+      });
+
+      expect(res.length).toBe(1);
+    });
+
+    it ('the #errStream stream dispatches errors deep in the flow', function () {
+      var res = [];
+
+      ProAct.flow.errStream().onErr(function (e) {
+        res.push(e);
+      });
+
+      ProAct.flow.run(function () {
+        ProAct.flow.defer(function () {
+          var c = a + 4; // a is non existent.
+        });
+      });
+
+      expect(res.length).toBe(1);
+      expect(res[0].queue).toNotBe(null);
+    });
+  });
 });

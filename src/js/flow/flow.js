@@ -380,6 +380,7 @@ ProAct.flow = new ProAct.Flow(['proq'], {
   flowInstance: {
     queue: {
       err: function (queue, e) {
+        e.queue = queue;
         if (P.flow.errStream) {
           P.flow.errStream().triggerErr(e);
         } else {
