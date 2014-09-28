@@ -12,13 +12,29 @@
  *
  * @class ProAct.NullProperty
  * @extends ProAct.Property
+ * @param {String} queueName
+ *      The name of the queue all the updates should be pushed to.
+ *      <p>
+ *        If this parameter is null/undefined the default queue of
+ *        {@link ProAct.flow} is used.
+ *      </p>
+ *      <p>
+ *        If this parameter is not a string it is used as the
+ *        <i>proObject</i>.
+ *      </p>
  * @param {Object} proObject
  *      A plain JavaScript object, holding a null/undefined field, this property should represent.
  * @param {String} property
  *      The name of the field of the object, this property should represent.
  * @see {@link ProAct.ObjectCore}
  */
-ProAct.NullProperty = P.NP = function (proObject, property) {
+function NullProperty (queueName, proObject, property) {
+  if (queueName && !P.U.isString(queueName)) {
+    property = proObject;
+    proObject = queueName;
+    queueName = null;
+  }
+
   var self = this,
       set = P.P.defaultSetter(this),
       setter = function (newVal) {
@@ -33,8 +49,9 @@ ProAct.NullProperty = P.NP = function (proObject, property) {
         return result;
       };
 
-  P.P.call(this, proObject, property, P.P.defaultGetter(this), setter);
-};
+  P.P.call(this, queueName, proObject, property, P.P.defaultGetter(this), setter);
+}
+ProAct.NullProperty = P.NP = NullProperty;
 
 ProAct.NullProperty.prototype = P.U.ex(Object.create(P.P.prototype), {
 

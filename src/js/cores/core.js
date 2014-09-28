@@ -30,8 +30,10 @@ ProAct.Core = P.C = function (shell, meta) {
   this.shell = shell;
   this.state = P.States.init;
   this.meta = meta || {};
+  this.queueName = (this.meta.p && this.meta.p.queueName &&
+                    P.U.isString(this.meta.p.queueName)) ? this.meta.p.queueName : null;
 
-  P.Actor.call(this); // Super!
+  P.Actor.call(this, this.queueName); // Super!
 };
 
 ProAct.Core.prototype = P.U.ex(Object.create(P.Actor.prototype), {

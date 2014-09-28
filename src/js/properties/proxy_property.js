@@ -15,6 +15,16 @@
  *
  * @class ProAct.ProxyProperty
  * @extends ProAct.Property
+ * @param {String} queueName
+ *      The name of the queue all the updates should be pushed to.
+ *      <p>
+ *        If this parameter is null/undefined the default queue of
+ *        {@link ProAct.flow} is used.
+ *      </p>
+ *      <p>
+ *        If this parameter is not a string it is used as the
+ *        <i>proObject</i>.
+ *      </p>
  * @param {Object} proObject
  *      A plain JavaScript object, holding a field, this property will represent.
  * @param {String} property
@@ -22,7 +32,13 @@
  * @param {ProAct.Property} target
  *      The target {@link ProAct.Property}, that will provide the value of the new ProAct.ProxyProperty.
  */
-ProAct.ProxyProperty = P.PXP = function (proObject, property, target) {
+function ProxyProperty (queueName, proObject, property, target) {
+  if (queueName && !P.U.isString(queueName)) {
+    target = property;
+    property = proObject;
+    proObject = queueName;
+    queueName = null;
+  }
   var self = this, getter, setter;
 
   getter = function () {
@@ -46,11 +62,12 @@ ProAct.ProxyProperty = P.PXP = function (proObject, property, target) {
     target.update();
   };
 
-  P.P.call(this, proObject, property, getter, setter);
+  P.P.call(this, queueName, proObject, property, getter, setter);
 
   this.target = target;
   this.target.on(this.makeListener());
-};
+}
+ProAct.ProxyProperty = P.PXP = ProxyProperty;
 
 ProAct.ProxyProperty.prototype = P.U.ex(Object.create(P.P.prototype), {
 

@@ -18,20 +18,37 @@
  * </p>
  *
  * @class ProAct.Actor
+ * @param {String} queueName
+ *      The name of the queue all the updates should be pushed to.
+ *      <p>
+ *        If this parameter is null/undefined the default queue of
+ *        {@link ProAct.flow} is used.
+ *      </p>
+ *      <p>
+ *        If this parameter is not a string it is used as the
+ *        <i>transforms</i>.
+ *      </p>
  * @param {Array} transforms
  *      A list of transformation to be used on all incoming chages.
  */
-ProAct.Actor = P.Pro = function (transforms) {
-  P.U.defValProp(this, 'listeners', false, false, true, this.defaultListeners());
-  this.sources = [];
+function Actor (queueName, transforms) {
+  if (queueName && !P.U.isString(queueName)) {
+    transforms = queueName;
+    queueName = null;
+  }
 
-  this.listener = null;
-  this.errListener = null;
+  P.U.defValProp(this, 'listeners', false, false, false, this.defaultListeners());
+  P.U.defValProp(this, 'sources', false, false, false, []);
 
-  this.transforms = transforms ? transforms : [];
+  P.U.defValProp(this, 'listener', false, false, true, null);
+  P.U.defValProp(this, 'errListener', false, false, true, null);
+  P.U.defValProp(this, 'parent', false, false, true, null);
 
-  this.parent = null;
-};
+  P.U.defValProp(this, 'queueName', false, false, false, queueName);
+  P.U.defValProp(this, 'transforms', false, false, false,
+                 (transforms ? transforms : []));
+}
+ProAct.Actor = P.Pro = Actor;
 
 P.U.ex(P.Actor, {
 
@@ -718,9 +735,9 @@ P.Actor.prototype = {
    */
   defer: function (event, listener) {
     if (P.U.isFunction(listener)) {
-      P.flow.pushOnce(listener, [event]);
+      P.flow.pushOnce(this.queueName, listener, [event]);
     } else {
-      P.flow.pushOnce(listener, listener.call, [event]);
+      P.flow.pushOnce(this.queueName, listener, listener.call, [event]);
     }
     return this;
   },

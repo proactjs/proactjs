@@ -26,6 +26,16 @@
  *
  * @class ProAct.Property
  * @extends ProAct.Actor
+ * @param {String} queueName
+ *      The name of the queue all the updates should be pushed to.
+ *      <p>
+ *        If this parameter is null/undefined the default queue of
+ *        {@link ProAct.flow} is used.
+ *      </p>
+ *      <p>
+ *        If this parameter is not a string it is used as the
+ *        <i>proObject</i>.
+ *      </p>
  * @param {Object} proObject
  *      A plain JavaScript object, holding a field, this property will represent.
  * @param {String} property
@@ -41,7 +51,15 @@
  * @see {@link ProAct.States.init}
  * @see {@link ProAct.States.ready}
  */
-ProAct.Property = P.P = function (proObject, property, getter, setter) {
+function Property (queueName, proObject, property, getter, setter) {
+  if (queueName && !P.U.isString(queueName)) {
+    setter = getter;
+    getter = property;
+    property = proObject;
+    proObject = queueName;
+    queueName = null;
+  }
+
   P.U.defValProp(this, 'proObject', false, false, true, proObject);
   this.property = property;
 
@@ -61,11 +79,12 @@ ProAct.Property = P.P = function (proObject, property, getter, setter) {
   this.g = this.get;
   this.s = this.set;
 
-  P.Actor.call(this); // Super!
+  P.Actor.call(this, queueName); // Super!
   this.parent = this.proObject.__pro__;
 
   this.init();
-};
+}
+ProAct.Property = P.P = Property;
 
 P.U.ex(ProAct.Property, {
 

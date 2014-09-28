@@ -37,11 +37,8 @@
  * @see {@link ProAct.Queue}
  */
 ProAct.Flow = P.F = function (queueNames, options) {
-  if (!queueNames) {
-    queueNames = ['proq'];
-  }
+  this.setQueues(queueNames);
 
-  this.queueNames = queueNames;
   this.options = options || {};
 
   this.flowInstance = null;
@@ -96,6 +93,42 @@ P.F.prototype = {
     if (start) {
       start(this.flowInstance);
     }
+  },
+
+  /**
+   * Appends a new queue name to the list of <i>this</i>' queues.
+   * <p>
+   *  When a new <i>flowInstance</i> is created the updated list will be used.
+   * </p>
+   *
+   * @memberof ProAct.Flow
+   * @instance
+   * @method addQueue
+   * @param {String} queueName
+   *      The queue name to add.
+   */
+  addQueue: function (queueName) {
+    this.queueNames.push(queueName);
+  },
+
+  /**
+   * Sets the queue names of <i>this</i> flow.
+   * <p>
+   *  When a new <i>flowInstance</i> is created the new list will be used.
+   * </p>
+   *
+   * @memberof ProAct.Flow
+   * @instance
+   * @method setQueues
+   * @param {Array} queueNames
+   *      Array with the names of the sub-queues of the {@link ProAct.Queues}es of the flow.
+   *      The size of this array determines the number of the sub-queues.
+   */
+  setQueues: function (queueNames) {
+    if (!queueNames) {
+      queueNames = ['proq'];
+    }
+    this.queueNames = queueNames;
   },
 
   /**

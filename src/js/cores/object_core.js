@@ -122,7 +122,7 @@ ProAct.ObjectCore.prototype = P.U.ex(Object.create(P.C.prototype), {
     }
 
     if (object.hasOwnProperty(property)) {
-      result = P.PP.provide(object, property, meta);
+      result = P.PP.provide(this.queueName, object, property, meta);
     }
 
     if (!result) {

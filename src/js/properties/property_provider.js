@@ -18,7 +18,8 @@
  * @class ProAct.PropertyProvider
  * @see {@link ProAct.ObjectCore}
  */
-ProAct.PropertyProvider = P.PP = function () {};
+function PropertyProvider () {}
+ProAct.PropertyProvider = P.PP = PropertyProvider;
 
 
 (function (P) {
@@ -102,6 +103,16 @@ ProAct.PropertyProvider = P.PP = function () {};
      *
      * @memberof ProAct.PropertyProvider
      * @static
+     * @param {String} queueName
+     *      The name of the queue all the updates should be pushed to.
+     *      <p>
+     *        If this parameter is null/undefined the default queue of
+     *        {@link ProAct.flow} is used.
+     *      </p>
+     *      <p>
+     *        If this parameter is not a string it is used as the
+     *        <i>object</i>.
+     *      </p>
      * @param {Object} object
      *      The object to provide a {@link ProAct.Property} instance for.
      * @param {String} property
@@ -111,7 +122,13 @@ ProAct.PropertyProvider = P.PP = function () {};
      * @return {ProAct.Property}
      *      A property provided by registered provider, or null if there is no compliant provider.
      */
-    provide: function (object, property, meta) {
+    provide: function (queueName, object, property, meta) {
+      if (queueName && !P.U.isString(queueName)) {
+        meta = property;
+        property = object;
+        object = queueName;
+        queueName = null;
+      }
       var ln = providers.length,
           prop = null,
           provider = null,
@@ -127,7 +144,7 @@ ProAct.PropertyProvider = P.PP = function () {};
       }
 
       if (provider) {
-        prop = provider.provide(object, property, meta);
+        prop = provider.provide(queueName, object, property, meta);
       }
 
       return prop;
@@ -188,6 +205,12 @@ ProAct.PropertyProvider.prototype = {
    * @abstract
    * @instance
    * @method provide
+   * @param {String} queueName
+   *      The name of the queue all the updates should be pushed to.
+   *      <p>
+   *        If this parameter is null/undefined the default queue of
+   *        {@link ProAct.flow} is used.
+   *      </p>
    * @param {Object} object
    *      The object to which a new {@link ProAct.Property} instance should be provided.
    * @param {String} property
@@ -197,7 +220,7 @@ ProAct.PropertyProvider.prototype = {
    * @return {ProAct.Property}
    *      A property provided by <i>this</i> provider.
    */
-  provide: function (object, property, meta) {
+  provide: function (queueName, object, property, meta) {
     throw new Error('Abstract! Implement!');
   }
 };
@@ -258,6 +281,12 @@ ProAct.NullPropertyProvider.prototype = P.U.ex(Object.create(P.PP.prototype), {
    * @memberof ProAct.NullPropertyProvider
    * @instance
    * @method provide
+   * @param {String} queueName
+   *      The name of the queue all the updates should be pushed to.
+   *      <p>
+   *        If this parameter is null/undefined the default queue of
+   *        {@link ProAct.flow} is used.
+   *      </p>
    * @param {Object} object
    *      The object to which a new {@link ProAct.NullProperty} instance should be provided.
    * @param {String} property
@@ -267,8 +296,8 @@ ProAct.NullPropertyProvider.prototype = P.U.ex(Object.create(P.PP.prototype), {
    * @return {ProAct.NullProperty}
    *      A {@link ProAct.NullProperty} instance provided by <i>this</i> provider.
    */
-  provide: function (object, property, meta) {
-    return new P.NP(object, property);
+  provide: function (queueName, object, property, meta) {
+    return new P.NP(queueName, object, property);
   }
 });
 
@@ -329,6 +358,12 @@ ProAct.SimplePropertyProvider.prototype = P.U.ex(Object.create(P.PP.prototype), 
    * @memberof ProAct.SimplePropertyProvider
    * @instance
    * @method provide
+   * @param {String} queueName
+   *      The name of the queue all the updates should be pushed to.
+   *      <p>
+   *        If this parameter is null/undefined the default queue of
+   *        {@link ProAct.flow} is used.
+   *      </p>
    * @param {Object} object
    *      The object to which a new {@link ProAct.Property} instance should be provided.
    * @param {String} property
@@ -338,8 +373,8 @@ ProAct.SimplePropertyProvider.prototype = P.U.ex(Object.create(P.PP.prototype), 
    * @return {ProAct.Property}
    *      A {@link ProAct.Property} instance provided by <i>this</i> provider.
    */
-  provide: function (object, property, meta) {
-    return new P.P(object, property);
+  provide: function (queueName, object, property, meta) {
+    return new P.P(queueName, object, property);
   }
 });
 
@@ -399,6 +434,12 @@ ProAct.AutoPropertyProvider.prototype = P.U.ex(Object.create(P.PP.prototype), {
    * @memberof ProAct.AutoPropertyProvider
    * @instance
    * @method provide
+   * @param {String} queueName
+   *      The name of the queue all the updates should be pushed to.
+   *      <p>
+   *        If this parameter is null/undefined the default queue of
+   *        {@link ProAct.flow} is used.
+   *      </p>
    * @param {Object} object
    *      The object to which a new {@link ProAct.AutoProperty} instance should be provided.
    * @param {String} property
@@ -408,8 +449,8 @@ ProAct.AutoPropertyProvider.prototype = P.U.ex(Object.create(P.PP.prototype), {
    * @return {ProAct.AutoProperty}
    *      A {@link ProAct.AutoProperty} instance provided by <i>this</i> provider.
    */
-  provide: function (object, property, meta) {
-    return new P.FP(object, property);
+  provide: function (queueName, object, property, meta) {
+    return new P.FP(queueName, object, property);
   }
 });
 
@@ -469,6 +510,12 @@ ProAct.ArrayPropertyProvider.prototype = P.U.ex(Object.create(P.PP.prototype), {
    * @memberof ProAct.ArrayPropertyProvider
    * @instance
    * @method provide
+   * @param {String} queueName
+   *      The name of the queue all the updates should be pushed to.
+   *      <p>
+   *        If this parameter is null/undefined the default queue of
+   *        {@link ProAct.flow} is used.
+   *      </p>
    * @param {Object} object
    *      The object to which a new {@link ProAct.ArrayProperty} instance should be provided.
    * @param {String} property
@@ -478,8 +525,8 @@ ProAct.ArrayPropertyProvider.prototype = P.U.ex(Object.create(P.PP.prototype), {
    * @return {ProAct.ArrayProperty}
    *      A {@link ProAct.ArrayProperty} instance provided by <i>this</i> provider.
    */
-  provide: function (object, property, meta) {
-    return new P.AP(object, property);
+  provide: function (queueName, object, property, meta) {
+    return new P.AP(queueName, object, property);
   }
 });
 
@@ -539,6 +586,12 @@ ProAct.ObjectPropertyProvider.prototype = P.U.ex(Object.create(P.PP.prototype), 
    * @memberof ProAct.ObjectPropertyProvider
    * @instance
    * @method provide
+   * @param {String} queueName
+   *      The name of the queue all the updates should be pushed to.
+   *      <p>
+   *        If this parameter is null/undefined the default queue of
+   *        {@link ProAct.flow} is used.
+   *      </p>
    * @param {Object} object
    *      The object to which a new {@link ProAct.ObjectProperty} instance should be provided.
    * @param {String} property
@@ -548,8 +601,8 @@ ProAct.ObjectPropertyProvider.prototype = P.U.ex(Object.create(P.PP.prototype), 
    * @return {ProAct.ObjectProperty}
    *      A {@link ProAct.ObjectProperty} instance provided by <i>this</i> provider.
    */
-  provide: function (object, property, meta) {
-    return new P.OP(object, property);
+  provide: function (queueName, object, property, meta) {
+    return new P.OP(queueName, object, property);
   }
 });
 
@@ -614,6 +667,12 @@ ProAct.ProxyPropertyProvider.prototype = P.U.ex(Object.create(P.PP.prototype), {
    * @memberof ProAct.ProxyPropertyProvider
    * @instance
    * @method provide
+   * @param {String} queueName
+   *      The name of the queue all the updates should be pushed to.
+   *      <p>
+   *        If this parameter is null/undefined the default queue of
+   *        {@link ProAct.flow} is used.
+   *      </p>
    * @param {Object} object
    *      The object to which a new {@link ProAct.ProxyProperty} instance should be provided.
    * @param {String} property
@@ -623,8 +682,8 @@ ProAct.ProxyPropertyProvider.prototype = P.U.ex(Object.create(P.PP.prototype), {
    * @return {ProAct.ProxyProperty}
    *      A {@link ProAct.ProxyProperty} instance provided by <i>this</i> provider.
    */
-  provide: function (object, property, meta) {
-    return new P.PXP(object, property, meta);
+  provide: function (queueName, object, property, meta) {
+    return new P.PXP(queueName, object, property, meta);
   }
 });
 

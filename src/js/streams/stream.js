@@ -20,18 +20,34 @@
  *
  * @class ProAct.Stream
  * @extends ProAct.Actor
+ * @param {String} queueName
+ *      The name of the queue all the updates should be pushed to.
+ *      <p>
+ *        If this parameter is null/undefined the default queue of
+ *        {@link ProAct.flow} is used.
+ *      </p>
+ *      <p>
+ *        If this parameter is not a string it is used as the
+ *        <i>source</i>.
+ *      </p>
  * @param {ProAct.Actor} source
  *      A default source of the stream, can be null.
  * @param {Array} transforms
  *      A list of transformation to be used on all incoming chages.
  */
-ProAct.Stream = ProAct.S = function (source, transforms) {
-  P.Actor.call(this, transforms);
+function Stream (queueName, source, transforms) {
+  if (queueName && !P.U.isString(queueName)) {
+    transforms = source;
+    source = queueName;
+    queueName = null;
+  }
+  P.Actor.call(this, queueName, transforms);
 
   if (source) {
     this.into(source);
   }
-};
+}
+ProAct.Stream = ProAct.S = Stream;
 
 ProAct.Stream.prototype = P.U.ex(Object.create(P.Actor.prototype), {
 
@@ -138,9 +154,9 @@ ProAct.Stream.prototype = P.U.ex(Object.create(P.Actor.prototype), {
     }
 
     if (P.U.isFunction(listener)) {
-      P.flow.push(listener, [event]);
+      P.flow.push(this.queueName, listener, [event]);
     } else {
-      P.flow.push(listener, listener.call, [event]);
+      P.flow.push(this.queueName, listener, listener.call, [event]);
     }
   },
 
@@ -223,8 +239,6 @@ ProAct.Stream.prototype = P.U.ex(Object.create(P.Actor.prototype), {
 
   // private
   go: function (event, useTransformations) {
-    var i, tr = this.transforms, ln = tr.length;
-
     if (useTransformations) {
       try {
         event = P.Actor.transform(this, event);

@@ -21,6 +21,16 @@
  *
  * @class ProAct.ArrayProperty
  * @extends ProAct.Property
+ * @param {String} queueName
+ *      The name of the queue all the updates should be pushed to.
+ *      <p>
+ *        If this parameter is null/undefined the default queue of
+ *        {@link ProAct.flow} is used.
+ *      </p>
+ *      <p>
+ *        If this parameter is not a string it is used as the
+ *        <i>proObject</i>.
+ *      </p>
  * @param {Object} proObject
  *      A plain JavaScript object, holding a field, this property will represent.
  * @param {String} property
@@ -29,7 +39,13 @@
  * @see {@link ProAct.States.init}
  * @see {@link ProAct.States.ready}
  */
-ProAct.ArrayProperty = P.AP = function (proObject, property) {
+function ArrayProperty (queueName, proObject, property) {
+  if (queueName && !P.U.isString(queueName)) {
+    property = proObject;
+    proObject = queueName;
+    queueName = null;
+  }
+
   var self = this, getter;
 
   getter = function () {
@@ -54,6 +70,9 @@ ProAct.ArrayProperty = P.AP = function (proObject, property) {
 
           if (!P.U.isProArray(self.val)) {
             self.val = new P.A(self.val);
+            if (queueName) {
+              self.val.core.queueName = queueName;
+            }
           }
 
           if (self.oldVal) {
@@ -102,8 +121,9 @@ ProAct.ArrayProperty = P.AP = function (proObject, property) {
     return self.val;
   };
 
-  P.P.call(this, proObject, property, getter, function () {});
-};
+  P.P.call(this, queueName, proObject, property, getter, function () {});
+}
+ProAct.ArrayProperty = P.AP = ArrayProperty;
 
 ProAct.ArrayProperty.prototype = P.U.ex(Object.create(P.P.prototype), {
 

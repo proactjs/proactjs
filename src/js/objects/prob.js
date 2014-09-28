@@ -25,14 +25,19 @@
  */
 ProAct.prob = function (object, meta) {
   var core, property,
-      isAr = P.U.isArray;
+      isAr = P.U.isArray,
+      array;
 
   if (object === null || (!P.U.isObject(object) && !isAr(object))) {
     return new P.V(object, meta);
   }
 
   if (P.U.isArray(object)) {
-    return new P.A(object);
+    array = new P.A(object);
+    if (meta && meta.p && meta.p.queueName && P.U.isString(meta.p.queueName)) {
+      array.core.queueName = meta.p.queueName;
+    }
+    return array;
   }
 
   core = new P.OC(object, meta);
