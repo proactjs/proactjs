@@ -65,4 +65,33 @@ describe('ProAct.Actor', function () {
       expect(res).toEqual(['1']);
     });
   });
+
+  describe('special queue support', function () {
+    beforeEach(function () {
+      ProAct.flow.addQueue('test');
+    });
+
+    it ('executes all updates in the special queue of the actor', function () {
+      var actor1 = new ProAct.Actor(),
+          actor2 = new ProAct.Actor('test'),
+          res = [],
+          up = function (val) {
+            res.push(val.source);
+          };
+
+      actor1.on(up);
+      actor2.on(up);
+
+      actor2.on(function () {
+        actor1.update(3);
+      });
+
+      ProAct.flow.run(function () {
+        actor2.update(2);
+        actor1.update(1);
+      });
+
+      expect(res).toEqual([1, 2, 3]);
+    });
+  });
 });
