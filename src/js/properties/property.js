@@ -375,6 +375,7 @@ ProAct.Property.prototype = P.U.ex(Object.create(P.Actor.prototype), {
 
       this.listener = {
         property: self,
+        queueName: self.queueName,
         call: function (newVal) {
           if (newVal && newVal.type !== undefined && newVal.type === P.E.Types.value && newVal.args.length === 3 && newVal.target) {
             newVal = newVal.args[0][newVal.target];

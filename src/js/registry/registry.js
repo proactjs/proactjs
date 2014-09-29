@@ -8,9 +8,10 @@
  *
  * @class ProAct.Registry
  */
-ProAct.Registry = P.R = function () {
+function Registry () {
   this.providers = {};
-};
+}
+ProAct.Registry = P.R = Registry;
 
 ProAct.Registry.prototype = rProto = {
 

@@ -18,15 +18,32 @@
  *
  * @class ProAct.BufferedStream
  * @extends ProAct.Stream
+ * @param {String} queueName
+ *      The name of the queue all the updates should be pushed to.
+ *      <p>
+ *        If this parameter is null/undefined the default queue of
+ *        {@link ProAct.flow} is used.
+ *      </p>
+ *      <p>
+ *        If this parameter is not a string it is used as the
+ *        <i>source</i>.
+ *      </p>
  * @param {ProAct.Actor} source
  *      A default source of the stream, can be null.
  * @param {Array} transforms
  *      A list of transformation to be used on all incoming chages.
  */
-ProAct.BufferedStream = P.BS = function (source, transforms) {
-  P.S.call(this, source, transforms);
+function BufferedStream (queueName, source, transforms) {
+  if (queueName && !P.U.isString(queueName)) {
+    transforms = source;
+    source = queueName;
+    queueName = null;
+  }
+
+  P.S.call(this, queueName, source, transforms);
   this.buffer = [];
-};
+}
+ProAct.BufferedStream = P.BS = BufferedStream;
 
 ProAct.BufferedStream.prototype = P.U.ex(Object.create(P.S.prototype), {
 

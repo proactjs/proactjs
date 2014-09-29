@@ -9,6 +9,16 @@
  *
  * @class ProAct.DebouncingStream
  * @extends ProAct.DelayedStream
+ * @param {String} queueName
+ *      The name of the queue all the updates should be pushed to.
+ *      <p>
+ *        If this parameter is null/undefined the default queue of
+ *        {@link ProAct.flow} is used.
+ *      </p>
+ *      <p>
+ *        If this parameter is not a string it is used as the
+ *        <i>source</i>.
+ *      </p>
  * @param {ProAct.Actor} source
  *      A default source of the stream, can be null.
  *      <p>
@@ -22,9 +32,10 @@
  * @param {Number} delay
  *      The time delay to be used to flush the stream.
  */
-ProAct.DebouncingStream = P.DDS = function (source, transforms, delay) {
-  P.DBS.call(this, source, transforms, delay);
-};
+function DebouncingStream (queueName, source, transforms, delay) {
+  P.DBS.call(this, queueName, source, transforms, delay);
+}
+ProAct.DebouncingStream = P.DDS = DebouncingStream;
 
 ProAct.DebouncingStream.prototype = P.U.ex(Object.create(P.DBS.prototype), {
 
@@ -82,7 +93,7 @@ P.U.ex(P.Stream.prototype, {
    *      A {@link ProAct.DebouncingStream} instance.
    */
   debounce: function (delay) {
-    return new P.DDS(this, delay);
+    return new P.DDS(this, this.queueName, delay);
   }
 });
 

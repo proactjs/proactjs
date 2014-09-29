@@ -121,6 +121,7 @@ ProAct.ProxyProperty.prototype = P.U.ex(Object.create(P.P.prototype), {
 
       this.listener = {
         property: self,
+        queueName: self.queueName,
         call: P.N
       };
     }

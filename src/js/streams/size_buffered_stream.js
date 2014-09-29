@@ -8,6 +8,16 @@
  *
  * @class ProAct.SizeBufferedStream
  * @extends ProAct.BufferedStream
+ * @param {String} queueName
+ *      The name of the queue all the updates should be pushed to.
+ *      <p>
+ *        If this parameter is null/undefined the default queue of
+ *        {@link ProAct.flow} is used.
+ *      </p>
+ *      <p>
+ *        If this parameter is not a string it is used as the
+ *        <i>source</i>.
+ *      </p>
  * @param {ProAct.Actor} source
  *      A default source of the stream, can be null.
  *      <p>
@@ -22,22 +32,29 @@
  *      The size of the buffer.
  * @throws {Error} SizeBufferedStream must contain size, if there is no size passed to it.
  */
-ProAct.SizeBufferedStream = P.SBS = function (source, transforms, size) {
-  if (arguments.length === 1 && typeof source === 'number') {
+function SizeBufferedStream (queueName, source, transforms, size) {
+  if (queueName && !P.U.isString(queueName)) {
+    size = transforms;
+    transforms = source;
+    source = queueName;
+    queueName = null;
+  }
+  if (typeof source === 'number') {
     size = source;
     source = null;
-  } else if (arguments.length === 2 && typeof transforms === 'number') {
+  } else if (typeof transforms === 'number') {
     size = transforms;
     transforms = null;
   }
-  P.BS.call(this, source, transforms);
+  P.BS.call(this, queueName, source, transforms);
 
   if (!size) {
     throw new Error('SizeBufferedStream must contain size!');
   }
 
   this.size = size;
-};
+}
+ProAct.SizeBufferedStream = P.SBS = SizeBufferedStream;
 
 ProAct.SizeBufferedStream.prototype = P.U.ex(Object.create(P.BS.prototype), {
 
@@ -97,7 +114,7 @@ P.U.ex(P.S.prototype, {
    * @throws {Error} SizeBufferedStream must contain size, if there is no size passed to it.
    */
   bufferit: function (size) {
-    return new P.SBS(this, size);
+    return new P.SBS(this, this.queueName, size);
   }
 });
 

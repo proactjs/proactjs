@@ -152,11 +152,12 @@ ProAct.Stream.prototype = P.U.ex(Object.create(P.Actor.prototype), {
       P.Actor.prototype.defer.call(this, event, listener);
       return;
     }
+    var queueName = (listener.queueName) ? listener.queueName : this.queueName;
 
     if (P.U.isFunction(listener)) {
-      P.flow.push(this.queueName, listener, [event]);
+      P.flow.push(queueName, listener, [event]);
     } else {
-      P.flow.push(this.queueName, listener, listener.call, [event]);
+      P.flow.push(queueName, listener, listener.call, [event]);
     }
   },
 

@@ -8,6 +8,16 @@
  *
  * @class ProAct.DelayedStream
  * @extends ProAct.BufferedStream
+ * @param {String} queueName
+ *      The name of the queue all the updates should be pushed to.
+ *      <p>
+ *        If this parameter is null/undefined the default queue of
+ *        {@link ProAct.flow} is used.
+ *      </p>
+ *      <p>
+ *        If this parameter is not a string it is used as the
+ *        <i>source</i>.
+ *      </p>
  * @param {ProAct.Actor} source
  *      A default source of the stream, can be null.
  *      <p>
@@ -21,7 +31,13 @@
  * @param {Number} delay
  *      The time delay to be used to flush the stream.
  */
-ProAct.DelayedStream = P.DBS = function (source, transforms, delay) {
+function DelayedStream (queueName, source, transforms, delay) {
+  if (queueName && !P.U.isString(queueName)) {
+    delay = transforms;
+    transforms = source;
+    source = queueName;
+    queueName = null;
+  }
   if (typeof source === 'number') {
     delay = source;
     source = null;
@@ -29,11 +45,12 @@ ProAct.DelayedStream = P.DBS = function (source, transforms, delay) {
     delay = transforms;
     transforms = null;
   }
-  P.BS.call(this, source, transforms);
+  P.BS.call(this, queueName, source, transforms);
 
   this.delayId = null;
   this.setDelay(delay);
-};
+}
+ProAct.DelayedStream = P.DBS = DelayedStream;
 
 ProAct.DelayedStream.prototype = P.U.ex(Object.create(P.BS.prototype), {
 
@@ -137,7 +154,7 @@ P.U.ex(P.S.prototype, {
    *      A {@link ProAct.DelayedStream} instance.
    */
   delay: function (delay) {
-    return new P.DBS(this, delay);
+    return new P.DBS(this, this.queueName, delay);
   }
 });
 

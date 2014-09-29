@@ -174,6 +174,7 @@ ProAct.AutoProperty.prototype = P.U.ex(Object.create(P.P.prototype), {
 
       this.listener = {
         property: self,
+        queueName: self.queueName,
         call: function () {
           self.oldVal = self.val;
           self.val = P.Actor.transform(self, self.func.call(self.proObject));

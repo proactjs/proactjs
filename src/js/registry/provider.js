@@ -1,3 +1,25 @@
+function Provider () {
+  this.stored = {};
+}
+function StreamProvider () {
+  P.R.Provider.call(this);
+}
+function FunctionProvider () {
+  P.R.Provider.call(this);
+}
+function ProObjectProvider () {
+  P.R.Provider.call(this);
+}
+
+function streamConstructArgs (args) {
+  var queueName;
+  if (args.length === 2) {
+    queueName = args[0];
+    args[0] = args[1];
+  }
+  return [queueName].concat(args);
+}
+
 P.U.ex(ProAct.Registry, {
 
   /**
@@ -14,9 +36,7 @@ P.U.ex(ProAct.Registry, {
    * @static
    * @see {@link ProAct.Registry}
    */
-  Provider: function () {
-    this.stored = {};
-  },
+  Provider: Provider,
 
   /**
    * Constructs a ProAct.Registry.StreamProvider. The {@link ProAct.Registry} uses registered stream providers as storage for {@link ProAct.Stream}s.
@@ -27,9 +47,7 @@ P.U.ex(ProAct.Registry, {
    * @static
    * @see {@link ProAct.Registry}
    */
-  StreamProvider: function () {
-    P.R.Provider.call(this);
-  },
+  StreamProvider: StreamProvider,
 
   /**
    * Constructs a ProAct.Registry.FunctionProvider. The {@link ProAct.Registry} uses registered function providers as storage for Functions.
@@ -43,9 +61,7 @@ P.U.ex(ProAct.Registry, {
    * @static
    * @see {@link ProAct.Registry}
    */
-  FunctionProvider: function () {
-    P.R.Provider.call(this);
-  },
+  FunctionProvider: FunctionProvider,
 
   /**
    * Constructs a ProAct.Registry.ProObjectProvider.
@@ -58,9 +74,7 @@ P.U.ex(ProAct.Registry, {
    * @see {@link ProAct.Registry}
    * @see {@link ProAct.Property}
    */
-  ProObjectProvider: function () {
-    P.R.Provider.call(this);
-  }
+  ProObjectProvider: ProObjectProvider
 });
 
 ProAct.Registry.Provider.prototype = {
@@ -279,7 +293,7 @@ ProAct.Registry.StreamProvider.prototype = P.U.ex(Object.create(P.R.Provider.pro
      *      An isntance of {@link ProAct.Stream}.
      * @see {@link ProAct.Stream}
      */
-    basic: function () { return new P.S(); },
+    basic: function (args) { return new P.S(args[0]); },
 
     /**
      * Constructs a {@link ProAct.DelayedStream}
@@ -298,7 +312,10 @@ ProAct.Registry.StreamProvider.prototype = P.U.ex(Object.create(P.R.Provider.pro
      *      An isntance of {@link ProAct.DelayedStream}.
      * @see {@link ProAct.DelayedStream}
      */
-    delayed: function (args) { return new P.DBS(parseInt(args[0], 10)); },
+    delayed: function (args) {
+      var args = streamConstructArgs(args);
+      return new P.DBS(args[0], parseInt(args[1], 10));
+    },
 
     /**
      * Constructs a {@link ProAct.SizeBufferedStream}
@@ -317,7 +334,10 @@ ProAct.Registry.StreamProvider.prototype = P.U.ex(Object.create(P.R.Provider.pro
      *      An isntance of {@link ProAct.SizeBufferedStream}.
      * @see {@link ProAct.SizeBufferedStream}
      */
-    size: function (args) { return new P.SBS(parseInt(args[0], 10)); },
+    size: function (args) {
+      var args = streamConstructArgs(args);
+      return new P.SBS(args[0], parseInt(args[1], 10));
+    },
 
     /**
      * Constructs a {@link ProAct.DebouncingStream}
@@ -336,7 +356,10 @@ ProAct.Registry.StreamProvider.prototype = P.U.ex(Object.create(P.R.Provider.pro
      *      An isntance of {@link ProAct.DebouncingStream}.
      * @see {@link ProAct.DebouncingStream}
      */
-    debouncing: function (args) { return new P.DDS(parseInt(args[0], 10)); },
+    debouncing: function (args) {
+      var args = streamConstructArgs(args);
+      return new P.DDS(args[0], parseInt(args[1], 10));
+    },
 
     /**
      * Constructs a {@link ProAct.ThrottlingStream}
@@ -355,7 +378,10 @@ ProAct.Registry.StreamProvider.prototype = P.U.ex(Object.create(P.R.Provider.pro
      *      An isntance of {@link ProAct.ThrottlingStream}.
      * @see {@link ProAct.ThrottlingStream}
      */
-    throttling: function (args) { return new P.TDS(parseInt(args[0], 10)); }
+    throttling: function (args) {
+      var args = streamConstructArgs(args);
+      return new P.TDS(args[0], parseInt(args[1], 10));
+    }
   }
 });
 

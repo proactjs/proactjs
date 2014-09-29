@@ -734,10 +734,12 @@ P.Actor.prototype = {
    * @see {@link ProAct.flow}
    */
   defer: function (event, listener) {
+    var queueName = (listener.queueName) ? listener.queueName : this.queueName;
+
     if (P.U.isFunction(listener)) {
-      P.flow.pushOnce(this.queueName, listener, [event]);
+      P.flow.pushOnce(queueName, listener, [event]);
     } else {
-      P.flow.pushOnce(this.queueName, listener, listener.call, [event]);
+      P.flow.pushOnce(queueName, listener, listener.call, [event]);
     }
     return this;
   },

@@ -131,62 +131,65 @@ ProAct.ArrayCore.prototype = P.U.ex(Object.create(P.C.prototype), {
   makeListener: function () {
     if (!this.listener) {
       var self = this.shell;
-      this.listener =  function (event) {
-        if (!event || !(event instanceof P.E)) {
-          self.push(event);
-          return;
-        }
-
-        if (event.type === P.E.Types.value) {
-          self.push(event.args[2]);
-          return;
-        }
-
-        var op    = event.args[0],
-            ind   = event.args[1],
-            ov    = event.args[2],
-            nv    = event.args[3],
-            nvs,
-            operations = P.Array.Operations;
-
-        if (op === operations.set) {
-          self[ind] = nv;
-        } else if (op === operations.add) {
-          nvs = slice.call(nv, 0);
-          if (ind === 0) {
-            pArrayProto.unshift.apply(self, nvs);
-          } else {
-            pArrayProto.push.apply(self, nvs);
+      this.listener =  {
+        queueName: this.queueName,
+        call: function (event) {
+          if (!event || !(event instanceof P.E)) {
+            self.push(event);
+            return;
           }
-        } else if (op === operations.remove) {
-          if (ind === 0) {
-            self.shift();
-          } else {
-            self.pop();
+
+          if (event.type === P.E.Types.value) {
+            self.push(event.args[2]);
+            return;
           }
-        } else if (op === operations.setLength) {
-          self.length = nv;
-        } else if (op === operations.reverse) {
-          self.reverse();
-        } else if (op === operations.sort) {
-          if (P.U.isFunction(nv)) {
-            self.sort(nv);
-          } else {
-            self.sort();
-          }
-        } else if (op === operations.splice) {
-          if (nv) {
+
+          var op    = event.args[0],
+              ind   = event.args[1],
+              ov    = event.args[2],
+              nv    = event.args[3],
+              nvs,
+              operations = P.Array.Operations;
+
+          if (op === operations.set) {
+            self[ind] = nv;
+          } else if (op === operations.add) {
             nvs = slice.call(nv, 0);
-          } else {
-            nvs = [];
-          }
-          if (ind === null || ind === undefined) {
-            ind = self.indexOf(ov[0]);
-            if (ind === -1) {
-              return;
+            if (ind === 0) {
+              pArrayProto.unshift.apply(self, nvs);
+            } else {
+              pArrayProto.push.apply(self, nvs);
             }
+          } else if (op === operations.remove) {
+            if (ind === 0) {
+              self.shift();
+            } else {
+              self.pop();
+            }
+          } else if (op === operations.setLength) {
+            self.length = nv;
+          } else if (op === operations.reverse) {
+            self.reverse();
+          } else if (op === operations.sort) {
+            if (P.U.isFunction(nv)) {
+              self.sort(nv);
+            } else {
+              self.sort();
+            }
+          } else if (op === operations.splice) {
+            if (nv) {
+              nvs = slice.call(nv, 0);
+            } else {
+              nvs = [];
+            }
+            if (ind === null || ind === undefined) {
+              ind = self.indexOf(ov[0]);
+              if (ind === -1) {
+                return;
+              }
+            }
+            pArrayProto.splice.apply(self, [ind, ov.length].concat(nvs));
           }
-          pArrayProto.splice.apply(self, [ind, ov.length].concat(nvs));
         }
       };
     }
