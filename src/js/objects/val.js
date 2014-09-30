@@ -25,7 +25,7 @@
  * @see {@link ProAct.ObjectCore}
  * @see {@link ProAct.Property}
  */
-ProAct.Val = P.V = function (val, meta) {
+function Val (val, meta) {
   this.v = val;
 
   if (meta && (P.U.isString(meta) || P.U.isArray(meta))) {
@@ -35,7 +35,8 @@ ProAct.Val = P.V = function (val, meta) {
   }
 
   P.prob(this, meta);
-};
+}
+ProAct.Val = P.V = Val;
 
 ProAct.Val.prototype = P.U.ex(Object.create(P.Actor.prototype), {
 

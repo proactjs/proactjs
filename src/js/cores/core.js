@@ -26,7 +26,7 @@
  *      Optional meta data to be used to define the observer-observable behavior of the <i>shell</i>.
  * @see {@link ProAct.States}
  */
-ProAct.Core = P.C = function (shell, meta) {
+function Core (shell, meta) {
   this.shell = shell;
   this.state = P.States.init;
   this.meta = meta || {};
@@ -34,7 +34,8 @@ ProAct.Core = P.C = function (shell, meta) {
                     P.U.isString(this.meta.p.queueName)) ? this.meta.p.queueName : null;
 
   P.Actor.call(this, this.queueName); // Super!
-};
+}
+ProAct.Core = P.C = Core;
 
 ProAct.Core.prototype = P.U.ex(Object.create(P.Actor.prototype), {
 

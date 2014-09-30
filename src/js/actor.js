@@ -47,6 +47,10 @@ function Actor (queueName, transforms) {
   P.U.defValProp(this, 'queueName', false, false, false, queueName);
   P.U.defValProp(this, 'transforms', false, false, false,
                  (transforms ? transforms : []));
+
+  P.U.defValProp(this, 'state', false, false, true, P.States.init);
+
+  this.init();
 }
 ProAct.Actor = P.Pro = Actor;
 
@@ -61,6 +65,16 @@ P.U.ex(P.Actor, {
    * @constant
    */
   BadValue: {},
+
+  /**
+   * A constant defining closing or ending  events.
+   *
+   * @memberof ProAct.Actor
+   * @type Object
+   * @static
+   * @constant
+   */
+  End: {},
 
   /**
    * Transforms the passed <i>val</i> using the ProAct.Actor#transforms of the passed <i>actor</i>.
@@ -101,6 +115,123 @@ P.Actor.prototype = {
   constructor: ProAct.Actor,
 
   /**
+   * Initializes this actor.
+   * <p>
+   *  This method logic is run only if the current state of <i>this</i> is {@link ProAct.States.init}.
+   * </p>
+   * <p>
+   *  Then {@link ProAct.Actor#afterInit} is called to finish the initialization.
+   * </p>
+   *
+   * @memberof ProAct.Actor
+   * @instance
+   * @method init
+   * @see {@link ProAct.Actor#doInit}
+   * @see {@link ProAct.Actor#afterInit}
+   */
+  init: function () {
+    if (this.state !== P.States.init) {
+      return;
+    }
+
+    this.doInit();
+
+    this.afterInit();
+  },
+
+  /**
+   * Allocating of resources or initializing is done here.
+   * <p>
+   *  Empty by default.
+   * </p>
+   *
+   * @memberof ProAct.Actor
+   * @instance
+   * @method doInit
+   * @see {@link ProAct.Actor#init}
+   */
+  doInit: function () {},
+
+  /**
+   * Called automatically after initialization of this actor.
+   * <p>
+   *  By default it changes the state of <i>this</i> to {@link ProAct.States.ready}.
+   * </p>
+   * <p>
+   *  It can be overridden to define more complex initialization logic.
+   * </p>
+   *
+   * @memberof ProAct.Property
+   * @instance
+   * @method afterInit
+   */
+  afterInit: function () {
+    this.state = P.States.ready;
+  },
+
+  /**
+   * Called immediately before destruction.
+   *
+   * @memberof ProAct.Actor
+   * @instance
+   * @abstract
+   * @method beforeDestroy
+   * @see {@link ProAct.Actor#destroy}
+   */
+  beforeDestroy: function () {
+  },
+
+  /**
+   * Frees additional resources.
+   *
+   * @memberof ProAct.Actor
+   * @instance
+   * @abstract
+   * @method doDestroy
+   * @see {@link ProAct.Actor#destroy}
+   */
+  doDestroy: function () {
+  },
+
+  /**
+   * Destroys this ProAct.Actor instance.
+   * <p>
+   *  The state of <i>this</i> is set to {@link ProAct.States.destroyed}.
+   * </p>
+   *
+   * @memberof ProAct.Actor
+   * @instance
+   * @method destroy
+   */
+  destroy: function () {
+    if (this.state === P.States.destroyed) {
+      return;
+    }
+
+    this.beforeDestroy();
+    this.doDestroy();
+
+    this.listeners = undefined;
+
+    var i, ln = this.sources.length, source;
+    for (i = 0; i < ln; i++) {
+      source = this.sources[i];
+      source.off(this.listener);
+      source.offErr(this.errListener);
+    }
+    this.sources = undefined;
+
+    this.listener = undefined;
+    this.errListener = undefined;
+    this.parent = undefined;
+
+    this.queueName = undefined;
+    this.transforms = undefined;
+
+    this.state = P.States.destroyed;
+  },
+
+  /**
    * Generates the initial listeners object. It can be overridden for alternative listeners collections.
    * It is used for resetting all the listeners too.
    *
@@ -113,7 +244,8 @@ P.Actor.prototype = {
   defaultListeners: function () {
     return {
       change: [],
-      error: []
+      error: [],
+      end: []
     };
   },
 

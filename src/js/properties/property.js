@@ -75,14 +75,12 @@ function Property (queueName, proObject, property, getter, setter) {
   this.oldVal = null;
   this.val = proObject[property];
 
-  this.state = P.States.init;
   this.g = this.get;
   this.s = this.set;
 
   P.Actor.call(this, queueName); // Super!
   this.parent = this.proObject.__pro__;
 
-  this.init();
 }
 ProAct.Property = P.P = Property;
 
@@ -392,45 +390,16 @@ ProAct.Property.prototype = P.U.ex(Object.create(P.Actor.prototype), {
   /**
    * Initializes this property.
    * <p>
-   *  This method logic is run only if the current state of <i>this</i> is {@link ProAct.States.init}.
-   * </p>
-   * <p>
    *  First the property is defined as a field in its object, using {@link ProAct.Property.defineProp}.
    * </p>
-   * <p>
-   *  Then {@link ProAct.Property#afterInit} is called to finish the initialization.
-   * </p>
    *
    * @memberof ProAct.Property
    * @instance
-   * @method init
-   * @see {@link ProAct.Property#afterInit}
+   * @method doInit
+   * @see {@link ProAct.Actor#init}
    */
-  init: function () {
-    if (this.state !== P.States.init) {
-      return;
-    }
-
+  doInit: function () {
     P.P.defineProp(this.proObject, this.property, this.get, this.set);
-
-    this.afterInit();
-  },
-
-  /**
-   * Called automatically after initialization of this property.
-   * <p>
-   *  By default it changes the state of <i>this</i> to {@link ProAct.States.ready}.
-   * </p>
-   * <p>
-   *  It can be overridden to define more complex initialization logic.
-   * </p>
-   *
-   * @memberof ProAct.Property
-   * @instance
-   * @method afterInit
-   */
-  afterInit: function () {
-    this.state = P.States.ready;
   },
 
   /**
@@ -451,31 +420,14 @@ ProAct.Property.prototype = P.U.ex(Object.create(P.Actor.prototype), {
     }
   },
 
-  /**
-   * Destroys this ProAct.Property instance, by making the field it manages to a normal field.
-   * <p>
-   *  The state of <i>this</i> is set to {@link ProAct.States.destroyed}.
-   * </p>
-   *
-   * @memberof ProAct.Property
-   * @instance
-   * @method destroy
-   */
-  destroy: function () {
-    if (this.state === P.States.destroyed) {
-      return;
-    }
-
+  doDestroy: function () {
     delete this.proObject.__pro__.properties[this.property];
-    this.listeners = undefined;
     this.oldVal = undefined;
-    this.parent = undefined;
 
     P.U.defValProp(this.proObject, this.property, true, true, true, this.val);
     this.get = this.set = this.property = this.proObject = undefined;
     this.g = this.s = undefined;
     this.val = undefined;
-    this.state = P.States.destroyed;
   },
 
   /**

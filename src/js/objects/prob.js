@@ -23,7 +23,7 @@
  * @return {Object}
  *      Reactive representation of the passed <i>object</i>.
  */
-ProAct.prob = function (object, meta) {
+function prob (object, meta) {
   var core, property,
       isAr = P.U.isArray,
       array;
@@ -46,7 +46,8 @@ ProAct.prob = function (object, meta) {
   core.prob();
 
   return object;
-};
+}
+ProAct.prob = prob;
 
 /**
  * The {@link ProAct.proxy} creates proxies or decorators to ProAct.js objects.
@@ -68,7 +69,7 @@ ProAct.prob = function (object, meta) {
  * @return {Object}
  *      Reactive representation of the passed <i>object</i>, decorating the passed <i>target</i>.
  */
-ProAct.proxy = function (object, target, meta, targetMeta) {
+function proxy (object, target, meta, targetMeta) {
   if (!object || !target) {
     return null;
   }
@@ -94,4 +95,5 @@ ProAct.proxy = function (object, target, meta, targetMeta) {
   object = ProAct.prob(object, meta);
 
   return object;
-};
+}
+ProAct.proxy = proxy;
