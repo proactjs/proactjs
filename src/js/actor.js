@@ -67,14 +67,14 @@ P.U.ex(P.Actor, {
   BadValue: {},
 
   /**
-   * A constant defining closing or ending  events.
+   * A constant defining closing or ending events.
    *
    * @memberof ProAct.Actor
    * @type Object
    * @static
    * @constant
    */
-  End: {},
+  Close: {},
 
   /**
    * Transforms the passed <i>val</i> using the ProAct.Actor#transforms of the passed <i>actor</i>.
@@ -245,7 +245,7 @@ P.Actor.prototype = {
     return {
       change: [],
       error: [],
-      end: []
+      close: []
     };
   },
 
@@ -453,6 +453,14 @@ P.Actor.prototype = {
    */
   offErr: function (listener) {
     return this.off('error', listener);
+  },
+
+  onClose: function (listener) {
+    return this.on('close', listener);
+  },
+
+  offClose: function (listener) {
+    return this.off('close', listener);
   },
 
   /**
@@ -805,6 +813,10 @@ P.Actor.prototype = {
     if (P.U.isString(actions)) {
       listeners = this.listeners[actions];
     } else {
+      while (actions.indexOf('close') !== -1) {
+        P.U.remove(actions, 'close');
+      }
+
       listeners = [];
       ln = actions.length;
 
@@ -821,12 +833,16 @@ P.Actor.prototype = {
       }
     }
 
-    if (listeners.length === 0 && this.parent === null) {
+    if (listeners.length === 0 && this.parent === null && actions !== 'close') {
       return this;
     }
 
     length = listeners.length;
-    event = this.makeEvent(source, eventData);
+    if (actions === 'close') {
+      event = ProAct.Actor.Close;
+    } else {
+      event = this.makeEvent(source, eventData);
+    }
 
     for (i = 0; i < length; i++) {
       listener = listeners[i];
@@ -840,6 +856,10 @@ P.Actor.prototype = {
 
     if (this.parent && this.parent.call) {
       this.defer(event, this.parent);
+    }
+
+    if (event === ProAct.Actor.Close) {
+      P.flow.pushOnce(this.queueName, this, destroy);
     }
 
     return this;
