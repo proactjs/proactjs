@@ -37,15 +37,15 @@ function Actor (queueName, transforms) {
     queueName = null;
   }
 
-  P.U.defValProp(this, 'listeners', false, false, false, this.defaultListeners());
-  P.U.defValProp(this, 'sources', false, false, false, []);
+  P.U.defValProp(this, 'listeners', false, false, true, this.defaultListeners());
+  P.U.defValProp(this, 'sources', false, false, true, []);
 
   P.U.defValProp(this, 'listener', false, false, true, null);
   P.U.defValProp(this, 'errListener', false, false, true, null);
   P.U.defValProp(this, 'parent', false, false, true, null);
 
   P.U.defValProp(this, 'queueName', false, false, false, queueName);
-  P.U.defValProp(this, 'transforms', false, false, false,
+  P.U.defValProp(this, 'transforms', false, false, true,
                  (transforms ? transforms : []));
 
   P.U.defValProp(this, 'state', false, false, true, P.States.init);
@@ -859,7 +859,7 @@ P.Actor.prototype = {
     }
 
     if (event === ProAct.Actor.Close) {
-      P.flow.pushOnce(this.queueName, this, destroy);
+      P.flow.pushClose(this, destroy);
     }
 
     return this;

@@ -45,6 +45,8 @@ ProAct.Flow = P.F = function (queueNames, options) {
   this.flowInstances = [];
 
   this.pauseMode = false;
+
+  P.U.defValProp(this, 'closingQueue', false, false, false, new ProAct.Queue('closing'));
 };
 
 P.F.prototype = {
@@ -178,6 +180,7 @@ P.F.prototype = {
         if (stop) {
           stop(queues);
         }
+        this.closingQueue.go();
       }
     }
   },
@@ -383,6 +386,10 @@ P.F.prototype = {
     if (!this.isPaused()) {
       this.flowInstance.pushOnce(queueName, context, action, args);
     }
+  },
+
+  pushClose: function (context, action, args) {
+    this.closingQueue.pushOnce(context, action, args);
   }
 };
 
