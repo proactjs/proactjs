@@ -221,6 +221,9 @@ P.Actor.prototype = {
     }
     this.sources = undefined;
 
+    if (this.listener) {
+      this.listener.destroyed = true;
+    }
     this.listener = undefined;
     this.errListener = undefined;
     this.parent = undefined;
@@ -804,7 +807,7 @@ P.Actor.prototype = {
       actions = this.defaultActions();
     }
 
-    var ln, i,
+    var ln, i, j,
         listener,
         listeners,
         length,
@@ -828,6 +831,12 @@ P.Actor.prototype = {
         listenersForAction = this.listeners[actions[i]];
 
         if (listenersForAction) {
+          for (j = 0; j < listenersForAction.length; j++) {
+            if (listenersForAction[j].destroyed) {
+              this.off(actions[i], listenersForAction[j]);
+              continue;
+            }
+          }
           listeners = listeners.concat(listenersForAction);
         }
       }
@@ -846,6 +855,10 @@ P.Actor.prototype = {
 
     for (i = 0; i < length; i++) {
       listener = listeners[i];
+      if (P.U.isString(actions) && listener.destroyed) {
+        this.off(actions, listener);
+        continue;
+      }
 
       this.defer(event, listener);
 
