@@ -18,12 +18,31 @@ describe('ProAct.Registry.StreamProvider', function () {
 
   describe('#make', function () {
     describe('stream types', function () {
+      it ('creates a stream with specific flow queue using s:test:basic({queueName})', function () {
+        var stream = reg.make('s:test:basic(test)');
+
+        expect(stream instanceof ProAct.Stream).toBe(true);
+        expect(reg.get('s:test')).toBe(stream);
+        expect(reg.get('s:test').queueName).toEqual('test');
+      });
+
       it ('creates a delayed buffered sream if using name as s:test:delayed({delay})', function () {
         var stream = reg.make('s:test:delayed(300)');
 
         expect(stream instanceof ProAct.Stream).toBe(true);
         expect(stream instanceof ProAct.DelayedStream).toBe(true);
         expect(reg.get('s:test')).toBe(stream);
+        expect(reg.get('s:test').delay).toEqual(300);
+      });
+
+      it ('creates a delayed buffered sream with specific flow queue, if using name as s:test:delayed({queueName},{delay})', function () {
+        var stream = reg.make('s:test:delayed(test,300)');
+
+        expect(stream instanceof ProAct.Stream).toBe(true);
+        expect(stream instanceof ProAct.DelayedStream).toBe(true);
+        expect(reg.get('s:test')).toBe(stream);
+        expect(reg.get('s:test').delay).toEqual(300);
+        expect(reg.get('s:test').queueName).toEqual('test');
       });
 
       it ('creates a size buffered sream if using name as s:test:size({size})', function () {
@@ -63,28 +82,28 @@ describe('ProAct.Registry.StreamProvider', function () {
         var source = new ProAct.Stream();
 
         reg.make('s:test', source);
-        expect(reg.get('s:test').sources[0]).toBe(source);
+        expect(source.listeners.change[0]).toBe(reg.get('s:test').makeListener());
       });
 
       it ('creates a simple stream with source - another registered stream using object options.', function () {
         reg.make('s:source');
         reg.make('s:test', {into: 's:source'});
 
-        expect(reg.get('s:test').sources[0]).toBe(reg.get('s:source'));
+        expect(reg.get('s:source').listeners.change[0]).toBe(reg.get('s:test').makeListener());
       });
 
       it ('creates a simple stream with source - another stream using object options.', function () {
         reg.make('s:source');
         reg.make('s:test', {into: reg.s('source')});
 
-        expect(reg.get('s:test').sources[0]).toBe(reg.stream('source'));
+        expect(reg.stream('source').listeners.change[0]).toBe(reg.get('s:test').makeListener());
       });
 
       it ('creates a simple stream with source source stream defined with the proRegQl', function () {
         reg.make('s:source');
         reg.make('s:test', '<<(s:source)');
 
-        expect(reg.get('s:test').sources[0]).toBe(reg.stream('source'));
+        expect(reg.stream('source').listeners.change[0]).toBe(reg.get('s:test').makeListener());
       });
     });
 
