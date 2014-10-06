@@ -38,7 +38,6 @@ function Actor (queueName, transforms) {
   }
 
   P.U.defValProp(this, 'listeners', false, false, true, this.defaultListeners());
-  P.U.defValProp(this, 'sources', false, false, true, []);
 
   P.U.defValProp(this, 'listener', false, false, true, null);
   P.U.defValProp(this, 'errListener', false, false, true, null);
@@ -212,14 +211,6 @@ P.Actor.prototype = {
     this.doDestroy();
 
     this.listeners = undefined;
-
-    var i, ln = this.sources.length, source;
-    for (i = 0; i < ln; i++) {
-      source = this.sources[i];
-      source.off(this.listener);
-      source.offErr(this.errListener);
-    }
-    this.sources = undefined;
 
     if (this.listener) {
       this.listener.destroyed = true;
@@ -492,7 +483,6 @@ P.Actor.prototype = {
         ln = args.length, i, source;
     for (i = 0; i < ln; i++) {
       source = args[i];
-      this.sources.push(source);
       source.on(this.makeListener());
       source.onErr(this.makeErrListener());
     }
@@ -515,26 +505,6 @@ P.Actor.prototype = {
    */
   out: function (destination) {
     destination.into(this);
-
-    return this;
-  },
-
-  /**
-   * Removes a <i>source actor</i> from <i>this</i>.
-   *
-   * @memberof ProAct.Actor
-   * @instance
-   * @method offSource
-   * @param {ProAct.Actor} source
-   *      The ProAct.Actor to remove as <i>source</i>.
-   * @return {ProAct.Actor}
-   *      <b>this</b>
-   * @see {@link ProAct.Actor#into}
-   */
-  offSource: function (source) {
-    P.U.remove(this.sources, source);
-    source.off(this.listener);
-    source.offErr(this.errListener);
 
     return this;
   },
