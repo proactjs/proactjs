@@ -1,6 +1,12 @@
 'use strict';
 
 describe('ProAct.Stream', function () {
+  it ('is in ProAct.States.ready state after creation', function () {
+    var stream = new ProAct.Stream();
+
+    expect(stream.state).toBe(ProAct.States.ready);
+  });
+
   describe('#trigger', function () {
     it ('updates the stream listeners', function () {
       var stream = new ProAct.Stream(), res = [];
@@ -252,7 +258,6 @@ describe('ProAct.Stream', function () {
       expect(resErr.length).toEqual(1);
       expect(resErr[0].message).toEqual('no!');
     });
-
   });
 
 });
