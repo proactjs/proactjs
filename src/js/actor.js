@@ -700,6 +700,8 @@ P.Actor.prototype = {
    *  {@link ProAct.Actor.willUpdate} action of <i>this</i> is called in it.
    * </p>
    *
+   * TODO Should be 'triggerActions'
+   *
    * @memberof ProAct.Actor
    * @instance
    * @method update
@@ -748,6 +750,8 @@ P.Actor.prototype = {
    *  If <i>this</i> ProAct.Actor has a <i>parent</i> ProAct.Actor it will be notified in the running flow
    *  as well.
    * </p>
+   *
+   * TODO Should be 'update'
    *
    * @memberof ProAct.Actor
    * @instance
@@ -817,11 +821,7 @@ P.Actor.prototype = {
     }
 
     length = listeners.length;
-    if (actions === 'close') {
-      event = ProAct.Actor.Close;
-    } else {
-      event = this.makeEvent(source, eventData);
-    }
+    event = this.makeEvent(source, eventData);
 
     for (i = 0; i < length; i++) {
       listener = listeners[i];
@@ -841,8 +841,8 @@ P.Actor.prototype = {
       this.defer(event, this.parent);
     }
 
-    if (event === ProAct.Actor.Close) {
-      P.flow.pushClose(this, destroy);
+    if (actions === 'close') {
+      P.flow.pushClose(this, this.destroy);
     }
 
     return this;
