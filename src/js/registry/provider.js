@@ -395,7 +395,49 @@ ProAct.Registry.FunctionProvider.prototype = P.U.ex(Object.create(P.R.Provider.p
    * @constant
    * @default ProAct.Registry.FunctionProvider
    */
-  constructor: ProAct.Registry.FunctionProvider
+  constructor: ProAct.Registry.FunctionProvider,
+
+  // Private stuff
+  predefinedActions: {
+    map: 'mapping',
+    filter: 'filtering',
+    acc: 'accumulation'
+  },
+
+  /**
+   * Reads a stored instance.
+   * <p>
+   *  If stored instance is not found and the key is in the form:
+   *  actions(arg) - it is searched in the predefined lambdas, for example:
+   *  <pre>
+   *    map(+)
+   *  </pre>
+   * </p>
+   *
+   * @memberof ProAct.Registry.FunctionProvider
+   * @instance
+   * @method get
+   * @param {String} key
+   *      The key to read.
+   * @return {Object}
+   *      The stored object corresponding to the passed <i>key</i> or
+   *      predefined lambda or undefined if there is no such object.
+   */
+  get: function (key) {
+    var func = this.stored[key],
+        reg, matched,
+        action, args;
+    if (!func) {
+      reg = new RegExp("(\\w*)\\(([\\s\\S]*)\\)");
+      matched = reg.exec(key);
+      if (matched) {
+        action = matched[1], args = matched[2],
+        func = dsl.predefined[this.predefinedActions[action]][args];
+      }
+    }
+
+    return func;
+  }
 });
 
 ProAct.Registry.ProObjectProvider.prototype = P.U.ex(Object.create(P.R.Provider.prototype), {

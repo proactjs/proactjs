@@ -655,6 +655,24 @@ ProAct.DSL = {
        */
       originalEvent: function (event) {
         return event.source === undefined || event.source === null;
+      },
+
+      /**
+       * Filtering operation for passing everything.
+       * <p>
+       *  Usage in a DSL expression:
+       *  <pre>
+       *    filter(all)
+       *  </pre>
+       * </p>
+       *
+       * @memberof ProAct.DSL.predefined.filtering
+       * @static
+       * @method
+       * @see {@link ProAct.DSL.ops.filter}
+       */
+      all: function () {
+        return true;
       }
     },
 

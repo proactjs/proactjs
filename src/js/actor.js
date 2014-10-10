@@ -41,6 +41,7 @@ function Actor (queueName, transforms) {
 
   P.U.defValProp(this, 'listener', false, false, true, null);
   P.U.defValProp(this, 'errListener', false, false, true, null);
+  P.U.defValProp(this, 'closeListener', false, false, true, null);
   P.U.defValProp(this, 'parent', false, false, true, null);
 
   P.U.defValProp(this, 'queueName', false, false, false, queueName);
@@ -217,6 +218,7 @@ P.Actor.prototype = {
     }
     this.listener = undefined;
     this.errListener = undefined;
+    this.closeListener = undefined;
     this.parent = undefined;
 
     this.queueName = undefined;
@@ -297,6 +299,26 @@ P.Actor.prototype = {
    *      The <i>error listener of this observer</i>.
    */
   makeErrListener: P.N,
+
+  /**
+   * Creates the <i>closing listener</i> of this actor.
+   * Every actor should have one closing listener that should pass to other actors.
+   * <p>
+   *  This listener turns the actor in a observer for closing events.
+   * </p>
+   * <p>
+   *  Should be overriden with specific listener, by default it returns null.
+   * </p>
+   *
+   * @memberof ProAct.Actor
+   * @instance
+   * @abstract
+   * @method makeCloseListener
+   * @default null
+   * @return {Object}
+   *      The <i>closing listener of this observer</i>.
+   */
+  makeCloseListener: P.N,
 
   /**
    * Creates the <i>event</i> to be send to the listeners on update.
@@ -724,6 +746,10 @@ P.Actor.prototype = {
    * @see {@link ProAct.flow}
    */
   update: function (source, actions, eventData) {
+    if (this.state === ProAct.States.destroyed) {
+      throw new Error('You can not trigger actions on destroyed actors!');
+    }
+
     var actor = this;
     if (!P.flow.isRunning()) {
       P.flow.run(function () {

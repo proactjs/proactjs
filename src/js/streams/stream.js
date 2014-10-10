@@ -127,6 +127,29 @@ ProAct.Stream.prototype = P.U.ex(Object.create(P.Actor.prototype), {
   },
 
   /**
+   * Creates the <i>closing listener</i> of this stream.
+   * <p>
+   *  The listener just calls {@link ProAct.Stream#triggerClose} of <i>this</i> with the incoming closing data.
+   * </p>
+   *
+   * @memberof ProAct.Stream
+   * @instance
+   * @method makeCloseListener
+   * @return {Object}
+   *      The <i>closing listener of this stream</i>.
+   */
+  makeCloseListener: function () {
+    if (!this.closeListener) {
+      var stream = this;
+      this.closeListener = function (error) {
+        stream.triggerClose(error);
+      };
+    }
+
+    return this.closeListener;
+  },
+
+  /**
    * Defers a ProAct.Actor listener.
    * <p>
    *  For streams this means pushing it to active flow using {@link ProAct.Flow#push}.
@@ -230,12 +253,34 @@ ProAct.Stream.prototype = P.U.ex(Object.create(P.Actor.prototype), {
    * @method triggerErr
    * @param {Error} err
    *      The error to trigger.
-   * @return {ProAct.Actor}
+   * @return {ProAct.Stream}
    *      <i>this</i>
    * @see {@link ProAct.Actor#update}
    */
   triggerErr: function (err) {
     return this.update(err, 'error');
+  },
+
+  /**
+   * <p>
+   *  Triggers a closing event to the stream. Anything that is listening for closing events from
+   *  this stream will get updated.
+   * </p>
+   * <p>
+   *  The stream will be closed and unusable.
+   * </p>
+   *
+   * @memberof ProAct.Stream
+   * @instance
+   * @method triggerClose
+   * @param {Object} data
+   *      Data connected to the closing event.
+   * @return {ProAct.Stream}
+   *      <i>this</i>
+   * @see {@link ProAct.Actor#update}
+   */
+  triggerClose: function (data) {
+    return this.update(data, 'close');
   },
 
   // private
