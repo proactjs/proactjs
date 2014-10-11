@@ -43,6 +43,8 @@ function Stream (queueName, source, transforms) {
   }
   P.Actor.call(this, queueName, transforms);
 
+  this.sourceNumber = 0;
+
   if (source) {
     this.into(source);
   }
@@ -371,6 +373,20 @@ ProAct.Stream.prototype = P.U.ex(Object.create(P.Actor.prototype), {
         result = new P.S();
 
     return P.S.prototype.into.apply(result, sources);
+  },
+
+  into: function () {
+    ProAct.Actor.prototype.into.apply(this, arguments);
+
+    this.sourceNumber += arguments.length;
+
+    return this;
+  },
+
+  canDestroy: function () {
+    this.sourceNumber -= 1;
+
+    return this.sourceNumber <= 0;
   }
 });
 

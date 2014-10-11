@@ -228,6 +228,20 @@ P.Actor.prototype = {
   },
 
   /**
+   * Checks if <i>this</i> can be dstroyed.
+   * <p>
+   *  Defaults to return true.
+   * </p>
+   *
+   * @memberof ProAct.Actor
+   * @instance
+   * @method canDestroy
+   */
+  canDestroy: function () {
+    return true;
+  },
+
+  /**
    * Generates the initial listeners object. It can be overridden for alternative listeners collections.
    * It is used for resetting all the listeners too.
    *
@@ -507,6 +521,7 @@ P.Actor.prototype = {
       source = args[i];
       source.on(this.makeListener());
       source.onErr(this.makeErrListener());
+      source.onClose(this.makeCloseListener());
     }
 
     return this;
@@ -843,6 +858,10 @@ P.Actor.prototype = {
     }
 
     if (listeners.length === 0 && this.parent === null && actions !== 'close') {
+      return this;
+    }
+
+    if (actions === 'close' && !this.canDestroy()) {
       return this;
     }
 
