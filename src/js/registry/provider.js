@@ -458,10 +458,10 @@ ProAct.Registry.FunctionProvider.prototype = P.U.ex(Object.create(P.R.Provider.p
         action, args,
         i, ln;
 
-    if (key.indexOf('||') !== -1) {
-      return higher.accumulator(higher.split(this, '||', key), false, higher.or);
-    } else if (key.indexOf('&&') !== -1) {
-      return higher.accumulator(higher.split(this, '&&', key), true, higher.and);
+    if (key.indexOf('OR') !== -1) {
+      return higher.accumulator(higher.split(this, 'OR', key), false, higher.or);
+    } else if (key.indexOf('AND') !== -1) {
+      return higher.accumulator(higher.split(this, 'AND', key), true, higher.and);
     } else if (key.indexOf('!') === 0) {
       func = this.get(key.substring(1));
       return function () {

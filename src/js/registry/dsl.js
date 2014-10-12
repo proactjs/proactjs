@@ -67,7 +67,7 @@ ProAct.OpStore = {
           return op.substring(0, sym.length) === sym;
         },
         setupArgument: function (arg, realArguments, predefined, opArguments) {
-          var i, k;
+          var i, k, ln, actions;
           if (arg.charAt(0) === '$') {
             arg = realArguments[parseInt(arg.substring(1), 10) - 1];
           } else if (predefined && arg.charAt(0) === '&') {
@@ -75,6 +75,14 @@ ProAct.OpStore = {
             k = arg.substring(0, i);
             if (predefined[k]) {
               arg = predefined[k].call(null, arg.substring(i + 1));
+            }
+          } else if (predefined && arg.charAt(0) === '!') {
+            arg = this.setupArgument(arg.substring(1), realArguments, predefined, opArguments);
+            if (arg) {
+              k = arg;
+              arg = function () {
+                return !k.apply(null, arguments);
+              };
             }
           } else if (predefined && predefined[arg]) {
             arg = predefined[arg];
@@ -625,6 +633,39 @@ ProAct.DSL = {
        * @see {@link ProAct.DSL.ops.filter}
        */
       '-': function (el) { return el <= 0; },
+
+      /**
+       * Flitering operation for using a method of an object as a filter.
+       * <p>
+       *  Usage in a DSL expression:
+       *  <pre>
+       *    filter(&.&boolFunc)
+       *  </pre>
+       *  This will call the 'target.boolFunc' method and use its result as a filter.
+       * </p>
+       *
+       * @memberof ProAct.DSL.predefined.filtering
+       * @static
+       * @method
+       * @see {@link ProAct.DSL.ops.filter}
+       */
+      '&.': function (arg) {
+        return function (el) {
+          if (this.action) {
+            return this.action.call(this.context, el);
+          }
+
+          var p = el[arg];
+          if (!p) {
+            return el;
+          } else if (P.U.isFunction(p)) {
+            this.action = p;
+            this.context = el;
+          } else {
+            return p;
+          }
+        };
+      },
 
       /**
        * Filtering operation for filtering only values different from undefined.
