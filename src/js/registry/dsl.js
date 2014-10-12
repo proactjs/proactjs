@@ -66,6 +66,27 @@ ProAct.OpStore = {
         match: function (op) {
           return op.substring(0, sym.length) === sym;
         },
+        setupArgument: function (arg, realArguments, predefined, opArguments) {
+          var i, k;
+          if (arg.charAt(0) === '$') {
+            arg = realArguments[parseInt(arg.substring(1), 10) - 1];
+          } else if (predefined && arg.charAt(0) === '&') {
+            i = arg.lastIndexOf('&');
+            k = arg.substring(0, i);
+            if (predefined[k]) {
+              arg = predefined[k].call(null, arg.substring(i + 1));
+            }
+          } else if (predefined && predefined[arg]) {
+            arg = predefined[arg];
+
+            if (P.U.isArray(arg)) {
+              opArguments.push.apply(opArguments, arg);
+              arg = undefined;
+            }
+          }
+
+          return arg;
+        },
         toOptions: function (actionObject, op) {
           var reg = new RegExp(dslOps[name].sym + "(\\w*)\\(([\\s\\S]*)\\)"),
               matched = reg.exec(op),
@@ -83,22 +104,7 @@ ProAct.OpStore = {
             ln = args.length;
             for (i = 0; i < ln; i++) {
               arg = args[i].trim();
-              if (arg.charAt(0) === '$') {
-                arg = realArguments[parseInt(arg.substring(1), 10) - 1];
-              } else if (predefined && arg.charAt(0) === '&') {
-                i = arg.lastIndexOf('&');
-                k = arg.substring(0, i);
-                if (predefined[k]) {
-                  arg = predefined[k].call(null, arg.substring(i + 1));
-                }
-              } else if (predefined && predefined[arg]) {
-                arg = predefined[arg];
-
-                if (P.U.isArray(arg)) {
-                  opArguments = opArguments.concat(arg);
-                  arg = undefined;
-                }
-              }
+              arg = this.setupArgument(arg, realArguments, predefined, opArguments);
 
               if (arg !== undefined) {
                 opArguments.push(arg);

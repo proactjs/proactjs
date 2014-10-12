@@ -385,6 +385,35 @@ ProAct.Registry.StreamProvider.prototype = P.U.ex(Object.create(P.R.Provider.pro
   }
 });
 
+var higher = {
+  split: function (provider, action, data) {
+    var keys = data.split(action),
+        ln = keys.length, i,
+        functions = [];
+    for (i = 0; i < ln; i++) {
+      functions.push(provider.get(keys[i].trim()));
+    }
+
+    return functions;
+  },
+
+  accumulator: function (functions, initial, computation) {
+    return function () {
+      var i, ln = functions.length, result = initial;
+      for (i = 0; i < ln; i++) {
+        result = computation(result, functions[i].apply(null, arguments));
+      }
+      return result;
+    };
+  },
+  or: function (tillNow, argument) {
+    return tillNow || argument;
+  },
+  and: function (tillNow, argument) {
+    return tillNow && argument;
+  }
+};
+
 ProAct.Registry.FunctionProvider.prototype = P.U.ex(Object.create(P.R.Provider.prototype), {
 
   /**
@@ -424,9 +453,23 @@ ProAct.Registry.FunctionProvider.prototype = P.U.ex(Object.create(P.R.Provider.p
    *      predefined lambda or undefined if there is no such object.
    */
   get: function (key) {
-    var func = this.stored[key],
+    var func,
         reg, matched,
-        action, args;
+        action, args,
+        i, ln;
+
+    if (key.indexOf('||') !== -1) {
+      return higher.accumulator(higher.split(this, '||', key), false, higher.or);
+    } else if (key.indexOf('&&') !== -1) {
+      return higher.accumulator(higher.split(this, '&&', key), true, higher.and);
+    } else if (key.indexOf('!') === 0) {
+      func = this.get(key.substring(1));
+      return function () {
+        return !func.apply(null, arguments);
+      };
+    }
+
+    func = this.stored[key];
     if (!func) {
       reg = new RegExp("(\\w*)\\(([\\s\\S]*)\\)");
       matched = reg.exec(key);
