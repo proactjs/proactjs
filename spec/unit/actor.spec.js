@@ -94,4 +94,63 @@ describe('ProAct.Actor', function () {
       expect(res).toEqual([1, 2, 3]);
     });
   });
+
+  describe('destroying', function () {
+    it ('cleans up all the resources', function () {
+      var actor1 = new ProAct.Actor(),
+          actor2 = new ProAct.Actor(),
+          res = [],
+          listener = function (val) {
+            res.push(val);
+          };
+      actor1.makeListener = function () {
+        return listener;
+      };
+
+      actor1.into(actor2);
+
+      expect(actor2.listeners.change[0]).toBe(listener);
+
+      actor2.destroy();
+
+      expect(actor2.state).toBe(ProAct.States.destroyed);
+      expect(actor2.listeners).toBe(undefined);
+      expect(actor2.listener).toBe(undefined);
+      expect(actor2.errListener).toBe(undefined);
+      expect(actor2.closeListener).toBe(undefined);
+      expect(actor2.parent).toBe(undefined);
+      expect(actor2.queueName).toBe(undefined);
+      expect(actor2.transforms).toBe(undefined);
+    });
+
+    it ('lazily cleans listeners of destoyed actors', function () {
+      var actor1 = new ProAct.Actor(),
+          actor2 = new ProAct.Actor(),
+          res = [],
+          listener = function (val) {
+            res.push(val);
+          };
+      actor1.makeListener = function () {
+        if (!this.listener) {
+          this.listener = listener;
+        }
+        return this.listener;
+      };
+
+      actor1.into(actor2);
+      expect(actor2.listeners.change).toEqual([listener]);
+
+      actor1.destroy();
+      actor2.update();
+
+      expect(actor2.listeners.change).toEqual([]);
+    });
+
+    it ('Close event destroys the actor on it was triggered', function () {
+      var actor = new ProAct.Actor();
+      actor.update(null, 'close');
+
+      expect(actor.state).toBe(ProAct.States.destroyed);
+    });
+  });
 });

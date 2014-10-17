@@ -105,4 +105,103 @@ describe('ProAct.Flow, ProAct.Property and ProAct.Stream', function () {
 
     expect(computeCounter).toEqual(2); // Initial compute and update compute.
   });
+
+  describe ('Multy queue', function () {
+    var plain, model, view;
+    beforeEach(function () {
+      ProAct.flow.addQueue('model');
+      ProAct.flow.addQueue('view');
+
+      view = ProAct.prob(
+        {
+          a: 0,
+          b: function () {
+            return model.d + this.a;
+          },
+          c: function () {
+            return this.b + plain.b;
+          },
+          name: 'view'
+        },
+        {
+          p: {
+            queueName: 'view'
+          }
+        }
+      );
+
+      plain = ProAct.prob(
+        {
+          a: 7,
+          b: function () {
+            return this.a + 1 + view.a;
+          },
+          name: 'plain'
+        }
+      );
+
+      model = ProAct.prob(
+        {
+          c: function () {
+            return this.d +  view.a;
+          },
+          d: function () {
+            return plain.a * plain.a;
+          },
+          name: 'model'
+        },
+        {
+          p: {
+            queueName: 'model'
+          }
+        }
+      );
+    });
+
+    it ('setup is right', function () {
+      expect(plain.a).toEqual(7);
+      expect(plain.b).toEqual(8);
+
+      expect(model.c).toEqual(49);
+      expect(model.d).toEqual(49);
+
+      expect(view.a).toEqual(0);
+      expect(view.b).toEqual(49);
+      expect(view.c).toEqual(57);
+    });
+
+    it ('updates are in the right queue order', function () {
+      var res = [],
+          l1 = function (e) {
+            res.push(e.args[0].name + '.' + e.target);
+          },
+          l2 = function (e) {
+            res.push(e.args[0].name + '.' + e.target);
+          };
+
+      plain.b;
+      plain.p('b').on(l2);
+      model.c;
+      model.p('c').on(l1);
+      model.d;
+      model.p('d').on(l2);
+      view.b;
+      view.p('b').on(l1);
+      view.c;
+      view.p('c').on(l2);
+
+      view.a = 15;
+
+      expect(plain.a).toEqual(7);
+      expect(plain.b).toEqual(23);
+
+      expect(model.c).toEqual(64);
+      expect(model.d).toEqual(49);
+
+      expect(view.b).toEqual(64);
+      expect(view.c).toEqual(87);
+
+      expect(res).toEqual(['plain.b', 'model.c', 'view.b', 'view.c']);
+    });
+  });
 });

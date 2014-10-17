@@ -33,12 +33,16 @@ describe('ProAct.Registry.ProObjectProvider', function () {
     });
 
     it ('is able to pass meta-data while creating a ProAct object', function () {
+      ProAct.flow.addQueue('test');
       var res = [], val = provider.make('test', null, {
             x: 5,
             y: 4,
             pow: function () {return this.x * this.y;}
           },
           {
+            p: {
+              queueName: 'test'
+            },
             pow: ['@($1)', function (val) {res.push(val);}]
           });
 
@@ -47,6 +51,7 @@ describe('ProAct.Registry.ProObjectProvider', function () {
 
       expect(res.length).toBe(1);
       expect(res[0].type).toBe(ProAct.Event.Types.value);
+      expect(val.p().queueName).toEqual('test');
     });
 
     describe('in the ProAct.Registry', function () {

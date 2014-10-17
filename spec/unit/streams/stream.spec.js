@@ -260,4 +260,67 @@ describe('ProAct.Stream', function () {
     });
   });
 
+  describe('Close', function () {
+    it ('triggering closing event destroys the stream, but the event is delivered to its listeners', function () {
+      var stream = new ProAct.Stream(), res = [];
+
+      stream.onClose(function (e) {
+        res.push(e);
+      });
+
+      stream.triggerClose('last');
+
+      expect(stream.state).toBe(ProAct.States.destroyed);
+      expect(res.length).toBe(1);
+      expect(res[0]).toEqual('last');
+    });
+
+    it ('triggering closing event destroys the stream and its source, but the event is delivered to its listeners', function () {
+      var stream1 = new ProAct.Stream(),
+          stream2 = stream1.map(function (e) {
+            return e + ' time';
+          }),
+          res = [];
+
+      stream2.onClose(function (e) {
+        res.push(e);
+      });
+
+      stream1.triggerClose('last');
+
+      expect(stream1.state).toBe(ProAct.States.destroyed);
+      expect(stream2.state).toBe(ProAct.States.destroyed);
+      expect(res.length).toBe(1);
+      expect(res[0]).toEqual('last');
+    });
+
+    it ('if stream is a merge stream, it is not closed untill all of its sources are closed', function () {
+      var source1 = new ProAct.Stream(),
+          source2 = new ProAct.Stream(),
+          source3 = new ProAct.Stream(),
+          stream = new ProAct.Stream().into(source1, source2, source3),
+          res = [];
+
+      stream.onClose(function (e) {
+        res.push(e);
+      });
+
+      source1.triggerClose('last');
+      expect(source1.state).toBe(ProAct.States.destroyed);
+      expect(stream.state).toBe(ProAct.States.ready);
+      expect(res.length).toBe(0);
+
+      source2.triggerClose('last');
+      expect(source2.state).toBe(ProAct.States.destroyed);
+      expect(stream.state).toBe(ProAct.States.ready);
+      expect(res.length).toBe(0);
+
+      source3.triggerClose('last');
+      expect(source3.state).toBe(ProAct.States.destroyed);
+      expect(stream.state).toBe(ProAct.States.destroyed);
+      expect(res.length).toBe(1);
+      expect(res[0]).toEqual('last');
+    });
+  });
+
 });

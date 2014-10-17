@@ -205,6 +205,54 @@ describe('ProAct.Registry.StreamProvider', function () {
         expect(res.length).toBe(2);
         expect(res).toEqual(['so', 'smerch']);
       });
+
+      it ('creates a stream with filtering, filtering its values, using filter(<predefined>)', function () {
+        reg.make('s:test', '@($1)|filter(+)', function (el) {
+          res.push(el);
+        });
+
+        reg.get('s:test').trigger(3).trigger(-3).trigger(5).trigger(-7);
+        expect(res.length).toBe(2);
+        expect(res).toEqual([3, 5]);
+      });
+
+      it ('creates a stream with filtering, filtering its values, using filter(!<predefined>)', function () {
+        reg.make('s:test', '@($1)|filter(!+)', function (el) {
+          res.push(el);
+        });
+
+        reg.get('s:test').trigger(3).trigger(-3).trigger(5).trigger(-7);
+        expect(res.length).toBe(2);
+        expect(res).toEqual([-3, -7]);
+      });
+
+      it ('creates a stream with filtering, filtering its values, using filter(f:!filter(<predefined>))', function () {
+        reg.make('s:test', '@($1)|filter(f:!filter(+))', function (el) {
+          res.push(el);
+        });
+
+        reg.get('s:test').trigger(3).trigger(-3).trigger(5).trigger(-7);
+        expect(res.length).toBe(2);
+        expect(res).toEqual([-3, -7]);
+      });
+
+      it ('creates a stream with filtering, filtering its values, using filter(f:filter(<predefined>)ORfilter(<predefined>))', function () {
+        reg.make('s:test', '@($1)|filter(f:filter(+)ORfilter(-))', function (el) {
+          res.push(el);
+        });
+
+        reg.get('s:test').trigger(3).trigger(-3).trigger(5).trigger(-7);
+        expect(res.length).toBe(4);
+        expect(res).toEqual([3, -3, 5, -7]);
+      });
+
+      it ('can use complex predefined filtering expressions', function () {
+        reg.make('s:test', '@($1)|filter(&.&bau)', listener).trigger({bau: function (el) {return el > 5}});
+
+        reg.get('s:test').trigger(14).trigger(-3).trigger(5).trigger(7);
+        expect(res.length).toBe(2);
+        expect(res).toEqual([14, 7]);
+      });
     });
 
     describe('acc', function () {
