@@ -19,7 +19,7 @@
  *
  * @namespace ProAct
  * @license MIT
- * @version 1.1.1
+ * @version 1.2.0
  * @author meddle0x53
  */
 var ProAct = Pro = P = {},
@@ -60,7 +60,7 @@ var ProAct = Pro = P = {},
  * @static
  * @constant
  */
-ProAct.VERSION = '1.1.1';
+ProAct.VERSION = '1.2.0';
 
 /**
  * Defines the possible states of the ProAct objects.
