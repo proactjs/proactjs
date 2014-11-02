@@ -26,7 +26,7 @@
 	 *
 	 * @namespace ProAct
 	 * @license MIT
-	 * @version 1.1.1
+	 * @version 1.2.0
 	 * @author meddle0x53
 	 */
 	var ProAct = Pro = P = {},
@@ -67,7 +67,7 @@
 	 * @static
 	 * @constant
 	 */
-	ProAct.VERSION = '1.1.1';
+	ProAct.VERSION = '1.2.0';
 	
 	/**
 	 * Defines the possible states of the ProAct objects.
@@ -1165,17 +1165,16 @@
 	 * @see {@link ProAct.Queue}
 	 */
 	ProAct.Flow = P.F = function (queueNames, options) {
-	  if (!queueNames) {
-	    queueNames = ['proq'];
-	  }
+	  this.setQueues(queueNames);
 	
-	  this.queueNames = queueNames;
 	  this.options = options || {};
 	
 	  this.flowInstance = null;
 	  this.flowInstances = [];
 	
 	  this.pauseMode = false;
+	
+	  P.U.defValProp(this, 'closingQueue', false, false, false, new ProAct.Queue('closing'));
 	};
 	
 	P.F.prototype = {
@@ -1227,6 +1226,42 @@
 	  },
 	
 	  /**
+	   * Appends a new queue name to the list of <i>this</i>' queues.
+	   * <p>
+	   *  When a new <i>flowInstance</i> is created the updated list will be used.
+	   * </p>
+	   *
+	   * @memberof ProAct.Flow
+	   * @instance
+	   * @method addQueue
+	   * @param {String} queueName
+	   *      The queue name to add.
+	   */
+	  addQueue: function (queueName) {
+	    this.queueNames.push(queueName);
+	  },
+	
+	  /**
+	   * Sets the queue names of <i>this</i> flow.
+	   * <p>
+	   *  When a new <i>flowInstance</i> is created the new list will be used.
+	   * </p>
+	   *
+	   * @memberof ProAct.Flow
+	   * @instance
+	   * @method setQueues
+	   * @param {Array} queueNames
+	   *      Array with the names of the sub-queues of the {@link ProAct.Queues}es of the flow.
+	   *      The size of this array determines the number of the sub-queues.
+	   */
+	  setQueues: function (queueNames) {
+	    if (!queueNames) {
+	      queueNames = ['proq'];
+	    }
+	    this.queueNames = queueNames;
+	  },
+	
+	  /**
 	   * Starts an action flow consisting of all the actions defered after the
 	   * last call of {@link ProAct.Flow#start} and then stops the ProAct.Flow.
 	   *
@@ -1273,6 +1308,7 @@
 	        if (stop) {
 	          stop(queues);
 	        }
+	        this.closingQueue.go();
 	      }
 	    }
 	  },
@@ -1478,6 +1514,10 @@
 	    if (!this.isPaused()) {
 	      this.flowInstance.pushOnce(queueName, context, action, args);
 	    }
+	  },
+	
+	  pushClose: function (context, action, args) {
+	    this.closingQueue.pushOnce(context, action, args);
 	  }
 	};
 	
@@ -1545,20 +1585,41 @@
 	 * </p>
 	 *
 	 * @class ProAct.Actor
+	 * @param {String} queueName
+	 *      The name of the queue all the updates should be pushed to.
+	 *      <p>
+	 *        If this parameter is null/undefined the default queue of
+	 *        {@link ProAct.flow} is used.
+	 *      </p>
+	 *      <p>
+	 *        If this parameter is not a string it is used as the
+	 *        <i>transforms</i>.
+	 *      </p>
 	 * @param {Array} transforms
 	 *      A list of transformation to be used on all incoming chages.
 	 */
-	ProAct.Actor = P.Pro = function (transforms) {
+	function Actor (queueName, transforms) {
+	  if (queueName && !P.U.isString(queueName)) {
+	    transforms = queueName;
+	    queueName = null;
+	  }
+	
 	  P.U.defValProp(this, 'listeners', false, false, true, this.defaultListeners());
-	  this.sources = [];
 	
-	  this.listener = null;
-	  this.errListener = null;
+	  P.U.defValProp(this, 'listener', false, false, true, null);
+	  P.U.defValProp(this, 'errListener', false, false, true, null);
+	  P.U.defValProp(this, 'closeListener', false, false, true, null);
+	  P.U.defValProp(this, 'parent', false, false, true, null);
 	
-	  this.transforms = transforms ? transforms : [];
+	  P.U.defValProp(this, 'queueName', false, false, false, queueName);
+	  P.U.defValProp(this, 'transforms', false, false, true,
+	                 (transforms ? transforms : []));
 	
-	  this.parent = null;
-	};
+	  P.U.defValProp(this, 'state', false, false, true, P.States.init);
+	
+	  this.init();
+	}
+	ProAct.Actor = P.Pro = Actor;
 	
 	P.U.ex(P.Actor, {
 	
@@ -1571,6 +1632,16 @@
 	   * @constant
 	   */
 	  BadValue: {},
+	
+	  /**
+	   * A constant defining closing or ending events.
+	   *
+	   * @memberof ProAct.Actor
+	   * @type Object
+	   * @static
+	   * @constant
+	   */
+	  Close: {},
 	
 	  /**
 	   * Transforms the passed <i>val</i> using the ProAct.Actor#transforms of the passed <i>actor</i>.
@@ -1611,6 +1682,133 @@
 	  constructor: ProAct.Actor,
 	
 	  /**
+	   * Initializes this actor.
+	   * <p>
+	   *  This method logic is run only if the current state of <i>this</i> is {@link ProAct.States.init}.
+	   * </p>
+	   * <p>
+	   *  Then {@link ProAct.Actor#afterInit} is called to finish the initialization.
+	   * </p>
+	   *
+	   * @memberof ProAct.Actor
+	   * @instance
+	   * @method init
+	   * @see {@link ProAct.Actor#doInit}
+	   * @see {@link ProAct.Actor#afterInit}
+	   */
+	  init: function () {
+	    if (this.state !== P.States.init) {
+	      return;
+	    }
+	
+	    this.doInit();
+	
+	    this.afterInit();
+	  },
+	
+	  /**
+	   * Allocating of resources or initializing is done here.
+	   * <p>
+	   *  Empty by default.
+	   * </p>
+	   *
+	   * @memberof ProAct.Actor
+	   * @instance
+	   * @method doInit
+	   * @see {@link ProAct.Actor#init}
+	   */
+	  doInit: function () {},
+	
+	  /**
+	   * Called automatically after initialization of this actor.
+	   * <p>
+	   *  By default it changes the state of <i>this</i> to {@link ProAct.States.ready}.
+	   * </p>
+	   * <p>
+	   *  It can be overridden to define more complex initialization logic.
+	   * </p>
+	   *
+	   * @memberof ProAct.Property
+	   * @instance
+	   * @method afterInit
+	   */
+	  afterInit: function () {
+	    this.state = P.States.ready;
+	  },
+	
+	  /**
+	   * Called immediately before destruction.
+	   *
+	   * @memberof ProAct.Actor
+	   * @instance
+	   * @abstract
+	   * @method beforeDestroy
+	   * @see {@link ProAct.Actor#destroy}
+	   */
+	  beforeDestroy: function () {
+	  },
+	
+	  /**
+	   * Frees additional resources.
+	   *
+	   * @memberof ProAct.Actor
+	   * @instance
+	   * @abstract
+	   * @method doDestroy
+	   * @see {@link ProAct.Actor#destroy}
+	   */
+	  doDestroy: function () {
+	  },
+	
+	  /**
+	   * Destroys this ProAct.Actor instance.
+	   * <p>
+	   *  The state of <i>this</i> is set to {@link ProAct.States.destroyed}.
+	   * </p>
+	   *
+	   * @memberof ProAct.Actor
+	   * @instance
+	   * @method destroy
+	   */
+	  destroy: function () {
+	    if (this.state === P.States.destroyed) {
+	      return;
+	    }
+	
+	    this.beforeDestroy();
+	    this.doDestroy();
+	
+	    this.listeners = undefined;
+	
+	    if (this.listener) {
+	      this.listener.destroyed = true;
+	    }
+	    this.listener = undefined;
+	    this.errListener = undefined;
+	    this.closeListener = undefined;
+	    this.parent = undefined;
+	
+	    this.queueName = undefined;
+	    this.transforms = undefined;
+	
+	    this.state = P.States.destroyed;
+	  },
+	
+	  /**
+	   * Checks if <i>this</i> can be dstroyed.
+	   * <p>
+	   *  Defaults to return true.
+	   * </p>
+	   *
+	   * @memberof ProAct.Actor
+	   * @instance
+	   * @method canDestroy
+	   */
+	  canDestroy: function () {
+	    return true;
+	  },
+	
+	  /**
 	   * Generates the initial listeners object. It can be overridden for alternative listeners collections.
 	   * It is used for resetting all the listeners too.
 	   *
@@ -1623,7 +1821,8 @@
 	  defaultListeners: function () {
 	    return {
 	      change: [],
-	      error: []
+	      error: [],
+	      close: []
 	    };
 	  },
 	
@@ -1681,6 +1880,26 @@
 	   *      The <i>error listener of this observer</i>.
 	   */
 	  makeErrListener: P.N,
+	
+	  /**
+	   * Creates the <i>closing listener</i> of this actor.
+	   * Every actor should have one closing listener that should pass to other actors.
+	   * <p>
+	   *  This listener turns the actor in a observer for closing events.
+	   * </p>
+	   * <p>
+	   *  Should be overriden with specific listener, by default it returns null.
+	   * </p>
+	   *
+	   * @memberof ProAct.Actor
+	   * @instance
+	   * @abstract
+	   * @method makeCloseListener
+	   * @default null
+	   * @return {Object}
+	   *      The <i>closing listener of this observer</i>.
+	   */
+	  makeCloseListener: P.N,
 	
 	  /**
 	   * Creates the <i>event</i> to be send to the listeners on update.
@@ -1833,6 +2052,14 @@
 	    return this.off('error', listener);
 	  },
 	
+	  onClose: function (listener) {
+	    return this.on('close', listener);
+	  },
+	
+	  offClose: function (listener) {
+	    return this.off('close', listener);
+	  },
+	
 	  /**
 	   * Links source actors into this actor. This means that <i>this actor</i>
 	   * is listening for changes from the <i>sources</i>.
@@ -1859,9 +2086,9 @@
 	        ln = args.length, i, source;
 	    for (i = 0; i < ln; i++) {
 	      source = args[i];
-	      this.sources.push(source);
 	      source.on(this.makeListener());
 	      source.onErr(this.makeErrListener());
+	      source.onClose(this.makeCloseListener());
 	    }
 	
 	    return this;
@@ -1882,26 +2109,6 @@
 	   */
 	  out: function (destination) {
 	    destination.into(this);
-	
-	    return this;
-	  },
-	
-	  /**
-	   * Removes a <i>source actor</i> from <i>this</i>.
-	   *
-	   * @memberof ProAct.Actor
-	   * @instance
-	   * @method offSource
-	   * @param {ProAct.Actor} source
-	   *      The ProAct.Actor to remove as <i>source</i>.
-	   * @return {ProAct.Actor}
-	   *      <b>this</b>
-	   * @see {@link ProAct.Actor#into}
-	   */
-	  offSource: function (source) {
-	    P.U.remove(this.sources, source);
-	    source.off(this.listener);
-	    source.offErr(this.errListener);
 	
 	    return this;
 	  },
@@ -2097,6 +2304,8 @@
 	   *  {@link ProAct.Actor.willUpdate} action of <i>this</i> is called in it.
 	   * </p>
 	   *
+	   * TODO Should be 'triggerActions'
+	   *
 	   * @memberof ProAct.Actor
 	   * @instance
 	   * @method update
@@ -2119,6 +2328,10 @@
 	   * @see {@link ProAct.flow}
 	   */
 	  update: function (source, actions, eventData) {
+	    if (this.state === ProAct.States.destroyed) {
+	      throw new Error('You can not trigger actions on destroyed actors!');
+	    }
+	
 	    var actor = this;
 	    if (!P.flow.isRunning()) {
 	      P.flow.run(function () {
@@ -2145,6 +2358,8 @@
 	   *  If <i>this</i> ProAct.Actor has a <i>parent</i> ProAct.Actor it will be notified in the running flow
 	   *  as well.
 	   * </p>
+	   *
+	   * TODO Should be 'update'
 	   *
 	   * @memberof ProAct.Actor
 	   * @instance
@@ -2174,7 +2389,7 @@
 	      actions = this.defaultActions();
 	    }
 	
-	    var ln, i,
+	    var ln, i, j,
 	        listener,
 	        listeners,
 	        length,
@@ -2183,6 +2398,10 @@
 	    if (P.U.isString(actions)) {
 	      listeners = this.listeners[actions];
 	    } else {
+	      while (actions.indexOf('close') !== -1) {
+	        P.U.remove(actions, 'close');
+	      }
+	
 	      listeners = [];
 	      ln = actions.length;
 	
@@ -2194,12 +2413,22 @@
 	        listenersForAction = this.listeners[actions[i]];
 	
 	        if (listenersForAction) {
+	          for (j = 0; j < listenersForAction.length; j++) {
+	            if (listenersForAction[j].destroyed) {
+	              this.off(actions[i], listenersForAction[j]);
+	              continue;
+	            }
+	          }
 	          listeners = listeners.concat(listenersForAction);
 	        }
 	      }
 	    }
 	
-	    if (listeners.length === 0 && this.parent === null) {
+	    if (listeners.length === 0 && this.parent === null && actions !== 'close') {
+	      return this;
+	    }
+	
+	    if (actions === 'close' && !this.canDestroy()) {
 	      return this;
 	    }
 	
@@ -2208,6 +2437,10 @@
 	
 	    for (i = 0; i < length; i++) {
 	      listener = listeners[i];
+	      if (P.U.isString(actions) && listener.destroyed) {
+	        this.off(actions, listener);
+	        continue;
+	      }
 	
 	      this.defer(event, listener);
 	
@@ -2218,6 +2451,10 @@
 	
 	    if (this.parent && this.parent.call) {
 	      this.defer(event, this.parent);
+	    }
+	
+	    if (actions === 'close') {
+	      P.flow.pushClose(this, this.destroy);
 	    }
 	
 	    return this;
@@ -2244,10 +2481,12 @@
 	   * @see {@link ProAct.flow}
 	   */
 	  defer: function (event, listener) {
+	    var queueName = (listener.queueName) ? listener.queueName : this.queueName;
+	
 	    if (P.U.isFunction(listener)) {
-	      P.flow.pushOnce(listener, [event]);
+	      P.flow.pushOnce(queueName, listener, [event]);
 	    } else {
-	      P.flow.pushOnce(listener, listener.call, [event]);
+	      P.flow.pushOnce(queueName, listener, listener.call, [event]);
 	    }
 	    return this;
 	  },
@@ -2504,18 +2743,36 @@
 	 *
 	 * @class ProAct.Stream
 	 * @extends ProAct.Actor
+	 * @param {String} queueName
+	 *      The name of the queue all the updates should be pushed to.
+	 *      <p>
+	 *        If this parameter is null/undefined the default queue of
+	 *        {@link ProAct.flow} is used.
+	 *      </p>
+	 *      <p>
+	 *        If this parameter is not a string it is used as the
+	 *        <i>source</i>.
+	 *      </p>
 	 * @param {ProAct.Actor} source
 	 *      A default source of the stream, can be null.
 	 * @param {Array} transforms
 	 *      A list of transformation to be used on all incoming chages.
 	 */
-	ProAct.Stream = ProAct.S = function (source, transforms) {
-	  P.Actor.call(this, transforms);
+	function Stream (queueName, source, transforms) {
+	  if (queueName && !P.U.isString(queueName)) {
+	    transforms = source;
+	    source = queueName;
+	    queueName = null;
+	  }
+	  P.Actor.call(this, queueName, transforms);
+	
+	  this.sourceNumber = 0;
 	
 	  if (source) {
 	    this.into(source);
 	  }
-	};
+	}
+	ProAct.Stream = ProAct.S = Stream;
 	
 	ProAct.Stream.prototype = P.U.ex(Object.create(P.Actor.prototype), {
 	
@@ -2595,6 +2852,29 @@
 	  },
 	
 	  /**
+	   * Creates the <i>closing listener</i> of this stream.
+	   * <p>
+	   *  The listener just calls {@link ProAct.Stream#triggerClose} of <i>this</i> with the incoming closing data.
+	   * </p>
+	   *
+	   * @memberof ProAct.Stream
+	   * @instance
+	   * @method makeCloseListener
+	   * @return {Object}
+	   *      The <i>closing listener of this stream</i>.
+	   */
+	  makeCloseListener: function () {
+	    if (!this.closeListener) {
+	      var stream = this;
+	      this.closeListener = function (error) {
+	        stream.triggerClose(error);
+	      };
+	    }
+	
+	    return this.closeListener;
+	  },
+	
+	  /**
 	   * Defers a ProAct.Actor listener.
 	   * <p>
 	   *  For streams this means pushing it to active flow using {@link ProAct.Flow#push}.
@@ -2620,11 +2900,12 @@
 	      P.Actor.prototype.defer.call(this, event, listener);
 	      return;
 	    }
+	    var queueName = (listener.queueName) ? listener.queueName : this.queueName;
 	
 	    if (P.U.isFunction(listener)) {
-	      P.flow.push(listener, [event]);
+	      P.flow.push(queueName, listener, [event]);
 	    } else {
-	      P.flow.push(listener, listener.call, [event]);
+	      P.flow.push(queueName, listener, listener.call, [event]);
 	    }
 	  },
 	
@@ -2697,7 +2978,7 @@
 	   * @method triggerErr
 	   * @param {Error} err
 	   *      The error to trigger.
-	   * @return {ProAct.Actor}
+	   * @return {ProAct.Stream}
 	   *      <i>this</i>
 	   * @see {@link ProAct.Actor#update}
 	   */
@@ -2705,10 +2986,30 @@
 	    return this.update(err, 'error');
 	  },
 	
+	  /**
+	   * <p>
+	   *  Triggers a closing event to the stream. Anything that is listening for closing events from
+	   *  this stream will get updated.
+	   * </p>
+	   * <p>
+	   *  The stream will be closed and unusable.
+	   * </p>
+	   *
+	   * @memberof ProAct.Stream
+	   * @instance
+	   * @method triggerClose
+	   * @param {Object} data
+	   *      Data connected to the closing event.
+	   * @return {ProAct.Stream}
+	   *      <i>this</i>
+	   * @see {@link ProAct.Actor#update}
+	   */
+	  triggerClose: function (data) {
+	    return this.update(data, 'close');
+	  },
+	
 	  // private
 	  go: function (event, useTransformations) {
-	    var i, tr = this.transforms, ln = tr.length;
-	
 	    if (useTransformations) {
 	      try {
 	        event = P.Actor.transform(this, event);
@@ -2795,6 +3096,20 @@
 	        result = new P.S();
 	
 	    return P.S.prototype.into.apply(result, sources);
+	  },
+	
+	  into: function () {
+	    ProAct.Actor.prototype.into.apply(this, arguments);
+	
+	    this.sourceNumber += arguments.length;
+	
+	    return this;
+	  },
+	
+	  canDestroy: function () {
+	    this.sourceNumber -= 1;
+	
+	    return this.sourceNumber <= 0;
 	  }
 	});
 	
@@ -2843,15 +3158,32 @@
 	 *
 	 * @class ProAct.BufferedStream
 	 * @extends ProAct.Stream
+	 * @param {String} queueName
+	 *      The name of the queue all the updates should be pushed to.
+	 *      <p>
+	 *        If this parameter is null/undefined the default queue of
+	 *        {@link ProAct.flow} is used.
+	 *      </p>
+	 *      <p>
+	 *        If this parameter is not a string it is used as the
+	 *        <i>source</i>.
+	 *      </p>
 	 * @param {ProAct.Actor} source
 	 *      A default source of the stream, can be null.
 	 * @param {Array} transforms
 	 *      A list of transformation to be used on all incoming chages.
 	 */
-	ProAct.BufferedStream = P.BS = function (source, transforms) {
-	  P.S.call(this, source, transforms);
+	function BufferedStream (queueName, source, transforms) {
+	  if (queueName && !P.U.isString(queueName)) {
+	    transforms = source;
+	    source = queueName;
+	    queueName = null;
+	  }
+	
+	  P.S.call(this, queueName, source, transforms);
 	  this.buffer = [];
-	};
+	}
+	ProAct.BufferedStream = P.BS = BufferedStream;
 	
 	ProAct.BufferedStream.prototype = P.U.ex(Object.create(P.S.prototype), {
 	
@@ -2900,6 +3232,16 @@
 	 *
 	 * @class ProAct.SizeBufferedStream
 	 * @extends ProAct.BufferedStream
+	 * @param {String} queueName
+	 *      The name of the queue all the updates should be pushed to.
+	 *      <p>
+	 *        If this parameter is null/undefined the default queue of
+	 *        {@link ProAct.flow} is used.
+	 *      </p>
+	 *      <p>
+	 *        If this parameter is not a string it is used as the
+	 *        <i>source</i>.
+	 *      </p>
 	 * @param {ProAct.Actor} source
 	 *      A default source of the stream, can be null.
 	 *      <p>
@@ -2914,22 +3256,29 @@
 	 *      The size of the buffer.
 	 * @throws {Error} SizeBufferedStream must contain size, if there is no size passed to it.
 	 */
-	ProAct.SizeBufferedStream = P.SBS = function (source, transforms, size) {
-	  if (arguments.length === 1 && typeof source === 'number') {
+	function SizeBufferedStream (queueName, source, transforms, size) {
+	  if (queueName && !P.U.isString(queueName)) {
+	    size = transforms;
+	    transforms = source;
+	    source = queueName;
+	    queueName = null;
+	  }
+	  if (typeof source === 'number') {
 	    size = source;
 	    source = null;
-	  } else if (arguments.length === 2 && typeof transforms === 'number') {
+	  } else if (typeof transforms === 'number') {
 	    size = transforms;
 	    transforms = null;
 	  }
-	  P.BS.call(this, source, transforms);
+	  P.BS.call(this, queueName, source, transforms);
 	
 	  if (!size) {
 	    throw new Error('SizeBufferedStream must contain size!');
 	  }
 	
 	  this.size = size;
-	};
+	}
+	ProAct.SizeBufferedStream = P.SBS = SizeBufferedStream;
 	
 	ProAct.SizeBufferedStream.prototype = P.U.ex(Object.create(P.BS.prototype), {
 	
@@ -2989,7 +3338,7 @@
 	   * @throws {Error} SizeBufferedStream must contain size, if there is no size passed to it.
 	   */
 	  bufferit: function (size) {
-	    return new P.SBS(this, size);
+	    return new P.SBS(this, this.queueName, size);
 	  }
 	});
 	
@@ -3005,6 +3354,16 @@
 	 *
 	 * @class ProAct.DelayedStream
 	 * @extends ProAct.BufferedStream
+	 * @param {String} queueName
+	 *      The name of the queue all the updates should be pushed to.
+	 *      <p>
+	 *        If this parameter is null/undefined the default queue of
+	 *        {@link ProAct.flow} is used.
+	 *      </p>
+	 *      <p>
+	 *        If this parameter is not a string it is used as the
+	 *        <i>source</i>.
+	 *      </p>
 	 * @param {ProAct.Actor} source
 	 *      A default source of the stream, can be null.
 	 *      <p>
@@ -3018,7 +3377,13 @@
 	 * @param {Number} delay
 	 *      The time delay to be used to flush the stream.
 	 */
-	ProAct.DelayedStream = P.DBS = function (source, transforms, delay) {
+	function DelayedStream (queueName, source, transforms, delay) {
+	  if (queueName && !P.U.isString(queueName)) {
+	    delay = transforms;
+	    transforms = source;
+	    source = queueName;
+	    queueName = null;
+	  }
 	  if (typeof source === 'number') {
 	    delay = source;
 	    source = null;
@@ -3026,11 +3391,12 @@
 	    delay = transforms;
 	    transforms = null;
 	  }
-	  P.BS.call(this, source, transforms);
+	  P.BS.call(this, queueName, source, transforms);
 	
 	  this.delayId = null;
 	  this.setDelay(delay);
-	};
+	}
+	ProAct.DelayedStream = P.DBS = DelayedStream;
 	
 	ProAct.DelayedStream.prototype = P.U.ex(Object.create(P.BS.prototype), {
 	
@@ -3134,7 +3500,7 @@
 	   *      A {@link ProAct.DelayedStream} instance.
 	   */
 	  delay: function (delay) {
-	    return new P.DBS(this, delay);
+	    return new P.DBS(this, this.queueName, delay);
 	  }
 	});
 	
@@ -3154,6 +3520,16 @@
 	 *
 	 * @class ProAct.ThrottlingStream
 	 * @extends ProAct.DelayedStream
+	 * @param {String} queueName
+	 *      The name of the queue all the updates should be pushed to.
+	 *      <p>
+	 *        If this parameter is null/undefined the default queue of
+	 *        {@link ProAct.flow} is used.
+	 *      </p>
+	 *      <p>
+	 *        If this parameter is not a string it is used as the
+	 *        <i>source</i>.
+	 *      </p>
 	 * @param {ProAct.Actor} source
 	 *      A default source of the stream, can be null.
 	 *      <p>
@@ -3167,9 +3543,10 @@
 	 * @param {Number} delay
 	 *      The time delay to be used to flush the stream.
 	 */
-	ProAct.ThrottlingStream = P.TDS = function (source, transforms, delay) {
-	  P.DBS.call(this, source, transforms, delay);
-	};
+	function ThrottlingStream (queueName, source, transforms, delay) {
+	  P.DBS.call(this, queueName, source, transforms, delay);
+	}
+	ProAct.ThrottlingStream = P.TDS = ThrottlingStream;
 	
 	ProAct.ThrottlingStream.prototype = P.U.ex(Object.create(P.DBS.prototype), {
 	
@@ -3243,6 +3620,16 @@
 	 *
 	 * @class ProAct.DebouncingStream
 	 * @extends ProAct.DelayedStream
+	 * @param {String} queueName
+	 *      The name of the queue all the updates should be pushed to.
+	 *      <p>
+	 *        If this parameter is null/undefined the default queue of
+	 *        {@link ProAct.flow} is used.
+	 *      </p>
+	 *      <p>
+	 *        If this parameter is not a string it is used as the
+	 *        <i>source</i>.
+	 *      </p>
 	 * @param {ProAct.Actor} source
 	 *      A default source of the stream, can be null.
 	 *      <p>
@@ -3256,9 +3643,10 @@
 	 * @param {Number} delay
 	 *      The time delay to be used to flush the stream.
 	 */
-	ProAct.DebouncingStream = P.DDS = function (source, transforms, delay) {
-	  P.DBS.call(this, source, transforms, delay);
-	};
+	function DebouncingStream (queueName, source, transforms, delay) {
+	  P.DBS.call(this, queueName, source, transforms, delay);
+	}
+	ProAct.DebouncingStream = P.DDS = DebouncingStream;
 	
 	ProAct.DebouncingStream.prototype = P.U.ex(Object.create(P.DBS.prototype), {
 	
@@ -3316,7 +3704,7 @@
 	   *      A {@link ProAct.DebouncingStream} instance.
 	   */
 	  debounce: function (delay) {
-	    return new P.DDS(this, delay);
+	    return new P.DDS(this, this.queueName, delay);
 	  }
 	});
 	
@@ -3350,6 +3738,16 @@
 	 *
 	 * @class ProAct.Property
 	 * @extends ProAct.Actor
+	 * @param {String} queueName
+	 *      The name of the queue all the updates should be pushed to.
+	 *      <p>
+	 *        If this parameter is null/undefined the default queue of
+	 *        {@link ProAct.flow} is used.
+	 *      </p>
+	 *      <p>
+	 *        If this parameter is not a string it is used as the
+	 *        <i>proObject</i>.
+	 *      </p>
 	 * @param {Object} proObject
 	 *      A plain JavaScript object, holding a field, this property will represent.
 	 * @param {String} property
@@ -3365,7 +3763,15 @@
 	 * @see {@link ProAct.States.init}
 	 * @see {@link ProAct.States.ready}
 	 */
-	ProAct.Property = P.P = function (proObject, property, getter, setter) {
+	function Property (queueName, proObject, property, getter, setter) {
+	  if (queueName && !P.U.isString(queueName)) {
+	    setter = getter;
+	    getter = property;
+	    property = proObject;
+	    proObject = queueName;
+	    queueName = null;
+	  }
+	
 	  P.U.defValProp(this, 'proObject', false, false, true, proObject);
 	  this.property = property;
 	
@@ -3381,15 +3787,14 @@
 	  this.oldVal = null;
 	  this.val = proObject[property];
 	
-	  this.state = P.States.init;
 	  this.g = this.get;
 	  this.s = this.set;
 	
-	  P.Actor.call(this); // Super!
+	  P.Actor.call(this, queueName); // Super!
 	  this.parent = this.proObject.__pro__;
 	
-	  this.init();
-	};
+	}
+	ProAct.Property = P.P = Property;
 	
 	P.U.ex(ProAct.Property, {
 	
@@ -3680,6 +4085,7 @@
 	
 	      this.listener = {
 	        property: self,
+	        queueName: self.queueName,
 	        call: function (newVal) {
 	          if (newVal && newVal.type !== undefined && newVal.type === P.E.Types.value && newVal.args.length === 3 && newVal.target) {
 	            newVal = newVal.args[0][newVal.target];
@@ -3696,45 +4102,16 @@
 	  /**
 	   * Initializes this property.
 	   * <p>
-	   *  This method logic is run only if the current state of <i>this</i> is {@link ProAct.States.init}.
-	   * </p>
-	   * <p>
 	   *  First the property is defined as a field in its object, using {@link ProAct.Property.defineProp}.
 	   * </p>
-	   * <p>
-	   *  Then {@link ProAct.Property#afterInit} is called to finish the initialization.
-	   * </p>
 	   *
 	   * @memberof ProAct.Property
 	   * @instance
-	   * @method init
-	   * @see {@link ProAct.Property#afterInit}
+	   * @method doInit
+	   * @see {@link ProAct.Actor#init}
 	   */
-	  init: function () {
-	    if (this.state !== P.States.init) {
-	      return;
-	    }
-	
+	  doInit: function () {
 	    P.P.defineProp(this.proObject, this.property, this.get, this.set);
-	
-	    this.afterInit();
-	  },
-	
-	  /**
-	   * Called automatically after initialization of this property.
-	   * <p>
-	   *  By default it changes the state of <i>this</i> to {@link ProAct.States.ready}.
-	   * </p>
-	   * <p>
-	   *  It can be overridden to define more complex initialization logic.
-	   * </p>
-	   *
-	   * @memberof ProAct.Property
-	   * @instance
-	   * @method afterInit
-	   */
-	  afterInit: function () {
-	    this.state = P.States.ready;
 	  },
 	
 	  /**
@@ -3755,31 +4132,14 @@
 	    }
 	  },
 	
-	  /**
-	   * Destroys this ProAct.Property instance, by making the field it manages to a normal field.
-	   * <p>
-	   *  The state of <i>this</i> is set to {@link ProAct.States.destroyed}.
-	   * </p>
-	   *
-	   * @memberof ProAct.Property
-	   * @instance
-	   * @method destroy
-	   */
-	  destroy: function () {
-	    if (this.state === P.States.destroyed) {
-	      return;
-	    }
-	
+	  doDestroy: function () {
 	    delete this.proObject.__pro__.properties[this.property];
-	    this.listeners = undefined;
 	    this.oldVal = undefined;
-	    this.parent = undefined;
 	
 	    P.U.defValProp(this.proObject, this.property, true, true, true, this.val);
 	    this.get = this.set = this.property = this.proObject = undefined;
 	    this.g = this.s = undefined;
 	    this.val = undefined;
-	    this.state = P.States.destroyed;
 	  },
 	
 	  /**
@@ -3811,13 +4171,29 @@
 	 *
 	 * @class ProAct.NullProperty
 	 * @extends ProAct.Property
+	 * @param {String} queueName
+	 *      The name of the queue all the updates should be pushed to.
+	 *      <p>
+	 *        If this parameter is null/undefined the default queue of
+	 *        {@link ProAct.flow} is used.
+	 *      </p>
+	 *      <p>
+	 *        If this parameter is not a string it is used as the
+	 *        <i>proObject</i>.
+	 *      </p>
 	 * @param {Object} proObject
 	 *      A plain JavaScript object, holding a null/undefined field, this property should represent.
 	 * @param {String} property
 	 *      The name of the field of the object, this property should represent.
 	 * @see {@link ProAct.ObjectCore}
 	 */
-	ProAct.NullProperty = P.NP = function (proObject, property) {
+	function NullProperty (queueName, proObject, property) {
+	  if (queueName && !P.U.isString(queueName)) {
+	    property = proObject;
+	    proObject = queueName;
+	    queueName = null;
+	  }
+	
 	  var self = this,
 	      set = P.P.defaultSetter(this),
 	      setter = function (newVal) {
@@ -3832,8 +4208,9 @@
 	        return result;
 	      };
 	
-	  P.P.call(this, proObject, property, P.P.defaultGetter(this), setter);
-	};
+	  P.P.call(this, queueName, proObject, property, P.P.defaultGetter(this), setter);
+	}
+	ProAct.NullProperty = P.NP = NullProperty;
 	
 	ProAct.NullProperty.prototype = P.U.ex(Object.create(P.P.prototype), {
 	
@@ -3923,6 +4300,16 @@
 	 *
 	 * @class ProAct.AutoProperty
 	 * @extends ProAct.Property
+	 * @param {String} queueName
+	 *      The name of the queue all the updates should be pushed to.
+	 *      <p>
+	 *        If this parameter is null/undefined the default queue of
+	 *        {@link ProAct.flow} is used.
+	 *      </p>
+	 *      <p>
+	 *        If this parameter is not a string it is used as the
+	 *        <i>proObject</i>.
+	 *      </p>
 	 * @param {Object} proObject
 	 *      A plain JavaScript object, holding a field, this property will represent.
 	 * @param {String} property
@@ -3931,7 +4318,13 @@
 	 * @see {@link ProAct.States.init}
 	 * @see {@link ProAct.States.ready}
 	 */
-	ProAct.AutoProperty = P.FP = function (proObject, property) {
+	function AutoProperty (queueName, proObject, property) {
+	  if (queueName && !P.U.isString(queueName)) {
+	    property = proObject;
+	    proObject = queueName;
+	    queueName = null;
+	  }
+	
 	  this.func = proObject[property];
 	
 	  var self = this,
@@ -3964,8 +4357,9 @@
 	        return self.val;
 	      };
 	
-	  P.P.call(this, proObject, property, getter, function () {});
-	};
+	  P.P.call(this, queueName, proObject, property, getter, function () {});
+	}
+	ProAct.AutoProperty = P.FP = AutoProperty;
 	
 	ProAct.AutoProperty.prototype = P.U.ex(Object.create(P.P.prototype), {
 	
@@ -4023,6 +4417,7 @@
 	
 	      this.listener = {
 	        property: self,
+	        queueName: self.queueName,
 	        call: function () {
 	          self.oldVal = self.val;
 	          self.val = P.Actor.transform(self, self.func.call(self.proObject));
@@ -4069,6 +4464,16 @@
 	 *
 	 * @class ProAct.ObjectProperty
 	 * @extends ProAct.Property
+	 * @param {String} queueName
+	 *      The name of the queue all the updates should be pushed to.
+	 *      <p>
+	 *        If this parameter is null/undefined the default queue of
+	 *        {@link ProAct.flow} is used.
+	 *      </p>
+	 *      <p>
+	 *        If this parameter is not a string it is used as the
+	 *        <i>proObject</i>.
+	 *      </p>
 	 * @param {Object} proObject
 	 *      A plain JavaScript object, holding a field, this property will represent.
 	 * @param {String} property
@@ -4077,7 +4482,12 @@
 	 * @see {@link ProAct.States.init}
 	 * @see {@link ProAct.States.ready}
 	 */
-	ProAct.ObjectProperty = P.OP = function (proObject, property) {
+	function ObjectProperty (queueName, proObject, property) {
+	  if (queueName && !P.U.isString(queueName)) {
+	    property = proObject;
+	    proObject = queueName;
+	    queueName = null;
+	  }
 	  var self = this, getter;
 	
 	  getter = function () {
@@ -4159,8 +4569,9 @@
 	    return self.val;
 	  };
 	
-	  P.P.call(this, proObject, property, getter, function () {});
-	};
+	  P.P.call(this, queueName, proObject, property, getter, function () {});
+	}
+	ProAct.ObjectProperty = P.OP = ObjectProperty;
 	
 	ProAct.ObjectProperty.prototype = P.U.ex(Object.create(P.P.prototype), {
 	
@@ -4226,6 +4637,16 @@
 	 *
 	 * @class ProAct.ArrayProperty
 	 * @extends ProAct.Property
+	 * @param {String} queueName
+	 *      The name of the queue all the updates should be pushed to.
+	 *      <p>
+	 *        If this parameter is null/undefined the default queue of
+	 *        {@link ProAct.flow} is used.
+	 *      </p>
+	 *      <p>
+	 *        If this parameter is not a string it is used as the
+	 *        <i>proObject</i>.
+	 *      </p>
 	 * @param {Object} proObject
 	 *      A plain JavaScript object, holding a field, this property will represent.
 	 * @param {String} property
@@ -4234,7 +4655,13 @@
 	 * @see {@link ProAct.States.init}
 	 * @see {@link ProAct.States.ready}
 	 */
-	ProAct.ArrayProperty = P.AP = function (proObject, property) {
+	function ArrayProperty (queueName, proObject, property) {
+	  if (queueName && !P.U.isString(queueName)) {
+	    property = proObject;
+	    proObject = queueName;
+	    queueName = null;
+	  }
+	
 	  var self = this, getter;
 	
 	  getter = function () {
@@ -4259,6 +4686,9 @@
 	
 	          if (!P.U.isProArray(self.val)) {
 	            self.val = new P.A(self.val);
+	            if (queueName) {
+	              self.val.core.queueName = queueName;
+	            }
 	          }
 	
 	          if (self.oldVal) {
@@ -4307,8 +4737,9 @@
 	    return self.val;
 	  };
 	
-	  P.P.call(this, proObject, property, getter, function () {});
-	};
+	  P.P.call(this, queueName, proObject, property, getter, function () {});
+	}
+	ProAct.ArrayProperty = P.AP = ArrayProperty;
 	
 	ProAct.ArrayProperty.prototype = P.U.ex(Object.create(P.P.prototype), {
 	
@@ -4368,6 +4799,16 @@
 	 *
 	 * @class ProAct.ProxyProperty
 	 * @extends ProAct.Property
+	 * @param {String} queueName
+	 *      The name of the queue all the updates should be pushed to.
+	 *      <p>
+	 *        If this parameter is null/undefined the default queue of
+	 *        {@link ProAct.flow} is used.
+	 *      </p>
+	 *      <p>
+	 *        If this parameter is not a string it is used as the
+	 *        <i>proObject</i>.
+	 *      </p>
 	 * @param {Object} proObject
 	 *      A plain JavaScript object, holding a field, this property will represent.
 	 * @param {String} property
@@ -4375,7 +4816,13 @@
 	 * @param {ProAct.Property} target
 	 *      The target {@link ProAct.Property}, that will provide the value of the new ProAct.ProxyProperty.
 	 */
-	ProAct.ProxyProperty = P.PXP = function (proObject, property, target) {
+	function ProxyProperty (queueName, proObject, property, target) {
+	  if (queueName && !P.U.isString(queueName)) {
+	    target = property;
+	    property = proObject;
+	    proObject = queueName;
+	    queueName = null;
+	  }
 	  var self = this, getter, setter;
 	
 	  getter = function () {
@@ -4399,11 +4846,12 @@
 	    target.update();
 	  };
 	
-	  P.P.call(this, proObject, property, getter, setter);
+	  P.P.call(this, queueName, proObject, property, getter, setter);
 	
 	  this.target = target;
 	  this.target.on(this.makeListener());
-	};
+	}
+	ProAct.ProxyProperty = P.PXP = ProxyProperty;
 	
 	ProAct.ProxyProperty.prototype = P.U.ex(Object.create(P.P.prototype), {
 	
@@ -4457,6 +4905,7 @@
 	
 	      this.listener = {
 	        property: self,
+	        queueName: self.queueName,
 	        call: P.N
 	      };
 	    }
@@ -4486,7 +4935,8 @@
 	 * @class ProAct.PropertyProvider
 	 * @see {@link ProAct.ObjectCore}
 	 */
-	ProAct.PropertyProvider = P.PP = function () {};
+	function PropertyProvider () {}
+	ProAct.PropertyProvider = P.PP = PropertyProvider;
 	
 	
 	(function (P) {
@@ -4570,6 +5020,16 @@
 	     *
 	     * @memberof ProAct.PropertyProvider
 	     * @static
+	     * @param {String} queueName
+	     *      The name of the queue all the updates should be pushed to.
+	     *      <p>
+	     *        If this parameter is null/undefined the default queue of
+	     *        {@link ProAct.flow} is used.
+	     *      </p>
+	     *      <p>
+	     *        If this parameter is not a string it is used as the
+	     *        <i>object</i>.
+	     *      </p>
 	     * @param {Object} object
 	     *      The object to provide a {@link ProAct.Property} instance for.
 	     * @param {String} property
@@ -4579,7 +5039,13 @@
 	     * @return {ProAct.Property}
 	     *      A property provided by registered provider, or null if there is no compliant provider.
 	     */
-	    provide: function (object, property, meta) {
+	    provide: function (queueName, object, property, meta) {
+	      if (queueName && !P.U.isString(queueName)) {
+	        meta = property;
+	        property = object;
+	        object = queueName;
+	        queueName = null;
+	      }
 	      var ln = providers.length,
 	          prop = null,
 	          provider = null,
@@ -4595,7 +5061,7 @@
 	      }
 	
 	      if (provider) {
-	        prop = provider.provide(object, property, meta);
+	        prop = provider.provide(queueName, object, property, meta);
 	      }
 	
 	      return prop;
@@ -4656,6 +5122,12 @@
 	   * @abstract
 	   * @instance
 	   * @method provide
+	   * @param {String} queueName
+	   *      The name of the queue all the updates should be pushed to.
+	   *      <p>
+	   *        If this parameter is null/undefined the default queue of
+	   *        {@link ProAct.flow} is used.
+	   *      </p>
 	   * @param {Object} object
 	   *      The object to which a new {@link ProAct.Property} instance should be provided.
 	   * @param {String} property
@@ -4665,7 +5137,7 @@
 	   * @return {ProAct.Property}
 	   *      A property provided by <i>this</i> provider.
 	   */
-	  provide: function (object, property, meta) {
+	  provide: function (queueName, object, property, meta) {
 	    throw new Error('Abstract! Implement!');
 	  }
 	};
@@ -4726,6 +5198,12 @@
 	   * @memberof ProAct.NullPropertyProvider
 	   * @instance
 	   * @method provide
+	   * @param {String} queueName
+	   *      The name of the queue all the updates should be pushed to.
+	   *      <p>
+	   *        If this parameter is null/undefined the default queue of
+	   *        {@link ProAct.flow} is used.
+	   *      </p>
 	   * @param {Object} object
 	   *      The object to which a new {@link ProAct.NullProperty} instance should be provided.
 	   * @param {String} property
@@ -4735,8 +5213,8 @@
 	   * @return {ProAct.NullProperty}
 	   *      A {@link ProAct.NullProperty} instance provided by <i>this</i> provider.
 	   */
-	  provide: function (object, property, meta) {
-	    return new P.NP(object, property);
+	  provide: function (queueName, object, property, meta) {
+	    return new P.NP(queueName, object, property);
 	  }
 	});
 	
@@ -4797,6 +5275,12 @@
 	   * @memberof ProAct.SimplePropertyProvider
 	   * @instance
 	   * @method provide
+	   * @param {String} queueName
+	   *      The name of the queue all the updates should be pushed to.
+	   *      <p>
+	   *        If this parameter is null/undefined the default queue of
+	   *        {@link ProAct.flow} is used.
+	   *      </p>
 	   * @param {Object} object
 	   *      The object to which a new {@link ProAct.Property} instance should be provided.
 	   * @param {String} property
@@ -4806,8 +5290,8 @@
 	   * @return {ProAct.Property}
 	   *      A {@link ProAct.Property} instance provided by <i>this</i> provider.
 	   */
-	  provide: function (object, property, meta) {
-	    return new P.P(object, property);
+	  provide: function (queueName, object, property, meta) {
+	    return new P.P(queueName, object, property);
 	  }
 	});
 	
@@ -4867,6 +5351,12 @@
 	   * @memberof ProAct.AutoPropertyProvider
 	   * @instance
 	   * @method provide
+	   * @param {String} queueName
+	   *      The name of the queue all the updates should be pushed to.
+	   *      <p>
+	   *        If this parameter is null/undefined the default queue of
+	   *        {@link ProAct.flow} is used.
+	   *      </p>
 	   * @param {Object} object
 	   *      The object to which a new {@link ProAct.AutoProperty} instance should be provided.
 	   * @param {String} property
@@ -4876,8 +5366,8 @@
 	   * @return {ProAct.AutoProperty}
 	   *      A {@link ProAct.AutoProperty} instance provided by <i>this</i> provider.
 	   */
-	  provide: function (object, property, meta) {
-	    return new P.FP(object, property);
+	  provide: function (queueName, object, property, meta) {
+	    return new P.FP(queueName, object, property);
 	  }
 	});
 	
@@ -4937,6 +5427,12 @@
 	   * @memberof ProAct.ArrayPropertyProvider
 	   * @instance
 	   * @method provide
+	   * @param {String} queueName
+	   *      The name of the queue all the updates should be pushed to.
+	   *      <p>
+	   *        If this parameter is null/undefined the default queue of
+	   *        {@link ProAct.flow} is used.
+	   *      </p>
 	   * @param {Object} object
 	   *      The object to which a new {@link ProAct.ArrayProperty} instance should be provided.
 	   * @param {String} property
@@ -4946,8 +5442,8 @@
 	   * @return {ProAct.ArrayProperty}
 	   *      A {@link ProAct.ArrayProperty} instance provided by <i>this</i> provider.
 	   */
-	  provide: function (object, property, meta) {
-	    return new P.AP(object, property);
+	  provide: function (queueName, object, property, meta) {
+	    return new P.AP(queueName, object, property);
 	  }
 	});
 	
@@ -5007,6 +5503,12 @@
 	   * @memberof ProAct.ObjectPropertyProvider
 	   * @instance
 	   * @method provide
+	   * @param {String} queueName
+	   *      The name of the queue all the updates should be pushed to.
+	   *      <p>
+	   *        If this parameter is null/undefined the default queue of
+	   *        {@link ProAct.flow} is used.
+	   *      </p>
 	   * @param {Object} object
 	   *      The object to which a new {@link ProAct.ObjectProperty} instance should be provided.
 	   * @param {String} property
@@ -5016,8 +5518,8 @@
 	   * @return {ProAct.ObjectProperty}
 	   *      A {@link ProAct.ObjectProperty} instance provided by <i>this</i> provider.
 	   */
-	  provide: function (object, property, meta) {
-	    return new P.OP(object, property);
+	  provide: function (queueName, object, property, meta) {
+	    return new P.OP(queueName, object, property);
 	  }
 	});
 	
@@ -5082,6 +5584,12 @@
 	   * @memberof ProAct.ProxyPropertyProvider
 	   * @instance
 	   * @method provide
+	   * @param {String} queueName
+	   *      The name of the queue all the updates should be pushed to.
+	   *      <p>
+	   *        If this parameter is null/undefined the default queue of
+	   *        {@link ProAct.flow} is used.
+	   *      </p>
 	   * @param {Object} object
 	   *      The object to which a new {@link ProAct.ProxyProperty} instance should be provided.
 	   * @param {String} property
@@ -5091,8 +5599,8 @@
 	   * @return {ProAct.ProxyProperty}
 	   *      A {@link ProAct.ProxyProperty} instance provided by <i>this</i> provider.
 	   */
-	  provide: function (object, property, meta) {
-	    return new P.PXP(object, property, meta);
+	  provide: function (queueName, object, property, meta) {
+	    return new P.PXP(queueName, object, property, meta);
 	  }
 	});
 	
@@ -5131,13 +5639,16 @@
 	 *      Optional meta data to be used to define the observer-observable behavior of the <i>shell</i>.
 	 * @see {@link ProAct.States}
 	 */
-	ProAct.Core = P.C = function (shell, meta) {
+	function Core (shell, meta) {
 	  this.shell = shell;
 	  this.state = P.States.init;
 	  this.meta = meta || {};
+	  this.queueName = (this.meta.p && this.meta.p.queueName &&
+	                    P.U.isString(this.meta.p.queueName)) ? this.meta.p.queueName : null;
 	
-	  P.Actor.call(this); // Super!
-	};
+	  P.Actor.call(this, this.queueName); // Super!
+	}
+	ProAct.Core = P.C = Core;
 	
 	ProAct.Core.prototype = P.U.ex(Object.create(P.Actor.prototype), {
 	
@@ -5366,7 +5877,7 @@
 	    }
 	
 	    if (object.hasOwnProperty(property)) {
-	      result = P.PP.provide(object, property, meta);
+	      result = P.PP.provide(this.queueName, object, property, meta);
 	    }
 	
 	    if (!result) {
@@ -5552,62 +6063,65 @@
 	  makeListener: function () {
 	    if (!this.listener) {
 	      var self = this.shell;
-	      this.listener =  function (event) {
-	        if (!event || !(event instanceof P.E)) {
-	          self.push(event);
-	          return;
-	        }
-	
-	        if (event.type === P.E.Types.value) {
-	          self.push(event.args[2]);
-	          return;
-	        }
-	
-	        var op    = event.args[0],
-	            ind   = event.args[1],
-	            ov    = event.args[2],
-	            nv    = event.args[3],
-	            nvs,
-	            operations = P.Array.Operations;
-	
-	        if (op === operations.set) {
-	          self[ind] = nv;
-	        } else if (op === operations.add) {
-	          nvs = slice.call(nv, 0);
-	          if (ind === 0) {
-	            pArrayProto.unshift.apply(self, nvs);
-	          } else {
-	            pArrayProto.push.apply(self, nvs);
+	      this.listener =  {
+	        queueName: this.queueName,
+	        call: function (event) {
+	          if (!event || !(event instanceof P.E)) {
+	            self.push(event);
+	            return;
 	          }
-	        } else if (op === operations.remove) {
-	          if (ind === 0) {
-	            self.shift();
-	          } else {
-	            self.pop();
+	
+	          if (event.type === P.E.Types.value) {
+	            self.push(event.args[2]);
+	            return;
 	          }
-	        } else if (op === operations.setLength) {
-	          self.length = nv;
-	        } else if (op === operations.reverse) {
-	          self.reverse();
-	        } else if (op === operations.sort) {
-	          if (P.U.isFunction(nv)) {
-	            self.sort(nv);
-	          } else {
-	            self.sort();
-	          }
-	        } else if (op === operations.splice) {
-	          if (nv) {
+	
+	          var op    = event.args[0],
+	              ind   = event.args[1],
+	              ov    = event.args[2],
+	              nv    = event.args[3],
+	              nvs,
+	              operations = P.Array.Operations;
+	
+	          if (op === operations.set) {
+	            self[ind] = nv;
+	          } else if (op === operations.add) {
 	            nvs = slice.call(nv, 0);
-	          } else {
-	            nvs = [];
-	          }
-	          if (ind === null || ind === undefined) {
-	            ind = self.indexOf(ov[0]);
-	            if (ind === -1) {
-	              return;
+	            if (ind === 0) {
+	              pArrayProto.unshift.apply(self, nvs);
+	            } else {
+	              pArrayProto.push.apply(self, nvs);
 	            }
+	          } else if (op === operations.remove) {
+	            if (ind === 0) {
+	              self.shift();
+	            } else {
+	              self.pop();
+	            }
+	          } else if (op === operations.setLength) {
+	            self.length = nv;
+	          } else if (op === operations.reverse) {
+	            self.reverse();
+	          } else if (op === operations.sort) {
+	            if (P.U.isFunction(nv)) {
+	              self.sort(nv);
+	            } else {
+	              self.sort();
+	            }
+	          } else if (op === operations.splice) {
+	            if (nv) {
+	              nvs = slice.call(nv, 0);
+	            } else {
+	              nvs = [];
+	            }
+	            if (ind === null || ind === undefined) {
+	              ind = self.indexOf(ov[0]);
+	              if (ind === -1) {
+	                return;
+	              }
+	            }
+	            pArrayProto.splice.apply(self, [ind, ov.length].concat(nvs));
 	          }
-	          pArrayProto.splice.apply(self, [ind, ov.length].concat(nvs));
 	        }
 	      };
 	    }
@@ -7915,7 +8429,7 @@
 	 * @see {@link ProAct.ObjectCore}
 	 * @see {@link ProAct.Property}
 	 */
-	ProAct.Val = P.V = function (val, meta) {
+	function Val (val, meta) {
 	  this.v = val;
 	
 	  if (meta && (P.U.isString(meta) || P.U.isArray(meta))) {
@@ -7925,7 +8439,8 @@
 	  }
 	
 	  P.prob(this, meta);
-	};
+	}
+	ProAct.Val = P.V = Val;
 	
 	ProAct.Val.prototype = P.U.ex(Object.create(P.Actor.prototype), {
 	
@@ -8227,16 +8742,21 @@
 	 * @return {Object}
 	 *      Reactive representation of the passed <i>object</i>.
 	 */
-	ProAct.prob = function (object, meta) {
+	function prob (object, meta) {
 	  var core, property,
-	      isAr = P.U.isArray;
+	      isAr = P.U.isArray,
+	      array;
 	
 	  if (object === null || (!P.U.isObject(object) && !isAr(object))) {
 	    return new P.V(object, meta);
 	  }
 	
 	  if (P.U.isArray(object)) {
-	    return new P.A(object);
+	    array = new P.A(object);
+	    if (meta && meta.p && meta.p.queueName && P.U.isString(meta.p.queueName)) {
+	      array.core.queueName = meta.p.queueName;
+	    }
+	    return array;
 	  }
 	
 	  core = new P.OC(object, meta);
@@ -8245,7 +8765,8 @@
 	  core.prob();
 	
 	  return object;
-	};
+	}
+	ProAct.prob = prob;
 	
 	/**
 	 * The {@link ProAct.proxy} creates proxies or decorators to ProAct.js objects.
@@ -8267,7 +8788,7 @@
 	 * @return {Object}
 	 *      Reactive representation of the passed <i>object</i>, decorating the passed <i>target</i>.
 	 */
-	ProAct.proxy = function (object, target, meta, targetMeta) {
+	function proxy (object, target, meta, targetMeta) {
 	  if (!object || !target) {
 	    return null;
 	  }
@@ -8293,7 +8814,8 @@
 	  object = ProAct.prob(object, meta);
 	
 	  return object;
-	};
+	}
+	ProAct.proxy = proxy;
 	
 	/**
 	 * <p>
@@ -8305,9 +8827,10 @@
 	 *
 	 * @class ProAct.Registry
 	 */
-	ProAct.Registry = P.R = function () {
+	function Registry () {
 	  this.providers = {};
-	};
+	}
+	ProAct.Registry = P.R = Registry;
 	
 	ProAct.Registry.prototype = rProto = {
 	
@@ -8665,6 +9188,35 @@
 	        match: function (op) {
 	          return op.substring(0, sym.length) === sym;
 	        },
+	        setupArgument: function (arg, realArguments, predefined, opArguments) {
+	          var i, k, ln, actions;
+	          if (arg.charAt(0) === '$') {
+	            arg = realArguments[parseInt(arg.substring(1), 10) - 1];
+	          } else if (predefined && arg.charAt(0) === '&') {
+	            i = arg.lastIndexOf('&');
+	            k = arg.substring(0, i);
+	            if (predefined[k]) {
+	              arg = predefined[k].call(null, arg.substring(i + 1));
+	            }
+	          } else if (predefined && arg.charAt(0) === '!') {
+	            arg = this.setupArgument(arg.substring(1), realArguments, predefined, opArguments);
+	            if (arg) {
+	              k = arg;
+	              arg = function () {
+	                return !k.apply(null, arguments);
+	              };
+	            }
+	          } else if (predefined && predefined[arg]) {
+	            arg = predefined[arg];
+	
+	            if (P.U.isArray(arg)) {
+	              opArguments.push.apply(opArguments, arg);
+	              arg = undefined;
+	            }
+	          }
+	
+	          return arg;
+	        },
 	        toOptions: function (actionObject, op) {
 	          var reg = new RegExp(dslOps[name].sym + "(\\w*)\\(([\\s\\S]*)\\)"),
 	              matched = reg.exec(op),
@@ -8682,22 +9234,7 @@
 	            ln = args.length;
 	            for (i = 0; i < ln; i++) {
 	              arg = args[i].trim();
-	              if (arg.charAt(0) === '$') {
-	                arg = realArguments[parseInt(arg.substring(1), 10) - 1];
-	              } else if (predefined && arg.charAt(0) === '&') {
-	                i = arg.lastIndexOf('&');
-	                k = arg.substring(0, i);
-	                if (predefined[k]) {
-	                  arg = predefined[k].call(null, arg.substring(i + 1));
-	                }
-	              } else if (predefined && predefined[arg]) {
-	                arg = predefined[arg];
-	
-	                if (P.U.isArray(arg)) {
-	                  opArguments = opArguments.concat(arg);
-	                  arg = undefined;
-	                }
-	              }
+	              arg = this.setupArgument(arg, realArguments, predefined, opArguments);
 	
 	              if (arg !== undefined) {
 	                opArguments.push(arg);
@@ -9220,6 +9757,39 @@
 	      '-': function (el) { return el <= 0; },
 	
 	      /**
+	       * Flitering operation for using a method of an object as a filter.
+	       * <p>
+	       *  Usage in a DSL expression:
+	       *  <pre>
+	       *    filter(&.&boolFunc)
+	       *  </pre>
+	       *  This will call the 'target.boolFunc' method and use its result as a filter.
+	       * </p>
+	       *
+	       * @memberof ProAct.DSL.predefined.filtering
+	       * @static
+	       * @method
+	       * @see {@link ProAct.DSL.ops.filter}
+	       */
+	      '&.': function (arg) {
+	        return function (el) {
+	          if (this.action) {
+	            return this.action.call(this.context, el);
+	          }
+	
+	          var p = el[arg];
+	          if (!p) {
+	            return el;
+	          } else if (P.U.isFunction(p)) {
+	            this.action = p;
+	            this.context = el;
+	          } else {
+	            return p;
+	          }
+	        };
+	      },
+	
+	      /**
 	       * Filtering operation for filtering only values different from undefined.
 	       * <p>
 	       *  Usage in a DSL expression:
@@ -9254,6 +9824,24 @@
 	       */
 	      originalEvent: function (event) {
 	        return event.source === undefined || event.source === null;
+	      },
+	
+	      /**
+	       * Filtering operation for passing everything.
+	       * <p>
+	       *  Usage in a DSL expression:
+	       *  <pre>
+	       *    filter(all)
+	       *  </pre>
+	       * </p>
+	       *
+	       * @memberof ProAct.DSL.predefined.filtering
+	       * @static
+	       * @method
+	       * @see {@link ProAct.DSL.ops.filter}
+	       */
+	      all: function () {
+	        return true;
 	      }
 	    },
 	
@@ -9527,6 +10115,28 @@
 	dsl = P.DSL;
 	dslOps = dsl.ops;
 	
+	function Provider () {
+	  this.stored = {};
+	}
+	function StreamProvider () {
+	  P.R.Provider.call(this);
+	}
+	function FunctionProvider () {
+	  P.R.Provider.call(this);
+	}
+	function ProObjectProvider () {
+	  P.R.Provider.call(this);
+	}
+	
+	function streamConstructArgs (args) {
+	  var queueName;
+	  if (args.length === 2) {
+	    queueName = args[0];
+	    args[0] = args[1];
+	  }
+	  return [queueName].concat(args);
+	}
+	
 	P.U.ex(ProAct.Registry, {
 	
 	  /**
@@ -9543,9 +10153,7 @@
 	   * @static
 	   * @see {@link ProAct.Registry}
 	   */
-	  Provider: function () {
-	    this.stored = {};
-	  },
+	  Provider: Provider,
 	
 	  /**
 	   * Constructs a ProAct.Registry.StreamProvider. The {@link ProAct.Registry} uses registered stream providers as storage for {@link ProAct.Stream}s.
@@ -9556,9 +10164,7 @@
 	   * @static
 	   * @see {@link ProAct.Registry}
 	   */
-	  StreamProvider: function () {
-	    P.R.Provider.call(this);
-	  },
+	  StreamProvider: StreamProvider,
 	
 	  /**
 	   * Constructs a ProAct.Registry.FunctionProvider. The {@link ProAct.Registry} uses registered function providers as storage for Functions.
@@ -9572,9 +10178,7 @@
 	   * @static
 	   * @see {@link ProAct.Registry}
 	   */
-	  FunctionProvider: function () {
-	    P.R.Provider.call(this);
-	  },
+	  FunctionProvider: FunctionProvider,
 	
 	  /**
 	   * Constructs a ProAct.Registry.ProObjectProvider.
@@ -9587,9 +10191,7 @@
 	   * @see {@link ProAct.Registry}
 	   * @see {@link ProAct.Property}
 	   */
-	  ProObjectProvider: function () {
-	    P.R.Provider.call(this);
-	  }
+	  ProObjectProvider: ProObjectProvider
 	});
 	
 	ProAct.Registry.Provider.prototype = {
@@ -9808,7 +10410,7 @@
 	     *      An isntance of {@link ProAct.Stream}.
 	     * @see {@link ProAct.Stream}
 	     */
-	    basic: function () { return new P.S(); },
+	    basic: function (args) { return new P.S(args[0]); },
 	
 	    /**
 	     * Constructs a {@link ProAct.DelayedStream}
@@ -9827,7 +10429,10 @@
 	     *      An isntance of {@link ProAct.DelayedStream}.
 	     * @see {@link ProAct.DelayedStream}
 	     */
-	    delayed: function (args) { return new P.DBS(parseInt(args[0], 10)); },
+	    delayed: function (args) {
+	      var args = streamConstructArgs(args);
+	      return new P.DBS(args[0], parseInt(args[1], 10));
+	    },
 	
 	    /**
 	     * Constructs a {@link ProAct.SizeBufferedStream}
@@ -9846,7 +10451,10 @@
 	     *      An isntance of {@link ProAct.SizeBufferedStream}.
 	     * @see {@link ProAct.SizeBufferedStream}
 	     */
-	    size: function (args) { return new P.SBS(parseInt(args[0], 10)); },
+	    size: function (args) {
+	      var args = streamConstructArgs(args);
+	      return new P.SBS(args[0], parseInt(args[1], 10));
+	    },
 	
 	    /**
 	     * Constructs a {@link ProAct.DebouncingStream}
@@ -9865,7 +10473,10 @@
 	     *      An isntance of {@link ProAct.DebouncingStream}.
 	     * @see {@link ProAct.DebouncingStream}
 	     */
-	    debouncing: function (args) { return new P.DDS(parseInt(args[0], 10)); },
+	    debouncing: function (args) {
+	      var args = streamConstructArgs(args);
+	      return new P.DDS(args[0], parseInt(args[1], 10));
+	    },
 	
 	    /**
 	     * Constructs a {@link ProAct.ThrottlingStream}
@@ -9884,9 +10495,41 @@
 	     *      An isntance of {@link ProAct.ThrottlingStream}.
 	     * @see {@link ProAct.ThrottlingStream}
 	     */
-	    throttling: function (args) { return new P.TDS(parseInt(args[0], 10)); }
+	    throttling: function (args) {
+	      var args = streamConstructArgs(args);
+	      return new P.TDS(args[0], parseInt(args[1], 10));
+	    }
 	  }
 	});
+	
+	var higher = {
+	  split: function (provider, action, data) {
+	    var keys = data.split(action),
+	        ln = keys.length, i,
+	        functions = [];
+	    for (i = 0; i < ln; i++) {
+	      functions.push(provider.get(keys[i].trim()));
+	    }
+	
+	    return functions;
+	  },
+	
+	  accumulator: function (functions, initial, computation) {
+	    return function () {
+	      var i, ln = functions.length, result = initial;
+	      for (i = 0; i < ln; i++) {
+	        result = computation(result, functions[i].apply(null, arguments));
+	      }
+	      return result;
+	    };
+	  },
+	  or: function (tillNow, argument) {
+	    return tillNow || argument;
+	  },
+	  and: function (tillNow, argument) {
+	    return tillNow && argument;
+	  }
+	};
 	
 	ProAct.Registry.FunctionProvider.prototype = P.U.ex(Object.create(P.R.Provider.prototype), {
 	
@@ -9898,7 +10541,63 @@
 	   * @constant
 	   * @default ProAct.Registry.FunctionProvider
 	   */
-	  constructor: ProAct.Registry.FunctionProvider
+	  constructor: ProAct.Registry.FunctionProvider,
+	
+	  // Private stuff
+	  predefinedActions: {
+	    map: 'mapping',
+	    filter: 'filtering',
+	    acc: 'accumulation'
+	  },
+	
+	  /**
+	   * Reads a stored instance.
+	   * <p>
+	   *  If stored instance is not found and the key is in the form:
+	   *  actions(arg) - it is searched in the predefined lambdas, for example:
+	   *  <pre>
+	   *    map(+)
+	   *  </pre>
+	   * </p>
+	   *
+	   * @memberof ProAct.Registry.FunctionProvider
+	   * @instance
+	   * @method get
+	   * @param {String} key
+	   *      The key to read.
+	   * @return {Object}
+	   *      The stored object corresponding to the passed <i>key</i> or
+	   *      predefined lambda or undefined if there is no such object.
+	   */
+	  get: function (key) {
+	    var func,
+	        reg, matched,
+	        action, args,
+	        i, ln;
+	
+	    if (key.indexOf('OR') !== -1) {
+	      return higher.accumulator(higher.split(this, 'OR', key), false, higher.or);
+	    } else if (key.indexOf('AND') !== -1) {
+	      return higher.accumulator(higher.split(this, 'AND', key), true, higher.and);
+	    } else if (key.indexOf('!') === 0) {
+	      func = this.get(key.substring(1));
+	      return function () {
+	        return !func.apply(null, arguments);
+	      };
+	    }
+	
+	    func = this.stored[key];
+	    if (!func) {
+	      reg = new RegExp("(\\w*)\\(([\\s\\S]*)\\)");
+	      matched = reg.exec(key);
+	      if (matched) {
+	        action = matched[1], args = matched[2],
+	        func = dsl.predefined[this.predefinedActions[action]][args];
+	      }
+	    }
+	
+	    return func;
+	  }
 	});
 	
 	ProAct.Registry.ProObjectProvider.prototype = P.U.ex(Object.create(P.R.Provider.prototype), {
