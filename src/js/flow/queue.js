@@ -76,7 +76,12 @@ ProAct.Queue.runAction = function (queue, context, action, args, errHandler) {
       try {
         action.apply(context, args);
       } catch (e) {
-        errHandler(queue, e);
+        if (!e.fromFlow) {
+          e.fromFlow = true;
+          errHandler(queue, e);
+        } else {
+          throw e;
+        }
       }
     } else {
       action.apply(context, args);
@@ -86,7 +91,12 @@ ProAct.Queue.runAction = function (queue, context, action, args, errHandler) {
       try {
         action.call(context);
       } catch(e) {
-        errHandler(queue, e);
+        if (!e.fromFlow) {
+          e.fromFlow = true;
+          errHandler(queue, e);
+        } else {
+          throw e;
+        }
       }
     } else {
       action.call(context);

@@ -251,7 +251,12 @@ P.F.prototype = {
         try {
           callback.call(context);
         } catch (e) {
-          err(e);
+          if (!e.fromFlow) {
+            e.fromFlow = true;
+            err(e);
+          } else {
+            throw e;
+          }
         }
       } else {
         callback.call(context);
