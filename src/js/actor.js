@@ -870,6 +870,10 @@ P.Actor.prototype = {
 
     for (i = 0; i < length; i++) {
       listener = listeners[i];
+      if (!listener) {
+        throw new Error('Invalid null listener for actions : ' + actions);
+      }
+
       if (P.U.isString(actions) && listener.destroyed) {
         this.off(actions, listener);
         continue;
