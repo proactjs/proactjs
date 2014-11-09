@@ -173,6 +173,10 @@ ProAct.Stream.prototype = P.U.ex(Object.create(P.Actor.prototype), {
    * @see {@link ProAct.flow}
    */
   defer: function (event, listener) {
+    if (!listener) {
+      return;
+    }
+
     if (listener.property) {
       P.Actor.prototype.defer.call(this, event, listener);
       return;
