@@ -2,7 +2,7 @@
   "name": "proact.js",
   "title": "ProAct.js",
   "description": "Reactive JavaScript Objects Properties.",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "author": "meddle0x53",
   "main": "dist/js/proact.min.js",
   "license": "MIT",
