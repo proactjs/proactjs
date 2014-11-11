@@ -26,7 +26,7 @@
 	 *
 	 * @namespace ProAct
 	 * @license MIT
-	 * @version 1.2.0
+	 * @version 1.2.1
 	 * @author meddle0x53
 	 */
 	var ProAct = Pro = P = {},
@@ -67,7 +67,7 @@
 	 * @static
 	 * @constant
 	 */
-	ProAct.VERSION = '1.2.0';
+	ProAct.VERSION = '1.2.1';
 	
 	/**
 	 * Defines the possible states of the ProAct objects.
@@ -629,7 +629,12 @@
 	      try {
 	        action.apply(context, args);
 	      } catch (e) {
-	        errHandler(queue, e);
+	        if (!e.fromFlow) {
+	          e.fromFlow = true;
+	          errHandler(queue, e);
+	        } else {
+	          throw e;
+	        }
 	      }
 	    } else {
 	      action.apply(context, args);
@@ -639,7 +644,12 @@
 	      try {
 	        action.call(context);
 	      } catch(e) {
-	        errHandler(queue, e);
+	        if (!e.fromFlow) {
+	          e.fromFlow = true;
+	          errHandler(queue, e);
+	        } else {
+	          throw e;
+	        }
 	      }
 	    } else {
 	      action.call(context);
@@ -1379,7 +1389,12 @@
 	        try {
 	          callback.call(context);
 	        } catch (e) {
-	          err(e);
+	          if (!e.fromFlow) {
+	            e.fromFlow = true;
+	            err(e);
+	          } else {
+	            throw e;
+	          }
 	        }
 	      } else {
 	        callback.call(context);
@@ -2437,6 +2452,10 @@
 	
 	    for (i = 0; i < length; i++) {
 	      listener = listeners[i];
+	      if (!listener) {
+	        throw new Error('Invalid null listener for actions : ' + actions);
+	      }
+	
 	      if (P.U.isString(actions) && listener.destroyed) {
 	        this.off(actions, listener);
 	        continue;
@@ -2896,6 +2915,10 @@
 	   * @see {@link ProAct.flow}
 	   */
 	  defer: function (event, listener) {
+	    if (!listener) {
+	      return;
+	    }
+	
 	    if (listener.property) {
 	      P.Actor.prototype.defer.call(this, event, listener);
 	      return;
