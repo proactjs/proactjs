@@ -16,12 +16,13 @@
  * @param [...] args
  *      Arguments of the event, for example for value event, these are the old value and the new value.
  */
-ProAct.Event = P.E = function (source, target, type) {
+function Event (source, target, type) {
   this.source = source;
   this.target = target;
   this.type = type;
   this.args = slice.call(arguments, 3);
 };
+ProAct.Event = P.E = Event;
 
 P.U.ex(ProAct.Event, {
 
