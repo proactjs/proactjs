@@ -10,6 +10,7 @@ module.exports = function(karma) {
       'src/js/flow/flow.js',
       'src/js/actor.js',
       'src/js/events/event.js',
+      'src/js/events/value_event.js',
       'src/js/streams/stream.js',
       'src/js/streams/buffered_stream.js',
       'src/js/streams/size_buffered_stream.js',
