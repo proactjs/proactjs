@@ -339,11 +339,11 @@ ProAct.Property.prototype = P.U.ex(Object.create(P.Actor.prototype), {
    * @default {ProAct.Event} with type {@link ProAct.Event.Types.value}
    * @param {ProAct.Event} source
    *      The source event of the event. It can be null
-   * @return {ProAct.Event}
+   * @return {ProAct.ValueEvent}
    *      The event, created.
    */
   makeEvent: function (source) {
-    return new P.E(source, this.property, P.E.Types.value, this.proObject, this.oldVal, this.val);
+    return new P.VE(source, this.property, this.proObject, this.oldVal, this.val);
   },
 
   /**
