@@ -189,7 +189,7 @@ ProAct.Array.Listeners = P.A.L = pArrayLs = {
    * Generates a listener that can be attached to an {@link ProAct.Array} on which
    * the method {@link ProAct.Array#pevery} is invoked.
    * <p>
-   *  The result of the {@link ProAct.Array#pevery} method is a {@link ProAct.Val}, dependent on the <i>original</i> array.
+   *  The result of the {@link ProAct.Array#pevery} method is a {@link ProAct.Property}, dependent on the <i>original</i> array.
    * </p>
    * <p>
    *  For example if the original was:
@@ -208,21 +208,21 @@ ProAct.Array.Listeners = P.A.L = pArrayLs = {
    *  </pre>
    * </p>
    * <p>
-   *  The generated listener by this method does this - updates the <i>val</i> {@link ProAct.Val}, when the <i>original</i> array changes
+   *  The generated listener by this method does this - updates the <i>val</i> {@link ProAct.Property}, when the <i>original</i> array changes
    *  and it does it in an optimal way.
    * </p>
    *
    * @memberof ProAct.Array.Listeners
    * @static
    * @constant
-   * @param {ProAct.Val} val
+   * @param {ProAct.Property} val
    *      The result of invoking {@link ProAct.Array#pevery} on the <i>original</i> {@link ProAct.Array}.
    * @param {ProAct.Array} original
    *      The {@link ProAct.Array} on which {@link ProAct.Array#pevery} was invoked.
    * @param {Array} args
    *      The arguments passed to {@link ProAct.Array#pevery}, when it was invoked on the <i>original</i> {@link ProAct.Array}
    * @return {Function}
-   *      A listener for events from the <i>original</i> {@link ProAct.Array}, updating the <i>val</i> {@link ProAct.Val} on
+   *      A listener for events from the <i>original</i> {@link ProAct.Array}, updating the <i>val</i> {@link ProAct.Property} on
    *      every new event, if it is necessary.
    */
   every: function (val, original, args) {
@@ -267,7 +267,7 @@ ProAct.Array.Listeners = P.A.L = pArrayLs = {
    * Generates a listener that can be attached to an {@link ProAct.Array} on which
    * the method {@link ProAct.Array#psome} is invoked.
    * <p>
-   *  The result of the {@link ProAct.Array#psome} method is a {@link ProAct.Val}, dependent on the <i>original</i> array.
+   *  The result of the {@link ProAct.Array#psome} method is a {@link ProAct.Property}, dependent on the <i>original</i> array.
    * </p>
    * <p>
    *  For example if the original was:
@@ -286,21 +286,21 @@ ProAct.Array.Listeners = P.A.L = pArrayLs = {
    *  </pre>
    * </p>
    * <p>
-   *  The generated listener by this method does this - updates the <i>val</i> {@link ProAct.Val}, when the <i>original</i> array changes
+   *  The generated listener by this method does this - updates the <i>val</i> {@link ProAct.Property}, when the <i>original</i> array changes
    *  and it does it in an optimal way.
    * </p>
    *
    * @memberof ProAct.Array.Listeners
    * @static
    * @constant
-   * @param {ProAct.Val} val
+   * @param {ProAct.Property} val
    *      The result of invoking {@link ProAct.Array#psome} on the <i>original</i> {@link ProAct.Array}.
    * @param {ProAct.Array} original
    *      The {@link ProAct.Array} on which {@link ProAct.Array#psome} was invoked.
    * @param {Array} args
    *      The arguments passed to {@link ProAct.Array#psome}, when it was invoked on the <i>original</i> {@link ProAct.Array}
    * @return {Function}
-   *      A listener for events from the <i>original</i> {@link ProAct.Array}, updating the <i>val</i> {@link ProAct.Val} on
+   *      A listener for events from the <i>original</i> {@link ProAct.Array}, updating the <i>val</i> {@link ProAct.Property} on
    *      every new event, if it is necessary.
    */
   some: function (val, original, args) {
@@ -558,7 +558,7 @@ ProAct.Array.Listeners = P.A.L = pArrayLs = {
    * Generates a listener that can be attached to an {@link ProAct.Array} on which
    * the method {@link ProAct.Array#preduce} is invoked.
    * <p>
-   *  The result of the {@link ProAct.Array#preduce} method is a {@link ProAct.Val}, dependent on the <i>original</i> array.
+   *  The result of the {@link ProAct.Array#preduce} method is a {@link ProAct.Property}, dependent on the <i>original</i> array.
    * </p>
    * <p>
    *  For example if the original was:
@@ -577,21 +577,21 @@ ProAct.Array.Listeners = P.A.L = pArrayLs = {
    *  </pre>
    * </p>
    * <p>
-   *  The generated listener by this method does this - updates the <i>val</i> {@link ProAct.Val}, when the <i>original</i> array changes
+   *  The generated listener by this method does this - updates the <i>val</i> {@link ProAct.Property}, when the <i>original</i> array changes
    *  and it does it in an optimal way.
    * </p>
    *
    * @memberof ProAct.Array.Listeners
    * @static
    * @constant
-   * @param {ProAct.Val} val
+   * @param {ProAct.Property} val
    *      The result of invoking {@link ProAct.Array#preduce} on the <i>original</i> {@link ProAct.Array}.
    * @param {ProAct.Array} original
    *      The {@link ProAct.Array} on which {@link ProAct.Array#preduce} was invoked.
    * @param {Array} args
    *      The arguments passed to {@link ProAct.Array#preduce}, when it was invoked on the <i>original</i> {@link ProAct.Array}
    * @return {Function}
-   *      A listener for events from the <i>original</i> {@link ProAct.Array}, updating the <i>val</i> {@link ProAct.Val} on
+   *      A listener for events from the <i>original</i> {@link ProAct.Array}, updating the <i>val</i> {@link ProAct.Property} on
    *      every new event, if it is necessary.
    */
   reduce: function (val, original, args) {
@@ -616,7 +616,7 @@ ProAct.Array.Listeners = P.A.L = pArrayLs = {
    * Generates a listener that can be attached to an {@link ProAct.Array} on which
    * the method {@link ProAct.Array#preduceRight} is invoked.
    * <p>
-   *  The result of the {@link ProAct.Array#preduceRight} method is a {@link ProAct.Val}, dependent on the <i>original</i> array.
+   *  The result of the {@link ProAct.Array#preduceRight} method is a {@link ProAct.Property}, dependent on the <i>original</i> array.
    * </p>
    * <p>
    *  For example if the original was:
@@ -635,21 +635,21 @@ ProAct.Array.Listeners = P.A.L = pArrayLs = {
    *  </pre>
    * </p>
    * <p>
-   *  The generated listener by this method does this - updates the <i>val</i> {@link ProAct.Val}, when the <i>original</i> array changes
+   *  The generated listener by this method does this - updates the <i>val</i> {@link ProAct.Property}, when the <i>original</i> array changes
    *  and it does it in an optimal way.
    * </p>
    *
    * @memberof ProAct.Array.Listeners
    * @static
    * @constant
-   * @param {ProAct.Val} val
+   * @param {ProAct.Property} val
    *      The result of invoking {@link ProAct.Array#preduceRight} on the <i>original</i> {@link ProAct.Array}.
    * @param {ProAct.Array} original
    *      The {@link ProAct.Array} on which {@link ProAct.Array#preduceRight} was invoked.
    * @param {Array} args
    *      The arguments passed to {@link ProAct.Array#preduceRight}, when it was invoked on the <i>original</i> {@link ProAct.Array}
    * @return {Function}
-   *      A listener for events from the <i>original</i> {@link ProAct.Array}, updating the <i>val</i> {@link ProAct.Val} on
+   *      A listener for events from the <i>original</i> {@link ProAct.Array}, updating the <i>val</i> {@link ProAct.Property} on
    *      every new event, if it is necessary.
    */
   reduceRight: function (val, original, args) {
@@ -673,7 +673,7 @@ ProAct.Array.Listeners = P.A.L = pArrayLs = {
    * Generates a listener that can be attached to an {@link ProAct.Array} on which
    * the method {@link ProAct.Array#pindexOf} is invoked.
    * <p>
-   *  The result of the {@link ProAct.Array#pindexOf} method is a {@link ProAct.Val}, dependent on the <i>original</i> array.
+   *  The result of the {@link ProAct.Array#pindexOf} method is a {@link ProAct.Property}, dependent on the <i>original</i> array.
    * </p>
    * <p>
    *  For example if the original was:
@@ -690,21 +690,21 @@ ProAct.Array.Listeners = P.A.L = pArrayLs = {
    *  </pre>
    * </p>
    * <p>
-   *  The generated listener by this method does this - updates the <i>val</i> {@link ProAct.Val}, when the <i>original</i> array changes
+   *  The generated listener by this method does this - updates the <i>val</i> {@link ProAct.Property}, when the <i>original</i> array changes
    *  and it does it in an optimal way.
    * </p>
    *
    * @memberof ProAct.Array.Listeners
    * @static
    * @constant
-   * @param {ProAct.Val} val
+   * @param {ProAct.Property} val
    *      The result of invoking {@link ProAct.Array#pindexOf} on the <i>original</i> {@link ProAct.Array}.
    * @param {ProAct.Array} original
    *      The {@link ProAct.Array} on which {@link ProAct.Array#pindexOf} was invoked.
    * @param {Array} args
    *      The arguments passed to {@link ProAct.Array#pindexOf}, when it was invoked on the <i>original</i> {@link ProAct.Array}
    * @return {Function}
-   *      A listener for events from the <i>original</i> {@link ProAct.Array}, updating the <i>val</i> {@link ProAct.Val} on
+   *      A listener for events from the <i>original</i> {@link ProAct.Array}, updating the <i>val</i> {@link ProAct.Property} on
    *      every new event, if it is necessary.
    */
   indexOf: function (val, original, args) {
@@ -780,7 +780,7 @@ ProAct.Array.Listeners = P.A.L = pArrayLs = {
    * Generates a listener that can be attached to an {@link ProAct.Array} on which
    * the method {@link ProAct.Array#plastIndexOf} is invoked.
    * <p>
-   *  The result of the {@link ProAct.Array#plastIndexOf} method is a {@link ProAct.Val}, dependent on the <i>original</i> array.
+   *  The result of the {@link ProAct.Array#plastIndexOf} method is a {@link ProAct.Property}, dependent on the <i>original</i> array.
    * </p>
    * <p>
    *  For example if the original was:
@@ -797,21 +797,21 @@ ProAct.Array.Listeners = P.A.L = pArrayLs = {
    *  </pre>
    * </p>
    * <p>
-   *  The generated listener by this method does this - updates the <i>val</i> {@link ProAct.Val}, when the <i>original</i> array changes
+   *  The generated listener by this method does this - updates the <i>val</i> {@link ProAct.Property}, when the <i>original</i> array changes
    *  and it does it in an optimal way.
    * </p>
    *
    * @memberof ProAct.Array.Listeners
    * @static
    * @constant
-   * @param {ProAct.Val} val
+   * @param {ProAct.Property} val
    *      The result of invoking {@link ProAct.Array#plastIndexOf} on the <i>original</i> {@link ProAct.Array}.
    * @param {ProAct.Array} original
    *      The {@link ProAct.Array} on which {@link ProAct.Array#plastIndexOf} was invoked.
    * @param {Array} args
    *      The arguments passed to {@link ProAct.Array#plastIndexOf}, when it was invoked on the <i>original</i> {@link ProAct.Array}
    * @return {Function}
-   *      A listener for events from the <i>original</i> {@link ProAct.Array}, updating the <i>val</i> {@link ProAct.Val} on
+   *      A listener for events from the <i>original</i> {@link ProAct.Array}, updating the <i>val</i> {@link ProAct.Property} on
    *      every new event, if it is necessary.
    */
   lastIndexOf: function (val, original, args) {
