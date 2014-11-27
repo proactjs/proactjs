@@ -376,7 +376,6 @@ describe('ProAct.Array', function () {
               return typeof(el) === 'number';
             });
 
-        expect(ProAct.Utils.isProVal(every)).toBe(true);
         expect(every.valueOf()).toBe(true);
       });
 
@@ -455,7 +454,6 @@ describe('ProAct.Array', function () {
               return typeof(el) === 'number';
             });
 
-        expect(ProAct.Utils.isProVal(every)).toBe(true);
         expect(every.valueOf()).toBe(true);
       });
 
@@ -864,7 +862,6 @@ describe('ProAct.Array', function () {
               return i + el;
             }, 0);
 
-        expect(ProAct.Utils.isProVal(val)).toBe(true);
         expect(val.valueOf()).toBe(15);
       });
 
@@ -940,7 +937,6 @@ describe('ProAct.Array', function () {
               return i + el;
             }, 0);
 
-        expect(ProAct.Utils.isProVal(val)).toBe(true);
         expect(val.valueOf()).toBe(15);
       });
 
@@ -1012,7 +1008,6 @@ describe('ProAct.Array', function () {
         var array = new ProAct.Array(1, 2, 3, 4, 5),
             val = array.pindexOf(5);
 
-        expect(ProAct.Utils.isProVal(val)).toBe(true);
         expect(val.valueOf()).toBe(4);
       });
 
@@ -1135,7 +1130,6 @@ describe('ProAct.Array', function () {
         var array = new ProAct.Array(1, 2, 3, 2, 5),
             val = array.plastindexOf(2);
 
-        expect(ProAct.Utils.isProVal(val)).toBe(true);
         expect(val.valueOf()).toBe(3);
       });
 
@@ -1229,7 +1223,6 @@ describe('ProAct.Array', function () {
             val = array.pjoin('-');
 
         val.v;
-        expect(ProAct.Utils.isProVal(val)).toBe(true);
         expect(val.valueOf()).toBe('0-8-8-8');
       });
 
