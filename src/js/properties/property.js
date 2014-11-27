@@ -60,6 +60,11 @@ function Property (queueName, proObject, property, getter, setter) {
     queueName = null;
   }
 
+  if (!(proObject || property)) {
+    property = 'v';
+    proObject = {v: null};
+  }
+
   P.U.defValProp(this, 'proObject', false, false, true, proObject);
   this.property = property;
 
@@ -288,6 +293,32 @@ P.U.ex(ProAct.Property, {
 
     property.destroy();
     return po.__pro__.makeProp(p, l);
+  },
+
+  value: function (val, meta, queueName) {
+    var property = P.P.lazyValue(val, meta, queueName);
+    property.get();
+
+    return property;
+  },
+
+  lazyValue: function (val, meta, queueName) {
+    if (meta && (P.U.isString(meta) || P.U.isArray(meta))) {
+      meta = {
+        v: meta
+      };
+    }
+    if (queueName) {
+      meta.p = meta.p || {};
+      meta.p.queueName = queueName;
+    }
+
+    var object = {v: val},
+        core = new ObjectCore(object, meta);
+    P.U.defValProp(object, '__pro__', false, false, false, core);
+    core.prob();
+
+    return core.properties.v;
   }
 });
 
@@ -400,6 +431,7 @@ ProAct.Property.prototype = P.U.ex(Object.create(P.Actor.prototype), {
    */
   doInit: function () {
     P.P.defineProp(this.proObject, this.property, this.get, this.set);
+    P.P.defineProp(this, 'v', this.get, this.set);
   },
 
   /**
@@ -428,6 +460,7 @@ ProAct.Property.prototype = P.U.ex(Object.create(P.Actor.prototype), {
     this.get = this.set = this.property = this.proObject = undefined;
     this.g = this.s = undefined;
     this.val = undefined;
+    delete this.v;
   },
 
   /**
@@ -441,6 +474,10 @@ ProAct.Property.prototype = P.U.ex(Object.create(P.Actor.prototype), {
    * @method toString
    */
   toString: function () {
+    return this.val + '';
+  },
+
+  valueOf: function () {
     return this.val;
   }
 });
