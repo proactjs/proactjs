@@ -17,11 +17,12 @@
  *      Optional meta data to be used to define the observer-observable behavior of the <i>object</i>. For example transformations for its properties.
  * @see {@link ProAct.Property}
  */
-ProAct.ObjectCore = P.OC = function (object, meta) {
+function ObjectCore (object, meta) {
   this.properties = {};
 
   P.C.call(this, object, meta); // Super!
 };
+ProAct.ObjectCore = P.OC = ObjectCore;
 
 ProAct.ObjectCore.prototype = P.U.ex(Object.create(P.C.prototype), {
 
