@@ -705,7 +705,7 @@ P.Actor.prototype = {
   accumulate: P.N,
 
   /**
-   * Generates a new {@link ProAct.Val} containing the state of an accumulations.
+   * Generates a new {@link ProAct.Property} containing the state of an accumulations.
    * <p>
    *  The value will be updated with every update coming to this actor.
    * </p>
@@ -717,13 +717,13 @@ P.Actor.prototype = {
    *      Initial value for the accumulation. For example '0' for sum.
    * @param {Object} accumulationFunction
    *      The function to accumulate.
-   * @return {ProAct.Val}
-   *      A {@link ProAct.Val} instance observing <i>this</i> with the accumulation applied.
+   * @return {ProAct.Property}
+   *      A {@link ProAct.Property} instance observing <i>this</i> with the accumulation applied.
    * @see {@link ProAct.Actor#accumulate}
-   * @see {@link ProAct.Val}
+   * @see {@link ProAct.Property}
    */
   reduce: function (initVal, accumulationFunction) {
-    return new P.Val(initVal).into(this.accumulate(initVal, accumulationFunction));
+    return P.P.value(initVal).into(this.accumulate(initVal, accumulationFunction));
   },
 
   /**
