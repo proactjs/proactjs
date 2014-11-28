@@ -1,7 +1,7 @@
 /**
  * The {@link ProAct.prob} method is the entry point for creating reactive values in ProAct.js
  * <p>
- *  If the value is Number/String/Boolean/null/undefined or Function a new {@link ProAct.Val} is created woth value, set
+ *  If the value is Number/String/Boolean/null/undefined or Function a new {@link ProAct.Property} is created woth value, set
  *  to the passed <i>object</i> value. The <i>meta</i>-data passed is used in the creation process.
  * </p>
  * <p>
@@ -29,7 +29,7 @@ function prob (object, meta) {
       array;
 
   if (object === null || (!P.U.isObject(object) && !isAr(object))) {
-    return new P.V(object, meta);
+    return P.P.lazyValue(object, meta);
   }
 
   if (P.U.isArray(object)) {
