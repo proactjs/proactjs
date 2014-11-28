@@ -219,7 +219,8 @@ P.U.ex(ProAct.Property, {
    */
   defaultSetter: function (property, setter) {
     return function (newVal) {
-      if (property.val === newVal) {
+      newVal = P.Actor.transform(property, newVal);
+      if (newVal === P.Actor.BadValue || property.val === newVal) {
         return;
       }
 
@@ -227,7 +228,7 @@ P.U.ex(ProAct.Property, {
       if (setter) {
         property.val = setter.call(property.proObject, newVal);
       } else {
-        property.val = P.Actor.transform(property, newVal);
+        property.val = newVal;
       }
 
       if (property.val === null || property.val === undefined) {
@@ -461,6 +462,18 @@ ProAct.Property.prototype = P.U.ex(Object.create(P.Actor.prototype), {
     this.g = this.s = undefined;
     this.val = undefined;
     delete this.v;
+  },
+
+  map: function (mappingFunction) {
+    var prop = P.P.value(this.val, {}, this.queueName).mapping(mappingFunction).into(this);
+    this.update();
+    return prop;
+  },
+
+  filter: function (filteringFunction) {
+    var prop = P.P.value(this.val, {}, this.queueName).filtering(filteringFunction).into(this);
+    this.update();
+    return prop;
   },
 
   /**
