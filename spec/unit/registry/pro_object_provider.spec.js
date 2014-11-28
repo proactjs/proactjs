@@ -7,10 +7,9 @@ describe('ProAct.Registry.ProObjectProvider', function () {
   });
 
   describe('#make', function () {
-    it ('creates and stores in the registry a ProAct.Value if called with simple value', function () {
+    it ('creates and stores in the registry a ProAct.Property if called with simple value', function () {
       var val = provider.make('test', null, 5);
 
-      expect(P.U.isProVal(val)).toBe(true);
       expect(val.v).toBe(5);
     });
 
@@ -55,7 +54,7 @@ describe('ProAct.Registry.ProObjectProvider', function () {
     });
 
     describe('in the ProAct.Registry', function () {
-      it ('creates and stores ProAct.Vals in the registry', function () {
+      it ('creates and stores ProAct.Properties in the registry', function () {
         var reg = new ProAct.Registry().register('po', provider), res = [];
 
         reg.prob('test', 0, ['@($1)', function (v) {
@@ -63,7 +62,6 @@ describe('ProAct.Registry.ProObjectProvider', function () {
         }]);
 
         expect(reg.get('po:test')).not.toBe(undefined);
-        expect(P.U.isProVal(reg.get('po:test'))).toBe(true);
       });
     });
   });
