@@ -573,6 +573,15 @@ P.Actor.prototype = {
     return this;
   },
 
+  transformStored: function (transformation, type) {
+    if (P.registry && P.U.isString(transformation)) {
+      P.DSL.run(this, type + '(' + transformation + ')', P.registry);
+      return this;
+    }
+
+    return this.transform(transformation);
+  },
+
   /**
    * Adds a mapping transformation to <i>this actor</i>.
    * <p>
@@ -591,7 +600,7 @@ P.Actor.prototype = {
    * @see {@link ProAct.Actor#transform}
    */
   mapping: function (mappingFunction) {
-    return this.transform(mappingFunction)
+    return this.transformStored(mappingFunction, 'map');
   },
 
   /**
@@ -611,13 +620,15 @@ P.Actor.prototype = {
    * @see {@link ProAct.Actor#transform}
    */
   filtering: function(filteringFunction) {
-    var _this = this;
-    return this.transform(function (val) {
-      if (filteringFunction.call(_this, val)) {
+    var self = this,
+    filter = filteringFunction.call ? function (val) {
+      if (filteringFunction.call(self, val)) {
         return val;
-      }
+      };
       return P.Actor.BadValue;
-    });
+    } : filteringFunction;
+
+    return this.transformStored(filter, 'filter');
   },
 
   /**
@@ -638,11 +649,18 @@ P.Actor.prototype = {
    * @see {@link ProAct.Actor#transform}
    */
   accumulation: function (initVal, accumulationFunction) {
-    var _this = this, val = initVal;
-    return this.transform(function (newVal) {
-      val = accumulationFunction.call(_this, val, newVal)
-      return val;
-    });
+    if (!accumulationFunction) {
+      accumulationFunction = initVal;
+      initVal = undefined;
+    }
+
+    var self = this,
+        val = initVal,
+        acc = accumulationFunction.call ? function (newVal) {
+          val = accumulationFunction.call(self, val, newVal)
+          return val;
+        } : accumulationFunction;
+    return this.transformStored(acc, 'acc');
   },
 
   /**
