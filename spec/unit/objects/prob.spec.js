@@ -9,39 +9,42 @@ describe('ProAct.prob', function () {
     };
   });
 
-  it ('turns number to a ProAct.Val with value the number', function () {
+  it ('turns number to a ProAct.Property with value the number', function () {
     var val = ProAct.prob(5);
 
-    expect(ProAct.Utils.isProVal(val)).toBe(true);
     expect(val.v).toBe(5);
   });
 
-  it ('turns string to a ProAct.Val with value the string', function () {
+  it ('turns string to a ProAct.Property with value the string', function () {
     var val = ProAct.prob('5');
 
-    expect(ProAct.Utils.isProVal(val)).toBe(true);
     expect(val.v).toBe('5');
   });
 
-  it ('turns boolean to a ProAct.Val with value the boolean', function () {
+  it ('turns boolean to a ProAct.Property with value the boolean', function () {
     var val = ProAct.prob(false);
 
-    expect(ProAct.Utils.isProVal(val)).toBe(true);
     expect(val.v).toBe(false);
   });
 
-  it ('turns null to a ProAct.Val with value null', function () {
+  it ('turns null to a ProAct.Property with value null', function () {
     var val = ProAct.prob(null);
 
-    expect(ProAct.Utils.isProVal(val)).toBe(true);
     expect(val.v).toBe(null);
   });
 
-  it ('turns undefined to a ProAct.Val with value undefined', function () {
+  it ('turns undefined to a ProAct.Property with value undefined', function () {
     var val = ProAct.prob(undefined);
 
-    expect(ProAct.Utils.isProVal(val)).toBe(true);
     expect(val.v).toBe(undefined);
+  });
+
+  it ('turns function to a ProAct.AutoProperty with its result as a value', function () {
+    var val = ProAct.prob(function () {
+      return 5;
+    });
+
+    expect(val.v).toBe(5);
   });
 
   it('makes normal object with simple properties a Pro object.', function () {
