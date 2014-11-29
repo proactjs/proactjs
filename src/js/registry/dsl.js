@@ -143,6 +143,10 @@ ProAct.OpStore = {
             args = [args];
           }
 
+          if (name === 'accumulation' && P.U.isArray(args[0]) && args[0].length == 2 && P.U.isFunction(args[0][1])) {
+            args = args[0];
+          }
+
           return object[name].apply(object, args);
         }
       };
@@ -164,7 +168,7 @@ opStoreAll = P.OpStore.all;
  *  <pre>
  *    ProAct.registry.prob('val', 0, '<<(s:data)');
  *  </pre>
- *  This tells the {@link ProAct.Registry} to create a {@link ProAct.Val} with the value of zero, and to point the previously,
+ *  This tells the {@link ProAct.Registry} to create a {@link ProAct.Property} with the value of zero, and to point the previously,
  *  stored 'data' stream to it.
  * </p>
  *
