@@ -476,6 +476,12 @@ ProAct.Property.prototype = P.U.ex(Object.create(P.Actor.prototype), {
     return prop;
   },
 
+  accumulate: function (initVal, accumulationFunction) {
+    var prop = P.P.value(this.val, {}, this.queueName).accumulation(initVal, accumulationFunction).into(this);
+    this.update();
+    return prop;
+  },
+
   /**
    * The <b>toString()</b> method returns a string representing this ProAct.Property.
    * <p>
