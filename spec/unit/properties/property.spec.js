@@ -31,6 +31,20 @@ describe('ProAct.Property', function () {
       expect(obj.a).toEqual(70);
     });
 
+    it('can be called without arguments, creating property "v"', function () {
+      var property = new ProAct.Property();
+
+      expect(property.val).toBeNull();
+    });
+
+  });
+
+  describe('.value', function () {
+    it('creates independent property with simple value.', function () {
+      var property = ProAct.Property.value(5);
+
+      expect(property.val).toBe(5);
+    });
   });
 
   describe('#destroy', function () {
@@ -194,6 +208,90 @@ describe('ProAct.Property', function () {
         propertyA.willUpdate();
       });
       expect(called).toBe(true);
+    });
+  });
+
+  describe('dependent', function () {
+    it('property can be bind to another one', function () {
+      var propertyA = new ProAct.Property(obj, 'a'),
+          propertyB = new ProAct.Property(obj, 'b');
+
+      propertyB.into(propertyA);
+
+      obj.a = 10;
+      expect(obj.b).toBe(obj.a);
+    });
+  });
+
+  describe('#accumulate', function () {
+    it ('creates a new property accumulating data from the caller using the passed initial value and function', function () {
+      var property = P.P.value(5),
+          accumulation = property.accumulate([], function (array, v) {
+            return array.concat(v);
+          });
+
+      expect(accumulation.get()).toEqual([5]);
+
+      property.set(6);
+      expect(accumulation.get()).toEqual([5, 6]);
+    });
+  });
+
+  describe('#filter', function () {
+    it ('creates a new property filtered from the caller with the passed function', function () {
+      var property = P.P.value(5),
+          filtered = property.filter(function (v) {
+            return v % 2 === 1;
+          });
+
+      expect(filtered.get()).toEqual(5);
+
+      property.set(6);
+      expect(filtered.get()).toEqual(5);
+
+      property.set(7);
+      expect(filtered.get()).toEqual(7);
+    });
+
+    it ('creates a new property filtered from the caller with the passed predefined function', function () {
+      var property = P.P.value(-5),
+          mapped = property.filter('-');
+
+      expect(mapped.get()).toEqual(-5);
+
+      property.set(3);
+      expect(mapped.get()).toEqual(-5);
+
+      property.set(-3);
+      expect(mapped.get()).toEqual(-3);
+    });
+  });
+
+  describe('#map', function () {
+    it ('creates a new property mapped to the caller with the passed function', function () {
+      var property = P.P.value(5),
+          mapped = property.map(function (v) {
+            return v * v;
+          });
+
+      expect(mapped.get()).toEqual(25);
+    });
+
+    it ('creates a new property mapped to the caller with the passed predefined function', function () {
+      var property = P.P.value(5),
+          mapped = property.map('-');
+
+      expect(mapped.get()).toEqual(-5);
+    });
+
+    it ('creates a new property mapped to the caller with the passed stored function', function () {
+      ProAct.registry.store('l:test', function (v) {
+        return v / 2;
+      });
+      var property = P.P.value(4),
+          mapped = property.map('l:test');
+
+      expect(mapped.get()).toEqual(2);
     });
   });
 });

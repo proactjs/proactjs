@@ -172,4 +172,29 @@ describe('ProAct.AutoProperty', function () {
     });
   });
 
+  describe('.value', function () {
+    it('can be created using Property dependencies', function () {
+      var a = P.P.value(3),
+          b = P.P.value(5),
+          c = P.P.value(function () {
+            return a.get() + b.get();
+          });
+
+      expect(c.get()).toEqual(a.get() + b.get());
+      expect(c.type()).toBe(P.P.Types.auto);
+      expect(c.proObject.v).toEqual(a.get() + b.get());
+    });
+
+    it('can be created using Property value dependencies', function () {
+      var a = P.P.value(3).proObject,
+          b = P.P.value(5).proObject,
+          c = P.P.value(function () {
+            return a.v + b.v;
+          });
+
+      expect(c.get()).toEqual(a.v + b.v);
+      expect(c.type()).toBe(P.P.Types.auto);
+    });
+  });
+
 });
