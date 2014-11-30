@@ -1,6 +1,6 @@
 'use strict';
 
-describe('ProAct.Property, ProAct.AutoProperty, ProAct.ObjectProperty, ProAct.ArrayProperty and ProAct.NullProperty', function () {
+describe('ProAct.Event, ProAct.ValueEvent, ProAct.Property, ProAct.AutoProperty, ProAct.ObjectProperty, ProAct.ArrayProperty and ProAct.NullProperty', function () {
   var obj;
   beforeEach(function () {
     obj = ProAct.prob({
@@ -76,7 +76,6 @@ describe('ProAct.Property, ProAct.AutoProperty, ProAct.ObjectProperty, ProAct.Ar
     expect(obj.f[4]()).toEqual(4);
 
     expect(obj.p('g').type()).toEqual(ProAct.Property.Types.object);
-    expect(ProAct.U.isProVal(obj.g)).toBe(true);
     expect(obj.g.v).toEqual(5);
 
     expect(obj.p('h').type()).toEqual(ProAct.Property.Types.array);
@@ -94,14 +93,12 @@ describe('ProAct.Property, ProAct.AutoProperty, ProAct.ObjectProperty, ProAct.Ar
     expect(obj.i.b).toEqual(obj.a);
 
     expect(obj.p('j').type()).toEqual(ProAct.Property.Types.object);
-    expect(ProAct.U.isProVal(obj.j)).toBe(true);
     expect(obj.j.v).toBeNull;
 
     expect(obj.p('k').type()).toEqual(ProAct.Property.Types.auto);
     expect(obj.k).toEqual(obj.f[1]);
 
     expect(obj.p('l').type()).toEqual(ProAct.Property.Types.object);
-    expect(ProAct.U.isProVal(obj.l)).toBe(true);
     expect(obj.l.v).toEqual(obj.g.v);
   });
 
@@ -199,5 +196,65 @@ describe('ProAct.Property, ProAct.AutoProperty, ProAct.ObjectProperty, ProAct.Ar
     expect(obj.e).toBeNull;
     expect(obj.p('e').type()).toEqual(ProAct.Property.Types.nil);
     expect(obj.k).toEqual('one');
+  });
+
+  describe('ProAct.ValueEvent', function () {
+    var event, listener;
+    beforeEach(function () {
+      event = null;
+      listener = function (e) {
+        event = e;
+      };
+    });
+
+    it ('is emitted on ProAct.Property change', function () {
+      obj.p('a').on(listener);
+      obj.a = 5;
+
+      expect(event).toNotBe(undefined);
+      expect(event.constructor).toBe(ProAct.ValueEvent);
+    });
+
+    describe('#fromVal', function () {
+      it ('returns the value this event changes for simple ProAct.Property', function () {
+        var oldVal = obj.a;
+
+        obj.p('a').on(listener);
+        obj.a = 5;
+
+        expect(event.fromVal()).toNotBe(undefined);
+        expect(event.fromVal()).toBe(oldVal);
+      });
+
+      it ('returns the value this event changes for ProAct.AutoProperty', function () {
+        var oldVal = obj.i.b;
+
+        obj.i.p('b').on(listener);
+        obj.a = 5;
+
+        expect(event.fromVal()).toNotBe(undefined);
+        expect(event.fromVal()).toBe(oldVal);
+      });
+    });
+
+    describe('#toVal', function () {
+      it ('returns the value this event sets for simple ProAct.Property', function () {
+        obj.p('a').on(listener);
+        obj.a = 5;
+
+        expect(event.toVal()).toNotBe(undefined);
+        expect(event.toVal()).toBe(5);
+      });
+
+      it ('returns the value this event sets for ProAct.AutoProperty', function () {
+        var oldVal = obj.i.b;
+
+        obj.i.p('b').on(listener);
+        obj.a = 5;
+
+        expect(event.toVal()).toNotBe(undefined);
+        expect(event.toVal()).toBe(5);
+      });
+    });
   });
 });
