@@ -61,6 +61,35 @@ describe('ProAct.Stream', function () {
       stream1.trigger(2);
       expect(res).toEqual(['(6)', '(12)']);
     });
+
+    it ('works with predefined mapping functions', function () {
+      var stream1 = new ProAct.Stream(),
+          stream2 = stream1.map('-'),
+          res = [];
+
+      stream2.on(function (number) {
+        res.push(number);
+      });
+
+      stream1.trigger(1);
+      expect(res).toEqual([-1]);
+    });
+
+    it ('works with stored mapping functions', function () {
+      P.registry.store('l:test', function (v) {
+        return '(' + v + ')';
+      });
+      var stream1 = new ProAct.Stream(),
+          stream2 = stream1.map('l:test'),
+          res = [];
+
+      stream2.on(function (number) {
+        res.push(number);
+      });
+
+      stream1.trigger(1);
+      expect(res).toEqual(['(1)']);
+    });
   });
 
   describe('#filter', function () {
@@ -112,10 +141,46 @@ describe('ProAct.Stream', function () {
       stream1.trigger(24);
       expect(res).toEqual([6, 24]);
     });
+
+    it ('works with predefined filtering functions', function () {
+      var stream1 = new ProAct.Stream(),
+          stream2 = stream1.filter('-'),
+          res = [];
+
+      stream2.on(function (number) {
+        res.push(number);
+      });
+
+      stream1.trigger(1);
+      expect(res).toEqual([]);
+
+      stream1.trigger(-3);
+      expect(res).toEqual([-3]);
+    });
+
+    it ('works with stored filtering functions', function () {
+      ProAct.registry.store('l:test', function (v) {
+        return v > 5;
+      });
+
+      var stream1 = new ProAct.Stream(),
+          stream2 = stream1.filter('l:test'),
+          res = [];
+
+      stream2.on(function (number) {
+        res.push(number);
+      });
+
+      stream1.trigger(1);
+      expect(res).toEqual([]);
+
+      stream1.trigger(13);
+      expect(res).toEqual([13]);
+    });
   });
 
   describe('#reduce', function () {
-    it ('creates a ProAct.Val that listens to accumulations', function () {
+    it ('creates a ProAct.Property that listens to accumulations', function () {
       var stream = new ProAct.Stream(),
           reduced = stream.reduce(0, function (x, y) {return x + y;});
       expect(reduced.v).toEqual(0);
@@ -173,6 +238,42 @@ describe('ProAct.Stream', function () {
 
       stream1.trigger(5);
       expect(res).toEqual([1, 3, 24]);
+    });
+
+    it ('works with predefined accumulating functions', function () {
+      var stream1 = new ProAct.Stream(),
+          stream2 = stream1.accumulate('+'),
+          res = [];
+
+      stream2.on(function (number) {
+        res.push(number);
+      });
+
+      stream1.trigger(1);
+      expect(res).toEqual([1]);
+
+      stream1.trigger(3);
+      expect(res).toEqual([1, 4]);
+    });
+
+    it ('works with predefined stored functions', function () {
+      ProAct.registry.store('l:test', [1, function (a, b) {
+        return a * b;
+      }]);
+
+      var stream1 = new ProAct.Stream(),
+          stream2 = stream1.accumulate('l:test'),
+          res = [];
+
+      stream2.on(function (number) {
+        res.push(number);
+      });
+
+      stream1.trigger(1);
+      expect(res).toEqual([1]);
+
+      stream1.trigger(3);
+      expect(res).toEqual([1, 3]);
     });
   });
 
