@@ -86,6 +86,8 @@ function Property (queueName, proObject, property, getter, setter) {
   P.Actor.call(this, queueName); // Super!
   this.parent = this.proObject.__pro__;
 
+  var meta = this.parent.meta.p;
+  this.isStaticTyped = meta && meta.statics && meta.statics.indexOf(this.property) !== -1;
 }
 ProAct.Property = P.P = Property;
 
@@ -231,7 +233,8 @@ P.U.ex(ProAct.Property, {
         property.val = newVal;
       }
 
-      if (property.val === null || property.val === undefined) {
+      if (property.type() !== P.P.Types.auto && P.P.Types.type(property.val) !== property.type()) {
+      //if (property.val === null || property.val === undefined) {
         P.P.reProb(property).update();
         return;
       }
@@ -269,10 +272,6 @@ P.U.ex(ProAct.Property, {
   /**
    * Recreates a property, using its current value.
    * <p>
-   *  For example if the initial value of the field was null, the property can be set to be instance of {@link ProAct.NullProperty},
-   *  but if it changes to the number <i>3</i> it can be changed to {@link ProAct.Property} using this method.
-   * </p>
-   * <p>
    *  The re-definition works by using {@link ProAct.Property#destroy} to destroy the passed <i>property</i> first, and then the
    *  {@link ProAct.ObjectCore#makeProp} method is called of the {@link ProAct.ObjectCore} of the object the <i>property</i> belongs to.
    * </p>
@@ -288,6 +287,10 @@ P.U.ex(ProAct.Property, {
    *      The new re-defined property.
    */
   reProb: function (property) {
+	    if (property.isStaticTyped || property.state !== P.States.ready) {
+      return;
+    }
+
     var po = property.proObject,
         p = property.property,
         l = property.listeners.change;
@@ -309,8 +312,11 @@ P.U.ex(ProAct.Property, {
         v: meta
       };
     }
+
+    meta = meta || {};
+    meta.p = meta.p || {};
+    meta.p.statics = meta.p.statics || ['v'];
     if (queueName) {
-      meta.p = meta.p || {};
       meta.p.queueName = queueName;
     }
 
@@ -461,6 +467,7 @@ ProAct.Property.prototype = P.U.ex(Object.create(P.Actor.prototype), {
     this.get = this.set = this.property = this.proObject = undefined;
     this.g = this.s = undefined;
     this.val = undefined;
+    this.isStaticTyped = undefined;
     delete this.v;
   },
 

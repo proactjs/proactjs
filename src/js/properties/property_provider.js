@@ -227,82 +227,6 @@ ProAct.PropertyProvider.prototype = {
 
 /**
  * <p>
- *  Constructor for ProAct.NullPropertyProvider.
- * </p>
- * <p>
- *  Provides {@link ProAct.NullProperty} instances.
- * </p>
- * <p>
- *  ProAct.NullPropertyProvider is part of the properties module of ProAct.js.
- * </p>
- *
- * @class ProAct.NullPropertyProvider
- * @extends ProAct.PropertyProvider
- * @see {@link ProAct.NullProperty}
- */
-ProAct.NullPropertyProvider = P.NPP = function () {
-  P.PP.call(this);
-};
-
-ProAct.NullPropertyProvider.prototype = P.U.ex(Object.create(P.PP.prototype), {
-
-  /**
-   * Reference to the constructor of this object.
-   *
-   * @memberof ProAct.NullPropertyProvider
-   * @instance
-   * @constant
-   * @default ProAct.NullPropertyProvider
-   */
-  constructor: ProAct.NullPropertyProvider,
-
-  /**
-   * Used to check if this {@link ProAct.NullPropertyProvider} is compliant with the field and meta data.
-   *
-   * @memberof ProAct.NullPropertyProvider
-   * @instance
-   * @method filter
-   * @param {Object} object
-   *      The object to which a new {@link ProAct.Property} instance should be provided.
-   * @param {String} property
-   *      The field name of the <i>object</i> to turn into a {@link ProAct.Property}. Can be used in the filtering process.
-   * @param {String|Array} meta
-   *      Meta information to be used for filtering and configuration of the {@link ProAct.Property} instance to be provided.
-   * @return {Boolean}
-   *      True if the value of <b>object[property]</b> is undefined or null.
-   */
-  filter: function (object, property, meta) {
-    return object[property] === null || object[property] === undefined;
-  },
-
-  /**
-   * Provides an instance of {@link ProAct.NullProperty}.
-   *
-   * @memberof ProAct.NullPropertyProvider
-   * @instance
-   * @method provide
-   * @param {String} queueName
-   *      The name of the queue all the updates should be pushed to.
-   *      <p>
-   *        If this parameter is null/undefined the default queue of
-   *        {@link ProAct.flow} is used.
-   *      </p>
-   * @param {Object} object
-   *      The object to which a new {@link ProAct.NullProperty} instance should be provided.
-   * @param {String} property
-   *      The field of the <i>object</i> to turn into a {@link ProAct.NullProperty}.
-   * @param {String|Array} meta
-   *      Meta information to be used for filtering and configuration of the {@link ProAct.NullProperty} instance to be provided.
-   * @return {ProAct.NullProperty}
-   *      A {@link ProAct.NullProperty} instance provided by <i>this</i> provider.
-   */
-  provide: function (queueName, object, property, meta) {
-    return new P.NP(queueName, object, property);
-  }
-});
-
-/**
- * <p>
  *  Constructor for ProAct.SimplePropertyProvider.
  * </p>
  * <p>
@@ -349,7 +273,7 @@ ProAct.SimplePropertyProvider.prototype = P.U.ex(Object.create(P.PP.prototype), 
    */
   filter: function (object, property, meta) {
     var v = object[property];
-    return v !== null && v !== undefined && !P.U.isFunction(v) && !P.U.isArrayObject(v) && !P.U.isObject(v);
+    return (v === null || v === undefined) || (!P.U.isFunction(v) && !P.U.isArrayObject(v) && !P.U.isObject(v));
   },
 
   /**
@@ -688,7 +612,6 @@ ProAct.ProxyPropertyProvider.prototype = P.U.ex(Object.create(P.PP.prototype), {
 });
 
 P.PP.registerProvider(new P.ProxyPropertyProvider());
-P.PP.registerProvider(new P.NullPropertyProvider());
 P.PP.registerProvider(new P.SimplePropertyProvider());
 P.PP.registerProvider(new P.AutoPropertyProvider());
 P.PP.registerProvider(new P.ArrayPropertyProvider());
