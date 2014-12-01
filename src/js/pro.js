@@ -221,25 +221,10 @@ ProAct.Utils = Pro.U = {
    * @param {Object} value
    * @return {Boolean}
    * @see {@link ProAct.Array}
-   * @see {@link ProAct.Value}
    * @see {@link ProAct.Core}
    */
   isProObject: function (value) {
     return value && ProAct.U.isObject(value) && value.__pro__ !== undefined && ProAct.U.isObject(value.__pro__.properties);
-  },
-
-  /**
-   * Checks if the passed value is a valid {@link ProAct.Value} or not.
-   * {@link ProAct.Value} is a simple ProAct.js object that has only one reactive property - 'v'.
-   *
-   * @memberof ProAct.Utils
-   * @function isProVal
-   * @param {Object} value
-   * @return {Boolean}
-   * @see {@link ProAct.Value}
-   */
-  isProVal: function (value) {
-    return P.U.isProObject(value) && value.__pro__.properties.v !== undefined;
   },
 
   /**
