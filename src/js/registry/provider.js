@@ -525,6 +525,9 @@ ProAct.Registry.ProObjectProvider.prototype = P.U.ex(Object.create(P.R.Provider.
    * @static
    */
   types: {
+    stat: function (options, value, meta) {
+      return P.P.value(value, meta);
+    },
 
     /**
      * Constructs a ProAct.js reactive object from original one, using {@link ProAct.prob}
