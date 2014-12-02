@@ -6,7 +6,7 @@ describe('ProAct.Registry', function () {
       ProAct.registry.make('s:plus'); // One stream to count.
       ProAct.registry.make('s:minus', 'map(-)'); // One stream to count with negative sign.
       ProAct.registry.make('s:counts', '<<(s:plus, s:minus)|acc(+)'); // One stream that depends on the above ones and sums.
-      ProAct.registry.prob('counter', 0, '<<(s:counts)'); // One ProAct.Val to store the result.
+      ProAct.registry.prob('counter', 0, '<<(s:counts)'); // One ProAct.Property to store the result.
 
       expect(ProAct.registry.get('po:counter').v).toEqual(0);
 
