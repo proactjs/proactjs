@@ -49,10 +49,10 @@ describe('ProAct.Event, ProAct.ValueEvent, ProAct.Property, ProAct.AutoProperty,
     expect(obj.p('b').type()).toEqual(ProAct.Property.Types.simple);
     expect(obj.b).toEqual('one');
 
-    expect(obj.p('c').type()).toEqual(ProAct.Property.Types.nil);
+    expect(obj.p('c').type()).toEqual(ProAct.Property.Types.simple);
     expect(obj.c).toBeNull;
 
-    expect(obj.p('d').type()).toEqual(ProAct.Property.Types.nil);
+    expect(obj.p('d').type()).toEqual(ProAct.Property.Types.simple);
     expect(obj.d).not.toBeDefined;
 
     expect(obj.p('e').type()).toEqual(ProAct.Property.Types.object);
@@ -102,22 +102,7 @@ describe('ProAct.Event, ProAct.ValueEvent, ProAct.Property, ProAct.AutoProperty,
     expect(obj.l.v).toEqual(obj.g.v);
   });
 
-  it ('null property can become simple property', function () {
-    expect(obj.p('c').type()).toEqual(ProAct.Property.Types.nil);
-    expect(obj.k).toEqual(false);
-    expect(obj.p('c').listeners.change.length).toEqual(1);
-
-    obj.c = 17;
-    expect(obj.c).toEqual(17);
-    expect(obj.p('c').type()).toEqual(ProAct.Property.Types.simple);
-    expect(obj.p('c').listeners.change.length).toEqual(1);
-    expect(obj.k).toEqual(true);
-
-    obj.c = 0;
-    expect(obj.k).toEqual(false);
-  });
-
-  it ('null property can become auto property', function () {
+  it ('simplr property can become auto property', function () {
     expect(obj.k).toEqual(false);
 
     obj.c = function () {
@@ -136,7 +121,7 @@ describe('ProAct.Event, ProAct.ValueEvent, ProAct.Property, ProAct.AutoProperty,
     expect(obj.k).toEqual(false);
   });
 
-  it ('null property can become array property', function () {
+  it ('simple property can become array property', function () {
     expect(obj.k).toEqual(false);
 
     obj.c = [4];
@@ -147,7 +132,7 @@ describe('ProAct.Event, ProAct.ValueEvent, ProAct.Property, ProAct.AutoProperty,
     expect(obj.k).toEqual(true);
   });
 
-  it ('null property can become object property', function () {
+  it ('simple property can become object property', function () {
     expect(obj.k).toEqual(false);
 
     obj.c = {a: 'null'};
@@ -160,33 +145,23 @@ describe('ProAct.Event, ProAct.ValueEvent, ProAct.Property, ProAct.AutoProperty,
     obj.c = {};
   });
 
-  it ('undefined values are turned to null properties', function () {
+  it ('undefined values are turned to simple properties', function () {
     expect(obj.d).not.toBeDefined();
-    expect(obj.p('d').type()).toEqual(ProAct.Property.Types.nil);
+    expect(obj.p('d').type()).toEqual(ProAct.Property.Types.simple);
   });
 
-  it ('simple property can be set to null and it will be turned to null property', function () {
-    expect(obj.a).toEqual(1);
-    expect(obj.i.b).toEqual(1);
-
-    obj.a = null;
-    expect(obj.a).toBeNull;
-    expect(obj.p('a').type()).toEqual(ProAct.Property.Types.nil);
-    expect(obj.i.b).toEqual(null);
-  });
-
-  it ('array property can be set to null and it will be turned to null property', function () {
+  it ('array property can be set to null and it will be turned to simple property', function () {
     expect(obj.p('f').type()).toEqual(ProAct.Property.Types.array);
     expect(ProAct.U.isProArray(obj.f)).toBe(true);
     expect(obj.k).toBe(false);
 
     obj.f = null;
     expect(obj.f).toBeNull;
-    expect(obj.p('f').type()).toEqual(ProAct.Property.Types.nil);
+    expect(obj.p('f').type()).toEqual(ProAct.Property.Types.simple);
     expect(obj.k).toBe(1);
   });
 
-  it ('object property can be set to null and it will be turned to null property', function () {
+  it ('object property can be set to null and it will be turned to simple property', function () {
     obj.c = true;
     expect(obj.p('e').type()).toEqual(ProAct.Property.Types.object);
     expect(ProAct.U.isProObject(obj.e)).toBe(true);
@@ -194,7 +169,7 @@ describe('ProAct.Event, ProAct.ValueEvent, ProAct.Property, ProAct.AutoProperty,
 
     obj.e = null;
     expect(obj.e).toBeNull;
-    expect(obj.p('e').type()).toEqual(ProAct.Property.Types.nil);
+    expect(obj.p('e').type()).toEqual(ProAct.Property.Types.simple);
     expect(obj.k).toEqual('one');
   });
 

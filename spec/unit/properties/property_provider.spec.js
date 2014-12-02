@@ -68,30 +68,6 @@ describe('ProAct.PropertyProvider', function () {
       expect(ProAct.PropertyProvider.provide(obj, 'c')).toNotBe(null);
     });
 
-    describe('ProAct.NullPropertyProvider', function () {
-      it ('provides a ProAct.NullProperty instance for object field with null value.', function () {
-        ProAct.PropertyProvider.registerProvider(new ProAct.NullPropertyProvider());
-
-        var property = ProAct.PropertyProvider.provide(obj, 'a');
-
-        expect(property).toNotBe(null);
-        expect(property instanceof ProAct.NullProperty).toBe(true);
-        expect(property.property).toBe('a');
-        expect(property.proObject).toBe(obj);
-      });
-
-      it ('provides a ProAct.NullProperty instance for object field with undefined value.', function () {
-        ProAct.PropertyProvider.registerProvider(new ProAct.NullPropertyProvider());
-
-        var property = ProAct.PropertyProvider.provide(obj, 'foo');
-
-        expect(property).toNotBe(null);
-        expect(property instanceof ProAct.NullProperty).toBe(true);
-        expect(property.property).toBe('foo');
-        expect(property.proObject).toBe(obj);
-      });
-    });
-
     describe('ProAct.SimplePropertyProvider', function () {
       it ('provides a ProAct.Property instance for object field with integer value.', function () {
         ProAct.PropertyProvider.registerProvider(new ProAct.SimplePropertyProvider());
@@ -129,7 +105,7 @@ describe('ProAct.PropertyProvider', function () {
       it ('provides null if the field has value of something else', function () {
         ProAct.PropertyProvider.registerProvider(new ProAct.SimplePropertyProvider());
 
-        expect(ProAct.PropertyProvider.provide(obj, 'a')).toBe(null);
+        expect(ProAct.PropertyProvider.provide(obj, 'e')).toBe(null);
       });
     });
 

@@ -5,7 +5,6 @@ beforeEach(function() {
 
   P.PP.clearProviders();
   P.PP.registerProvider(new P.ProxyPropertyProvider());
-  P.PP.registerProvider(new P.NullPropertyProvider());
   P.PP.registerProvider(new P.SimplePropertyProvider());
   P.PP.registerProvider(new P.AutoPropertyProvider());
   P.PP.registerProvider(new P.ArrayPropertyProvider());
