@@ -116,6 +116,17 @@ module.exports = function(grunt) {
       ]
     },
 
+    compress: {
+      main: {
+        options: {
+          mode: 'gzip'
+        },
+        files: [
+          {expand: true, src: ['dist/js/proact.min.js'], dest: '', ext: '.min.gz.js'}
+        ]
+      }
+    },
+
     karma: {
       unit: {
         configFile: 'spec/config/karma.conf.js',
@@ -150,7 +161,6 @@ module.exports = function(grunt) {
           'streams/throttling_stream',
           'streams/debouncing_stream',
           'properties/property',
-          'properties/null_property',
           'properties/auto_property',
           'properties/object_property',
           'properties/array_property',
@@ -161,7 +171,6 @@ module.exports = function(grunt) {
           'cores/array_core',
           'arrays/array',
           'arrays/listeners',
-          'objects/val',
           'objects/prob',
           'registry/registry',
           'registry/dsl',
@@ -185,7 +194,7 @@ module.exports = function(grunt) {
     grunt.config.set('customBuild.files', customFiles);
   });
 
-  grunt.registerTask('build', ['clean:dist', 'setup', 'concat', 'wrap', 'uglify', 'karma:integration']);
+  grunt.registerTask('build', ['clean:dist', 'setup', 'concat', 'wrap', 'uglify', 'compress', 'karma:integration']);
   grunt.registerTask('spec', ['karma:unit']);
   grunt.registerTask('all', ['lint', 'todo', 'spec', 'jsdoc', 'build']);
 
