@@ -69,6 +69,7 @@ ProAct.VERSION = '1.2.1';
  *  <li>ready - Ready for use.</li>
  *  <li>destroyed - Destroyed : An object that is ProAct dependent no more. All the ProAct logic should be cleaned up from it.</li>
  *  <li>error - There was some runtime error while creating or working with the object.</li>
+ *  <li>closed - The object is closed. It can not emit new changes.</li>
  * </ul>
  *
  * @namespace ProAct.States
@@ -77,7 +78,8 @@ ProAct.States = {
   init: 1,
   ready: 2,
   destroyed: 3,
-  error: 4
+  error: 4,
+  closed: 5
 };
 
 

@@ -169,6 +169,17 @@ P.Actor.prototype = {
     this.state = P.States.ready;
   },
 
+  close: function () {
+    if (this.state === P.States.closed) {
+      return;
+    }
+    return this.update(null, 'close');
+  },
+
+  doClose: function () {
+    this.state = P.States.closed;
+  },
+
   /**
    * Called immediately before destruction.
    *
@@ -228,16 +239,16 @@ P.Actor.prototype = {
   },
 
   /**
-   * Checks if <i>this</i> can be dstroyed.
+   * Checks if <i>this</i> can be closed.
    * <p>
    *  Defaults to return true.
    * </p>
    *
    * @memberof ProAct.Actor
    * @instance
-   * @method canDestroy
+   * @method canClose
    */
-  canDestroy: function () {
+  canClose: function () {
     return true;
   },
 
@@ -783,6 +794,10 @@ P.Actor.prototype = {
       throw new Error('You can not trigger actions on destroyed actors!');
     }
 
+    if (this.state === ProAct.States.closed) {
+      return;
+    }
+
     var actor = this;
     if (!P.flow.isRunning()) {
       P.flow.run(function () {
@@ -879,7 +894,7 @@ P.Actor.prototype = {
       return this;
     }
 
-    if (actions === 'close' && !this.canDestroy()) {
+    if (actions === 'close' && !this.canClose()) {
       return this;
     }
 
@@ -909,7 +924,7 @@ P.Actor.prototype = {
     }
 
     if (actions === 'close') {
-      P.flow.pushClose(this, this.destroy);
+      P.flow.pushClose(this, this.doClose);
     }
 
     return this;

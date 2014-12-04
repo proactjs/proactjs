@@ -371,7 +371,7 @@ describe('ProAct.Stream', function () {
 
       stream.triggerClose('last');
 
-      expect(stream.state).toBe(ProAct.States.destroyed);
+      expect(stream.state).toBe(ProAct.States.closed);
       expect(res.length).toBe(1);
       expect(res[0]).toEqual('last');
     });
@@ -389,8 +389,8 @@ describe('ProAct.Stream', function () {
 
       stream1.triggerClose('last');
 
-      expect(stream1.state).toBe(ProAct.States.destroyed);
-      expect(stream2.state).toBe(ProAct.States.destroyed);
+      expect(stream1.state).toBe(ProAct.States.closed);
+      expect(stream2.state).toBe(ProAct.States.closed);
       expect(res.length).toBe(1);
       expect(res[0]).toEqual('last');
     });
@@ -407,18 +407,18 @@ describe('ProAct.Stream', function () {
       });
 
       source1.triggerClose('last');
-      expect(source1.state).toBe(ProAct.States.destroyed);
+      expect(source1.state).toBe(ProAct.States.closed);
       expect(stream.state).toBe(ProAct.States.ready);
       expect(res.length).toBe(0);
 
       source2.triggerClose('last');
-      expect(source2.state).toBe(ProAct.States.destroyed);
+      expect(source2.state).toBe(ProAct.States.closed);
       expect(stream.state).toBe(ProAct.States.ready);
       expect(res.length).toBe(0);
 
       source3.triggerClose('last');
-      expect(source3.state).toBe(ProAct.States.destroyed);
-      expect(stream.state).toBe(ProAct.States.destroyed);
+      expect(source3.state).toBe(ProAct.States.closed);
+      expect(stream.state).toBe(ProAct.States.closed);
       expect(res.length).toBe(1);
       expect(res[0]).toEqual('last');
     });
