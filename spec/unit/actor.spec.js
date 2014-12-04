@@ -146,11 +146,14 @@ describe('ProAct.Actor', function () {
       expect(actor2.listeners.change).toEqual([]);
     });
 
-    it ('Close event destroys the actor on it was triggered', function () {
+  });
+
+  describe('closing', function () {
+    it ('Close event closes the actor on it was triggered', function () {
       var actor = new ProAct.Actor();
       actor.update(null, 'close');
 
-      expect(actor.state).toBe(ProAct.States.destroyed);
+      expect(actor.state).toBe(ProAct.States.closed);
     });
   });
 });
