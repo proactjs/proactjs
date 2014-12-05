@@ -221,6 +221,9 @@ P.U.ex(ProAct.Property, {
    */
   defaultSetter: function (property, setter) {
     return function (newVal) {
+      if (property.state != P.States.ready) {
+        return;
+      }
       newVal = P.Actor.transform(property, newVal);
       if (newVal === P.Actor.BadValue || property.val === newVal) {
         return;
@@ -297,6 +300,10 @@ P.U.ex(ProAct.Property, {
 
     property.destroy();
     return po.__pro__.makeProp(p, l);
+  },
+
+  constant: function (val, meta, queueName) {
+    return P.P.value(val, meta, queueName).close();
   },
 
   value: function (val, meta, queueName) {
