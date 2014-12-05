@@ -47,6 +47,17 @@ describe('ProAct.Property', function () {
     });
   });
 
+  describe('.constant', function () {
+    it('creates independent property with simple value that can not be changed.', function () {
+      var property = ProAct.Property.constant(5);
+
+      expect(property.val).toBe(5);
+
+      property.set(6);
+      expect(property.val).toBe(5);
+    });
+  });
+
   describe('#destroy', function () {
     it('destroys the property', function () {
       var property = new ProAct.Property(obj, 'a');
