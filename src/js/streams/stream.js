@@ -387,7 +387,7 @@ ProAct.Stream.prototype = P.U.ex(Object.create(P.Actor.prototype), {
     return this;
   },
 
-  canDestroy: function () {
+  canClose: function () {
     this.sourceNumber -= 1;
 
     return this.sourceNumber <= 0;
