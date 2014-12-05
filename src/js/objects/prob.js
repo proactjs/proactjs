@@ -97,3 +97,75 @@ function proxy (object, target, meta, targetMeta) {
   return object;
 }
 ProAct.proxy = proxy;
+
+function stream () {
+  return new ProAct.Stream();
+}
+ProAct.stream = stream;
+
+function closed () {
+  return stream().close();
+}
+ProAct.closed = P.never = closed;
+
+function timeout (timeout, value) {
+  var stream = stream();
+
+  window.setTimeout(function () {
+    stream.trigger(value);
+    stream.close();
+  }, timeout);
+
+  return stream;
+}
+ProAct.timeout = ProAct.later = timeout;
+
+function interval (interval, value) {
+  var stream = stream();
+
+  window.setInterval(function () {
+    stream.trigger(value);
+  }, interval);
+
+  return stream;
+}
+ProAct.interval = interval;
+
+function seq (interval, vals) {
+  var stream = stream(),
+      operation;
+
+  if (vals.length > 0) {
+    operation = function () {
+      var value = vals.unshift();
+      stream.trigger(value);
+
+      if (vals.length === 0) {
+        stream.close();
+      } else {
+        window.setTimeout(operation, timeout);
+      }
+    };
+    window.setTimeout(operation, timeout);
+  }
+
+  return stream;
+}
+ProAct.seq = seq;
+
+function repeat (interval, vals) {
+  var stream = stream(), i = 0;
+
+  if (vals.length > 0) {
+    window.setInterval(function () {
+      if (i === vals.length) {
+        i = 0;
+      }
+
+      var value = vals[i++];
+      stream.trigger(value);
+    }, interval);
+  }
+
+  return stream;
+}
