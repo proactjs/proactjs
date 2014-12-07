@@ -153,6 +153,33 @@ function seq (interval, vals) {
 }
 ProAct.seq = seq;
 
+/**
+ * Creates a {@link ProAct.Stream}, which emits values of the passed <i>vals</i> array on the passed interval.
+ * <p>
+ *  When every value is emitted through the stream they are emitted again and again and so on...
+ * <p>
+ * <p>Example:</p>
+ * <pre>
+    var stream = ProAct.repeat(1000, [4, 5]);
+    stream.on(function (v) {
+      console.log(v);
+    });
+
+   // This will print one number on every 1s and the numbers will be 4 5 4 5 4 5 4 5 4 5 .. and so on
+
+ * </pre>
+ *
+ * @method fromInvoke
+ * @memberof ProAct
+ * @static
+ * @param {Number} interval
+ *      The interval on which <i>func</i> will be called and its returned value will
+ *      be triggered into the stream.
+ * @param {Function} func
+ *      The function to invoke in order to get the value to trigger into the stream.
+ * @return {ProAct.Stream}
+ *      A {@link ProAct.Stream} instance.
+ */
 function repeat (interval, vals) {
   var stream = P.stream(), i = 0;
 
