@@ -104,12 +104,12 @@ function stream () {
 ProAct.stream = stream;
 
 function closed () {
-  return stream().close();
+  return P.stream().close();
 }
 ProAct.closed = P.never = closed;
 
 function timeout (timeout, value) {
-  var stream = stream();
+  var stream = P.stream();
 
   window.setTimeout(function () {
     stream.trigger(value);
@@ -121,7 +121,7 @@ function timeout (timeout, value) {
 ProAct.timeout = ProAct.later = timeout;
 
 function interval (interval, value) {
-  var stream = stream();
+  var stream = P.stream();
 
   window.setInterval(function () {
     stream.trigger(value);
@@ -132,7 +132,7 @@ function interval (interval, value) {
 ProAct.interval = interval;
 
 function seq (interval, vals) {
-  var stream = stream(),
+  var stream = P.stream(),
       operation;
 
   if (vals.length > 0) {
@@ -154,7 +154,7 @@ function seq (interval, vals) {
 ProAct.seq = seq;
 
 function repeat (interval, vals) {
-  var stream = stream(), i = 0;
+  var stream = P.stream(), i = 0;
 
   if (vals.length > 0) {
     window.setInterval(function () {
@@ -169,3 +169,44 @@ function repeat (interval, vals) {
 
   return stream;
 }
+ProAct.repeat = repeat;
+
+/**
+ * The {@link ProAct.fromInvoke} creates a {@link ProAct.Stream}, which emits the result of the passed
+ * <i>func</i> argument on every <i>interval</i> milliseconds.
+ * <p>Example:</p>
+ * <pre>
+    var stream = ProAct.fromInvoke(1000, function () {
+      return 5;
+    });
+    stream.on(function (v) {
+      console.log(v);
+    });
+
+    // After 1s we'll see '5' in the log, after 2s we'll see a second '5' in the log and so on...
+
+ * </pre>
+ *
+ * @method fromInvoke
+ * @memberof ProAct
+ * @static
+ * @param {Number} interval
+ *      The interval on which <i>func</i> will be called and its returned value will
+ *      be triggered into the stream.
+ * @param {Function} func
+ *      The function to invoke in order to get the value to trigger into the stream.
+ * @return {ProAct.Stream}
+ *      A {@link ProAct.Stream} instance.
+ */
+function fromInvoke (interval, func) {
+  var stream = P.stream();
+
+  window.setInterval(function () {
+    var value = func.call();
+
+    stream.trigger(value);
+  }, interval);
+
+  return stream;
+}
+ProAct.fromInvoke = fromInvoke;
