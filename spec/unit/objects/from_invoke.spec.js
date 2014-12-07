@@ -14,8 +14,10 @@ describe('ProAct.fromInvoke', function () {
   it ('creates a ProAct.Stream emitting the result of the passed "func" argument on every "interval" milliseconds', function () {
     var stream = ProAct.fromInvoke(1000, function () {
       return 5;
+    }), res = [];
+    stream.on(function (v) {
+      res.push(v);
     });
-    stream.on(resultListener);
 
     expect(res).toEqual([]);
 

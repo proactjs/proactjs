@@ -1,6 +1,5 @@
 'use strict';
 
-var res;
 beforeEach(function() {
   ProAct.currentCaller = null;
 
@@ -32,11 +31,6 @@ beforeEach(function() {
       }
     }
   });
-
-  res = [];
 });
 
-function resultListener (v) {
-  res.push(v);
-}
 
