@@ -530,3 +530,5 @@ ProAct.N = function () {};
  * @static
  */
 ProAct.currentCaller = null;
+
+ProAct.close = ProAct.stop = ProAct.end = {};
