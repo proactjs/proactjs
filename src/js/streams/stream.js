@@ -211,6 +211,9 @@ ProAct.Stream.prototype = P.U.ex(Object.create(P.Actor.prototype), {
    * @see {@link ProAct.Actor#update}
    */
   trigger: function (event, useTransformations) {
+    if (this.listeners.change.length === 0) {
+      return this;
+    }
     if (useTransformations === undefined) {
       useTransformations = true;
     }
