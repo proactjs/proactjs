@@ -223,7 +223,7 @@ ProAct.Registry.Provider.prototype = {
       var type = options[0],
           regexp, matched, args,
           argumentData = slice.call(arguments, 1);
-      if (type) {
+      if (type && !(type === 'basic')) {
         regexp = new RegExp("(\\w*)\\(([\\s\\S]*)\\)");
         matched = regexp.exec(type);
         args = matched[2];
