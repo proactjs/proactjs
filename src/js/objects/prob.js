@@ -98,11 +98,40 @@ function proxy (object, target, meta, targetMeta) {
 }
 ProAct.proxy = proxy;
 
-function stream () {
-  return new ProAct.Stream();
+/**
+ * Creates a {@link ProAct.Stream} instance.
+ *
+ * @method stream
+ * @memberof ProAct
+ * @static
+ * @return {ProAct.Stream}
+ *      A {@link ProAct.Stream} instance.
+ */
+function stream (subscribe, transformations, source, queueName) {
+  if (!subscribe) {
+    return new ProAct.Stream(queueName, source, transformations);
+  } else if (P.U.isFunction(subscribe)) {
+    return new ProAct.SubscribableStream(subscribe, queueName, source, transformations);
+  } else if (P.U.isString(subscribe) && P.registry && P.registry.providers.s) {
+    var provider = P.registry.providers.s,
+        options = transformations || '',
+        args = slice.call(arguments, 2),
+        result = provider.provide.apply(provider, [subscribe.split(':')].concat(args));
+
+    return P.registry.setup(result, options, args);
+  }
 }
 ProAct.stream = stream;
 
+/**
+ * Creates a closed {@link ProAct.Stream}.
+ *
+ * @method closed
+ * @memberof ProAct
+ * @static
+ * @return {ProAct.Stream}
+ *      A closed {@link ProAct.Stream} instance.
+ */
 function closed () {
   return P.stream().close();
 }
@@ -272,6 +301,9 @@ ProAct.repeat = repeat;
 /**
  * The {@link ProAct.fromInvoke} creates a {@link ProAct.Stream}, which emits the result of the passed
  * <i>func</i> argument on every <i>interval</i> milliseconds.
+ * <p>
+ *  If <i>func</i> returns {@link ProAct.closed} the stream is closed.
+ * </p>
  * <p>Example:</p>
  * <pre>
     var stream = ProAct.fromInvoke(1000, function () {
