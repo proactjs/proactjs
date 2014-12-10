@@ -50,7 +50,8 @@ var ProAct = Pro = P = {},
     rProto,
     dsl, dslOps,
     opStoreAll,
-    streamProvider, functionProvider;
+    streamProvider, functionProvider,
+    attachers, attacherKeys;
 
 
 /**
