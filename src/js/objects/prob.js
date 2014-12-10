@@ -112,13 +112,10 @@ function stream (subscribe, transformations, source, queueName) {
     return new ProAct.Stream(queueName, source, transformations);
   } else if (P.U.isFunction(subscribe)) {
     return new ProAct.SubscribableStream(subscribe, queueName, source, transformations);
-  } else if (P.U.isString(subscribe) && P.registry && P.registry.providers.s) {
-    var provider = P.registry.providers.s,
-        options = transformations || '',
-        args = slice.call(arguments, 2),
-        result = provider.provide.apply(provider, [subscribe.split(':')].concat(args));
-
-    return P.registry.setup(result, options, args);
+  } else if (P.U.isString(subscribe) && P.registry) {
+    return P.registry.setup(
+      new ProAct.Stream(), subscribe, slice.call(arguments, 1)
+    );
   }
 }
 ProAct.stream = stream;
@@ -346,3 +343,54 @@ function fromInvoke (interval, func) {
   return stream;
 }
 ProAct.fromInvoke = fromInvoke;
+
+function fromCallback (callbackCaller) {
+  var stream = P.stream();
+
+  callbackCaller(function (result) {
+    stream.trigger(result);
+    stream.close();
+  });
+
+  return stream;
+}
+
+ProAct.fromCallback = fromCallback;
+
+attachers = {
+  addEventListener: 'removeEventListener',
+  addListener: 'removeListener',
+  on: 'off'
+};
+attacherKeys = Object.keys(attachers);
+
+function fromEventDispatcher (target, eventType) {
+  var i, ln = attacherKeys.length,
+      on, off,
+      attacher, current;
+
+  for (i = 0; i < ln; i++) {
+    attacher = attacherKeys[i];
+    current = target[attacher];
+
+    if (current && P.U.isFunction(current)) {
+      on = attacher;
+      off = attachers[attacher];
+      break;
+    }
+  }
+
+  if (on === undefined) {
+    return null;
+  }
+
+  return new ProAct.SubscribableStream(function (stream) {
+    target[on](eventType, stream.trigger);
+
+    return function (stream) {
+      target[off](eventType, stream.trigger);
+    };
+  });
+}
+
+ProAct.fromEventDispatcher = fromEventDispatcher;
