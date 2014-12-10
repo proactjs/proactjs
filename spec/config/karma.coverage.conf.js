@@ -17,6 +17,7 @@ module.exports = function(karma) {
       'src/js/streams/delayed_stream.js',
       'src/js/streams/throttling_stream.js',
       'src/js/streams/debouncing_stream.js',
+      'src/js/streams/subscribable_stream.js',
       'src/js/properties/property.js',
       'src/js/properties/auto_property.js',
       'src/js/properties/object_property.js',
