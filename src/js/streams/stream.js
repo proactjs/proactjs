@@ -418,6 +418,15 @@ P.U.ex(P.F.prototype, {
   }
 });
 
+P.U.ex(P.Actor.prototype, {
+  toStream: function () {
+    return new P.S(this.queueName, this);
+  },
+
+  take: function () {
+  }
+});
+
 P.S.prototype.t = P.S.prototype.trigger;
 P.S.prototype.tt = P.S.prototype.triggerMany;
 P.S.prototype.te = P.S.prototype.triggerErr;
