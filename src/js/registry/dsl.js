@@ -561,6 +561,17 @@ ProAct.DSL = {
        */
       'true': function (event) {
         return true;
+      },
+
+      '!': function (value) {
+        return !value;
+      },
+
+      'time': function (value) {
+        if (P.U.isObject(value)) {
+          value.time = new Date().getTime();
+        }
+        return value;
       }
     },
 
