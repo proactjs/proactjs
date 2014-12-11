@@ -514,3 +514,9 @@ ProAct.Property.prototype = P.U.ex(Object.create(P.Actor.prototype), {
     return this.val;
   }
 });
+
+P.U.ex(P.Actor.prototype, {
+  toProperty: function () {
+    return P.P.value(this.val, {}, this.queueName).into(this);
+  }
+});
