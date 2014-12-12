@@ -3,7 +3,7 @@
 describe('ProAct.Property & ProAct.Stream', function () {
 
   it ('is possible to direct a steam into a property', function () {
-    var stream = new ProAct.Stream(),
+    var stream = ProAct.stream(),
         obj = ProAct.prob({
           a: 4
         });
@@ -15,7 +15,7 @@ describe('ProAct.Property & ProAct.Stream', function () {
   });
 
   it ('is possible to direct a steam chain into a property', function () {
-    var stream1 = new ProAct.Stream(),
+    var stream1 = ProAct.stream(),
         stream2 = stream1.map(function (el) { return el * 3; }),
         stream3 = stream2.filter(function (el) { return el % 2 == 0; }),
         obj = ProAct.prob({
@@ -48,7 +48,7 @@ describe('ProAct.Property & ProAct.Stream', function () {
   });
 
   it ('diamond streams update properties only once', function () {
-    var s1 = new ProAct.Stream(),
+    var s1 = ProAct.stream(),
         s2 = new ProAct.Stream(s1),
         s3 = new ProAct.Stream(s1),
         s4 = s3.merge(s2), res = [],
@@ -69,7 +69,7 @@ describe('ProAct.Property & ProAct.Stream', function () {
   });
 
   it ('auto property updates from buffered event are applied only once', function () {
-    var s = new ProAct.Stream().delay(110),
+    var s = ProAct.stream().delay(110),
         res = [],
         obj = ProAct.prob({
           prop: 4,

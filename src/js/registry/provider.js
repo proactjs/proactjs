@@ -293,7 +293,7 @@ ProAct.Registry.StreamProvider.prototype = P.U.ex(Object.create(P.R.Provider.pro
      *      An isntance of {@link ProAct.Stream}.
      * @see {@link ProAct.Stream}
      */
-    basic: function (args) { return new P.S(args[0]); },
+    basic: function (args) { return P.stream(undefined, undefined, undefined, args[0]); },
 
     /**
      * Constructs a {@link ProAct.DelayedStream}

@@ -242,7 +242,7 @@ P.U.ex(ProAct.Property, {
         return;
       }
 
-      property.update();
+      ActorUtil.update.call(property);
     };
   },
 
@@ -480,19 +480,19 @@ ProAct.Property.prototype = P.U.ex(Object.create(P.Actor.prototype), {
 
   map: function (mappingFunction) {
     var prop = P.P.value(this.val, {}, this.queueName).mapping(mappingFunction).into(this);
-    this.update();
+    ActorUtil.update.call(this);
     return prop;
   },
 
   filter: function (filteringFunction) {
     var prop = P.P.value(this.val, {}, this.queueName).filtering(filteringFunction).into(this);
-    this.update();
+    ActorUtil.update.call(this);
     return prop;
   },
 
   accumulate: function (initVal, accumulationFunction) {
     var prop = P.P.value(this.val, {}, this.queueName).accumulation(initVal, accumulationFunction).into(this);
-    this.update();
+    ActorUtil.update.call(this);
     return prop;
   },
 

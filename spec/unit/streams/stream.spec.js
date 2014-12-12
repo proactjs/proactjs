@@ -2,14 +2,14 @@
 
 describe('ProAct.Stream', function () {
   it ('is in ProAct.States.ready state after creation', function () {
-    var stream = new ProAct.Stream();
+    var stream = P.stream();
 
     expect(stream.state).toBe(ProAct.States.ready);
   });
 
   describe('#trigger', function () {
     it ('updates the stream listeners', function () {
-      var stream = new ProAct.Stream(), res = [];
+      var stream = ProAct.stream(), res = [];
       stream.on(function (number) {
         res.push(number);
       });
@@ -26,7 +26,7 @@ describe('ProAct.Stream', function () {
 
   describe('#map', function () {
     it ('creates a new stream from the this stream, using the passed function as default transformation', function () {
-      var stream1 = new ProAct.Stream(),
+      var stream1 = P.stream(),
           stream2 = stream1.map(function (number) {return number * 2;}),
           res = [];
       stream2.on(function (number) {
@@ -43,7 +43,7 @@ describe('ProAct.Stream', function () {
     });
 
     it ('is transitive', function () {
-      var stream1 = new ProAct.Stream(),
+      var stream1 = P.stream(),
           stream2 = stream1.map(function (number) {return number * 2;}),
           stream3 = stream2.map(function (number) {return number * 3;}),
           stream4 = stream3.map(function (number) {return '(' + number + ')';}),
@@ -63,7 +63,7 @@ describe('ProAct.Stream', function () {
     });
 
     it ('works with predefined mapping functions', function () {
-      var stream1 = new ProAct.Stream(),
+      var stream1 = P.stream(),
           stream2 = stream1.map('-'),
           res = [];
 
@@ -79,7 +79,7 @@ describe('ProAct.Stream', function () {
       P.registry.store('l:test', function (v) {
         return '(' + v + ')';
       });
-      var stream1 = new ProAct.Stream(),
+      var stream1 = P.stream(),
           stream2 = stream1.map('l:test'),
           res = [];
 
@@ -94,7 +94,7 @@ describe('ProAct.Stream', function () {
 
   describe('#filter', function () {
     it ('filters only chosen values', function() {
-      var stream1 = new ProAct.Stream(),
+      var stream1 = P.stream(),
           stream2 = stream1.filter(function (number) {return number % 2 === 0;}),
           res = [];
 
@@ -118,7 +118,7 @@ describe('ProAct.Stream', function () {
     });
 
     it ('is chainable', function () {
-      var stream1 = new ProAct.Stream(),
+      var stream1 = P.stream(),
           stream2 = stream1.filter(function (number) {return number % 2 === 0;}),
           stream3 = stream2.filter(function (number) {return number % 3 === 0;}),
           res = [];
@@ -143,7 +143,7 @@ describe('ProAct.Stream', function () {
     });
 
     it ('works with predefined filtering functions', function () {
-      var stream1 = new ProAct.Stream(),
+      var stream1 = P.stream(),
           stream2 = stream1.filter('-'),
           res = [];
 
@@ -163,7 +163,7 @@ describe('ProAct.Stream', function () {
         return v > 5;
       });
 
-      var stream1 = new ProAct.Stream(),
+      var stream1 = P.stream(),
           stream2 = stream1.filter('l:test'),
           res = [];
 
@@ -181,7 +181,7 @@ describe('ProAct.Stream', function () {
 
   describe('#reduce', function () {
     it ('creates a ProAct.Property that listens to accumulations', function () {
-      var stream = new ProAct.Stream(),
+      var stream = P.stream(),
           reduced = stream.reduce(0, function (x, y) {return x + y;});
       expect(reduced.v).toEqual(0);
 
@@ -195,7 +195,7 @@ describe('ProAct.Stream', function () {
 
   describe('#accumulate', function () {
     it ('accumulates values using the passed function', function () {
-      var stream1 = new ProAct.Stream(),
+      var stream1 = P.stream(),
           stream2 = stream1.accumulate(0, function (x, y) {return x + y;}),
           res = [];
 
@@ -219,7 +219,7 @@ describe('ProAct.Stream', function () {
     });
 
     it ('can be chained', function () {
-      var stream1 = new ProAct.Stream(),
+      var stream1 = P.stream(),
           stream2 = stream1.accumulate(0, function (x, y) {return x + y;}),
           stream3 = stream2.accumulate(1, function (x, y) {return x * y;}),
           res = [];
@@ -241,7 +241,7 @@ describe('ProAct.Stream', function () {
     });
 
     it ('works with predefined accumulating functions', function () {
-      var stream1 = new ProAct.Stream(),
+      var stream1 = P.stream(),
           stream2 = stream1.accumulate('+'),
           res = [];
 
@@ -261,7 +261,7 @@ describe('ProAct.Stream', function () {
         return a * b;
       }]);
 
-      var stream1 = new ProAct.Stream(),
+      var stream1 = P.stream(),
           stream2 = stream1.accumulate('l:test'),
           res = [];
 
@@ -279,8 +279,8 @@ describe('ProAct.Stream', function () {
 
   describe('#merge', function () {
     it ('merges two streams events into one stream of events', function () {
-      var stream1 = new ProAct.Stream(),
-          stream2 = new ProAct.Stream(),
+      var stream1 = P.stream(),
+          stream2 = P.stream(),
           stream3 = stream1.merge(stream2),
           res = [];
 
@@ -300,7 +300,7 @@ describe('ProAct.Stream', function () {
 
   describe('Errors', function () {
     it ('can be triggered with #triggerErr and listen for with #onErr', function () {
-      var stream = new ProAct.Stream(), res = [], resErr = [];
+      var stream = P.stream(), res = [], resErr = [];
 
       stream.onErr(function (error) {
         resErr.push(error);
@@ -319,7 +319,7 @@ describe('ProAct.Stream', function () {
     });
 
     it ('can be chained through many streams', function () {
-      var stream1 = new ProAct.Stream(),
+      var stream1 = P.stream(),
           stream2 = new ProAct.Stream(stream1),
           resErr = [];
 
@@ -332,7 +332,7 @@ describe('ProAct.Stream', function () {
     });
 
     it ('can be generated from transformations', function () {
-      var stream1 = new ProAct.Stream(),
+      var stream1 = P.stream(),
           stream2 = stream1.map(function (v) {
             if (v < 0) {
               throw Error('no!');
@@ -363,7 +363,7 @@ describe('ProAct.Stream', function () {
 
   describe('Close', function () {
     it ('triggering closing event destroys the stream, but the event is delivered to its listeners', function () {
-      var stream = new ProAct.Stream(), res = [];
+      var stream = P.stream(), res = [];
 
       stream.onClose(function (e) {
         res.push(e);
@@ -377,7 +377,7 @@ describe('ProAct.Stream', function () {
     });
 
     it ('triggering closing event destroys the stream and its source, but the event is delivered to its listeners', function () {
-      var stream1 = new ProAct.Stream(),
+      var stream1 = P.stream(),
           stream2 = stream1.map(function (e) {
             return e + ' time';
           }),
@@ -396,10 +396,10 @@ describe('ProAct.Stream', function () {
     });
 
     it ('if stream is a merge stream, it is not closed untill all of its sources are closed', function () {
-      var source1 = new ProAct.Stream(),
-          source2 = new ProAct.Stream(),
-          source3 = new ProAct.Stream(),
-          stream = new ProAct.Stream().into(source1, source2, source3),
+      var source1 = P.stream(),
+          source2 = P.stream(),
+          source3 = P.stream(),
+          stream = P.stream().into(source1, source2, source3),
           res = [];
 
       stream.onClose(function (e) {
@@ -424,4 +424,31 @@ describe('ProAct.Stream', function () {
     });
   });
 
+  describe ('ProAct.Actor#take', function () {
+    it ('creates a limited stream with limit the passed limit with the caller as source', function () {
+      var stream = ProAct.stream(),
+          take = stream.take(3),
+          res = [], closed = false;
+
+      take.on(function (v) {
+        res.push(v);
+      });
+
+      take.onClose(function () {
+        closed = true;
+      });
+
+      stream.trigger(3);
+      expect(res).toEqual([3]);
+      expect(closed).toBe(false);
+
+      stream.trigger(5);
+      expect(res).toEqual([3, 5]);
+      expect(closed).toBe(false);
+
+      stream.trigger(8);
+      expect(res).toEqual([3, 5, 8]);
+      expect(closed).toBe(true);
+    });
+  });
 });

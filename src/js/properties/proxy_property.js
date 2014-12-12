@@ -59,7 +59,7 @@ function ProxyProperty (queueName, proObject, property, target) {
       return;
     }
 
-    target.update();
+    ActorUtil.update.call();
   };
 
   P.P.call(this, queueName, proObject, property, getter, setter);

@@ -341,7 +341,7 @@ ProAct.ArrayCore.prototype = P.U.ex(Object.create(P.C.prototype), {
       actions = 'length';
     }
 
-    return this.update(null, actions, [op, index, spliced, newItems]);
+    return ActorUtil.update.call(this, null, actions, [op, index, spliced, newItems]);
   },
 
   /**
@@ -420,7 +420,7 @@ ProAct.ArrayCore.prototype = P.U.ex(Object.create(P.C.prototype), {
       oldLength = array._array.length;
       array._array.length = newLength;
 
-      self.update(null, 'length', [pArrayOps.setLength, -1, oldLength, newLength]);
+      ActorUtil.update.call(self, null, 'length', [pArrayOps.setLength, -1, oldLength, newLength]);
 
       return newLength;
     };
@@ -490,7 +490,7 @@ ProAct.ArrayCore.prototype = P.U.ex(Object.create(P.C.prototype), {
         oldVal = array[i];
         array[i] = newVal;
 
-        self.update(null, 'index', [pArrayOps.set, i, oldVal, newVal]);
+        ActorUtil.update.call(self, null, 'index', [pArrayOps.set, i, oldVal, newVal]);
       }
     });
   }

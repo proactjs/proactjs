@@ -1,6 +1,7 @@
 'use strict';
 
 describe('ProAct.Actor', function () {
+
   describe('#on', function () {
     it ('adds observer to the actor', function () {
       var actor = new ProAct.Actor(), res = [];
@@ -151,7 +152,7 @@ describe('ProAct.Actor', function () {
   describe('closing', function () {
     it ('Close event closes the actor on it was triggered', function () {
       var actor = new ProAct.Actor();
-      actor.update(null, 'close');
+      actor.close();
 
       expect(actor.state).toBe(ProAct.States.closed);
     });

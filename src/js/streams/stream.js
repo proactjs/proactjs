@@ -1,3 +1,44 @@
+StreamUtil = {
+  go: function (event, useTransformations) {
+    if (this.listeners.change.length === 0) {
+      return this;
+    }
+    if (useTransformations) {
+      try {
+        event = P.Actor.transform(this, event);
+      } catch (e) {
+        this.triggerErr(e);
+        return this;
+      }
+    }
+
+    if (event === P.Actor.BadValue) {
+      return this;
+    }
+
+    return ActorUtil.update.call(this, event);
+  },
+
+  triggerMany: function () {
+    var i, args = slice.call(arguments), ln = args.length;
+
+    for (i = 0; i < ln; i++) {
+      this.trigger(args[i], true);
+    }
+
+    return this;
+  },
+
+  trigger: function (event, useTransformations) {
+    if (useTransformations === undefined) {
+      useTransformations = true;
+    }
+
+    return StreamUtil.go.call(this, event, useTransformations);
+  }
+
+};
+
 /**
  * <p>
  *  Constructs a ProAct.Stream. The stream is a simple {@link ProAct.Actor}, without state.
@@ -98,7 +139,11 @@ ProAct.Stream.prototype = P.U.ex(Object.create(P.Actor.prototype), {
     if (!this.listener) {
       var stream = this;
       this.listener = function (event) {
-        stream.trigger(event, true);
+        if (stream.trigger) {
+          stream.trigger(event, true);
+        } else {
+          StreamUtil.trigger.call(stream, event, true);
+        }
       };
     }
 
@@ -168,7 +213,6 @@ ProAct.Stream.prototype = P.U.ex(Object.create(P.Actor.prototype), {
    *      The listener to defer. It should be a function or object defining the <i>call</i> method.
    * @return {ProAct.Actor}
    *      <i>this</i>
-   * @see {@link ProAct.Actor#willUpdate}
    * @see {@link ProAct.Actor#makeListener}
    * @see {@link ProAct.flow}
    */
@@ -192,64 +236,6 @@ ProAct.Stream.prototype = P.U.ex(Object.create(P.Actor.prototype), {
 
   /**
    * <p>
-   *  Triggers a new event/value to the stream. Anything that is listening for events from
-   *  this stream will get updated.
-   * </p>
-   * <p>
-   *  ProAct.Stream.t is alias of this method.
-   * </p>
-   *
-   * @memberof ProAct.Stream
-   * @instance
-   * @method trigger
-   * @param {Object} event
-   *      The event/value to pass to trigger.
-   * @param {Boolean} useTransformations
-   *      If the stream should transform the triggered value. By default it is true (if not passed)
-   * @return {ProAct.Stream}
-   *      <i>this</i>
-   * @see {@link ProAct.Actor#update}
-   */
-  trigger: function (event, useTransformations) {
-    if (this.listeners.change.length === 0) {
-      return this;
-    }
-    if (useTransformations === undefined) {
-      useTransformations = true;
-    }
-
-    return this.go(event, useTransformations);
-  },
-
-  /**
-   * <p>
-   *  Triggers all the passed params, using transformations.
-   * </p>
-   * <p>
-   *  ProAct.Stream.tt is alias of this method.
-   * </p>
-   *
-   * @memberof ProAct.Stream
-   * @instance
-   * @method triggerMany
-   * @param [...]
-   *      A list of events/values to trigger
-   * @return {ProAct.Stream}
-   *      <i>this</i>
-   * @see {@link ProAct.Stream#trigger}
-   */
-  triggerMany: function () {
-    var i, args = slice.call(arguments), ln = args.length;
-
-    for (i = 0; i < ln; i++) {
-      this.trigger(args[i], true);
-    }
-
-    return this;
-  },
-
-  /**
-   * <p>
    *  Triggers a new error to the stream. Anything that is listening for errors from
    *  this stream will get updated.
    * </p>
@@ -267,7 +253,7 @@ ProAct.Stream.prototype = P.U.ex(Object.create(P.Actor.prototype), {
    * @see {@link ProAct.Actor#update}
    */
   triggerErr: function (err) {
-    return this.update(err, 'error');
+    return ActorUtil.update.call(this, err, 'error');
   },
 
   /**
@@ -289,25 +275,7 @@ ProAct.Stream.prototype = P.U.ex(Object.create(P.Actor.prototype), {
    * @see {@link ProAct.Actor#update}
    */
   triggerClose: function (data) {
-    return this.update(data, 'close');
-  },
-
-  // private
-  go: function (event, useTransformations) {
-    if (useTransformations) {
-      try {
-        event = P.Actor.transform(this, event);
-      } catch (e) {
-        this.triggerErr(e);
-        return this;
-      }
-    }
-
-    if (event === P.Actor.BadValue) {
-      return this;
-    }
-
-    return this.update(event);
+    return ActorUtil.update.call(this, data, 'close');
   },
 
   /**
@@ -423,7 +391,51 @@ P.U.ex(P.Actor.prototype, {
     return new P.S(this.queueName, this);
   },
 
-  take: function () {
+  take: function (limit) {
+    var left = limit;
+    return this.fromLambda(function (stream, event) {
+      left--;
+      if (left >= 0) {
+        stream.trigger(event, true);
+      }
+      if (left <= 0 && stream.state === ProAct.States.ready) {
+        stream.close();
+      }
+    });
+  },
+
+  takeWhile: function (condition) {
+    //return new P.CS(condition, this.queueName, this);
+  },
+
+  fromLambda: function (lambda) {
+    var stream = new ProAct.Stream(this.queueName);
+    this.onAll(function (e) {
+      stream.trigger = StreamUtil.trigger;
+      lambda.call(null, stream, e);
+      stream.trigger = undefined;
+    });
+
+    return stream;
+  },
+
+  flatMap: function (mapper) {
+    return this.fromLambda(function (stream, e) {
+      var actor = mapper ? mapper.call(null, e) : e;
+      stream.into(actor);
+    });
+  },
+
+  flatMapLast: function (mapper) {
+    var oldActor;
+    return this.fromLambda(function (stream, e) {
+      var actor = mapper ? mapper.call(null, e) : e;
+      if (oldActor) {
+        oldActor.offAll(stream.makeListener());
+      }
+      oldActor = actor;
+      stream.into(actor);
+    });
   }
 });
 

@@ -31,6 +31,8 @@ beforeEach(function() {
       }
     }
   });
+
+  ProAct.Actor.prototype.update = ProAct.ActorUtil.update;
 });
 
 

@@ -41,7 +41,7 @@ describe('ProAct', function () {
 
     describe('meta & dsl', function () {
       it ('uses property metadata to configure its properties', function () {
-        var stream = new ProAct.Stream(),
+        var stream = ProAct.stream(),
             proObj = ProAct.prob({
               counter: 0,
               renderCounter: function () {

@@ -51,7 +51,8 @@ var ProAct = Pro = P = {},
     dsl, dslOps,
     opStoreAll,
     streamProvider, functionProvider,
-    attachers, attacherKeys;
+    attachers, attacherKeys,
+    ActorUtil, StreamUtil;
 
 
 /**

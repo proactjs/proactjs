@@ -135,7 +135,7 @@ ProAct.Core.prototype = P.U.ex(Object.create(P.Actor.prototype), {
    * @see {@link ProAct.Actor#update}
    */
   call: function (event) {
-    this.update(event);
+    ActorUtil.update.call(this, event);
   }
 });
 

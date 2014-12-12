@@ -112,7 +112,7 @@ function ArrayProperty (queueName, proObject, property) {
             toRemove = [];
           }
 
-          self.update();
+          ActorUtil.update.call(self);
         };
 
     P.P.defineProp(self.proObject, self.property, get, set);

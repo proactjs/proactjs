@@ -1,3 +1,106 @@
+ActorUtil = {
+  update: function (source, actions, eventData) {
+    if (this.state === ProAct.States.destroyed) {
+      throw new Error('You can not trigger actions on destroyed actors!');
+    }
+
+    if (this.state === ProAct.States.closed) {
+      return;
+    }
+
+    var actor = this;
+    if (!P.flow.isRunning()) {
+      P.flow.run(function () {
+        ActorUtil.doUpdate.call(actor, source, actions, eventData);
+      });
+    } else {
+      ActorUtil.doUpdate.call(actor, source, actions, eventData);
+    }
+    return this;
+  },
+
+  doUpdate: function (source, actions, eventData) {
+    if (!actions) {
+      actions = this.defaultActions();
+    }
+
+    var ln, i, j,
+        listener,
+        listeners,
+        length,
+        event;
+
+    if (P.U.isString(actions)) {
+      listeners = this.listeners[actions];
+    } else {
+      while (actions.indexOf('close') !== -1) {
+        P.U.remove(actions, 'close');
+      }
+
+      listeners = [];
+      ln = actions.length;
+
+      if (this.parent === null && actions.length === 0) {
+        return this;
+      }
+
+      for (i = 0; i < ln; i++) {
+        listenersForAction = this.listeners[actions[i]];
+
+        if (listenersForAction) {
+          for (j = 0; j < listenersForAction.length; j++) {
+            if (listenersForAction[j].destroyed) {
+              this.off(actions[i], listenersForAction[j]);
+              continue;
+            }
+          }
+          listeners = listeners.concat(listenersForAction);
+        }
+      }
+    }
+
+    if (listeners.length === 0 && this.parent === null && actions !== 'close') {
+      return this;
+    }
+
+    if (actions === 'close' && !this.canClose()) {
+      return this;
+    }
+
+    length = listeners.length;
+    event = this.makeEvent(source, eventData);
+
+    for (i = 0; i < length; i++) {
+      listener = listeners[i];
+      if (!listener) {
+        throw new Error('Invalid null listener for actions : ' + actions);
+      }
+
+      if (P.U.isString(actions) && listener.destroyed) {
+        this.off(actions, listener);
+        continue;
+      }
+
+      this.defer(event, listener);
+
+      if (listener.property) {
+        ActorUtil.doUpdate.call(listener.property, event);
+      }
+    }
+
+    if (this.parent && this.parent.call) {
+      this.defer(event, this.parent);
+    }
+
+    if (actions === 'close') {
+      P.flow.pushClose(this, this.doClose);
+    }
+
+    return this;
+  }
+};
+P.U.defValProp(ProAct, 'ActorUtil', false, false, false, ActorUtil);
+
 /**
  * <p>
  *  Constructs a ProAct.Actor. It can be used both as observer and observable.
@@ -173,11 +276,12 @@ P.Actor.prototype = {
     if (this.state === P.States.closed) {
       return;
     }
-    return this.update(null, 'close');
+    return ActorUtil.update.call(this, null, 'close');
   },
 
   doClose: function () {
     this.state = P.States.closed;
+    this.offAll();
   },
 
   /**
@@ -504,6 +608,16 @@ P.Actor.prototype = {
     return this.off('close', listener);
   },
 
+  onAll: function (listener) {
+    return this.on(listener).onClose(listener).onErr(listener);
+  },
+
+  offAll: function (listener) {
+    this.off(listener);
+    this.off('error', listener);
+    return this.off('close', listener);
+  },
+
   /**
    * Links source actors into this actor. This means that <i>this actor</i>
    * is listening for changes from the <i>sources</i>.
@@ -755,180 +869,6 @@ P.Actor.prototype = {
     return P.P.value(initVal).into(this.accumulate(initVal, accumulationFunction));
   },
 
-  /**
-   * Update notifies all the observers of this ProAct.Actor.
-   * <p>
-   *  If there is running {@link ProAct.flow} instance it uses it to call the
-   *  {@link ProAct.Actor.willUpdate} action with the passed <i>parameters</i>.
-   * </p>
-   * <p>
-   *  If {@link ProAct.flow} is not running, a new instance is created and the
-   *  {@link ProAct.Actor.willUpdate} action of <i>this</i> is called in it.
-   * </p>
-   *
-   * TODO Should be 'triggerActions'
-   *
-   * @memberof ProAct.Actor
-   * @instance
-   * @method update
-   * @param {Object} source
-   *      The source of the update, for example update of ProAct.Actor, that <i>this</i> is observing.
-   *      <p>
-   *        Can be null - no source.
-   *      </p>
-   *      <p>
-   *        In the most cases {@link ProAct.Event} is the source.
-   *      </p>
-   * @param {Array|String} actions
-   *      A list of actions or a single action to update the listeners that listen to it.
-   * @param {Array} eventData
-   *      Data to be passed to the event to be created.
-   * @return {ProAct.Actor}
-   *      <i>this</i>
-   * @see {@link ProAct.Actor#willUpdate}
-   * @see {@link ProAct.Actor#makeEvent}
-   * @see {@link ProAct.flow}
-   */
-  update: function (source, actions, eventData) {
-    if (this.state === ProAct.States.destroyed) {
-      throw new Error('You can not trigger actions on destroyed actors!');
-    }
-
-    if (this.state === ProAct.States.closed) {
-      return;
-    }
-
-    var actor = this;
-    if (!P.flow.isRunning()) {
-      P.flow.run(function () {
-        actor.willUpdate(source, actions, eventData);
-      });
-    } else {
-      actor.willUpdate(source, actions, eventData);
-    }
-    return this;
-  },
-
-  /**
-   * <b>willUpdate()</b> is the method used to notify observers that <i>this</i> ProAct.Actor will be updated.
-   * <p>
-   *  It uses the {@link ProAct.Actor#defer} to defer the listeners of the listening ProAct.Actors.
-   *  The idea is that everything should be executed in a running {@link ProAct.Flow}, so there will be no repetative
-   *  updates.
-   * </p>
-   * <p>
-   *  The update value will come from the {@link ProAct.Actor#makeEvent} method and the <i>source</i>
-   *  parameter will be passed to it.
-   * </p>
-   * <p>
-   *  If <i>this</i> ProAct.Actor has a <i>parent</i> ProAct.Actor it will be notified in the running flow
-   *  as well.
-   * </p>
-   *
-   * TODO Should be 'update'
-   *
-   * @memberof ProAct.Actor
-   * @instance
-   * @method willUpdate
-   * @param {Object} source
-   *      The source of the update, for example update of ProAct.Actor, that <i>this</i> is observing.
-   *      <p>
-   *        Can be null - no source.
-   *      </p>
-   *      <p>
-   *        In the most cases {@link ProAct.Event} is the source.
-   *      </p>
-   * @param {Array|String} actions
-   *      A list of actions or a single action to update the listeners that listen to it.
-   *      If there is no action provided, the actions from {@link ProAct.Actor#defaultActions} are used.
-   * @param {Array} eventData
-   *      Data to be passed to the event to be created.
-   * @return {ProAct.Actor}
-   *      <i>this</i>
-   * @see {@link ProAct.Actor#defer}
-   * @see {@link ProAct.Actor#makeEvent}
-   * @see {@link ProAct.Actor#defaultActions}
-   * @see {@link ProAct.flow}
-   */
-  willUpdate: function (source, actions, eventData) {
-    if (!actions) {
-      actions = this.defaultActions();
-    }
-
-    var ln, i, j,
-        listener,
-        listeners,
-        length,
-        event;
-
-    if (P.U.isString(actions)) {
-      listeners = this.listeners[actions];
-    } else {
-      while (actions.indexOf('close') !== -1) {
-        P.U.remove(actions, 'close');
-      }
-
-      listeners = [];
-      ln = actions.length;
-
-      if (this.parent === null && actions.length === 0) {
-        return this;
-      }
-
-      for (i = 0; i < ln; i++) {
-        listenersForAction = this.listeners[actions[i]];
-
-        if (listenersForAction) {
-          for (j = 0; j < listenersForAction.length; j++) {
-            if (listenersForAction[j].destroyed) {
-              this.off(actions[i], listenersForAction[j]);
-              continue;
-            }
-          }
-          listeners = listeners.concat(listenersForAction);
-        }
-      }
-    }
-
-    if (listeners.length === 0 && this.parent === null && actions !== 'close') {
-      return this;
-    }
-
-    if (actions === 'close' && !this.canClose()) {
-      return this;
-    }
-
-    length = listeners.length;
-    event = this.makeEvent(source, eventData);
-
-    for (i = 0; i < length; i++) {
-      listener = listeners[i];
-      if (!listener) {
-        throw new Error('Invalid null listener for actions : ' + actions);
-      }
-
-      if (P.U.isString(actions) && listener.destroyed) {
-        this.off(actions, listener);
-        continue;
-      }
-
-      this.defer(event, listener);
-
-      if (listener.property) {
-        listener.property.willUpdate(event);
-      }
-    }
-
-    if (this.parent && this.parent.call) {
-      this.defer(event, this.parent);
-    }
-
-    if (actions === 'close') {
-      P.flow.pushClose(this, this.doClose);
-    }
-
-    return this;
-  },
 
   /**
    * Defers a ProAct.Actor listener.
@@ -946,7 +886,6 @@ P.Actor.prototype = {
    *      The listener to defer. It should be a function or object defining the <i>call</i> method.
    * @return {ProAct.Actor}
    *      <i>this</i>
-   * @see {@link ProAct.Actor#willUpdate}
    * @see {@link ProAct.Actor#makeListener}
    * @see {@link ProAct.flow}
    */
@@ -959,7 +898,7 @@ P.Actor.prototype = {
       P.flow.pushOnce(queueName, listener, listener.call, [event]);
     }
     return this;
-  },
+  }
 };
 
 /**

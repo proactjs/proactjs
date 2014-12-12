@@ -99,9 +99,7 @@ describe('ProAct.Property', function () {
       ProAct.currentCaller = null;
       expect(property.listeners.change.length).toBe(1);
 
-      ProAct.flow.run(function () {
-        property.willUpdate();
-      });
+      property.update();
       expect(obj.b).toEqual('my val is cool');
     });
   });
@@ -121,10 +119,10 @@ describe('ProAct.Property', function () {
     it('notifies the listeners of the property', function () {
       var property = new ProAct.Property(obj, 'a');
       property.on('change', function () {});
-      spyOn(property, 'willUpdate');
+      spyOn(ProAct.ActorUtil, 'doUpdate');
       property.set(3);
 
-      expect(property.willUpdate).toHaveBeenCalled();
+      expect(ProAct.ActorUtil.doUpdate).toHaveBeenCalled();
     });
 
     describe('transformators', function () {
@@ -156,12 +154,12 @@ describe('ProAct.Property', function () {
     });
   });
 
-  describe('#willUpdate', function () {
+  describe('ProAct.ActorUtil#doUpdate', function () {
     it('must be called in a flow', function () {
       var property = new ProAct.Property(obj, 'a'), go;
       property.on(function () {});
       go = function () {
-        property.willUpdate();
+        ProAct.ActorUtil.doUpdate.call(property);
       };
 
       expect(go).toThrow('Not in running flow!');
@@ -183,7 +181,7 @@ describe('ProAct.Property', function () {
       property.oldVal = property.val;
       property.val = 10;
       ProAct.flow.run(function () {
-        property.willUpdate();
+        ProAct.ActorUtil.doUpdate.call(property);
       });
       expect(called).toBe(true);
     });
@@ -216,7 +214,7 @@ describe('ProAct.Property', function () {
       propertyA.oldVal = propertyA.val;
       propertyA.val = 10;
       ProAct.flow.run(function () {
-        propertyA.willUpdate();
+        ProAct.ActorUtil.doUpdate.call(propertyA);
       });
       expect(called).toBe(true);
     });

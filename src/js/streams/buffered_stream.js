@@ -73,7 +73,7 @@ ProAct.BufferedStream.prototype = P.U.ex(Object.create(P.S.prototype), {
 
     P.flow.run(function () {
       for (i = 0; i < ln; i+= 2) {
-        self.go(b[i], b[i+1]);
+        StreamUtil.go.call(self, b[i], b[i+1]);
       }
       self.buffer = [];
     });

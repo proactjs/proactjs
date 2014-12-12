@@ -800,7 +800,7 @@ ProAct.Array.prototype = pArrayProto = P.U.ex(Object.create(arrayProto), {
     }
     var reversed = reverse.apply(this._array, arguments);
 
-    this.core.update(null, 'index', [pArrayOps.reverse, -1, null, null]);
+    ActorUtil.update.call(this.core, null, 'index', [pArrayOps.reverse, -1, null, null]);
     return reversed;
   },
 
@@ -825,7 +825,7 @@ ProAct.Array.prototype = pArrayProto = P.U.ex(Object.create(arrayProto), {
     var sorted = sort.apply(this._array, arguments),
         args = arguments;
 
-    this.core.update(null, 'index', [pArrayOps.sort, -1, null, args]);
+    ActorUtil.update.call(this.core, null, 'index', [pArrayOps.sort, -1, null, args]);
     return this;
   },
 
@@ -908,7 +908,7 @@ ProAct.Array.prototype = pArrayProto = P.U.ex(Object.create(arrayProto), {
         index = this._array.length;
 
     delete this[index];
-    this.core.update(null, 'length', [pArrayOps.remove, this._array.length, popped, null]);
+    ActorUtil.update.call(this.core, null, 'length', [pArrayOps.remove, this._array.length, popped, null]);
 
     return popped;
   },
@@ -942,7 +942,7 @@ ProAct.Array.prototype = pArrayProto = P.U.ex(Object.create(arrayProto), {
       this.core.defineIndexProp(index);
     }
 
-    this.core.update(null, 'length', [pArrayOps.add, this._array.length - 1, null, slice.call(vals, 0)]);
+    ActorUtil.update.call(this.core, null, 'length', [pArrayOps.add, this._array.length - 1, null, slice.call(vals, 0)]);
 
     return this._array.length;
   },
@@ -971,7 +971,7 @@ ProAct.Array.prototype = pArrayProto = P.U.ex(Object.create(arrayProto), {
         index = this._array.length;
 
     delete this[index];
-    this.core.update(null, 'length', [pArrayOps.remove, 0, shifted, null]);
+    ActorUtil.update.call(this.core, null, 'length', [pArrayOps.remove, 0, shifted, null]);
 
     return shifted;
   },
@@ -1005,7 +1005,7 @@ ProAct.Array.prototype = pArrayProto = P.U.ex(Object.create(arrayProto), {
       this.core.defineIndexProp(array.length - 1);
     }
 
-    this.core.update(null, 'length', [pArrayOps.add, 0, null, vals]);
+    ActorUtil.update.call(this.core, null, 'length', [pArrayOps.add, 0, null, vals]);
 
     return array.length;
   },
@@ -1050,5 +1050,15 @@ ProAct.Array.prototype = pArrayProto = P.U.ex(Object.create(arrayProto), {
    */
   toJSON: function () {
     return JSON.stringify(this._array);
+  }
+});
+
+P.U.ex(P.Actor.prototype, {
+  toProArray: function () {
+    var array = new P.A();
+
+    array.core.queueName = this.queueName;
+    array.core.into(this);
+    return array;
   }
 });
