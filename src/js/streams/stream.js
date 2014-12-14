@@ -426,6 +426,33 @@ P.U.ex(P.Actor.prototype, {
     });
   },
 
+  flatMapLimited: function (mapper, limit) {
+    var queue = [], current = 0, addActor = function (stream, actor) {
+      if (!actor) {
+        return;
+      }
+      if (current < limit) {
+        current++;
+        stream.into(actor);
+
+        actor.onClose(function () {
+          current--;
+          actor.offAll(stream.makeListener());
+
+          addActor(stream, queue.shift());
+        });
+      } else {
+        queue.push(actor);
+      }
+    };
+
+    return this.fromLambda(function (stream, e) {
+      var actor = mapper ? mapper.call(null, e) : e;
+
+      addActor(stream, actor);
+    });
+  },
+
   flatMapLast: function (mapper) {
     var oldActor;
     return this.fromLambda(function (stream, e) {
