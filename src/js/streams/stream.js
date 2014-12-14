@@ -436,6 +436,22 @@ P.U.ex(P.Actor.prototype, {
       oldActor = actor;
       stream.into(actor);
     });
+  },
+
+  flatMapFirst: function (mapper) {
+    var oldActor;
+    return this.fromLambda(function (stream, e) {
+      if (oldActor && oldActor.state !== ProAct.States.closed) {
+        return;
+      }
+
+      var actor = mapper ? mapper.call(null, e) : e;
+      if (oldActor) {
+        oldActor.offAll(stream.makeListener());
+      }
+      oldActor = actor;
+      stream.into(actor);
+    });
   }
 });
 
