@@ -89,9 +89,25 @@ module.exports = function(grunt) {
         description: '<%= pkg.description %>',
         version: '<%= pkg.version %>',
         url: '<%= pkg.homepage %>',
+        logo: '../proact_logo_icon.png',
         options: {
-          paths: 'src',
-          outdir: 'doc'
+          linkNatives: true,
+          paths: [
+            'src'
+          ],
+          exclude: [
+            'arrays',
+            'cores',
+            'events',
+            'flow',
+            'objects',
+            'properties',
+            'registry',
+            'streams'
+          ].join(','),
+          outdir: 'doc',
+          themedir: '../yuidoc-bootstrap-theme',
+          helpers: ['../yuidoc-bootstrap-theme/helpers/helpers.js']
         }
       }
     },
