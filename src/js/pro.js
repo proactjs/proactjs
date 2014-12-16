@@ -1,4 +1,9 @@
 /**
+ * @module proact
+ * @submodule proact-core
+ */
+
+/**
  * ProAct.js turns plain JavaScript objects into holders of reactive properties.
  * You can define the dependencies between these objects and properties using the 'vanilla' js syntax.
  * For example if an object should have a property 'x', that depends on its two fields 'a' and 'b', the only thing that's needed
@@ -13,8 +18,18 @@
  * A powerful tool for creating other, high level tools, or applications.
  * Everything should be defined in this namespace. It can be used as P or Pro.
  *
- * @module ProAct
- * @main ProAct
+ * ProAct is powerful Functional Reactive Programming (FRP) lib too. Its streams and events
+ *
+ * are integrated with the reactive properties mentioned above.
+ * Everything can be described using declarative expressions.
+ * All ProAct classes and functions are defined in this namespace.
+ * You can use `Pro` and `P` instead of `ProAct` too.
+ *
+ * The `proact-core` module provides base utilties and common functionality for all the other
+ * modules of the lib.
+ *
+ * @class ProAct
+ * @static
  */
 var ProAct = Pro = P = {},
 
@@ -50,27 +65,41 @@ var ProAct = Pro = P = {},
 
 
 /**
- * The current version of the library.
- *
+ * @property VERSION
  * @type String
  * @static
- * @constant
+ * @for ProAct
  */
 ProAct.VERSION = '1.2.1';
 
 /**
  * Defines the possible states of the ProAct objects.
  * <ul>
- *  <li>init - Initialized : It is not usable yet, but is market as ProAct object.</li>
  *  <li>ready - Ready for use.</li>
  *  <li>destroyed - Destroyed : An object that is ProAct dependent no more. All the ProAct logic should be cleaned up from it.</li>
  *  <li>error - There was some runtime error while creating or working with the object.</li>
  *  <li>closed - The object is closed. It can not emit new changes.</li>
  * </ul>
  *
- * @namespace ProAct.States
+ * @class States
+ * @namespace ProAct
+ * @static
  */
 ProAct.States = {
+
+  /**
+   * Initialized : It is not usable yet.
+   *
+   * For example a computed property (property depending on other properties/actors) is
+   * in `init` state when it's created and not read yet.
+   * When something reads its value it computes it for the the first time and becomes in `ready`
+   * state.
+   *
+   * @property init
+   * @type Number
+   * @final
+   * @for ProAct.States
+   */
   init: 1,
   ready: 2,
   destroyed: 3,
@@ -83,7 +112,9 @@ ProAct.States = {
  * Contains a set of utility functions to ease working with arrays and objects.
  * Can be reffered by using 'ProAct.U' too.
  *
- * @namespace ProAct.Utils
+ * @namespace ProAct
+ * @class Utils
+ * @static
  */
 ProAct.Utils = Pro.U = {
 
@@ -471,7 +502,9 @@ ProAct.Utils = Pro.U = {
 /**
  * Contains various configurations for the ProAct.js library.
  *
- * @namespace ProAct.Configuration
+ * @class Configuration
+ * @namespace ProAct
+ * @static
  */
 ProAct.Configuration = {
   /**
