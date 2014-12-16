@@ -11,16 +11,10 @@
  *
  * ProAct.js can be used to define bindings, to separate views from models (mv*), for performance optimizations... It is a tool.
  * A powerful tool for creating other, high level tools, or applications.
- */
-
-/**
- * The main namespace that contains all the ProAct classes and methods.
  * Everything should be defined in this namespace. It can be used as P or Pro.
  *
- * @namespace ProAct
- * @license MIT
- * @version 1.2.1
- * @author meddle0x53
+ * @module ProAct
+ * @main ProAct
  */
 var ProAct = Pro = P = {},
 
