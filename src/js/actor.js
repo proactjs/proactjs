@@ -49,7 +49,7 @@ ActorUtil = {
 
         if (listenersForAction) {
           for (j = 0; j < listenersForAction.length; j++) {
-            if (listenersForAction[j].destroyed) {
+            if (listenersForAction[j].destroyed || listenersForAction[j].closed) {
               this.off(actions[i], listenersForAction[j]);
               continue;
             }
@@ -199,6 +199,10 @@ P.U.ex(P.Actor, {
       if (val === P.Actor.BadValue) {
         break;
       }
+
+      if (val === P.Actor.Close) {
+        break;
+      }
     }
 
     return val;
@@ -276,12 +280,15 @@ P.Actor.prototype = {
     if (this.state === P.States.closed) {
       return;
     }
-    return ActorUtil.update.call(this, null, 'close');
+    return ActorUtil.update.call(this, P.Actor.Close, 'close');
   },
 
   doClose: function () {
     this.state = P.States.closed;
     this.offAll();
+    if (this.listener) {
+      this.listener.closed = true;
+    }
   },
 
   /**
