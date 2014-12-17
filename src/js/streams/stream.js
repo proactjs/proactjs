@@ -391,6 +391,22 @@ P.U.ex(P.Actor.prototype, {
     return new P.S(this.queueName, this);
   },
 
+  skip: function (n) {
+    var i = n, self = this;
+    return this.fromLambda(function (stream, event) {
+      if (event === ProAct.Actor.close) {
+        stream.close();
+        return;
+      }
+
+      i--;
+      if (i < 0) {
+        self.offAll(stream.lambda);
+        stream.into(self);
+      }
+    });
+  },
+
   take: function (limit) {
     var left = limit;
     return this.fromLambda(function (stream, event) {
@@ -405,24 +421,34 @@ P.U.ex(P.Actor.prototype, {
   },
 
   takeWhile: function (condition) {
-    //return new P.CS(condition, this.queueName, this);
+    return this.fromLambda(function (stream, event) {
+      if (condition.call(event)) {
+        stream.trigger(event);
+      } else {
+        stream.close();
+      }
+    });
   },
 
   fromLambda: function (lambda) {
-    var stream = new ProAct.Stream(this.queueName);
-    this.onAll(function (e) {
-      stream.trigger = StreamUtil.trigger;
-      lambda.call(null, stream, e);
-      stream.trigger = undefined;
-    });
+    var stream = new ProAct.Stream(this.queueName),
+        listener = function (e) {
+          stream.trigger = StreamUtil.trigger;
+          lambda.call(null, stream, e);
+          stream.trigger = undefined;
+        };
+    this.onAll(listener);
+    stream.lambda = listener;
 
     return stream;
   },
 
   flatMap: function (mapper) {
     return this.fromLambda(function (stream, e) {
-      var actor = mapper ? mapper.call(null, e) : e;
-      stream.into(actor);
+      if (e !== P.Actor.Close) {
+        var actor = mapper ? mapper.call(null, e) : e;
+        stream.into(actor);
+      }
     });
   },
 
