@@ -75,7 +75,6 @@ ProAct.VERSION = '1.2.1';
 /**
  * Defines the possible states of the ProAct objects.
  * <ul>
- *  <li>ready - Ready for use.</li>
  *  <li>destroyed - Destroyed : An object that is ProAct dependent no more. All the ProAct logic should be cleaned up from it.</li>
  *  <li>error - There was some runtime error while creating or working with the object.</li>
  *  <li>closed - The object is closed. It can not emit new changes.</li>
@@ -101,6 +100,18 @@ ProAct.States = {
    * @for ProAct.States
    */
   init: 1,
+
+  /**
+   * Ready for use.
+   *
+   * Active ProAct object has this state. It can be listened to, it
+   * can be updated and notify all of its dependencies.
+   *
+   * @property ready
+   * @type Number
+   * @final
+   * @for ProAct.States
+   */
   ready: 2,
   destroyed: 3,
   error: 4,
