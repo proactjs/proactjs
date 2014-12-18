@@ -73,12 +73,7 @@ var ProAct = Pro = P = {},
 ProAct.VERSION = '1.2.1';
 
 /**
- * Defines the possible states of the ProAct objects.
- * <ul>
- *  <li>destroyed - Destroyed : An object that is ProAct dependent no more. All the ProAct logic should be cleaned up from it.</li>
- *  <li>error - There was some runtime error while creating or working with the object.</li>
- *  <li>closed - The object is closed. It can not emit new changes.</li>
- * </ul>
+ * Defines the possible states of the {{#crossLink "ProAct.Actor"}}{{/crossLink}} instances.
  *
  * @class States
  * @namespace ProAct
@@ -104,7 +99,7 @@ ProAct.States = {
   /**
    * Ready for use.
    *
-   * Active ProAct object has this state. It can be listened to, it
+   * Active {{#crossLink "ProAct.Actor"}}Actors{{/crossLink}} have this state. It can be listened to, it
    * can be updated and notify all of its dependencies.
    *
    * @property ready
@@ -113,8 +108,47 @@ ProAct.States = {
    * @for ProAct.States
    */
   ready: 2,
+
+  /**
+   * Ended it's lifecycle.
+   *
+   * Every {{#crossLink "ProAct.Actor"}}{{/crossLink}} can be `destroyed`. All the resources it uses are freed.
+   * All the dependent objects don't depend on it anymore.
+   *
+   * For example if an application has states/routing, {{#crossLink "ProAct.Actor"}}Actors{{/crossLink}} that were active in one
+   * of the states should be `destroyed` before going into other route/state.
+   *
+   * @property destroyed
+   * @type Number
+   * @final
+   * @for ProAct.States
+   */
   destroyed: 3,
+
+  /**
+   * Error has occured in the {{#crossLink "ProAct.Actor"}}{{/crossLink}}'s lifecycle.
+   *
+   * For example, if there was an exception in the object's initialization.
+   *
+   * @property error
+   * @type Number
+   * @final
+   * @for ProAct.States
+   */
   error: 4,
+
+  /**
+   * A closed ProAct object.
+   *
+   * Streams that can emmit events anymore are closed streams.
+   *
+   * Properties which value can not be updated are closed (constants).
+   *
+   * @property closed
+   * @type Number
+   * @final
+   * @for ProAct.States
+   */
   closed: 5
 };
 
