@@ -394,7 +394,7 @@ P.U.ex(P.Actor.prototype, {
   skip: function (n) {
     var i = n, self = this;
     return this.fromLambda(function (stream, event) {
-      if (event === ProAct.Actor.close) {
+      if (event === ProAct.Actor.Close) {
         stream.close();
         return;
       }
@@ -403,7 +403,61 @@ P.U.ex(P.Actor.prototype, {
       if (i < 0) {
         self.offAll(stream.lambda);
         stream.into(self);
+        stream.trigger(event);
       }
+    });
+  },
+
+  skipWhile: function (condition) {
+    var self = this,
+        cond = condition ? condition : function (e) {
+          return e;
+        };
+    return this.fromLambda(function (stream, event) {
+      if (event === ProAct.Actor.close) {
+        stream.close();
+        return;
+      }
+
+      if (!cond(event)) {
+        self.offAll(stream.lambda);
+        stream.into(self);
+        stream.trigger(event);
+      }
+    });
+  },
+
+  skipDuplicates: function (comparator) {
+    var last = undefined,
+        cmp = comparator ? comparator : function (a, b) {
+          return a === b;
+        };
+    return this.fromLambda(function (stream, event) {
+      if (!cmp(last, event)) {
+        stream.trigger(event);
+        last = event;
+      }
+    });
+  },
+
+  diff: function(seed, differ) {
+    var last = seed,
+        fn = differ ? differ : function (last, next) {
+          return [last, next];
+        };
+    return this.fromLambda(function (stream, event) {
+      if (event === ProAct.Actor.close) {
+        stream.close();
+        return;
+      }
+
+      if (last === undefined) {
+        last = event;
+        return;
+      }
+
+      stream.trigger(differ(last, event));
+      last = event;
     });
   },
 
@@ -422,7 +476,7 @@ P.U.ex(P.Actor.prototype, {
 
   takeWhile: function (condition) {
     return this.fromLambda(function (stream, event) {
-      if (condition.call(event)) {
+      if (condition.call(null, event)) {
         stream.trigger(event);
       } else {
         stream.close();
