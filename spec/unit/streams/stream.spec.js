@@ -451,4 +451,107 @@ describe('ProAct.Stream', function () {
       expect(closed).toBe(true);
     });
   });
+
+  describe ('ProAct.Actor#skip', function () {
+    it ('creates a stream that begins emitting after given limit events were triggered into it', function () {
+      var stream = ProAct.stream(),
+          skip = stream.skip(3),
+          res = [];
+
+      skip.on(function (v) {
+        res.push(v);
+      });
+
+      stream.trigger(3);
+      expect(res).toEqual([]);
+
+      stream.trigger(5);
+      expect(res).toEqual([]);
+
+      stream.trigger(8);
+      expect(res).toEqual([]);
+
+      stream.trigger(13);
+      expect(res).toEqual([13]);
+
+      stream.trigger(21);
+      expect(res).toEqual([13, 21]);
+    });
+
+    it ('it closes the stream if source closes', function () {
+      var stream = ProAct.stream(),
+          skip = stream.skip(2),
+          res = [], closed = false;
+
+      skip.on(function (v) {
+        res.push(v);
+      });
+      skip.onClose(function () {
+        closed = true;
+      });
+
+      stream.trigger(3);
+      expect(res).toEqual([]);
+
+      stream.close();
+      expect(res).toEqual([]);
+      expect(closed).toEqual(true);
+    });
+  });
+
+  describe ('ProAct.Actor#skipWhile', function () {
+    it ('the resulting stream doesn\'t emit anything while the passed condition is true', function () {
+      var stream = ProAct.stream(),
+          skip = stream.skipWhile(function (x) {
+            return x < 4;
+          }),
+          res = [];
+
+      skip.on(function (v) {
+        res.push(v);
+      });
+
+      stream.trigger(3);
+      expect(res).toEqual([]);
+
+      stream.trigger(2);
+      expect(res).toEqual([]);
+
+      stream.trigger(8);
+      expect(res).toEqual([8]);
+
+      stream.trigger(13);
+      expect(res).toEqual([8, 13]);
+    });
+  });
+
+  describe('ProAct.Actor.flatMap', function () {
+    beforeEach(function () {
+      jasmine.Clock.useMock();
+    });
+
+    it ('turns stream of streams in a stream with sources these streams', function () {
+      var sourceStream = ProAct.seq(100, [1, 2, 3, 4]),
+          stream = sourceStream.flatMap(function (s) {
+            return ProAct.interval(50, s).take(4);
+          }), res = [];
+      stream.on(function (v) {
+        res.push(v);
+      });
+
+      stream.onClose(function (v) {
+        res.push(v);
+      });
+
+      jasmine.Clock.tick(150);
+      expect(res).toEqual([1]);
+      jasmine.Clock.tick(150);
+      expect(res).toEqual([1, 1, 1, 2, 1, 2]);
+      jasmine.Clock.tick(150);
+      expect(res).toEqual([1, 1, 1, 2, 1, 2, 2, 3, 2, 3, 4, 3]);
+      jasmine.Clock.tick(150);
+      expect(res).toEqual([1, 1, 1, 2, 1, 2, 2, 3, 2, 3, 4, 3, 3, 4, 4, 4, P.Actor.Close]);
+      expect(stream.state).toEqual(ProAct.States.closed);
+    });
+  });
 });
