@@ -155,7 +155,9 @@ ProAct.States = {
 
 /**
  * Contains a set of utility functions to ease working with arrays and objects.
- * Can be reffered by using 'ProAct.U' too.
+ * Can be reffered by using `ProAct.U` too.
+ *
+ * This class is part of the `proact-core` module of ProAct.js.
  *
  * @namespace ProAct
  * @class Utils
