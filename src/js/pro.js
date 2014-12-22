@@ -166,13 +166,10 @@ ProAct.States = {
 ProAct.Utils = Pro.U = {
 
   /**
-   * Generates an unique id.
-   * The idea is to be used as keynames in the {@link ProAct.Registry}.
+   * Generates an universally unique identifier.
    *
-   * @memberof ProAct.Utils
-   * @function uuid
-   * @return {String}
-   *      Unique string.
+   * @method uuid
+   * @return {String} Unique string.
    */
   uuid: function () {
     return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
