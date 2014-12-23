@@ -181,12 +181,11 @@ ProAct.Utils = Pro.U = {
   },
 
   /**
-   * Checks if the passed value is a function or not.
+   * Checks if the passed value is a Function or not.
    *
-   * @memberof ProAct.Utils
-   * @function isFunction
-   * @param {Object} value
-   * @return {Boolean}
+   * @method isFunction
+   * @param {Object} value The object/value to check.
+   * @return {Boolean} True if the passed value is a function.
    */
   isFunction: function (value) {
     return typeof(value) === 'function';
