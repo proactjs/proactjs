@@ -185,19 +185,18 @@ ProAct.Utils = Pro.U = {
    *
    * @method isFunction
    * @param {Object} value The object/value to check.
-   * @return {Boolean} True if the passed value is a function.
+   * @return {Boolean} True if the passed value is a Function.
    */
   isFunction: function (value) {
     return typeof(value) === 'function';
   },
 
   /**
-   * Checks if the passed value is a string or not.
+   * Checks if the passed value is a String instance or not.
    *
-   * @memberof ProAct.Utils
-   * @function isString
-   * @param {Object} value
-   * @return {Boolean}
+   * @method isString
+   * @param {Object} value The object/value to check.
+   * @return {Boolean} True if the passed value is a String.
    */
   isString: function (value) {
     return typeof(value) === 'string';
