@@ -205,10 +205,9 @@ ProAct.Utils = Pro.U = {
   /**
    * Checks if the passed value is a JavaScript object or not.
    *
-   * @memberof ProAct.Utils
-   * @function isObject
-   * @param {Object} value
-   * @return {Boolean}
+   * @method isObject
+   * @param {Object} value The value to check
+   * @return {Boolean} True if the passed values is not primitive.
    */
   isObject: function (value) {
     return typeof(value) === 'object';
