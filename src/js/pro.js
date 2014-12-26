@@ -206,7 +206,7 @@ ProAct.Utils = Pro.U = {
    * Checks if the passed value is a JavaScript object or not.
    *
    * @method isObject
-   * @param {Object} value The value to check
+   * @param {Object} value The value to check.
    * @return {Boolean} True if the passed values is not primitive.
    */
   isObject: function (value) {
@@ -216,10 +216,9 @@ ProAct.Utils = Pro.U = {
   /**
    * Checks if the passed value is {} or not.
    *
-   * @memberof ProAct.Utils
-   * @function isEmptyObject
-   * @param {Object} value
-   * @return {Boolean}
+   * @method isEmptyObject
+   * @param {Object} value The value to check.
+   * @return {Boolean} True if the value is object that has no own fields.
    */
   isEmptyObject: function (value) {
     var property;
