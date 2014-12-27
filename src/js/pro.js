@@ -231,37 +231,34 @@ ProAct.Utils = Pro.U = {
   },
 
   /**
-   * Checks if the passed value is a valid JavaScript error or not.
+   * Checks if the passed value is a valid JavaScript Error instance or not.
    *
-   * @memberof ProAct.Utils
-   * @function isError
-   * @param {Object} value
-   * @return {Boolean}
+   * @method isError
+   * @param {Object} value The value to check.
+   * @return {Boolean} True if the passed `value` is instance of an Error.
    */
   isError: function (value) {
     return value !== null && value instanceof Error;
   },
 
   /**
-   * Checks if the passed value is a valid JavaScript array or not.
+   * Checks if the passed value is a valid JavaScript Array instance or not.
    *
-   * @memberof ProAct.Utils
-   * @function isArray
-   * @param {Object} value
-   * @return {Boolean}
+   * @method isArray
+   * @param {Object} value The value to check.
+   * @return {Boolean} True if the passed `value` is Array.
    */
   isArray: function (value) {
     return P.U.isObject(value) && Object.prototype.toString.call(value) === '[object Array]';
   },
 
   /**
-   * Checks if the passed value is instance of the {@link ProAct.Array} type or not.
+   * Checks if the passed value is instance of the {{#crossLink "ProAct.Array"}}{{/crossLink}} type or not.
+   * TODO Move to the proact-arrays module.
    *
-   * @memberof ProAct.Utils
-   * @function isProArray
-   * @param {Object} value
-   * @return {Boolean}
-   * @see {@link ProAct.Array}
+   * @method isProArray
+   * @param {Object} value The value to check.
+   * @return {Boolean} True if the passed `value` is a ProAct.Array instance.
    */
   isProArray: function (value) {
     return value !== null && P.U.isObject(value) && P.U.isArray(value._array) && value.length !== undefined;
@@ -269,13 +266,12 @@ ProAct.Utils = Pro.U = {
 
   /**
    * Checks if the passed value is a valid array-like object or not.
-   * Array like objects in ProAct.js are plain JavaScript arrays and {@link ProAct.Array}s.
+   * Array like objects in ProAct.js are plain JavaScript arrays and {{#crossLink "ProAct.Array"}}{{/crossLink}}s.
+   * TODO Move to the proact-arrays module.
    *
-   * @memberof ProAct.Utils
-   * @function isArrayObject
-   * @param {Object} value
-   * @return {Boolean}
-   * @see {@link ProAct.Array}
+   * @method isArrayObject
+   * @param {Object} value The value to check.
+   * @return {Boolean} True if the passed `value` is an Array or ProAct.Array instance.
    */
   isArrayObject: function (value) {
     return P.U.isArray(value) || P.U.isProArray(value);
@@ -283,14 +279,12 @@ ProAct.Utils = Pro.U = {
 
   /**
    * Checks if the passed value is a valid ProAct.js object or not.
-   * ProAct.js object have a special '__pro__' object that is hidden in them, which should be instance of {@link ProAct.Core}.
+   * ProAct.js object have a special `__pro__` object that is hidden in them, which should be instance of {{#crossLink "ProAct.Core"}}{{/crossLink}}.
+   * TODO Move to the proact-properties module.
    *
-   * @memberof ProAct.Utils
-   * @function isProObject
-   * @param {Object} value
-   * @return {Boolean}
-   * @see {@link ProAct.Array}
-   * @see {@link ProAct.Core}
+   * @method isProObject
+   * @param {Object} value The value to check.
+   * @return {Boolean} True if the value is object containing {{#crossLink "ProAct.Property"}}{{/crossLink}} instances and has a `core`.
    */
   isProObject: function (value) {
     return value && ProAct.U.isObject(value) && value.__pro__ !== undefined && ProAct.U.isObject(value.__pro__.properties);
@@ -300,12 +294,12 @@ ProAct.Utils = Pro.U = {
    * Clones the passed object. It creates a deep copy of it.
    * For now it clones only arrays.
    *
-   * @memberof ProAct.Utils
-   * @function clone
-   * @param {Object} obj
-   *      The object to clone.
-   * @return {Object}
-   *      Clone of the passed object.
+   * TODO It is not fully implemented...
+   *
+   * @method clone
+   * @beta
+   * @param {Object} obj The object to clone.
+   * @return {Object} Clone of the passed object.
    */
   clone: function (obj) {
     if (P.U.isArray(obj)) {
@@ -321,15 +315,20 @@ ProAct.Utils = Pro.U = {
   /**
    * Extends the destination object with the properties and methods of the source object.
    *
-   * @memberof ProAct.Utils
-   * @function ex
-   * @param {Object} destination
-   *      The object to be extended - it will be modified.
-   * @param {Object} source
-   *      The source holding the properties and the functions to extend destination with.
-   * @return {Object}
-   *      The changed destination object.
-   * @see {@link ProAct.Utils.clone}
+   * ```
+   *  var obj1 = {a: 3};
+   *  var obj2 = {b: 4;}
+   *  ProAct.Utils.ex(obj2, obj1);
+   *
+   *  console.log(obj2);
+   *  // This prints : {a: 3, b: 4}
+   *
+   * ```
+   *
+   * @method ex
+   * @param {Object} destination The object to be extended - it will be modified.
+   * @param {Object} source The source holding the properties and the functions to extend destination with.
+   * @return {Object} The changed destination object.
    */
   ex: function(destination, source) {
     var p;
