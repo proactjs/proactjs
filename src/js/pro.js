@@ -344,21 +344,19 @@ ProAct.Utils = Pro.U = {
   /**
    * Used for extending of classes.
    * Example is:
-   * <pre>
+   * ```
+   *
    *  var Bar = ProAct.Utils.extendClass.call(Foo, {
    *    a: 1,
    *    b: 2,
    *    c: function () {}
    *  });
-   * </pre>
    *
-   * @memberof ProAct.Utils
-   * @function extendClass
-   * @param {Object} data
-   *      Data to add new properties to the new class or override old ones.
-   * @return {Object}
-   *      Child class.
-   * @see {@link ProAct.Utils.ex}
+   * ```
+   *
+   * @method extendClass
+   * @param {Object} data Data to add new properties to the new class or override old ones.
+   * @return {Object} Child class.
    */
   extendClass: function (data) {
     var parent = this,
