@@ -72,6 +72,7 @@ var ProAct = Pro = P = {},
  */
 ProAct.VERSION = '1.2.1';
 
+
 /**
  * Defines the possible states of the {{#crossLink "ProAct.Actor"}}{{/crossLink}} instances.
  *
@@ -407,31 +408,21 @@ ProAct.Utils = Pro.U = {
   },
 
   /**
-   * Checks if an <i>array</i> contains a <i>value</i>.
+   * Removes the first appearance of the passed `value` in the passed `array`.
+   * If the `value` is not present in the passed `array` does nothing.
    *
-   * @memberof ProAct.Utils
-   * @function contains
-   * @param {Array} array
-   *      The <i>array</i> to check.
-   * @param {Object} value
-   *      The <i>value</i> to check for.
-   * @return {Boolean}
-   *      True if the <i>array</i> contains the <i>value</i>, False otherwise.
-   */
-  contains: function (array, value) {
-    array.indexOf(value) !== -1;
-  },
-
-  /**
-   * Removes the first appearance of the passed <i>value</i> in the passed <i>array</i>.
-   * If the <i>value</i> is not present in the passed <i>array</i> does nothing.
+   * ```
    *
-   * @memberof ProAct.Utils
-   * @function remove
-   * @param {Array} array
-   *      The <i>array</i> to remove from.
-   * @param {Object} value
-   *      The <i>value</i> to be removed.
+   *  var array = [1, 2, 3];
+   *  ProAct.Utils.remove(array, 2);
+   *
+   *  console.log(array); // prints [1, 3]
+   *
+   * ```
+   *
+   * @method remove
+   * @param {Array} array The `array` to remove from.
+   * @param {Object} value The `value` to be removed.
    */
   remove: function (array, value) {
     var i = array.indexOf(value);
@@ -443,8 +434,7 @@ ProAct.Utils = Pro.U = {
   /**
    * A powerful function that creates a diff object containing the differences between two arrays.
    *
-   * @memberof ProAct.Utils
-   * @function diff
+   * @method diff
    * @param {Array} array1
    * @param {Array} array2
    * @return {Object}
@@ -453,19 +443,19 @@ ProAct.Utils = Pro.U = {
    *      <p>The 'o' property represents the owned elemetns of the first array that are different from the other's.</p>
    *      <p>The 'n' property contains all the elements that are not owned by the first array, but present in the other.</p>
    *      <p>Example:</p>
-   *      <pre>
-   *        var array1 = [1, 3, 4, 5],
-   *            array2 = [1, 2, 7, 5, 6]
-   *            diff;
+   * ```
+   *   var array1 = [1, 3, 4, 5],
+   *       array2 = [1, 2, 7, 5, 6]
+   *       diff;
    *
-   *        diff = ProAct.Utils.diff(array1, array2);
+   *   diff = ProAct.Utils.diff(array1, array2);
    *
-   *        console.log(diff[0]); // undefined - the arrays are the same at he index 0
-   *        console.log(diff[1]); // {o: [3, 4], n: [2, 7]}
-   *        console.log(diff[2]); // undefined the change began from index 1, so it is stored there
-   *        console.log(diff[3]); // undefined - the arrays are the same at index 3
-   *        console.log(diff[4]); // {o: [], n: [6]}
-   *      </pre>
+   *   console.log(diff[0]); // undefined - the arrays are the same at he index 0
+   *   console.log(diff[1]); // {o: [3, 4], n: [2, 7]}
+   *   console.log(diff[2]); // undefined the change began from index 1, so it is stored there
+   *   console.log(diff[3]); // undefined - the arrays are the same at index 3
+   *   console.log(diff[4]); // {o: [], n: [6]}
+   * ```
    */
   diff: function (array1, array2) {
     var i, e1, e2,
@@ -514,22 +504,16 @@ ProAct.Utils = Pro.U = {
 
   /**
    * Defines a property to an object that contains a initial value.
+   *
    * The property can be configured using the arguments passed if it is possible in the javascript implementation.
    *
-   * @memberof ProAct.Utils
-   * @function defValProp
-   * @param {Object} obj
-   *      The object to define a property in.
-   * @param {String} prop
-   *      The name of the property to define.
-   * @param {Boolean} enumerable
-   *      If the property should be enumerable.<br /> In other words visible when doing <pre>for (p in obj) {}</pre>
-   * @param {Boolean} configurable
-   *      If the property should be configurable.<br /> In other words if the parameters of the property for example enumerable or writable can be changed in the future.
-   * @param {Boolean} writable
-   *      If the property can be changed.
-   * @param {Object} val
-   *      The initial value of the property.
+   * @method defValProp
+   * @param {Object} obj The object to define a property in.
+   * @param {String} prop The name of the property to define.
+   * @param {Boolean} enumerable If the property should be enumerable.<br /> In other words visible when doing <pre>for (p in obj) {}</pre>
+   * @param {Boolean} configurable If the property should be configurable.<br /> In other words if the parameters of the property for example enumerable or writable can be changed in the future.
+   * @param {Boolean} writable If the property can be changed.
+   * @param {Object} val The initial value of the property.
    */
   defValProp: function (obj, prop, enumerable, configurable, writable, val) {
     try {
@@ -546,33 +530,36 @@ ProAct.Utils = Pro.U = {
 };
 
 /**
- * Contains various configurations for the ProAct.js library.
+ * Contains various configuration settings for the ProAct.js library.
  *
- * @class Configuration
  * @namespace ProAct
+ * @class Configuration
  * @static
  */
 ProAct.Configuration = {
+
   /**
    * If this option is set to true, when a ProAct.js object is created and has properties named
-   * as one or more of the properties listed in <i>ProAct.Configuration.keypropList</i> an Error will be thrown.
+   * as one or more of the properties listed in
+   * {{#crossLink "ProAct.Configuration.keypropList"}}{{/crossLink}} an `Error` will be thrown.
+   *
    * In other words declares some of the properties of every ProAct objects as keyword properties.
    *
+   * @property keyprops
    * @type Boolean
-   * @memberof ProAct.Configuration
    * @static
-   * @see {@link ProAct.Configuration.keypropList}
+   * @for ProAct.Configuration
    */
   keyprops: true,
 
   /**
    * Defines a list of the keyword properties that can not be used in ProAct.js objects.
-   * The {@link ProAct.Configuration.keyprops} option must be set to true in order for this list to be used.
+   * The {{#crossLink "ProAct.Configuration.keyprops"}}{{/crossLink}} option must be set to true in order for this list to be used.
    *
+   * @property keypropList
    * @type Array
-   * @memberof ProAct.Configuration
    * @static
-   * @see {@link ProAct.Configuration.keyprops}
+   * @for ProAct.Configuration
    */
   keypropList: ['p']
 };
@@ -580,29 +567,31 @@ ProAct.Configuration = {
 /**
  * No-action or emtpy function. Represent an action that does nothing.
  *
- * @function N
- * @memberof ProAct
- * @static
+ * @method N
+ * @for ProAct
  */
 ProAct.N = function () {};
+
 
 /**
  * <p>
  *  Represents the current caller of a method, the initiator of the current action.
  * </p>
  * <p>
- *  This property does the magic when for example an {@link ProAct.AutoProperty} is called
+ *  This property does the magic when for example an {{#crossLink "ProAct.AutoProperty"}}{{/crossLink}} is called
  *  for the first time and the dependencies to the other properties are created.
  *  The current caller expects to be used in a single threaded environment.
  * </p>
  * <p>
  *  Do not remove or modify this property manually.
  * </p>
+ * TODO move to proact-properties module.
  *
+ * @property currentCaller
  * @type Object
- * @memberof ProAct
  * @default null
  * @static
+ * @for ProAct
  */
 ProAct.currentCaller = null;
 
