@@ -379,17 +379,26 @@ ProAct.Utils = Pro.U = {
   },
 
   /**
-   * Binds a <i>function</i> to an object <i>context</i>.
-   * Every time the <i>function</i> is called the value <i>this</i> of this will be the object.
+   * Binds a `function` to an `object context`.
    *
-   * @memberof ProAct.Utils
-   * @function bind
-   * @param {Object} ctx
-   *      The <i>context</i> to bind the <i>this</i> of the function to.
-   * @param {Function} func
-   *      The <i>function</i> to bind.
-   * @return {Function}
-   *      The bound <i>function</i>.
+   * Every time the `function` is called, `this` will point to the passed `object`.
+   *
+   * ```
+   *
+   *  var context = {a: 3};
+   *  var f = ProAct.Utils.bind(context, function () {
+   *    return this;
+   *  });
+   *
+   *  var result = f();
+   *  console.log(result === context); // prints 'true'
+   *
+   * ```
+   *
+   * @method bind
+   * @param {Object} ctx The `context` to bind the `this` of the function to.
+   * @param {Function} func The `function` to bind.
+   * @return {Function} The bound `function`.
    */
   bind: function (ctx, func) {
     return function () {
