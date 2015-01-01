@@ -1,6 +1,7 @@
 /**
  * @module proact
  * @submodule proact-core
+ * @main proact
  */
 
 /**
@@ -594,5 +595,3 @@ ProAct.N = function () {};
  * @for ProAct
  */
 ProAct.currentCaller = null;
-
-ProAct.close = ProAct.stop = ProAct.end = {};
