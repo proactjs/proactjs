@@ -1,3 +1,12 @@
+/**
+ * @module proact
+ * @submodule proact-core
+ */
+/**
+ * @namespace ProAct
+ * @class ActorUtil
+ * @static
+ */
 ActorUtil = {
   update: function (source, actions, eventData) {
     if (this.state === ProAct.States.destroyed) {
