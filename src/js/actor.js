@@ -2,7 +2,10 @@
  * @module proact
  * @submodule proact-core
  */
+
 /**
+ * TODO Move it to its own file.
+ *
  * @namespace ProAct
  * @class ActorUtil
  * @static
