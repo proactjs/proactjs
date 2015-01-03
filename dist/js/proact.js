@@ -8,6 +8,7 @@
 	/**
 	 * @module proact
 	 * @submodule proact-core
+	 * @main proact
 	 */
 	
 	/**
@@ -77,16 +78,11 @@
 	 * @static
 	 * @for ProAct
 	 */
-	ProAct.VERSION = '1.2.1';
+	ProAct.VERSION = '1.2.2';
+	
 	
 	/**
-	 * Defines the possible states of the ProAct objects.
-	 * <ul>
-	 *  <li>ready - Ready for use.</li>
-	 *  <li>destroyed - Destroyed : An object that is ProAct dependent no more. All the ProAct logic should be cleaned up from it.</li>
-	 *  <li>error - There was some runtime error while creating or working with the object.</li>
-	 *  <li>closed - The object is closed. It can not emit new changes.</li>
-	 * </ul>
+	 * Defines the possible states of the {{#crossLink "ProAct.Actor"}}{{/crossLink}} instances.
 	 *
 	 * @class States
 	 * @namespace ProAct
@@ -108,16 +104,69 @@
 	   * @for ProAct.States
 	   */
 	  init: 1,
+	
+	  /**
+	   * Ready for use.
+	   *
+	   * Active {{#crossLink "ProAct.Actor"}}Actors{{/crossLink}} have this state. It can be listened to, it
+	   * can be updated and notify all of its dependencies.
+	   *
+	   * @property ready
+	   * @type Number
+	   * @final
+	   * @for ProAct.States
+	   */
 	  ready: 2,
+	
+	  /**
+	   * Ended it's lifecycle.
+	   *
+	   * Every {{#crossLink "ProAct.Actor"}}{{/crossLink}} can be `destroyed`. All the resources it uses are freed.
+	   * All the dependent objects don't depend on it anymore.
+	   *
+	   * For example if an application has states/routing, {{#crossLink "ProAct.Actor"}}Actors{{/crossLink}} that were active in one
+	   * of the states should be `destroyed` before going into other route/state.
+	   *
+	   * @property destroyed
+	   * @type Number
+	   * @final
+	   * @for ProAct.States
+	   */
 	  destroyed: 3,
+	
+	  /**
+	   * Error has occured in the {{#crossLink "ProAct.Actor"}}{{/crossLink}}'s lifecycle.
+	   *
+	   * For example, if there was an exception in the object's initialization.
+	   *
+	   * @property error
+	   * @type Number
+	   * @final
+	   * @for ProAct.States
+	   */
 	  error: 4,
+	
+	  /**
+	   * A closed ProAct object.
+	   *
+	   * Streams that can emmit events anymore are closed streams.
+	   *
+	   * Properties which value can not be updated are closed (constants).
+	   *
+	   * @property closed
+	   * @type Number
+	   * @final
+	   * @for ProAct.States
+	   */
 	  closed: 5
 	};
 	
 	
 	/**
 	 * Contains a set of utility functions to ease working with arrays and objects.
-	 * Can be reffered by using 'ProAct.U' too.
+	 * Can be reffered by using `ProAct.U` too.
+	 *
+	 * This class is part of the `proact-core` module of ProAct.js.
 	 *
 	 * @namespace ProAct
 	 * @class Utils
@@ -126,13 +175,10 @@
 	ProAct.Utils = Pro.U = {
 	
 	  /**
-	   * Generates an unique id.
-	   * The idea is to be used as keynames in the {@link ProAct.Registry}.
+	   * Generates an universally unique identifier.
 	   *
-	   * @memberof ProAct.Utils
-	   * @function uuid
-	   * @return {String}
-	   *      Unique string.
+	   * @method uuid
+	   * @return {String} Unique string.
 	   */
 	  uuid: function () {
 	    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
@@ -144,24 +190,22 @@
 	  },
 	
 	  /**
-	   * Checks if the passed value is a function or not.
+	   * Checks if the passed value is a Function or not.
 	   *
-	   * @memberof ProAct.Utils
-	   * @function isFunction
-	   * @param {Object} value
-	   * @return {Boolean}
+	   * @method isFunction
+	   * @param {Object} value The object/value to check.
+	   * @return {Boolean} True if the passed value is a Function.
 	   */
 	  isFunction: function (value) {
 	    return typeof(value) === 'function';
 	  },
 	
 	  /**
-	   * Checks if the passed value is a string or not.
+	   * Checks if the passed value is a String instance or not.
 	   *
-	   * @memberof ProAct.Utils
-	   * @function isString
-	   * @param {Object} value
-	   * @return {Boolean}
+	   * @method isString
+	   * @param {Object} value The object/value to check.
+	   * @return {Boolean} True if the passed value is a String.
 	   */
 	  isString: function (value) {
 	    return typeof(value) === 'string';
@@ -170,10 +214,9 @@
 	  /**
 	   * Checks if the passed value is a JavaScript object or not.
 	   *
-	   * @memberof ProAct.Utils
-	   * @function isObject
-	   * @param {Object} value
-	   * @return {Boolean}
+	   * @method isObject
+	   * @param {Object} value The value to check.
+	   * @return {Boolean} True if the passed values is not primitive.
 	   */
 	  isObject: function (value) {
 	    return typeof(value) === 'object';
@@ -182,10 +225,9 @@
 	  /**
 	   * Checks if the passed value is {} or not.
 	   *
-	   * @memberof ProAct.Utils
-	   * @function isEmptyObject
-	   * @param {Object} value
-	   * @return {Boolean}
+	   * @method isEmptyObject
+	   * @param {Object} value The value to check.
+	   * @return {Boolean} True if the value is object that has no own fields.
 	   */
 	  isEmptyObject: function (value) {
 	    var property;
@@ -198,37 +240,34 @@
 	  },
 	
 	  /**
-	   * Checks if the passed value is a valid JavaScript error or not.
+	   * Checks if the passed value is a valid JavaScript Error instance or not.
 	   *
-	   * @memberof ProAct.Utils
-	   * @function isError
-	   * @param {Object} value
-	   * @return {Boolean}
+	   * @method isError
+	   * @param {Object} value The value to check.
+	   * @return {Boolean} True if the passed `value` is instance of an Error.
 	   */
 	  isError: function (value) {
 	    return value !== null && value instanceof Error;
 	  },
 	
 	  /**
-	   * Checks if the passed value is a valid JavaScript array or not.
+	   * Checks if the passed value is a valid JavaScript Array instance or not.
 	   *
-	   * @memberof ProAct.Utils
-	   * @function isArray
-	   * @param {Object} value
-	   * @return {Boolean}
+	   * @method isArray
+	   * @param {Object} value The value to check.
+	   * @return {Boolean} True if the passed `value` is Array.
 	   */
 	  isArray: function (value) {
 	    return P.U.isObject(value) && Object.prototype.toString.call(value) === '[object Array]';
 	  },
 	
 	  /**
-	   * Checks if the passed value is instance of the {@link ProAct.Array} type or not.
+	   * Checks if the passed value is instance of the {{#crossLink "ProAct.Array"}}{{/crossLink}} type or not.
+	   * TODO Move to the proact-arrays module.
 	   *
-	   * @memberof ProAct.Utils
-	   * @function isProArray
-	   * @param {Object} value
-	   * @return {Boolean}
-	   * @see {@link ProAct.Array}
+	   * @method isProArray
+	   * @param {Object} value The value to check.
+	   * @return {Boolean} True if the passed `value` is a ProAct.Array instance.
 	   */
 	  isProArray: function (value) {
 	    return value !== null && P.U.isObject(value) && P.U.isArray(value._array) && value.length !== undefined;
@@ -236,13 +275,12 @@
 	
 	  /**
 	   * Checks if the passed value is a valid array-like object or not.
-	   * Array like objects in ProAct.js are plain JavaScript arrays and {@link ProAct.Array}s.
+	   * Array like objects in ProAct.js are plain JavaScript arrays and {{#crossLink "ProAct.Array"}}{{/crossLink}}s.
+	   * TODO Move to the proact-arrays module.
 	   *
-	   * @memberof ProAct.Utils
-	   * @function isArrayObject
-	   * @param {Object} value
-	   * @return {Boolean}
-	   * @see {@link ProAct.Array}
+	   * @method isArrayObject
+	   * @param {Object} value The value to check.
+	   * @return {Boolean} True if the passed `value` is an Array or ProAct.Array instance.
 	   */
 	  isArrayObject: function (value) {
 	    return P.U.isArray(value) || P.U.isProArray(value);
@@ -250,14 +288,12 @@
 	
 	  /**
 	   * Checks if the passed value is a valid ProAct.js object or not.
-	   * ProAct.js object have a special '__pro__' object that is hidden in them, which should be instance of {@link ProAct.Core}.
+	   * ProAct.js object have a special `__pro__` object that is hidden in them, which should be instance of {{#crossLink "ProAct.Core"}}{{/crossLink}}.
+	   * TODO Move to the proact-properties module.
 	   *
-	   * @memberof ProAct.Utils
-	   * @function isProObject
-	   * @param {Object} value
-	   * @return {Boolean}
-	   * @see {@link ProAct.Array}
-	   * @see {@link ProAct.Core}
+	   * @method isProObject
+	   * @param {Object} value The value to check.
+	   * @return {Boolean} True if the value is object containing {{#crossLink "ProAct.Property"}}{{/crossLink}} instances and has a `core`.
 	   */
 	  isProObject: function (value) {
 	    return value && ProAct.U.isObject(value) && value.__pro__ !== undefined && ProAct.U.isObject(value.__pro__.properties);
@@ -267,12 +303,12 @@
 	   * Clones the passed object. It creates a deep copy of it.
 	   * For now it clones only arrays.
 	   *
-	   * @memberof ProAct.Utils
-	   * @function clone
-	   * @param {Object} obj
-	   *      The object to clone.
-	   * @return {Object}
-	   *      Clone of the passed object.
+	   * TODO It is not fully implemented...
+	   *
+	   * @method clone
+	   * @beta
+	   * @param {Object} obj The object to clone.
+	   * @return {Object} Clone of the passed object.
 	   */
 	  clone: function (obj) {
 	    if (P.U.isArray(obj)) {
@@ -288,15 +324,20 @@
 	  /**
 	   * Extends the destination object with the properties and methods of the source object.
 	   *
-	   * @memberof ProAct.Utils
-	   * @function ex
-	   * @param {Object} destination
-	   *      The object to be extended - it will be modified.
-	   * @param {Object} source
-	   *      The source holding the properties and the functions to extend destination with.
-	   * @return {Object}
-	   *      The changed destination object.
-	   * @see {@link ProAct.Utils.clone}
+	   * ```
+	   *  var obj1 = {a: 3};
+	   *  var obj2 = {b: 4;}
+	   *  ProAct.Utils.ex(obj2, obj1);
+	   *
+	   *  console.log(obj2);
+	   *  // This prints : {a: 3, b: 4}
+	   *
+	   * ```
+	   *
+	   * @method ex
+	   * @param {Object} destination The object to be extended - it will be modified.
+	   * @param {Object} source The source holding the properties and the functions to extend destination with.
+	   * @return {Object} The changed destination object.
 	   */
 	  ex: function(destination, source) {
 	    var p;
@@ -312,21 +353,19 @@
 	  /**
 	   * Used for extending of classes.
 	   * Example is:
-	   * <pre>
+	   * ```
+	   *
 	   *  var Bar = ProAct.Utils.extendClass.call(Foo, {
 	   *    a: 1,
 	   *    b: 2,
 	   *    c: function () {}
 	   *  });
-	   * </pre>
 	   *
-	   * @memberof ProAct.Utils
-	   * @function extendClass
-	   * @param {Object} data
-	   *      Data to add new properties to the new class or override old ones.
-	   * @return {Object}
-	   *      Child class.
-	   * @see {@link ProAct.Utils.ex}
+	   * ```
+	   *
+	   * @method extendClass
+	   * @param {Object} data Data to add new properties to the new class or override old ones.
+	   * @return {Object} Child class.
 	   */
 	  extendClass: function (data) {
 	    var parent = this,
@@ -349,17 +388,26 @@
 	  },
 	
 	  /**
-	   * Binds a <i>function</i> to an object <i>context</i>.
-	   * Every time the <i>function</i> is called the value <i>this</i> of this will be the object.
+	   * Binds a `function` to an `object context`.
 	   *
-	   * @memberof ProAct.Utils
-	   * @function bind
-	   * @param {Object} ctx
-	   *      The <i>context</i> to bind the <i>this</i> of the function to.
-	   * @param {Function} func
-	   *      The <i>function</i> to bind.
-	   * @return {Function}
-	   *      The bound <i>function</i>.
+	   * Every time the `function` is called, `this` will point to the passed `object`.
+	   *
+	   * ```
+	   *
+	   *  var context = {a: 3};
+	   *  var f = ProAct.Utils.bind(context, function () {
+	   *    return this;
+	   *  });
+	   *
+	   *  var result = f();
+	   *  console.log(result === context); // prints 'true'
+	   *
+	   * ```
+	   *
+	   * @method bind
+	   * @param {Object} ctx The `context` to bind the `this` of the function to.
+	   * @param {Function} func The `function` to bind.
+	   * @return {Function} The bound `function`.
 	   */
 	  bind: function (ctx, func) {
 	    return function () {
@@ -368,31 +416,21 @@
 	  },
 	
 	  /**
-	   * Checks if an <i>array</i> contains a <i>value</i>.
+	   * Removes the first appearance of the passed `value` in the passed `array`.
+	   * If the `value` is not present in the passed `array` does nothing.
 	   *
-	   * @memberof ProAct.Utils
-	   * @function contains
-	   * @param {Array} array
-	   *      The <i>array</i> to check.
-	   * @param {Object} value
-	   *      The <i>value</i> to check for.
-	   * @return {Boolean}
-	   *      True if the <i>array</i> contains the <i>value</i>, False otherwise.
-	   */
-	  contains: function (array, value) {
-	    array.indexOf(value) !== -1;
-	  },
-	
-	  /**
-	   * Removes the first appearance of the passed <i>value</i> in the passed <i>array</i>.
-	   * If the <i>value</i> is not present in the passed <i>array</i> does nothing.
+	   * ```
 	   *
-	   * @memberof ProAct.Utils
-	   * @function remove
-	   * @param {Array} array
-	   *      The <i>array</i> to remove from.
-	   * @param {Object} value
-	   *      The <i>value</i> to be removed.
+	   *  var array = [1, 2, 3];
+	   *  ProAct.Utils.remove(array, 2);
+	   *
+	   *  console.log(array); // prints [1, 3]
+	   *
+	   * ```
+	   *
+	   * @method remove
+	   * @param {Array} array The `array` to remove from.
+	   * @param {Object} value The `value` to be removed.
 	   */
 	  remove: function (array, value) {
 	    var i = array.indexOf(value);
@@ -404,8 +442,7 @@
 	  /**
 	   * A powerful function that creates a diff object containing the differences between two arrays.
 	   *
-	   * @memberof ProAct.Utils
-	   * @function diff
+	   * @method diff
 	   * @param {Array} array1
 	   * @param {Array} array2
 	   * @return {Object}
@@ -414,19 +451,19 @@
 	   *      <p>The 'o' property represents the owned elemetns of the first array that are different from the other's.</p>
 	   *      <p>The 'n' property contains all the elements that are not owned by the first array, but present in the other.</p>
 	   *      <p>Example:</p>
-	   *      <pre>
-	   *        var array1 = [1, 3, 4, 5],
-	   *            array2 = [1, 2, 7, 5, 6]
-	   *            diff;
+	   * ```
+	   *   var array1 = [1, 3, 4, 5],
+	   *       array2 = [1, 2, 7, 5, 6]
+	   *       diff;
 	   *
-	   *        diff = ProAct.Utils.diff(array1, array2);
+	   *   diff = ProAct.Utils.diff(array1, array2);
 	   *
-	   *        console.log(diff[0]); // undefined - the arrays are the same at he index 0
-	   *        console.log(diff[1]); // {o: [3, 4], n: [2, 7]}
-	   *        console.log(diff[2]); // undefined the change began from index 1, so it is stored there
-	   *        console.log(diff[3]); // undefined - the arrays are the same at index 3
-	   *        console.log(diff[4]); // {o: [], n: [6]}
-	   *      </pre>
+	   *   console.log(diff[0]); // undefined - the arrays are the same at he index 0
+	   *   console.log(diff[1]); // {o: [3, 4], n: [2, 7]}
+	   *   console.log(diff[2]); // undefined the change began from index 1, so it is stored there
+	   *   console.log(diff[3]); // undefined - the arrays are the same at index 3
+	   *   console.log(diff[4]); // {o: [], n: [6]}
+	   * ```
 	   */
 	  diff: function (array1, array2) {
 	    var i, e1, e2,
@@ -475,22 +512,16 @@
 	
 	  /**
 	   * Defines a property to an object that contains a initial value.
+	   *
 	   * The property can be configured using the arguments passed if it is possible in the javascript implementation.
 	   *
-	   * @memberof ProAct.Utils
-	   * @function defValProp
-	   * @param {Object} obj
-	   *      The object to define a property in.
-	   * @param {String} prop
-	   *      The name of the property to define.
-	   * @param {Boolean} enumerable
-	   *      If the property should be enumerable.<br /> In other words visible when doing <pre>for (p in obj) {}</pre>
-	   * @param {Boolean} configurable
-	   *      If the property should be configurable.<br /> In other words if the parameters of the property for example enumerable or writable can be changed in the future.
-	   * @param {Boolean} writable
-	   *      If the property can be changed.
-	   * @param {Object} val
-	   *      The initial value of the property.
+	   * @method defValProp
+	   * @param {Object} obj The object to define a property in.
+	   * @param {String} prop The name of the property to define.
+	   * @param {Boolean} enumerable If the property should be enumerable.<br /> In other words visible when doing <pre>for (p in obj) {}</pre>
+	   * @param {Boolean} configurable If the property should be configurable.<br /> In other words if the parameters of the property for example enumerable or writable can be changed in the future.
+	   * @param {Boolean} writable If the property can be changed.
+	   * @param {Object} val The initial value of the property.
 	   */
 	  defValProp: function (obj, prop, enumerable, configurable, writable, val) {
 	    try {
@@ -507,33 +538,36 @@
 	};
 	
 	/**
-	 * Contains various configurations for the ProAct.js library.
+	 * Contains various configuration settings for the ProAct.js library.
 	 *
-	 * @class Configuration
 	 * @namespace ProAct
+	 * @class Configuration
 	 * @static
 	 */
 	ProAct.Configuration = {
+	
 	  /**
 	   * If this option is set to true, when a ProAct.js object is created and has properties named
-	   * as one or more of the properties listed in <i>ProAct.Configuration.keypropList</i> an Error will be thrown.
+	   * as one or more of the properties listed in
+	   * {{#crossLink "ProAct.Configuration.keypropList"}}{{/crossLink}} an `Error` will be thrown.
+	   *
 	   * In other words declares some of the properties of every ProAct objects as keyword properties.
 	   *
+	   * @property keyprops
 	   * @type Boolean
-	   * @memberof ProAct.Configuration
 	   * @static
-	   * @see {@link ProAct.Configuration.keypropList}
+	   * @for ProAct.Configuration
 	   */
 	  keyprops: true,
 	
 	  /**
 	   * Defines a list of the keyword properties that can not be used in ProAct.js objects.
-	   * The {@link ProAct.Configuration.keyprops} option must be set to true in order for this list to be used.
+	   * The {{#crossLink "ProAct.Configuration.keyprops"}}{{/crossLink}} option must be set to true in order for this list to be used.
 	   *
+	   * @property keypropList
 	   * @type Array
-	   * @memberof ProAct.Configuration
 	   * @static
-	   * @see {@link ProAct.Configuration.keyprops}
+	   * @for ProAct.Configuration
 	   */
 	  keypropList: ['p']
 	};
@@ -541,33 +575,33 @@
 	/**
 	 * No-action or emtpy function. Represent an action that does nothing.
 	 *
-	 * @function N
-	 * @memberof ProAct
-	 * @static
+	 * @method N
+	 * @for ProAct
 	 */
 	ProAct.N = function () {};
+	
 	
 	/**
 	 * <p>
 	 *  Represents the current caller of a method, the initiator of the current action.
 	 * </p>
 	 * <p>
-	 *  This property does the magic when for example an {@link ProAct.AutoProperty} is called
+	 *  This property does the magic when for example an {{#crossLink "ProAct.AutoProperty"}}{{/crossLink}} is called
 	 *  for the first time and the dependencies to the other properties are created.
 	 *  The current caller expects to be used in a single threaded environment.
 	 * </p>
 	 * <p>
 	 *  Do not remove or modify this property manually.
 	 * </p>
+	 * TODO move to proact-properties module.
 	 *
+	 * @property currentCaller
 	 * @type Object
-	 * @memberof ProAct
 	 * @default null
 	 * @static
+	 * @for ProAct
 	 */
 	ProAct.currentCaller = null;
-	
-	ProAct.close = ProAct.stop = ProAct.end = {};
 	
 	/**
 	 * <p>
@@ -1598,6 +1632,18 @@
 	P.F.prototype.deferOnce = P.F.prototype.enqueOnce = P.F.prototype.addOnce = P.F.prototype.pushOnce;
 	P.F.prototype.flush = P.F.prototype.go = P.F.prototype.run;
 	
+	/**
+	 * @module proact
+	 * @submodule proact-core
+	 */
+	
+	/**
+	 * TODO Move it to its own file.
+	 *
+	 * @namespace ProAct
+	 * @class ActorUtil
+	 * @static
+	 */
 	ActorUtil = {
 	  update: function (source, actions, eventData) {
 	    if (this.state === ProAct.States.destroyed) {
@@ -1801,7 +1847,6 @@
 	      }
 	
 	      if (val === P.Actor.Close) {
-	        actor.close();
 	        break;
 	      }
 	    }
@@ -3169,7 +3214,7 @@
 	  skip: function (n) {
 	    var i = n, self = this;
 	    return this.fromLambda(function (stream, event) {
-	      if (event === ProAct.Actor.close) {
+	      if (event === ProAct.Actor.Close) {
 	        stream.close();
 	        return;
 	      }
@@ -3178,7 +3223,61 @@
 	      if (i < 0) {
 	        self.offAll(stream.lambda);
 	        stream.into(self);
+	        stream.trigger(event);
 	      }
+	    });
+	  },
+	
+	  skipWhile: function (condition) {
+	    var self = this,
+	        cond = condition ? condition : function (e) {
+	          return e;
+	        };
+	    return this.fromLambda(function (stream, event) {
+	      if (event === ProAct.Actor.close) {
+	        stream.close();
+	        return;
+	      }
+	
+	      if (!cond(event)) {
+	        self.offAll(stream.lambda);
+	        stream.into(self);
+	        stream.trigger(event);
+	      }
+	    });
+	  },
+	
+	  skipDuplicates: function (comparator) {
+	    var last = undefined,
+	        cmp = comparator ? comparator : function (a, b) {
+	          return a === b;
+	        };
+	    return this.fromLambda(function (stream, event) {
+	      if (!cmp(last, event)) {
+	        stream.trigger(event);
+	        last = event;
+	      }
+	    });
+	  },
+	
+	  diff: function(seed, differ) {
+	    var last = seed,
+	        fn = differ ? differ : function (last, next) {
+	          return [last, next];
+	        };
+	    return this.fromLambda(function (stream, event) {
+	      if (event === ProAct.Actor.close) {
+	        stream.close();
+	        return;
+	      }
+	
+	      if (last === undefined) {
+	        last = event;
+	        return;
+	      }
+	
+	      stream.trigger(differ(last, event));
+	      last = event;
 	    });
 	  },
 	
@@ -3197,7 +3296,7 @@
 	
 	  takeWhile: function (condition) {
 	    return this.fromLambda(function (stream, event) {
-	      if (condition.call(event)) {
+	      if (condition.call(null, event)) {
 	        stream.trigger(event);
 	      } else {
 	        stream.close();
