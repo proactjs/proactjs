@@ -8,3 +8,5 @@
 npm-debug.log
 
 coverage
+
+/dist/js/proact.min.gz.js
