@@ -5,6 +5,7 @@
 
 /**
  * TODO Move it to its own file.
+ *
  * ActorUtil provides methods that can be used to make the Actor to 'act'.
  * The Actor is ProAct.js version of the base `Observable` object. Various types
  * of listeners can be attached to it and used to observe its `actions`.
@@ -28,9 +29,40 @@
  *
  * @namespace ProAct
  * @class ActorUtil
+ * @extensionfor ProAct.Actor
  * @static
  */
 ActorUtil = {
+
+  /**
+   * Updating/notifying method that can be applied to an {{#crossLink "ProAct.Actor"}}{{/crossLink}}
+   *
+   * This method defers the update and the notifications into {{#crossLink "ProAct.flow"}}{{/crossLink}}.
+   * 
+   * If the state of the caller is {{#crossLink "ProAct.States.destroyed)"}}{{/crossLink}}, an exception will be thrown.
+   * If the state of the caller is {{#crossLink "ProAct.States.closed)"}}{{/crossLink}}, nothing will happen.
+   *
+   * Examples:
+   *
+   * You can implement a stream and in it's `trigger` method use this:
+   * ```
+   *   ActorUtil.update.call(this, event);
+   * ```
+   * This way the event will be triggered into the stream and all the listeners to the stream will be notified.
+   * For this to work you'll have to override the `makeEvent` method of the stream to return the unmodified source - no state/no event generation,
+   * the event will just go through.
+   *
+   *
+   * If you want to implement a statefull `Actor` like a `property`, you can set a state in it and just notify all the
+   * observing `Actors` with this method.
+   *
+   *
+   * @method update
+   * @param {Object} [source] The event/value, causing the update -> can be null : no source.
+   * @param {Object} [actions] For which actions should notify -> can be null : default actions.
+   * @param {Object} [eventData] Data for creating the updating event -> can be null : no data.
+   * @return {Object} The calling object.
+   */
   update: function (source, actions, eventData) {
     if (this.state === ProAct.States.destroyed) {
       throw new Error('You can not trigger actions on destroyed actors!');
