@@ -5,6 +5,26 @@
 
 /**
  * TODO Move it to its own file.
+ * ActorUtil provides methods that can be used to make the Actor to 'act'.
+ * The Actor is ProAct.js version of the base `Observable` object. Various types
+ * of listeners can be attached to it and used to observe its `actions`.
+ *
+ * On the other hand the `Actor` should do something or `act`, because something
+ * has to be observed after all.
+ *
+ * The `ActorUtil` contains a set of methods that help implementing these `acts`.
+ *
+ * For example the we can trigger events/values in the `Streams`. This is thier `act`.
+ * This triggering can be implemented with ease using the methods defined in `ActorUtil`.
+ *
+ * Another example is `Properties` - they can be set or updated by the reactive flow -> they should react.
+ *
+ * So `ActorUtil` provides the `Actors` with helpful methods for `acting` and `reacting`.
+ *
+ * All these methods use the {{#crossLink "ProAct.Flow"}}{{/crossLink}} to defer the changes the right way.
+ * And the using the `flow` these methods handle the dependencies between the `Actors`.
+ *
+ * Use the methods in the `ActorUtil` to implement your `Actor's` `actions` and `reactions`.
  *
  * @namespace ProAct
  * @class ActorUtil
