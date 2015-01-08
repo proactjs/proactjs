@@ -237,7 +237,6 @@ P.U.ex(ProAct.Property, {
       }
 
       if (property.type() !== P.P.Types.auto && P.P.Types.type(property.val) !== property.type()) {
-      //if (property.val === null || property.val === undefined) {
         P.P.reProb(property).update();
         return;
       }
