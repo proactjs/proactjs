@@ -6,6 +6,8 @@
 /**
  * TODO Move it to its own file.
  *
+ * TODO Rename to ProAct.ActorEncapsulated
+ *
  * ActorUtil provides methods that can be used to make the Actor to 'act'.
  * The Actor is ProAct.js version of the base `Observable` object. Various types
  * of listeners can be attached to it and used to observe its `actions`.
@@ -38,7 +40,7 @@ ActorUtil = {
    * Updating/notifying method that can be applied to an {{#crossLink "ProAct.Actor"}}{{/crossLink}}
    *
    * This method defers the update and the notifications into {{#crossLink "ProAct.flow"}}{{/crossLink}}.
-   * 
+   *
    * If the state of the caller is {{#crossLink "ProAct.States.destroyed)"}}{{/crossLink}}, an exception will be thrown.
    * If the state of the caller is {{#crossLink "ProAct.States.closed)"}}{{/crossLink}}, nothing will happen.
    *
@@ -58,6 +60,7 @@ ActorUtil = {
    *
    *
    * @method update
+   * @protected
    * @param {Object} [source] The event/value, causing the update -> can be null : no source.
    * @param {Object} [actions] For which actions should notify -> can be null : default actions.
    * @param {Object} [eventData] Data for creating the updating event -> can be null : no data.
@@ -83,6 +86,17 @@ ActorUtil = {
     return this;
   },
 
+  /**
+   * Contains the real notify/update logic defered by {{#crossLink "ProAct.ActorUtil/update:method"}}{{/crossLink}} into the flow.
+   * It is private method, should not be used - use `update`.
+   *
+   * @method doUpdate
+   * @private
+   * @param {Object} [source] The event/value, causing the update -> can be null : no source.
+   * @param {Object} [actions] For which actions should notify -> can be null : default actions.
+   * @param {Object} [eventData] Data for creating the updating event -> can be null : no data.
+   * @return {Object} The calling object.
+   */
   doUpdate: function (source, actions, eventData) {
     if (!actions) {
       actions = this.defaultActions();
