@@ -1,6 +1,5 @@
 /**
- * @module proact
- * @submodule proact-core
+ * @module proact-core
  */
 
 /**
@@ -181,7 +180,7 @@ P.U.defValProp(ProAct, 'ActorUtil', false, false, false, ActorUtil);
 
 /**
  * <p>
- *  Constructs a ProAct.Actor. It can be used both as observer and observable.
+ *  `ProAct.Actor` is the basic observer-observable functionallity in ProAct.js
  * </p>
  * <p>
  *  The actors in ProAct.js form the dependency graph.
@@ -196,10 +195,12 @@ P.U.defValProp(ProAct, 'ActorUtil', false, false, false, ActorUtil);
  * </p>
  * <p>
  *  ProAct.Actor is part of the core module of ProAct.js.
+    System.out.println();
  * </p>
  *
  * @class ProAct.Actor
- * @param {String} queueName
+ * @constructor
+ * @param {String} [queueName]
  *      The name of the queue all the updates should be pushed to.
  *      <p>
  *        If this parameter is null/undefined the default queue of
@@ -209,7 +210,7 @@ P.U.defValProp(ProAct, 'ActorUtil', false, false, false, ActorUtil);
  *        If this parameter is not a string it is used as the
  *        <i>transforms</i>.
  *      </p>
- * @param {Array} transforms
+ * @param {Array} [transforms]
  *      A list of transformation to be used on all incoming chages.
  */
 function Actor (queueName, transforms) {
