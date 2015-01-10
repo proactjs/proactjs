@@ -1,7 +1,6 @@
 /**
- * @module proact
- * @submodule proact-core
- * @main proact
+ * @module proact-core
+ * @main proact-core
  */
 
 /**
