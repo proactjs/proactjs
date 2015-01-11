@@ -241,35 +241,41 @@ P.U.ex(P.Actor, {
   /**
    * A constant defining bad values or bad events.
    *
-   * @memberof ProAct.Actor
+   * Part of the filtering mechainsm; If a transformation returns
+   * a `BadValue`, based on uncomming event -> the event is skipped.
+   *
+   * @property BadValue
    * @type Object
+   * @final
    * @static
-   * @constant
+   * @for ProAct.Actor
    */
   BadValue: {},
 
   /**
    * A constant defining closing or ending events.
    *
-   * @memberof ProAct.Actor
+   * If a transformation returns this value, the actor will be closed.
+   *
+   * You can manually close `Actor`s updating them with this constant as an event.
+   *
+   * @property Close
    * @type Object
+   * @final
    * @static
-   * @constant
+   * @for ProAct.Actor
    */
   Close: {},
 
   /**
-   * Transforms the passed <i>val</i> using the ProAct.Actor#transforms of the passed <i>actor</i>.
+   * Transforms the passed <i>val</i> using the {{#crossLink "ProAct.Actor/transforms:method"}}{{/crossLink}} method of the passed <i>actor</i>.
    *
-   * @function transforms
-   * @memberof ProAct.Actor
+   * @method transforms
+   * @for ProAct.Actor
    * @static
-   * @param {ProAct.Actor} actor
-   *      The ProAct.Actor which transformations should be used.
-   * @param {Object} val
-   *      The value to transform.
-   * @return {Object}
-   *      The transformed value.
+   * @param {ProAct.Actor} actor The `ProAct.Actor` which transformations should be used.
+   * @param {Object} val The value to transform.
+   * @return {Object} The transformed value.
    */
   transform: function (actor, val) {
     var i, t = actor.transforms, ln = t.length;
