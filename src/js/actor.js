@@ -299,10 +299,10 @@ P.Actor.prototype = {
   /**
    * Reference to the constructor of this object.
    *
-   * @memberof ProAct.Actor
-   * @instance
-   * @constant
-   * @default ProAct.Actor
+   * @property constructor
+   * @type ProAct.Actor
+   * @final
+   * @for ProAct.Actor
    */
   constructor: ProAct.Actor,
 
