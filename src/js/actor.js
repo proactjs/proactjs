@@ -309,17 +309,16 @@ P.Actor.prototype = {
   /**
    * Initializes this actor.
    * <p>
-   *  This method logic is run only if the current state of <i>this</i> is {@link ProAct.States.init}.
+   *  This method logic is run only if the current state of <i>this</i> is
+   *  {{#crossLink "ProAct.States/init:property"}}{{/crossLink}}.
    * </p>
    * <p>
-   *  Then {@link ProAct.Actor#afterInit} is called to finish the initialization.
+   *  Then {{#crossLink "ProAct.Actor/afterInit:method"}}{{/crossLink}} is called to finish the initialization.
    * </p>
    *
-   * @memberof ProAct.Actor
+   * @for ProAct.Actor
    * @instance
    * @method init
-   * @see {@link ProAct.Actor#doInit}
-   * @see {@link ProAct.Actor#afterInit}
    */
   init: function () {
     if (this.state !== P.States.init) {
@@ -337,10 +336,9 @@ P.Actor.prototype = {
    *  Empty by default.
    * </p>
    *
-   * @memberof ProAct.Actor
+   * @for ProAct.Actor
    * @instance
    * @method doInit
-   * @see {@link ProAct.Actor#init}
    */
   doInit: function () {},
 
