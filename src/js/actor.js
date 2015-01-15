@@ -345,13 +345,13 @@ P.Actor.prototype = {
   /**
    * Called automatically after initialization of this actor.
    * <p>
-   *  By default it changes the state of <i>this</i> to {@link ProAct.States.ready}.
+   *  By default it changes the state of <i>this</i> to {{#crossLink "ProAct.States/ready:property"}}{{/crossLink}}.
    * </p>
    * <p>
    *  It can be overridden to define more complex initialization logic.
    * </p>
    *
-   * @memberof ProAct.Property
+   * @for ProAct.Actor
    * @instance
    * @method afterInit
    */
