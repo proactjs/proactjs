@@ -359,6 +359,28 @@ P.Actor.prototype = {
     this.state = P.States.ready;
   },
 
+  /**
+   * Closes this actor => it state becomes {{#crossLink "ProAct.States/closed:property"}}{{/crossLink}}.
+   *
+   * This sends a `close` event to all the subscribers to closing.
+   *
+   * After closing the actor it can't emit events anymore.
+   *
+   * Example:
+   * ```
+   *  var actor = new ProAct.Actor();
+   *  actor.onClose(function () {
+   *    console.log('Done!');
+   *  });
+   *
+   *  actor.close(); // We will see 'Done!' on the console output.
+   * ```
+   *
+   * @for ProAct.Actor
+   * @instance
+   * @method close
+   * @return {ProAct.Actor} This instance - can be chained.
+   */
   close: function () {
     if (this.state === P.States.closed) {
       return;
@@ -366,6 +388,19 @@ P.Actor.prototype = {
     return ActorUtil.update.call(this, P.Actor.Close, 'close');
   },
 
+  /**
+   * This method is called when a `close` event is pushed to this `Actor`.
+   *
+   * It removes all the subscriptions to the `Actor` and sets its
+   * state to {{#crossLink "ProAct.States/closed:property"}}{{/crossLink}}.
+   *
+   * Do not call this method; it is private!
+   *
+   * @for ProAct.Actor
+   * @private
+   * @instance
+   * @method doClose
+   */
   doClose: function () {
     this.state = P.States.closed;
     this.offAll();
