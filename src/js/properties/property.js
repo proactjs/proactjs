@@ -465,7 +465,7 @@ ProAct.Property.prototype = P.U.ex(Object.create(P.Actor.prototype), {
     }
   },
 
-  doDestroy: function () {
+  beforeDestroy: function () {
     delete this.proObject.__pro__.properties[this.property];
     this.oldVal = undefined;
 
