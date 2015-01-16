@@ -338,6 +338,7 @@ P.Actor.prototype = {
    *
    * @for ProAct.Actor
    * @instance
+   * @protected
    * @method doInit
    */
   doInit: function () {},
@@ -353,6 +354,7 @@ P.Actor.prototype = {
    *
    * @for ProAct.Actor
    * @instance
+   * @protected
    * @method afterInit
    */
   afterInit: function () {
@@ -389,6 +391,20 @@ P.Actor.prototype = {
   },
 
   /**
+   * Checks if <i>this</i> can be closed.
+   * <p>
+   *  Defaults to return true.
+   * </p>
+   *
+   * @for ProAct.Actor
+   * @instance
+   * @method canClose
+   */
+  canClose: function () {
+    return true;
+  },
+
+  /**
    * This method is called when a `close` event is pushed to this `Actor`.
    *
    * It removes all the subscriptions to the `Actor` and sets its
@@ -399,6 +415,7 @@ P.Actor.prototype = {
    * @for ProAct.Actor
    * @private
    * @instance
+   * @protected
    * @method doClose
    */
   doClose: function () {
@@ -412,34 +429,26 @@ P.Actor.prototype = {
   /**
    * Called immediately before destruction.
    *
-   * @memberof ProAct.Actor
+   * The idea is to be implemented by extenders to free additional resources on destroy.
+   *
+   * @for ProAct.Actor
    * @instance
    * @abstract
+   * @protected
    * @method beforeDestroy
-   * @see {@link ProAct.Actor#destroy}
    */
   beforeDestroy: function () {
   },
 
   /**
-   * Frees additional resources.
-   *
-   * @memberof ProAct.Actor
-   * @instance
-   * @abstract
-   * @method doDestroy
-   * @see {@link ProAct.Actor#destroy}
-   */
-  doDestroy: function () {
-  },
-
-  /**
-   * Destroys this ProAct.Actor instance.
+   * Destroys this `ProAct.Actor` instance.
    * <p>
-   *  The state of <i>this</i> is set to {@link ProAct.States.destroyed}.
+   *  The state of <i>this</i> is set to {{#crossLink "ProAct.States/destroyed:property"}}{{/crossLink}}.
    * </p>
    *
-   * @memberof ProAct.Actor
+   * Calls {{#crossLink "ProAct.Actor/beforeDestroy:method"}}{{/crossLink}}
+   *
+   * @for ProAct.Actor
    * @instance
    * @method destroy
    */
@@ -449,7 +458,6 @@ P.Actor.prototype = {
     }
 
     this.beforeDestroy();
-    this.doDestroy();
 
     this.listeners = undefined;
 
@@ -468,28 +476,24 @@ P.Actor.prototype = {
   },
 
   /**
-   * Checks if <i>this</i> can be closed.
-   * <p>
-   *  Defaults to return true.
-   * </p>
-   *
-   * @memberof ProAct.Actor
-   * @instance
-   * @method canClose
-   */
-  canClose: function () {
-    return true;
-  },
-
-  /**
-   * Generates the initial listeners object. It can be overridden for alternative listeners collections.
+   * Generates the initial listeners object.
+   * It can be overridden for alternative listeners collections.
    * It is used for resetting all the listeners too.
    *
-   * @memberof ProAct.Actor
+   * The default types of listeners are:
+   * ```
+   *  {
+   *    change: [],
+   *    error: [],
+   *    close: []
+   *  }
+   * ```
+   *
+   * @for ProAct.Actor
    * @instance
+   * @protected
    * @method defaultListeners
-   * @return {Object}
-   *      A map containing the default listeners collections.
+   * @return {Object} A map containing the default listeners collections.
    */
   defaultListeners: function () {
     return {
@@ -502,13 +506,15 @@ P.Actor.prototype = {
   /**
    * A list of actions or action to be used when no action is passed for the methods working with actions.
    *
-   * @memberof ProAct.Actor
+   * @for ProAct.Actor
    * @instance
    * @method defaultActions
+   * @protected
    * @default 'change'
-   * @return {Array|String}
-   *      The actions to be used if no actions are provided to action related methods,
-   *      like {@link ProAct.Actor#on}, {@link ProAct.Actor#off}, {@link ProAct.Actor#update}, {@link ProAct.Actor#willUpdate}.
+   * @return {Array|String} The actions to be used if no actions are provided to action related methods, like
+   *  {{#crossLink "ProAct.Actor/on:method"}}{{/crossLink}},
+   *  {{#crossLink "ProAct.Actor/off:method"}}{{/crossLink}},
+   *  {{#crossLink "ProAct.ActorUtil/update:method"}}{{/crossLink}}.
    */
   defaultActions: function () {
     return 'change';
