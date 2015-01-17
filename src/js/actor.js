@@ -522,21 +522,22 @@ P.Actor.prototype = {
 
   /**
    * Creates the <i>listener</i> of this actor.
+   *
    * Every actor should have one listener that should pass to other actors.
+   *
    * <p>
    *  This listener turns the actor in a observer.
    * </p>
    * <p>
-   *  Should be overriden with specific listener, by default it returns null.
+   *  Should be overriden with specific listener, by default it returns {{#crossLink "ProAct/N:method"}}{{/crossLink}}.
    * </p>
    *
-   * @memberof ProAct.Actor
+   * @for ProAct.Actor
    * @instance
    * @abstract
    * @method makeListener
-   * @default null
-   * @return {Object}
-   *      The <i>listener of this observer</i>.
+   * @default {ProAct.N}
+   * @return {Object} The <i>listener of this observer</i>.
    */
   makeListener: P.N,
 
