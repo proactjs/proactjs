@@ -536,6 +536,7 @@ P.Actor.prototype = {
    * @instance
    * @abstract
    * @method makeListener
+   * @protected
    * @default {ProAct.N}
    * @return {Object} The <i>listener of this observer</i>.
    */
@@ -543,61 +544,66 @@ P.Actor.prototype = {
 
   /**
    * Creates the <i>error listener</i> of this actor.
+   *
    * Every actor should have one error listener that should pass to other actors.
+   *
    * <p>
    *  This listener turns the actor in a observer for errors.
    * </p>
    * <p>
-   *  Should be overriden with specific listener, by default it returns null.
+   *  Should be overriden with specific listener, by default it returns {{#crossLink "ProAct/N:method"}}{{/crossLink}}.
    * </p>
    *
-   * @memberof ProAct.Actor
+   * @for ProAct.Actor
    * @instance
    * @abstract
    * @method makeErrListener
-   * @default null
-   * @return {Object}
-   *      The <i>error listener of this observer</i>.
+   * @protected
+   * @default {ProAct.N}
+   * @return {Object} The <i>error listener of this observer</i>.
    */
   makeErrListener: P.N,
 
   /**
    * Creates the <i>closing listener</i> of this actor.
+   *
    * Every actor should have one closing listener that should pass to other actors.
+   *
    * <p>
    *  This listener turns the actor in a observer for closing events.
    * </p>
    * <p>
-   *  Should be overriden with specific listener, by default it returns null.
+   *  Should be overriden with specific listener, by default it returns {{#crossLink "ProAct/N:method"}}{{/crossLink}}.
    * </p>
    *
-   * @memberof ProAct.Actor
+   * @for ProAct.Actor
    * @instance
    * @abstract
+   * @protected
    * @method makeCloseListener
-   * @default null
-   * @return {Object}
-   *      The <i>closing listener of this observer</i>.
+   * @default {ProAct.N}
+   * @return {Object} The <i>closing listener of this observer</i>.
    */
   makeCloseListener: P.N,
 
   /**
    * Creates the <i>event</i> to be send to the listeners on update.
+   *
    * <p>
-   *  The <i>event</i> should be an instance of {@link ProAct.Event}.
-   * </p>
-   * <p>
-   *  By default this method returns {@link ProAct.Event.Types.value} event.
+   *  The <i>event</i> should be an instance of {{#crossLink "ProAct.Event"}}{{/crossLink}}.
    * </p>
    *
-   * @memberof ProAct.Actor
+   * <p>
+   *  By default this method returns {{#crossLink "ProAct.Event.Types/value:property"}}{{/crossLink}} event.
+   * </p>
+   *
+   * @for ProAct.Actor
    * @instance
    * @method makeEvent
-   * @default {ProAct.Event} with type {@link ProAct.Event.Types.value}
-   * @param {ProAct.Event} source
-   *      The source event of the event. It can be null
-   * @return {ProAct.Event}
-   *      The event.
+   * @default {ProAct.Event} with type {{#crossLink "ProAct.Event.Types/value:property"}}{{/crossLink}}.
+   * @protected
+   * @param {ProAct.Event} source The source event of the event. It can be null
+   * @return {ProAct.Event} The event.
    */
   makeEvent: function (source) {
     return new P.Event(source, this, P.Event.Types.value);
