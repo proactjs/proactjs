@@ -610,14 +610,32 @@ P.Actor.prototype = {
   },
 
   /**
-   * Attaches a new listener to this ProAct.Actor.
+   * Attaches a new listener to this `ProAct.Actor`.
+   *
    * The listener may be function or object that defines a <i>call</i> method.
    *
-   * @memberof ProAct.Actor
+   * ```
+   *   actor.on(function (v) {
+   *    console.log(v);
+   *   });
+   *
+   *   actor.on('error', function (v) {
+   *    console.error(v);
+   *   });
+   *
+   *   actor.on({
+   *    call: function (v) {
+   *      console.log(v);
+   *    }
+   *   });
+   * ```
+   *
+   * @for ProAct.Actor
    * @instance
    * @method on
    * @param {Array|String} actions
-   *      The action/actions to listen for. If this parameter is skipped or null/undefined, the actions from {@link ProAct.Actor#defaultActions} are used.
+   *      The action/actions to listen for. If this parameter is skipped or null/undefined,
+   *      the actions from {{#crossLink "ProAct.Actor/defaultActions:method"}}{{/crossLink}} are used.
    *      <p>
    *        The actions can be skipped and on their place as first parameter to be passed the <i>listener</i>.
    *      </p>
@@ -625,7 +643,6 @@ P.Actor.prototype = {
    *      The listener to attach. It must be instance of Function or object with a <i>call</i> method.
    * @return {ProAct.Actor}
    *      <b>this</b>
-   * @see {@link ProAct.Actor#defaultActions}
    */
   on: function (actions, listener) {
     if (!P.U.isString(actions) && !P.U.isArray(actions)) {
@@ -655,16 +672,50 @@ P.Actor.prototype = {
 
   /**
    * Removes a <i>listener</i> from the passed <i>action</i>.
+   *
    * <p>
    *  If this method is called without parameters, all the listeners for all the actions are removed.
-   *  The listeners are reset using {@link ProAct.Actor#defaultListeners}.
+   *  The listeners are reset using {{#crossLink "ProAct.Actor/defaultActions:method"}}{{/crossLink}}.
    * </p>
    *
-   * @memberof ProAct.Actor
+   * Examples are:
+   *
+   * Removing a listener:
+   * ```
+   *  var listener = function (v) {
+   *    console.log(v);
+   *  };
+   *  actor.on(listener);
+   *  actor.off(listener);
+   * ```
+   *
+   * Or for removing all the listeners attached to an actor:
+   * ```
+   *  actor.off();
+   * ```
+   *
+   * Or for removing all the listeners of a given type attached to an actor:
+   * ```
+   *  actor.off('error');
+   * ```
+   *
+   * Or for removing a listener from different type of actions:
+   * ```
+   *  var listener = function (v) {
+   *    console.log(v);
+   *  };
+   *  actor.on(listener);
+   *  actor.onErr(listener);
+   *
+   *  actor.off(['error', 'change'], listener);
+   * ```
+   *
+   * @for ProAct.Actor
    * @instance
    * @method off
    * @param {Array|String} actions
-   *      The action/actions to stop listening for. If this parameter is skipped or null/undefined, the actions from {@link ProAct.Actor#defaultActions} are used.
+   *      The action/actions to stop listening for. If this parameter is skipped or null/undefined,
+   *      the actions from {{#crossLink "ProAct.Actor/defaultActions:method"}}{{/crossLink}} are used.
    *      <p>
    *        The actions can be skipped and on their place as first parameter to be passed the <i>listener</i>.
    *      </p>
@@ -672,9 +723,6 @@ P.Actor.prototype = {
    *      The listener to detach. If it is skipped, null or undefined all the listeners are removed from this actor.
    * @return {ProAct.Actor}
    *      <b>this</b>
-   * @see {@link ProAct.Actor#on}
-   * @see {@link ProAct.Actor#defaultActions}
-   * @see {@link ProAct.Actor#defaultListeners}
    */
   off: function (actions, listener) {
     if (!actions && !listener) {
@@ -707,9 +755,12 @@ P.Actor.prototype = {
 
   /**
    * Attaches a new error listener to this ProAct.Actor.
+   *
    * The listener may be function or object that defines a <i>call</i> method.
    *
-   * @memberof ProAct.Actor
+   * This is the same as calling `on('error', listener)` on an `Actor`...
+   *
+   * @for ProAct.Actor
    * @instance
    * @method onErr
    * @param {Object} listener
