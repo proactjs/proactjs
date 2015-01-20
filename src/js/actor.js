@@ -767,7 +767,6 @@ P.Actor.prototype = {
    *      The listener to attach. It must be instance of Function or object with a <i>call</i> method.
    * @return {ProAct.Actor}
    *      <b>this</b>
-   * @see {@link ProAct.Actor#on}
    */
   onErr: function (listener) {
     return this.on('error', listener);
@@ -776,14 +775,15 @@ P.Actor.prototype = {
   /**
    * Removes an error <i>listener</i> from the passed <i>action</i>.
    *
-   * @memberof ProAct.Actor
+   * This is the same as calling `off('error', listener)` on an `Actor`...
+   *
+   * @for ProAct.Actor
    * @instance
    * @method offErr
    * @param {Object} listener
    *      The listener to detach. If it is skipped, null or undefined all the listeners are removed from this actor.
    * @return {ProAct.Actor}
    *      <b>this</b>
-   * @see {@link ProAct.Actor#onErr}
    */
   offErr: function (listener) {
     return this.off('error', listener);
@@ -815,18 +815,33 @@ P.Actor.prototype = {
    *  stream, it is passed to the listening too. That way the source stream is plugged <b>into</b> the listening one.
    * </p>
    * <p>
-   *  The listeners from {@link ProAct.Actor#makeListener} and {@link ProAct.Actor#makeErrListener} are used.
+   *  The listeners from {{#crossLink "ProAct.Actor/makeListener:method"}}{{/crossLink}},
+   *  {{#crossLink "ProAct.Actor/makeErrListener:method"}}{{/crossLink}} and {{#crossLink "ProAct.Actor/makeCloseListener:method"}}{{/crossLink}} are used.
    * </p>
    *
-   * @memberof ProAct.Actor
+   * Chaining actors is very powerful operation. It can be used to merge many source actors into one.
+   *
+   * ```
+   *  var sourceActor1 = <Actor implementation>;
+   *  var sourceActor2 = <Actor implementation>;
+   *  var actor = <Actor implementation>;
+   *
+   *  actor.into(sourceActor1, sourceActor2);
+   *  actor.on(function (v) {
+   *    console.log(v);
+   *  });
+   *
+   *  Now if the any of the source actors is updated, the update will be printed on the console by the `actor`.
+   *
+   * ```
+   *
+   * @for ProAct.Actor
    * @instance
    * @method into
    * @param [...]
    *      Zero or more source ProAct.Actors to set as sources.
    * @return {ProAct.Actor}
    *      <b>this</b>
-   * @see {@link ProAct.Actor#makeListener}
-   * @see {@link ProAct.Actor#makeErrListener}
    */
   into: function () {
     var args = slice.call(arguments),
@@ -842,17 +857,29 @@ P.Actor.prototype = {
   },
 
   /**
-   * The reverse of {@link ProAct.Actor#into} - sets <i>this actor</i> as a source
+   * The reverse of {{#crossLink "ProAct.Actor/into:method"}}{{/crossLink}} - sets <i>this actor</i> as a source
    * to the passed <i>destination</i> actor.
    *
-   * @memberof ProAct.Actor
+   * ```
+   *  var sourceActor = <Actor implementation>;
+   *  var actor = <Actor implementation>;
+   *
+   *  sourceActor.out(actor);
+   *  actor.on(function (v) {
+   *    console.log(v);
+   *  });
+   *
+   *  Now if the any of the source actors is updated, the update will be printed on the console by the `actor`.
+   *
+   * ```
+   *
+   * @for ProAct.Actor
    * @instance
    * @method out
    * @param {ProAct.Actor} destination
    *      The actor to set as source <i>this</i> to.
    * @return {ProAct.Actor}
    *      <b>this</b>
-   * @see {@link ProAct.Actor#into}
    */
   out: function (destination) {
     destination.into(this);
@@ -863,6 +890,7 @@ P.Actor.prototype = {
   /**
    * Adds a new <i>transformation</i> to the list of transformations
    * of <i>this actor</i>.
+   *
    * <p>
    *  A transformation is a function or an object that has a <i>call</i> method defined.
    *  This function or call method should have one argument and to return a transformed version of it.
