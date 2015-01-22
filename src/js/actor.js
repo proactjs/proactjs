@@ -960,14 +960,14 @@ P.Actor.prototype = {
    *  we'll get <i>9</i> as actual updating value.
    * </p>
    *
-   * @memberof ProAct.Actor
+   * @for ProAct.Actor
+   * @protected
    * @instance
    * @method mapping
    * @param {Object} mappingFunction
    *      Function or object with a <i>call method</i> to use as map function.
    * @return {ProAct.Actor}
    *      <b>this</b>
-   * @see {@link ProAct.Actor#transform}
    */
   mapping: function (mappingFunction) {
     return this.transformStored(mappingFunction, 'map');
@@ -980,14 +980,14 @@ P.Actor.prototype = {
    *  filter by only odd numbers as update values.
    * </p>
    *
-   * @memberof ProAct.Actor
+   * @for ProAct.Actor
    * @instance
+   * @protected
    * @method filtering
    * @param {Object} filteringFunction
    *      The filtering function or object with a call method, should return boolean.
    * @return {ProAct.Actor}
    *      <b>this</b>
-   * @see {@link ProAct.Actor#transform}
    */
   filtering: function(filteringFunction) {
     var self = this,
@@ -1007,8 +1007,9 @@ P.Actor.prototype = {
    *  Accumulation is used to compute a value based on the previous one.
    * </p>
    *
-   * @memberof ProAct.Actor
+   * @for ProAct.Actor
    * @instance
+   * @protected
    * @method accumulation
    * @param {Object} initVal
    *      Initial value for the accumulation. For example '0' for sum.
@@ -1016,7 +1017,6 @@ P.Actor.prototype = {
    *      The function to accumulate.
    * @return {ProAct.Actor}
    *      <b>this</b>
-   * @see {@link ProAct.Actor#transform}
    */
   accumulation: function (initVal, accumulationFunction) {
     if (!accumulationFunction) {
@@ -1040,15 +1040,27 @@ P.Actor.prototype = {
    *  Should be overridden with creating the right actor.
    * </p>
    *
-   * @memberof ProAct.Actor
+   * ```
+   *  var actor = sourceActor.map(function (el) {
+   *    return el * el;
+   *  });
+   * ```
+   *
+   * or
+   *
+   * ```
+   *  var actor = sourceActor.map('+');
+   * ```
+   *
+   * @for ProAct.Actor
    * @instance
    * @abstract
    * @method map
-   * @param {Object} mappingFunction
+   * @param {Object|Function|Strin} mappingFunction
    *      Function or object with a <i>call method</i> to use as map function.
+   *      Can be string for predefined mapping functions.
    * @return {ProAct.Actor}
    *      A new ProAct.Actor instance with the <i>mapping</i> applied.
-   * @see {@link ProAct.Actor#mapping}
    */
   map: P.N,
 
