@@ -1071,7 +1071,21 @@ P.Actor.prototype = {
    *  Should be overridden with creating the right actor.
    * </p>
    *
-   * @memberof ProAct.Actor
+   * ```
+   *  var actor = sou
+   *    var actor = sourceActor.filter(function (el) {
+   *      return el % 2 == 0;
+   *    });
+   * ```
+   *
+   * or
+   *
+   * ```
+   *  var actor = sourceActor.filter('odd');
+   *
+   * ```
+   *
+   * @for ProAct.Actor
    * @instance
    * @abstract
    * @method filter
@@ -1079,7 +1093,6 @@ P.Actor.prototype = {
    *      The filtering function or object with a call method, should return boolean.
    * @return {ProAct.Actor}
    *      A new ProAct.Actor instance with the <i>filtering</i> applied.
-   * @see {@link ProAct.Actor#filtering}
    */
   filter: P.N,
 
