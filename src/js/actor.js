@@ -1072,10 +1072,9 @@ P.Actor.prototype = {
    * </p>
    *
    * ```
-   *  var actor = sou
-   *    var actor = sourceActor.filter(function (el) {
-   *      return el % 2 == 0;
-   *    });
+   *  var actor = sourceActor.filter(function (el) {
+   *    return el % 2 == 0;
+   *  });
    * ```
    *
    * or
@@ -1103,7 +1102,19 @@ P.Actor.prototype = {
    *  Should be overridden with creating the right actor.
    * </p>
    *
-   * @memberof ProAct.Actor
+   * ```
+   *  var actor = sourceActor.accumulate(0, function (current, el) {
+   *    return current + el;
+   *  });
+   * ```
+   *
+   * or
+   *
+   * ```
+   *  var actor = sourceActor.accumulate('+');
+   * ```
+   *
+   * @for ProAct.Actor
    * @instance
    * @abstract
    * @method accumulate
@@ -1113,7 +1124,6 @@ P.Actor.prototype = {
    *      The function to accumulate.
    * @return {ProAct.Actor}
    *      A new ProAct.Actor instance with the <i>accumulation</i> applied.
-   * @see {@link ProAct.Actor#accumulation}
    */
   accumulate: P.N,
 
