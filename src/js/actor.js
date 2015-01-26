@@ -1155,11 +1155,17 @@ P.Actor.prototype = {
   /**
    * Defers a ProAct.Actor listener.
    * <p>
-   *  By default this means that the listener is put into active {@link ProAct.Flow} using it's
-   *  {@link ProAct.Flow#pushOnce} method, but it can be overridden.
+   *  By default this means that the listener is put into active {{#crossLink "ProAct.Flow"}}{{/crossLink}} using it's
+   *  {{#crossLink "ProAct.Flow/pushOnce:method"}}{{/crossLink}} method, but it can be overridden.
    * </p>
    *
-   * @memberof ProAct.Actor
+   * This method determines the order of actions, triggered by the changes in the data flow.
+   * The default implementation is executing only one update on this Actor per data flow change.
+   * This means that if the `Actor` depends on other three Actors, and all of them get updated,
+   * it is updated only once with the last update value.
+   *
+   * @for ProAct.Actor
+   * @protected
    * @instance
    * @method defer
    * @param {Object} event
@@ -1168,8 +1174,6 @@ P.Actor.prototype = {
    *      The listener to defer. It should be a function or object defining the <i>call</i> method.
    * @return {ProAct.Actor}
    *      <i>this</i>
-   * @see {@link ProAct.Actor#makeListener}
-   * @see {@link ProAct.flow}
    */
   defer: function (event, listener) {
     var queueName = (listener.queueName) ? listener.queueName : this.queueName;
@@ -1182,30 +1186,3 @@ P.Actor.prototype = {
     return this;
   }
 };
-
-/**
- * <p>
- *  Constructs a ProAct.Observable. It can be used both as observer and actor.
- * </p>
- * <p>
- *  The observables in ProAct.js form the dependency graph.
- *  If some observable listens to changes from another - it depends on it.
- * </p>
- * <p>
- *  The observables can transform the values or events incoming to them.
- * </p>
- * <p>
- *  Every observable can have a parent observable, that will be notified for all the changes
- *  on the child-observable, it is something as special observer.
- * </p>
- * <p>
- *  ProAct.Observable is part of the core module of ProAct.js.
- * </p>
- *
- * @class ProAct.Observable
- * @param {Array} transforms
- *      A list of transformation to be used on all incoming chages.
- * @deprecated since version 1.1.1. Use {@link ProAct.Actor} instead.
- * @see {@link ProAct.Actor}
- */
-ProAct.Observable = ProAct.Actor;
