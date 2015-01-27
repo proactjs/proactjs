@@ -4,11 +4,11 @@ module.exports = function(karma) {
     frameworks: ['jasmine'],
 
     files: [
-      'src/js/pro.js',
+      'src/js/core/pro.js',
       'src/js/flow/queue.js',
       'src/js/flow/queues.js',
       'src/js/flow/flow.js',
-      'src/js/actor.js',
+      'src/js/core/actor.js',
       'src/js/events/event.js',
       'src/js/events/value_event.js',
       'src/js/streams/stream.js',

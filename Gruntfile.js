@@ -93,7 +93,7 @@ module.exports = function(grunt) {
         options: {
           linkNatives: true,
           paths: [
-            'src'
+            'src/js/core'
           ],
           exclude: [
             'arrays',
@@ -126,11 +126,11 @@ module.exports = function(grunt) {
       src : [
         'spec/unit/flow/flow.spec.js',
         'spec/unit/arrays/array.spec.js',
-        'src/js/pro.js',
+        'src/js/core/pro.js',
         'src/js/flow/queue.js',
         'src/js/flow/queues.js',
         'src/js/flow/flow.js',
-        'src/js/actor.js',
+        'src/js/core/actor.js',
         'src/js/events/event.js',
         'src/js/events/value_event.js',
         'src/js/streams/stream.js',
@@ -179,11 +179,11 @@ module.exports = function(grunt) {
   grunt.registerTask('setup', 'build task', function() {
 
     var defaultFiles = [
-          'pro',
+          'core/pro',
           'flow/queue',
           'flow/queues',
           'flow/flow',
-          'actor',
+          'core/actor',
           'events/event',
           'events/value_event',
           'streams/stream',

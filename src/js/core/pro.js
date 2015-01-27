@@ -1,4 +1,7 @@
 /**
+ * The `proact-core` module provides base utilties and common functionality for all the other
+ * modules of the lib.
+ *
  * @module proact-core
  * @main proact-core
  */
@@ -24,9 +27,6 @@
  * Everything can be described using declarative expressions.
  * All ProAct classes and functions are defined in this namespace.
  * You can use `Pro` and `P` instead of `ProAct` too.
- *
- * The `proact-core` module provides base utilties and common functionality for all the other
- * modules of the lib.
  *
  * @class ProAct
  * @static
