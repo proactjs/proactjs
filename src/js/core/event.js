@@ -199,8 +199,9 @@ ProAct.Event.Types = {
    * Close type events. Events for closing streams or destroying properties.
    *
    * @type Number
-   * @static
-   * @constant
+   * @property close
+   * @final
+   * @for ProAct.Event
    */
   close: 2,
 
@@ -208,8 +209,9 @@ ProAct.Event.Types = {
    * Error type events. Events for errors.
    *
    * @type Number
-   * @static
-   * @constant
+   * @property error
+   * @final
+   * @for ProAct.Event
    */
   error: 3
 };
