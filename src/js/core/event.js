@@ -1,12 +1,17 @@
 /**
+ * @module proact-core
+ */
+
+/**
  * <p>
- *  Constructs a ProAct.Event. The event contains information of the update.
+ *  Constructs a `ProAct.Event`. The event contains information of the update.
  * </p>
  * <p>
- *  ProAct.Event is part of the core module of ProAct.js.
+ *  `ProAct.Event` is part of the core module of ProAct.js.
  * </p>
  *
  * @class ProAct.Event
+ * @constructor
  * @param {ProAct.Event} source
  *      If there is an event that coused this event - it is the source. Can be null - no source.
  * @param {Object} target
@@ -32,7 +37,7 @@ P.U.ex(ProAct.Event, {
    *  NOTE: For now only works with arrays, because creating array events required a lot of code.
    * </p>
    *
-   * @memberof ProAct.Event
+   * @for ProAct.Event
    * @static
    * @param {ProAct.Event} source
    *      If there is an event that coused this event - it is the source. Can be null - no source.
@@ -40,13 +45,12 @@ P.U.ex(ProAct.Event, {
    *      The thing that triggered this event.
    * @param {ProAct.Event.Types|String} type
    *      The type of the event. Can be string for ease.
-   *      For now this method supports only {@link ProAct.Event.Types.array} events.
+   *      For now this method supports only {{#crossLink "ProAct.Event.Types/array:property"}}{{/crossLink}} events.
    *      It is possible to pass the string 'array' for type.
    * @param {Array} data
    *      Arguments of the event.
    * @return {ProAct.Event}
    *      The new event.
-   * @see {@link ProAct.Event.makeArray}
    */
   make: function (source, target, type, data) {
     if (type === 'array' || type === P.E.Types.array) {
@@ -55,12 +59,14 @@ P.U.ex(ProAct.Event, {
   },
 
   /**
-   * Factory method for creating of new ProAct.Events of type ProAct.Event.Types.array  with ease.
+   * Factory method for creating of new ProAct.Events of type {{#crossLink "ProAct.Event.Types/array:property"}}{{/crossLink}} with ease.
    * <p>
    *  NOTE: For now only array modifying events can be created - remove and splice (you can trigger a value for add).
    * </p>
    *
-   * @memberof ProAct.Event
+   * TODO Move to the proact-arrays package!
+   *
+   * @for ProAct.Event
    * @static
    * @param {ProAct.Event} source
    *      If there is an event that coused this event - it is the source. Can be null - no source.
@@ -103,7 +109,9 @@ P.U.ex(ProAct.Event, {
    * This event can be passed to the ProAct.ArrayCore#update method of the core of a ProAct.Array and it will delete
    * the element in it.
    *
-   * @memberof ProAct.Event
+   * TODO Some of these types and comments should be undepended of the proact-arrays module.
+   *
+   * @for ProAct.Event
    * @static
    * @param {ProAct.Event.Types|String} eventType
    *      The type of the event. Can be string for ease.
@@ -152,7 +160,9 @@ P.U.ex(ProAct.Event, {
 /**
  * Defines the possible types of the ProAct.Events.
  *
- * @namespace ProAct.Event.Types
+ * @namespace ProAct.Event
+ * @class Types
+ * @static
  */
 ProAct.Event.Types = {
 
@@ -164,8 +174,9 @@ ProAct.Event.Types = {
    * </p>
    *
    * @type Number
-   * @static
-   * @constant
+   * @property value
+   * @final
+   * @for ProAct.Event
    */
   value: 0,
 
@@ -175,10 +186,12 @@ ProAct.Event.Types = {
    *  The args should consist of operation, index, old values, new values.
    * </p>
    *
+   * TODO Move it to the proact-arrays module.
+   *
    * @type Number
-   * @static
-   * @constant
-   * @see {@link ProAct.Array.Operations}
+   * @property array
+   * @final
+   * @for ProAct.Event
    */
   array: 1,
 
