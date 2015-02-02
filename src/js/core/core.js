@@ -1,9 +1,13 @@
 /**
+ * @module proact-core
+ */
+
+/**
  * <p>
  *  Constructs a ProAct.Core. The core is an ProAct.Actor which can be used to manage other {@link ProAct.Actor} objects or shells arround ProAct.Actor objects.
  * </p>
  * <p>
- *  For example a shell can be a plain old JavaScript object; The core will be in charge of creating {@link ProAct.Property} for every field of the shell.
+ *  For example a shell can be a plain old JavaScript object; The core will be in charge of creating dynamic properties for every field of the shell.
  * </p>
  * <p>
  *  The idea of the core is to inject observer-observable capabilities in normal objects.
@@ -18,13 +22,14 @@
  *  ProAct.Core is part of the core module of ProAct.js.
  * </p>
  *
+ * TODO Maybe should be renamed to something else?
+ *
  * @class ProAct.Core
  * @extends ProAct.Actor
  * @param {Object} shell
  *      The shell arrounf this core. This ProAct.Core manages observer-observable behavior for this <i>shell</i> object.
  * @param {Object} meta
  *      Optional meta data to be used to define the observer-observable behavior of the <i>shell</i>.
- * @see {@link ProAct.States}
  */
 function Core (shell, meta) {
   this.shell = shell;
@@ -83,8 +88,6 @@ ProAct.Core.prototype = P.U.ex(Object.create(P.Actor.prototype), {
    * @method prob
    * @return {ProAct.Core}
    *      <i>this</i>
-   * @see {@link ProAct.Core#setup}
-   * @see {@link ProAct.States}
    */
   prob: function () {
     var self = this,
@@ -115,7 +118,6 @@ ProAct.Core.prototype = P.U.ex(Object.create(P.Actor.prototype), {
    * @instance
    * @abstract
    * @method setup
-   * @see {@link ProAct.Core#prob}
    */
   setup: function () {
     throw Error('Abstract, implement!');
@@ -132,7 +134,6 @@ ProAct.Core.prototype = P.U.ex(Object.create(P.Actor.prototype), {
    * @method call
    * @param {Object} event
    *      The value/event that this listener is notified for.
-   * @see {@link ProAct.Actor#update}
    */
   call: function (event) {
     ActorUtil.update.call(this, event);
