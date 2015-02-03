@@ -4,25 +4,25 @@
 
 /**
  * <p>
- *  Constructs a ProAct.Core. The core is an ProAct.Actor which can be used to manage other {@link ProAct.Actor} objects or shells arround ProAct.Actor objects.
+ *  Constructs a ProAct.Core. The core is an {{#crossLink "ProAct.Actor"}}{{/crossLink}} which can be used to manage other {@link ProAct.Actor} objects or groups many ProAct.Actor objects.
  * </p>
  * <p>
  *  For example a shell can be a plain old JavaScript object; The core will be in charge of creating dynamic properties for every field of the shell.
  * </p>
  * <p>
- *  The idea of the core is to inject observer-observable capabilities in normal objects.
+ *  The idea of the core is to inject observer-observable capabilities in normal objects, or just group many observables.
  * </p>
  * <p>
- *  ProAct.Core is an abstract class, that has a {@link ProAct.States} state. Its initializing logic should be implemented in an extender.
+ *  `ProAct.Core` is an abstract class, that has a {{#crossLink "ProAct.States"}}{{/crossLink}} state. Its initializing logic should be implemented in an extender.
  * </p>
  * <p>
- *  ProAct.Core is used as a parent for the {@link ProAct.Actor}s it manages, so it can be passed as a listener object - defines a <i>call method</i>.
+ *  ProAct.Core is used as a parent for the {{#crossLink "ProAct.Actor"}}{{/crossLink}}s it manages, so it can be passed as a listener object - defines a <i>call method</i>.
  * </p>
  * <p>
  *  ProAct.Core is part of the core module of ProAct.js.
  * </p>
  *
- * TODO Maybe should be renamed to something else?
+ * TODO Maybe should be renamed to something else? For example ActorGroup or ActorTroupe, or maybe ActorManager :).
  *
  * @class ProAct.Core
  * @extends ProAct.Actor
