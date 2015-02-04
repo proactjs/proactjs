@@ -47,26 +47,26 @@ ProAct.Core.prototype = P.U.ex(Object.create(P.Actor.prototype), {
   /**
    * Reference to the constructor of this object.
    *
-   * @memberof ProAct.Core
-   * @instance
-   * @constant
-   * @default ProAct.Core
+   * @property constructor
+   * @type ProAct.Core
+   * @final
+   * @for ProAct.Core
    */
   constructor: ProAct.Core,
 
   /**
-   * A function to be set to the <i>shell</i> object's <b>p</b> field (if it is configured in @{link ProAct.Configuration}).
+   * A function to be set to the <i>shell</i> object's <b>p</b> field (if it is configured in {{#crossLink "ProAct.Configuration"}}{{/crossLink}}.
    * <p>
-   *  This function is the link to the this ProAct.Core of the <i>shell</i>. It can be overridden to return different aspects of
-   *  the core depending on parameters passed.
+   *  This function is the link to the this ProAct.Core of the <i>shell</i>.
+   *  It can be overridden to return different aspects of the core depending on parameters passed.
    * </p>
    *
-   * @memberof ProAct.Core
+   * @for ProAct.Core
    * @instance
    * @method value
    * @default {this}
    * @return {Object}
-   *      Some aspects of <i>this</i> ProAct.Core.
+   *      Some aspects of <i>this</i> `ProAct.Core`.
    */
   value: function () {
     return this;
@@ -75,19 +75,20 @@ ProAct.Core.prototype = P.U.ex(Object.create(P.Actor.prototype), {
   /**
    * Initializes <i>this</i> ProAct.Core. This method should be called when the core should become active.
    * <p>
-   *  The main idea of the method is to change the {@link ProAct.States} state of <i>this</i> to {@link ProAct.States.ready}, by
+   *  The main idea of the method is to change the {{#crossLink "ProAct.States"}}{{/crossLink}}
+   *  state of <i>this</i> to {{#crossLink "ProAct.States/ready:property"}}{{/crossLink}}, by
    *  settuping everything needed by the shell to has observer-observable logic.
    * </p>
    * <p>
-   *  The abstract {@link ProAct.Core#setup} method is called for the actual setup. If it throws an error, <i>this</i> state
-   *  is set to {@link ProAct.States.error} and the core stays inactive.
+   *  The abstract {{#crossLink "ProAct.Core/setup:method"}}{{/crossLink}} method is called for the actual setup.
+   *  If it throws an error, <i>this</i> state is set to {{#crossLink "ProAct.States/error:property"}}{{/crossLink}}
+   *  and the core stays inactive.
    * </p>
    *
-   * @memberof ProAct.Core
+   * @for ProAct.Core
    * @instance
    * @method prob
-   * @return {ProAct.Core}
-   *      <i>this</i>
+   * @return {ProAct.Core} <i>this</i>
    */
   prob: function () {
     var self = this,
