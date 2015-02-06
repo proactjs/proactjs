@@ -113,9 +113,12 @@ ProAct.Core.prototype = P.U.ex(Object.create(P.Actor.prototype), {
   },
 
   /**
-   * Abstract method called by {@link ProAct.Core#prob} for the actual initialization of <i>this</i> core.
+   * Abstract method called by {{#crossLink "ProAct.Core/prob:method"}}{{/crossLink}}
+   * for the actual initialization of <i>this</i> core.
    *
-   * @memberof ProAct.Core
+   * By default it throws an exception.
+   *
+   * @for ProAct.Core
    * @instance
    * @abstract
    * @method setup
