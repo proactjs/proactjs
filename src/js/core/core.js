@@ -128,12 +128,14 @@ ProAct.Core.prototype = P.U.ex(Object.create(P.Actor.prototype), {
   },
 
   /**
-   * ProAct.Core can be used as a parent listener for other {@link ProAct.Actor}s, so it defines the <i>call</i> method.
+   * `ProAct.Core` can be used as a parent listener for its managed
+   * {{#crossLink "ProAct.Actor"}}{{/crossLink}}s, so it defines the <i>call</i> method.
    * <p>
-   *  By default this method calls {@link ProAct.Actor#update} of <i>this</i> with the passed <i>event</i>.
+   *  By default this method calls {{#crossLink "ProAct.ActorUtil/update:method"}}{{/crossLink}}
+   *  with <i>this</i> and the passed <i>event</i>.
    * </p>
    *
-   * @memberof ProAct.Core
+   * @for ProAct.Core
    * @instance
    * @method call
    * @param {Object} event
