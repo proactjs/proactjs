@@ -1,4 +1,12 @@
 /**
+ * The `proact-properties` module provides stateful reactive values attached to normal JavaScript
+ * object's fields.
+ *
+ * @module proact-properties
+ * @main proact-properties
+ */
+
+/**
  * <p>
  *  Constructs a ProAct.Property. The properties are simple {@link ProAct.Actor}s with state. The basic property
  *  has a state of a simple value - number/string/boolean.
