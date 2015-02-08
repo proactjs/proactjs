@@ -8,37 +8,51 @@
 
 /**
  * <p>
- *  Constructs a ProAct.Property. The properties are simple {@link ProAct.Actor}s with state. The basic property
- *  has a state of a simple value - number/string/boolean.
+ *  Constructs a `ProAct.Property`.
+ *  The properties are simple {{#crossLink "ProAct.Actor"}}{{/crossLink}}s with state.
+ *  The basic property has a state of a simple value - number/string/boolean.
  * </p>
  * <p>
- *  Every property represents a field in a plain javascript object. It makes it reactive, on reading the property value,
- *  if {@link ProAct.currentCaller} is set, it is added as a listener to the property changes.
+ *  Every property could represent a field in a plain JavaScript object.
+ *  It makes it reactive, on reading the property value,
+ *  if {{#crossLink "ProAct/currentCaller:property"}}{{/crossLink}} is set,
+ *  it is added as a listener to the property changes.
  * </p>
  * <p>
  *  Every property has a type the default property has a type of a simple value.
  * </p>
  * <p>
- *  All the properties of an object are managed by its {@link ProAct.ObjectCore}, which is set to a hidden field of the object - '__pro__'.
+ *  All the properties of an object are managed by its {{#crossLink "ProAct.ObjectCore"}}{{/crossLink}},
+ *  which is set to a hidden field of the object - '__pro__'.
  * </p>
  * <p>
- *  When created every property is in {@link ProAct.States.init} state, when it is functional, the state is changed to {@link ProAct.States.ready}.
- *  If the property is not in {@link ProAct.States.ready} state, it is not useable.
+ *  When created every property is in {{#crossLink "ProAct.States/init:property"}}{{/crossLink}}, state,
+ *  when it is functional, the state is changed to {{#crossLink "ProAct.States/ready:property"}}{{/crossLink}}.
+ *  If the property is not in {{#crossLink "ProAct.States/ready:property"}}{{/crossLink}} state, it is not useable.
  * </p>
  * <p>
- *  {@link ProAct.Property#init} is called by this constructor for the property initialization. It should initialize the property and set its state to {@link ProAct.States.ready}.
+ *  {{#crossLink "ProAct.Property/init:method"}}{{/crossLink}} is called by this constructor for the property initialization.
+ *  It should initialize the property and set its state to {{#crossLink "ProAct.States/ready:property"}}{{/crossLink}}.
  * </p>
  * <p>
- *  ProAct.Property is part of the properties module of ProAct.js.
+ *  ProAct.Property is part of the proact-properties module of ProAct.js.
  * </p>
+ *
+ * ```
+ *  var property = new Property({v: 5}, 'v');
+ *  property.get(); // This is 5
+ *  property.set(4);
+ *  property.get(); // This is 4
+ * ```
  *
  * @class ProAct.Property
  * @extends ProAct.Actor
+ * @constructor
  * @param {String} queueName
  *      The name of the queue all the updates should be pushed to.
  *      <p>
  *        If this parameter is null/undefined the default queue of
- *        {@link ProAct.flow} is used.
+ *        {{#crossLink "ProAct/flow:property"}}{{/crossLink}} is used.
  *      </p>
  *      <p>
  *        If this parameter is not a string it is used as the
@@ -49,15 +63,11 @@
  * @param {String} property
  *      The name of the field of the object, this property should represent.
  * @param {Function} getter
- *      An optional getter to be used when the property is read. If this parameter is empty, a new {@link ProAct.Property.defaultGetter} is build for <i>this</i>.
+ *      An optional getter to be used when the property is read.
+ *      If this parameter is empty, a new {{#crossLink "ProAct.Property/defaultGetter:method"}}{{/crossLink}} is build for <i>this</i>.
  * @param {Function} setter
- *      An optional setter to be used when the property is written. If this parameter is empty, a new {@link ProAct.Property.defaultSetter} is build for <i>this</i>.
- * @see {@link ProAct.ObjectCore}
- * @see {@link ProAct.Property.defaultGetter}
- * @see {@link ProAct.Property.defaultSetter}
- * @see {@link ProAct.Property#init}
- * @see {@link ProAct.States.init}
- * @see {@link ProAct.States.ready}
+ *      An optional setter to be used when the property is written.
+ *      If this parameter is empty, a new {{#crossLink "ProAct.Property/defaultSetter:method"}}{{/crossLink}} is build for <i>this</i>.
  */
 function Property (queueName, proObject, property, getter, setter) {
   if (queueName && !P.U.isString(queueName)) {
