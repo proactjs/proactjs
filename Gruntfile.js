@@ -93,7 +93,8 @@ module.exports = function(grunt) {
         options: {
           linkNatives: true,
           paths: [
-            'src/js/core'
+            'src/js/core',
+            'src/js/properties'
           ],
           exclude: [
             'arrays',
@@ -101,7 +102,6 @@ module.exports = function(grunt) {
             'events',
             'flow',
             'objects',
-            'properties',
             'registry',
             'streams'
           ].join(','),
