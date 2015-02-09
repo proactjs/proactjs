@@ -112,9 +112,11 @@ ProAct.Property = P.P = Property;
 P.U.ex(ProAct.Property, {
 
   /**
-   * Defines the possible types of the ProAct.Property.
+   * Defines the possible types of the `ProAct.Property`.
    *
-   * @namespace ProAct.Property.Types
+   * @class Types
+   * @namespace ProAct.Property
+   * @static
    */
   Types: {
 
