@@ -123,9 +123,10 @@ P.U.ex(ProAct.Property, {
     /**
      * ProAct.Property for simple types - Numbers, Strings or Booleans.
      *
-     * @memberof ProAct.Property.Types
-     * @static
-     * @constant
+     * @property simple
+     * @type Number
+     * @final
+     * @for ProAct.Property.Types
      */
     simple: 0, // strings, booleans and numbers
 
