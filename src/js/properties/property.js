@@ -133,9 +133,10 @@ P.U.ex(ProAct.Property, {
     /**
      * ProAct.Property for auto computed types - Functions.
      *
-     * @memberof ProAct.Property.Types
-     * @static
-     * @constant
+     * @property auto
+     * @type Number
+     * @final
+     * @for ProAct.Property.Types
      */
     auto: 1, // functions - dependent
 
