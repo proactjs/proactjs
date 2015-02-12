@@ -143,9 +143,10 @@ P.U.ex(ProAct.Property, {
     /**
      * ProAct.Property for object types - fields containing objects.
      *
-     * @memberof ProAct.Property.Types
-     * @static
-     * @constant
+     * @property object
+     * @type Number
+     * @final
+     * @for ProAct.Property.Types
      */
     object: 2, // references Pro objects
 
