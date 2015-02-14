@@ -163,9 +163,10 @@ P.U.ex(ProAct.Property, {
     /**
      * ProAct.Property for nil types - fields containing null or undefined.
      *
-     * @memberof ProAct.Property.Types
-     * @static
-     * @constant
+     * @property nil
+     * @type Number
+     * @final
+     * @for ProAct.Property.Types
      */
     nil: 4, // nulls
 
