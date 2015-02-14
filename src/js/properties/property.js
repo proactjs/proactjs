@@ -153,9 +153,10 @@ P.U.ex(ProAct.Property, {
     /**
      * ProAct.Property for array types - fields containing arrays.
      *
-     * @memberof ProAct.Property.Types
-     * @static
-     * @constant
+     * @property array
+     * @type Number
+     * @final
+     * @for ProAct.Property.Types
      */
     array: 3, // arrays
 
