@@ -171,12 +171,11 @@ P.U.ex(ProAct.Property, {
     nil: 4, // nulls
 
     /**
-     * Retrieves the right ProAct.Property.Types value from a value.
+     * Retrieves the right` ProAct.Property.Types` value from a value.
      *
-     * @memberof ProAct.Property.Types
-     * @static
+     * @for ProAct.Property.Types
      * @param {Object} value
-     *      The value to use to compute the ProAct.Property.Types member for.
+     *      The value to use to compute the `ProAct.Property.Types` member for.
      * @return {Number}
      *      The type of the passed value.
      */
