@@ -195,20 +195,21 @@ P.U.ex(ProAct.Property, {
   },
 
   /**
-   * Generates a default getter function for a ProAct.Property instance.
+   * Generates a default getter function for a `ProAct.Property` instance.
    * <p>
-   *  Every ProAct.Property instance has a getter and a setter, they can be passed in the constructor, but if left blank,
+   *  Every `ProAct.Property` instance has a getter and a setter,
+   *  they can be passed in the constructor, but if left blank,
    *  this method is used for creating the getter function.
    * </p>
    * <p>
-   *  The default getter function uses {@link ProAct.Property#addCaller} method to track the {@link ProAct.currentCaller} listener if set.
+   *  The default getter function uses {{#crossLink "ProAct.Property/addCaller:method"}}{{/crossLink}}
+   *  method to track the {{#crossLink "ProAct/currentCaller:property"}}{{/crossLink}} listener if set.
    *  If it is set it is added as a listener to the passed <i>property</i>.
    * </p>
    *
-   * @memberof ProAct.Property
-   * @static
+   * @for ProAct.Property
    * @param {ProAct.Property} property
-   *      The ProAct.Property instance to generate a getter function for.
+   *      The `ProAct.Property` instance to generate a getter function for.
    * @return {Function}
    *      The generated getter function.
    */
