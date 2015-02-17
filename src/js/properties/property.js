@@ -224,23 +224,26 @@ P.U.ex(ProAct.Property, {
   /**
    * Generates a default setter function for a ProAct.Property instance.
    * <p>
-   *  Every ProAct.Property instance has a setter and a getter, they can be passed in the constructor, but if left blank,
+   *  Every `ProAct.Property` instance has a setter and a getter,
+   *  they can be passed in the constructor, but if left blank,
    *  this method is used for creating the setter function.
    * </p>
    * <p>
-   *  The default setter function uses {@link ProAct.Property#update} method to update all the listeners for <i>change</i>s for the passed
-   *  <i>property</i>.
+   *  The default setter function uses the {{#crossLink "ProAct.ActorUtil/update:method"}}{{/crossLink}}
+   *  method to update all the listeners for <i>change</i>s for the passed <i>property</i>.
    * </p>
    * <p>
-   *  It updates the listeners only if the new value of the property is different from the old one (using <i>===</i> for the comparison).
+   *  It updates the listeners only if the new value of the property
+   *  is different from the old one (using <i>===</i> for the comparison).
    * </p>
    *
-   * @memberof ProAct.Property
+   * @for ProAct.Property
    * @static
    * @param {ProAct.Property} property
-   *      The ProAct.Property instance to generate a setter function for.
+   *      The `ProAct.Property` instance to generate a setter function for.
    * @param {Function} setter
-   *      A setter function for the way of setting the value. It can be skipped if the value should be set using <i>=</i>.
+   *      A setter function for the way of setting the value.
+   *      It can be skipped if the value should be set using <i>=</i>.
    * @return {Function}
    *      The generated setter function.
    */
