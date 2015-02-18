@@ -208,6 +208,7 @@ P.U.ex(ProAct.Property, {
    * </p>
    *
    * @for ProAct.Property
+   * @static
    * @param {ProAct.Property} property
    *      The `ProAct.Property` instance to generate a getter function for.
    * @return {Function}
@@ -274,12 +275,12 @@ P.U.ex(ProAct.Property, {
   },
 
   /**
-   * Used to define the managed by a ProAct.Property instance field of the passed <i>obj</i>.
+   * Used to define the managed by a `ProAct.Property` instance field of the passed <i>obj</i>.
    * <p>
    *  The field is writable, enumerable and configurable.
    * </p>
    *
-   * @memberof ProAct.Property
+   * @for ProAct.Property
    * @static
    * @param {Object} obj
    *      The object which field should be defined as a property.
@@ -302,14 +303,16 @@ P.U.ex(ProAct.Property, {
   /**
    * Recreates a property, using its current value.
    * <p>
-   *  The re-definition works by using {@link ProAct.Property#destroy} to destroy the passed <i>property</i> first, and then the
-   *  {@link ProAct.ObjectCore#makeProp} method is called of the {@link ProAct.ObjectCore} of the object the <i>property</i> belongs to.
+   *  The re-definition works by using {{#crossLink "ProAct.Property/destroy:method"}}{{/crossLink}}
+   *  to destroy the passed <i>property</i> first, and then the
+   *  {{#crossLink "ProAct.ObjectCore/makeProp:method"}}{{/crossLink}} method is called of the
+   *  {{#crossLink "ProAct.ObjectCore"}}{{/crossLink}} of the object the <i>property</i> belongs to.
    * </p>
    * <p>
-   *  This way a new ProAct.Property instance is created to replace the passed one.
+   *  This way a new `ProAct.Property` instance is created to replace the passed one.
    * </p>
    *
-   * @memberof ProAct.Property
+   * @for ProAct.Property
    * @static
    * @param {ProAct.Property} property
    *      The ProAct.Property instance to re-define.
