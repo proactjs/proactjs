@@ -281,6 +281,7 @@ P.U.ex(ProAct.Property, {
    * </p>
    *
    * @for ProAct.Property
+   * @method defineProp
    * @static
    * @param {Object} obj
    *      The object which field should be defined as a property.
@@ -313,6 +314,7 @@ P.U.ex(ProAct.Property, {
    * </p>
    *
    * @for ProAct.Property
+   * @method reProb
    * @static
    * @param {ProAct.Property} property
    *      The ProAct.Property instance to re-define.
@@ -332,6 +334,26 @@ P.U.ex(ProAct.Property, {
     return po.__pro__.makeProp(p, l);
   },
 
+  /**
+   * Creates a constant property. It's value can not be changed.
+   *
+   * ```
+   *  var property = ProAct.Property.constant(5);
+   *
+   *  console.log(property.get()); // 5
+   *
+   *  property.set(4);
+   *  console.log(property.get()); // 5
+   * ```
+   *
+   * @for ProAct.Property
+   * @static
+   * @method constant
+   * @param {Object} val The value of the property. Can not be changed.
+   * @param {Object} meta Optional meta data for the property.
+   * @param {String} queueName The name of the queue all the updates should be pushed to. By default the default queue is used.
+   * @return {ProAct.Property} The new constant property.
+   */
   constant: function (val, meta, queueName) {
     return P.P.value(val, meta, queueName).close();
   },
