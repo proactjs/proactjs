@@ -174,6 +174,7 @@ P.U.ex(ProAct.Property, {
      * Retrieves the right` ProAct.Property.Types` value from a value.
      *
      * @for ProAct.Property.Types
+     * @method type
      * @param {Object} value
      *      The value to use to compute the `ProAct.Property.Types` member for.
      * @return {Number}
@@ -209,6 +210,7 @@ P.U.ex(ProAct.Property, {
    *
    * @for ProAct.Property
    * @static
+   * @method defaultGetter
    * @param {ProAct.Property} property
    *      The `ProAct.Property` instance to generate a getter function for.
    * @return {Function}
@@ -239,6 +241,7 @@ P.U.ex(ProAct.Property, {
    * </p>
    *
    * @for ProAct.Property
+   * @method defaultSetter
    * @static
    * @param {ProAct.Property} property
    *      The `ProAct.Property` instance to generate a setter function for.
@@ -358,6 +361,28 @@ P.U.ex(ProAct.Property, {
     return P.P.value(val, meta, queueName).close();
   },
 
+  /**
+   * Creates a value property. It's value can be updated any time and other properties may depend on it.
+   *
+   * This propety is eage - this means that it is initialized automatically even if it's not used.
+   *
+   * ```
+   *  var property = ProAct.Property.constant(5);
+   *
+   *  console.log(property.get()); // 5
+   *
+   *  property.set(4);
+   *  console.log(property.get()); // 4
+   * ```
+   *
+   * @for ProAct.Property
+   * @static
+   * @method value
+   * @param {Object} val The value of the property.
+   * @param {Object} meta Optional meta data for the property.
+   * @param {String} queueName The name of the queue all the updates should be pushed to. By default the default queue is used.
+   * @return {ProAct.Property} The new value property.
+   */
   value: function (val, meta, queueName) {
     var property = P.P.lazyValue(val, meta, queueName);
     property.get();
