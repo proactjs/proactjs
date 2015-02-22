@@ -440,10 +440,10 @@ ProAct.Property.prototype = P.U.ex(Object.create(P.Actor.prototype), {
   /**
    * Reference to the constructor of this object.
    *
-   * @memberof ProAct.Property
-   * @instance
-   * @constant
-   * @default ProAct.Property
+   * @property constructor
+   * @type ProAct.Property
+   * @final
+   * @for ProAct.Property
    */
   constructor: ProAct.Property,
 
