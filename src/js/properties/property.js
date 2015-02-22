@@ -364,10 +364,10 @@ P.U.ex(ProAct.Property, {
   /**
    * Creates a value property. It's value can be updated any time and other properties may depend on it.
    *
-   * This propety is eage - this means that it is initialized automatically even if it's not used.
+   * This propety is eager - this means that it is initialized automatically even if it's not used.
    *
    * ```
-   *  var property = ProAct.Property.constant(5);
+   *  var property = ProAct.Property.value(5);
    *
    *  console.log(property.get()); // 5
    *
@@ -390,6 +390,28 @@ P.U.ex(ProAct.Property, {
     return property;
   },
 
+  /**
+   * Creates a lazy initialized value property. It's value can be updated any time and other properties may depend on it.
+   *
+   * Being lazy means, that the property won't be initialized until it is read (it's get() method is called).
+   *
+   * ```
+   *  var property = ProAct.Property.lazyValue(5);
+   *
+   *  console.log(property.get()); // 5
+   *
+   *  property.set(4);
+   *  console.log(property.get()); // 4
+   * ```
+   *
+   * @for ProAct.Property
+   * @static
+   * @method lazyValue
+   * @param {Object} val The value of the property.
+   * @param {Object} meta Optional meta data for the property.
+   * @param {String} queueName The name of the queue all the updates should be pushed to. By default the default queue is used.
+   * @return {ProAct.Property} The new lazily initialized value property.
+   */
   lazyValue: function (val, meta, queueName) {
     if (meta && (P.U.isString(meta) || P.U.isArray(meta))) {
       meta = {
