@@ -448,12 +448,13 @@ ProAct.Property.prototype = P.U.ex(Object.create(P.Actor.prototype), {
   constructor: ProAct.Property,
 
   /**
-   * Retrieves the {@link ProAct.Property.Types} value of <i>this</i> property.
+   * Retrieves the {{#crossLink "ProAct.Property.Types"}}{{/crossLink}} value of <i>this</i> property.
    * <p>
-   *  For instances of the base class - ProAct.Property it is {@link ProAct.Property.Types.simple}.
+   *  For instances of the base class - `ProAct.Property` it is
+   *  {{#crossLink "ProAct.Property.Types/simple:property"}}{{/crossLink}}.
    * </p>
    *
-   * @memberof ProAct.Property
+   * @for ProAct.Property
    * @instance
    * @method type
    * @return {Number}
