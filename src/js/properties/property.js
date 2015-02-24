@@ -465,23 +465,23 @@ ProAct.Property.prototype = P.U.ex(Object.create(P.Actor.prototype), {
   },
 
   /**
-   * Creates the <i>event</i> to be send to the listeners of this ProAct.Property on update.
+   * Creates the <i>event</i> to be send to the listeners of this `ProAct.Property` on update.
    * <p>
-   *  The <i>event</i> should be an instance of {@link ProAct.Event}.
+   *  The <i>event</i> should be an instance of {{#crossLink "ProAct.Event"}}{{/crossLink}}.
    * </p>
    * <p>
-   *  By default this method returns {@link ProAct.Event.Types.value} event with target the property name and arguments:
+   *  By default this method returns {{#crossLink "ProAct.Event.Types/value:property"}}{{/crossLink}} event with target the property name and arguments:
    *  <ul>
-   *    <li>The object this ProAct.Property manages a field for.</li>
+   *    <li>The object this `ProAct.Property` manages a field for.</li>
    *    <li>The old value of this property.</li>
    *    <li>The new value of this property.</li>
    *  </ul>
    * </p>
    *
-   * @memberof ProAct.Property
+   * @for ProAct.Property
    * @instance
    * @method makeEvent
-   * @default {ProAct.Event} with type {@link ProAct.Event.Types.value}
+   * @default {ProAct.Event} with type {{#crossLink "ProAct.Event.Types/value:property"}}{{/crossLink}}.
    * @param {ProAct.Event} source
    *      The source event of the event. It can be null
    * @return {ProAct.ValueEvent}
