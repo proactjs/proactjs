@@ -492,7 +492,7 @@ ProAct.Property.prototype = P.U.ex(Object.create(P.Actor.prototype), {
   },
 
   /**
-   * Creates the <i>listener</i> of this ProAct.Property.
+   * Creates the <i>listener</i> of this `ProAct.Property`.
    * <p>
    *  This listener turns the observable in a observer.
    * </p>
@@ -503,10 +503,10 @@ ProAct.Property.prototype = P.U.ex(Object.create(P.Actor.prototype), {
    *  It has a <i>property</i> field set to <i>this</i>.
    * </p>
    * <p>
-   *  On value changes the <i><this</i> value is set to the new value using the {@link ProAct.Actor#transform} to transform it.
+   *  On value changes the <i><this</i> value is set to the new value using the {{#crossLink "ProAct.Actor/transform:method"}}{{/crossLink}} to transform it.
    * </p>
    *
-   * @memberof ProAct.Property
+   * @for ProAct.Property
    * @instance
    * @method makeListener
    * @return {Object}
