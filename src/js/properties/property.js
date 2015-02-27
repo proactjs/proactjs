@@ -210,6 +210,7 @@ P.U.ex(ProAct.Property, {
    *
    * @for ProAct.Property
    * @static
+   * @private
    * @method defaultGetter
    * @param {ProAct.Property} property
    *      The `ProAct.Property` instance to generate a getter function for.
@@ -241,6 +242,7 @@ P.U.ex(ProAct.Property, {
    * </p>
    *
    * @for ProAct.Property
+   * @private
    * @method defaultSetter
    * @static
    * @param {ProAct.Property} property
@@ -285,6 +287,7 @@ P.U.ex(ProAct.Property, {
    *
    * @for ProAct.Property
    * @method defineProp
+   * @private
    * @static
    * @param {Object} obj
    *      The object which field should be defined as a property.
@@ -317,6 +320,7 @@ P.U.ex(ProAct.Property, {
    * </p>
    *
    * @for ProAct.Property
+   * @private
    * @method reProb
    * @static
    * @param {ProAct.Property} property
@@ -480,6 +484,7 @@ ProAct.Property.prototype = P.U.ex(Object.create(P.Actor.prototype), {
    *
    * @for ProAct.Property
    * @instance
+   * @protected
    * @method makeEvent
    * @default {ProAct.Event} with type {{#crossLink "ProAct.Event.Types/value:property"}}{{/crossLink}}.
    * @param {ProAct.Event} source
@@ -508,6 +513,7 @@ ProAct.Property.prototype = P.U.ex(Object.create(P.Actor.prototype), {
    *
    * @for ProAct.Property
    * @instance
+   * @protected
    * @method makeListener
    * @return {Object}
    *      The <i>listener of this ProAct.Property</i>.
@@ -535,13 +541,14 @@ ProAct.Property.prototype = P.U.ex(Object.create(P.Actor.prototype), {
   /**
    * Initializes this property.
    * <p>
-   *  First the property is defined as a field in its object, using {@link ProAct.Property.defineProp}.
+   *  First the property is defined as a field in its object,
+   *  using {{#crossLink "ProAct.Property/defineProp:method"}}{{/crossLink}}.
    * </p>
    *
-   * @memberof ProAct.Property
+   * @for ProAct.Property
    * @instance
+   * @protected
    * @method doInit
-   * @see {@link ProAct.Actor#init}
    */
   doInit: function () {
     P.P.defineProp(this.proObject, this.property, this.get, this.set);
@@ -549,12 +556,14 @@ ProAct.Property.prototype = P.U.ex(Object.create(P.Actor.prototype), {
   },
 
   /**
-   * Uses {@link ProAct.currentCaller} to automatically add a new listener to this property if the caller is set.
+   * Uses {{#crossLink "ProAct/currentCaller:property"}}{{/crossLink}} to
+   * automatically add a new listener to this property if the caller is set.
    * <p>
    *  This method is used by the default getter to make every reader of the property a listener to it.
    * </p>
    *
-   * @memberof ProAct.Property
+   * @for ProAct.Property
+   * @protected
    * @instance
    * @method addCaller
    */
