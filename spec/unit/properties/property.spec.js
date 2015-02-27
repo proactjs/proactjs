@@ -247,6 +247,7 @@ describe('ProAct.Property', function () {
   });
 
   describe('#filter', function () {
+
     it ('creates a new property filtered from the caller with the passed function', function () {
       var property = P.P.value(5),
           filtered = property.filter(function (v) {

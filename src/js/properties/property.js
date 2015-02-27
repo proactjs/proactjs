@@ -575,6 +575,18 @@ ProAct.Property.prototype = P.U.ex(Object.create(P.Actor.prototype), {
     }
   },
 
+  /**
+   * A hook that is called right before destruction, the extenders use it to clean up resources.
+   *
+   * The `ProAct.Property` deletes its state and is removed from its core container.
+   *
+   * Don't override it.
+   *
+   * @for ProAct.Property
+   * @protected
+   * @instance
+   * @method beforeDestroy
+   */
   beforeDestroy: function () {
     delete this.proObject.__pro__.properties[this.property];
     this.oldVal = undefined;
@@ -587,14 +599,91 @@ ProAct.Property.prototype = P.U.ex(Object.create(P.Actor.prototype), {
     delete this.v;
   },
 
+  /**
+   * Creates a new `ProAct.Property` instance with source <i>this</i> and mapping
+   * the passed <i>mapping function</i>.
+   *
+   * When the source is changed, the product of this operator is updated too.
+   *
+   * ```
+   *  var val = ProAct.Property.value(5);
+   *  var plusOne = val.map(function (v) {
+   *    return v + 1;
+   *  });
+   *
+   *  plusOne.get(); // 6
+   *
+   *  val.set(4);
+   *  plusOne.get(); // 5
+   * ```
+   *
+   * or
+   *
+   * ```
+   *  var positive = val.map('+');
+   *
+   *  val.set(-4);
+   *
+   *  positive.get(); // 4
+   * ```
+   *
+   * @for ProAct.Property
+   * @instance
+   * @method map
+   * @param {Object|Function|Strin} mappingFunction
+   *      Function or object with a <i>call method</i> to use as map function.
+   *      Can be string for predefined mapping functions.
+   * @return {ProAct.Property}
+   *      A new `ProAct.Property` instance with the <i>mapping</i> applied.
+   */
   map: function (mappingFunction) {
     var prop = P.P.value(this.val, {}, this.queueName).mapping(mappingFunction).into(this);
     ActorUtil.update.call(this);
     return prop;
   },
 
+  /**
+   * Creates a new `ProAct.Property` instance with source <i>this</i> and filtering
+   * the passed <i>filtering function</i>.
+   *
+   * When the source changes, the product, may be updated.
+   *
+   * TODO On creation if the filter fails, the property keeps the original value.
+   * What to do? Also these kinds of properties shouldn't be set manually.
+   *
+   * ```
+   *  var prop = ProAct.Property.value(4);
+   *  var even = sourceActor.filter(function (el) {
+   *    return el % 2 == 0;
+   *  });
+   *
+   *  even.get(); // 4
+   *
+   *  prop.set(5);
+   *  even.get(); // 4
+   *
+   *  prop.set(6);
+   *  even.get(); // 6
+   * ```
+   *
+   * or
+   *
+   * ```
+   *  var actor = sourceActor.filter('odd');
+   *
+   * ```
+   *
+   * @for ProAct.Actor
+   * @instance
+   * @method filter
+   * @param {Object} filteringFunction
+   *      The filtering function or object with a call method, should return boolean.
+   * @return {ProAct.Property}
+   *      A new ProAct.Actor instance with the <i>filtering</i> applied.
+   */
   filter: function (filteringFunction) {
     var prop = P.P.value(this.val, {}, this.queueName).filtering(filteringFunction).into(this);
+
     ActorUtil.update.call(this);
     return prop;
   },
