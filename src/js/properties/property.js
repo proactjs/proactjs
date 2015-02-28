@@ -688,6 +688,45 @@ ProAct.Property.prototype = P.U.ex(Object.create(P.Actor.prototype), {
     return prop;
   },
 
+  /**
+   * Creates a new `ProAct.Property` instance with source <i>this</i> and accumulation
+   * the passed <i>accumulation function</i>.
+   *
+   * Some examples:
+   *
+   * ```
+   *  var prop = ProAct.Property.value(3);
+   *  var acc = prop.accumulate(0, function (current, el) {
+   *    return current + el;
+   *  });
+   *
+   *  acc.get(); // 3
+   *
+   *  prop.set(5);
+   *
+   *  acc.get(); // 8
+   *
+   *  prop.set(2);
+   *
+   *  acc.get(); // 10
+   * ```
+   *
+   * or
+   *
+   * ```
+   *  var acc = prop.accumulate('+'); // The same as the above if the DSL module is present.
+   * ```
+   *
+   * @for ProAct.Property
+   * @instance
+   * @method accumulate
+   * @param {Object} initVal
+   *      Initial value for the accumulation. For example '0' for sum.
+   * @param {Object} accumulationFunction
+   *      The function to accumulate.
+   * @return {ProAct.Property}
+   *      A new `ProAct.Property` instance with the <i>accumulation</i> applied.
+   */
   accumulate: function (initVal, accumulationFunction) {
     var prop = P.P.value(this.val, {}, this.queueName).accumulation(initVal, accumulationFunction).into(this);
     ActorUtil.update.call(this);
@@ -695,12 +734,12 @@ ProAct.Property.prototype = P.U.ex(Object.create(P.Actor.prototype), {
   },
 
   /**
-   * The <b>toString()</b> method returns a string representing this ProAct.Property.
+   * The <b>toString()</b> method returns a string representing this `ProAct.Property`.
    * <p>
    *  The string representation is the value of <i>this</i> property.
    * </p>
    *
-   * @memberof ProAct.Property
+   * @for ProAct.Property
    * @instance
    * @method toString
    */
