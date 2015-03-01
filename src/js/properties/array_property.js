@@ -21,6 +21,7 @@
  *
  * @class ProAct.ArrayProperty
  * @extends ProAct.Property
+ * @constructor
  * @param {String} queueName
  *      The name of the queue all the updates should be pushed to.
  *      <p>
@@ -35,9 +36,6 @@
  *      A plain JavaScript object, holding a field, this property will represent.
  * @param {String} property
  *      The name of the field of the object, this property should represent.
- * @see {@link ProAct.ObjectCore}
- * @see {@link ProAct.States.init}
- * @see {@link ProAct.States.ready}
  */
 function ArrayProperty (queueName, proObject, property) {
   if (queueName && !P.U.isString(queueName)) {

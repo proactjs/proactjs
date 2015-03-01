@@ -753,6 +753,16 @@ ProAct.Property.prototype = P.U.ex(Object.create(P.Actor.prototype), {
 });
 
 P.U.ex(P.Actor.prototype, {
+
+  /**
+   * Creates a {{{#crossLink "ProAct.Property"}}{{/crossLink}} instance,
+   * dependent on this.
+   * Comes from the `proact-properties` module.
+   *
+   * @for ProAct.Actor
+   * @instance
+   * @method toProperty
+   */
   toProperty: function () {
     return P.P.value(this.val, {}, this.queueName).into(this);
   }
