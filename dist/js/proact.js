@@ -6,9 +6,11 @@
 	}
 }(function() {
 	/**
-	 * @module proact
-	 * @submodule proact-core
-	 * @main proact
+	 * The `proact-core` module provides base utilties and common functionality for all the other
+	 * modules of the lib.
+	 *
+	 * @module proact-core
+	 * @main proact-core
 	 */
 	
 	/**
@@ -32,9 +34,6 @@
 	 * Everything can be described using declarative expressions.
 	 * All ProAct classes and functions are defined in this namespace.
 	 * You can use `Pro` and `P` instead of `ProAct` too.
-	 *
-	 * The `proact-core` module provides base utilties and common functionality for all the other
-	 * modules of the lib.
 	 *
 	 * @class ProAct
 	 * @static
@@ -1633,18 +1632,70 @@
 	P.F.prototype.flush = P.F.prototype.go = P.F.prototype.run;
 	
 	/**
-	 * @module proact
-	 * @submodule proact-core
+	 * @module proact-core
 	 */
 	
+	
 	/**
-	 * TODO Move it to its own file.
+	 * ActorUtil provides methods that can be used to make the Actor to 'act'.
+	 * The Actor is ProAct.js version of the base `Observable` object. Various types
+	 * of listeners can be attached to it and used to observe its `actions`.
+	 *
+	 * On the other hand the `Actor` should do something or `act`, because something
+	 * has to be observed after all.
+	 *
+	 * The `ActorUtil` contains a set of methods that help implementing these `acts`.
+	 *
+	 * For example the we can trigger events/values in the `Streams`. This is thier `act`.
+	 * This triggering can be implemented with ease using the methods defined in `ActorUtil`.
+	 *
+	 * Another example is `Properties` - they can be set or updated by the reactive flow -> they should react.
+	 *
+	 * So `ActorUtil` provides the `Actors` with helpful methods for `acting` and `reacting`.
+	 *
+	 * All these methods use the {{#crossLink "ProAct.Flow"}}{{/crossLink}} to defer the changes the right way.
+	 * And the using the `flow` these methods handle the dependencies between the `Actors`.
+	 *
+	 * Use the methods in the `ActorUtil` to implement your `Actor's` `actions` and `reactions`.
 	 *
 	 * @namespace ProAct
+	 * @private
 	 * @class ActorUtil
+	 * @extensionfor ProAct.Actor
 	 * @static
 	 */
 	ActorUtil = {
+	
+	  /**
+	   * Updating/notifying method that can be applied to an {{#crossLink "ProAct.Actor"}}{{/crossLink}}
+	   *
+	   * This method defers the update and the notifications into {{#crossLink "ProAct.flow"}}{{/crossLink}}.
+	   *
+	   * If the state of the caller is {{#crossLink "ProAct.States.destroyed)"}}{{/crossLink}}, an exception will be thrown.
+	   * If the state of the caller is {{#crossLink "ProAct.States.closed)"}}{{/crossLink}}, nothing will happen.
+	   *
+	   * Examples:
+	   *
+	   * You can implement a stream and in it's `trigger` method use this:
+	   * ```
+	   *   ActorUtil.update.call(this, event);
+	   * ```
+	   * This way the event will be triggered into the stream and all the listeners to the stream will be notified.
+	   * For this to work you'll have to override the `makeEvent` method of the stream to return the unmodified source - no state/no event generation,
+	   * the event will just go through.
+	   *
+	   *
+	   * If you want to implement a statefull `Actor` like a `property`, you can set a state in it and just notify all the
+	   * observing `Actors` with this method.
+	   *
+	   *
+	   * @method update
+	   * @protected
+	   * @param {Object} [source] The event/value, causing the update -> can be null : no source.
+	   * @param {Object} [actions] For which actions should notify -> can be null : default actions.
+	   * @param {Object} [eventData] Data for creating the updating event -> can be null : no data.
+	   * @return {Object} The calling object.
+	   */
 	  update: function (source, actions, eventData) {
 	    if (this.state === ProAct.States.destroyed) {
 	      throw new Error('You can not trigger actions on destroyed actors!');
@@ -1665,6 +1716,17 @@
 	    return this;
 	  },
 	
+	  /**
+	   * Contains the real notify/update logic defered by {{#crossLink "ProAct.ActorUtil/update:method"}}{{/crossLink}} into the flow.
+	   * It is private method, should not be used - use `update`.
+	   *
+	   * @method doUpdate
+	   * @private
+	   * @param {Object} [source] The event/value, causing the update -> can be null : no source.
+	   * @param {Object} [actions] For which actions should notify -> can be null : default actions.
+	   * @param {Object} [eventData] Data for creating the updating event -> can be null : no data.
+	   * @return {Object} The calling object.
+	   */
 	  doUpdate: function (source, actions, eventData) {
 	    if (!actions) {
 	      actions = this.defaultActions();
@@ -1748,8 +1810,12 @@
 	P.U.defValProp(ProAct, 'ActorUtil', false, false, false, ActorUtil);
 	
 	/**
+	 * @module proact-core
+	 */
+	
+	/**
 	 * <p>
-	 *  Constructs a ProAct.Actor. It can be used both as observer and observable.
+	 *  `ProAct.Actor` is the basic observer-observable functionallity in ProAct.js
 	 * </p>
 	 * <p>
 	 *  The actors in ProAct.js form the dependency graph.
@@ -1764,10 +1830,12 @@
 	 * </p>
 	 * <p>
 	 *  ProAct.Actor is part of the core module of ProAct.js.
+	    System.out.println();
 	 * </p>
 	 *
 	 * @class ProAct.Actor
-	 * @param {String} queueName
+	 * @constructor
+	 * @param {String} [queueName]
 	 *      The name of the queue all the updates should be pushed to.
 	 *      <p>
 	 *        If this parameter is null/undefined the default queue of
@@ -1777,7 +1845,7 @@
 	 *        If this parameter is not a string it is used as the
 	 *        <i>transforms</i>.
 	 *      </p>
-	 * @param {Array} transforms
+	 * @param {Array} [transforms]
 	 *      A list of transformation to be used on all incoming chages.
 	 */
 	function Actor (queueName, transforms) {
@@ -1808,35 +1876,41 @@
 	  /**
 	   * A constant defining bad values or bad events.
 	   *
-	   * @memberof ProAct.Actor
+	   * Part of the filtering mechainsm; If a transformation returns
+	   * a `BadValue`, based on uncomming event -> the event is skipped.
+	   *
+	   * @property BadValue
 	   * @type Object
+	   * @final
 	   * @static
-	   * @constant
+	   * @for ProAct.Actor
 	   */
 	  BadValue: {},
 	
 	  /**
 	   * A constant defining closing or ending events.
 	   *
-	   * @memberof ProAct.Actor
+	   * If a transformation returns this value, the actor will be closed.
+	   *
+	   * You can manually close `Actor`s updating them with this constant as an event.
+	   *
+	   * @property Close
 	   * @type Object
+	   * @final
 	   * @static
-	   * @constant
+	   * @for ProAct.Actor
 	   */
 	  Close: {},
 	
 	  /**
-	   * Transforms the passed <i>val</i> using the ProAct.Actor#transforms of the passed <i>actor</i>.
+	   * Transforms the passed <i>val</i> using the {{#crossLink "ProAct.Actor/transforms:method"}}{{/crossLink}} method of the passed <i>actor</i>.
 	   *
-	   * @function transforms
-	   * @memberof ProAct.Actor
+	   * @method transforms
+	   * @for ProAct.Actor
 	   * @static
-	   * @param {ProAct.Actor} actor
-	   *      The ProAct.Actor which transformations should be used.
-	   * @param {Object} val
-	   *      The value to transform.
-	   * @return {Object}
-	   *      The transformed value.
+	   * @param {ProAct.Actor} actor The `ProAct.Actor` which transformations should be used.
+	   * @param {Object} val The value to transform.
+	   * @return {Object} The transformed value.
 	   */
 	  transform: function (actor, val) {
 	    var i, t = actor.transforms, ln = t.length;
@@ -1860,27 +1934,26 @@
 	  /**
 	   * Reference to the constructor of this object.
 	   *
-	   * @memberof ProAct.Actor
-	   * @instance
-	   * @constant
-	   * @default ProAct.Actor
+	   * @property constructor
+	   * @type ProAct.Actor
+	   * @final
+	   * @for ProAct.Actor
 	   */
 	  constructor: ProAct.Actor,
 	
 	  /**
 	   * Initializes this actor.
 	   * <p>
-	   *  This method logic is run only if the current state of <i>this</i> is {@link ProAct.States.init}.
+	   *  This method logic is run only if the current state of <i>this</i> is
+	   *  {{#crossLink "ProAct.States/init:property"}}{{/crossLink}}.
 	   * </p>
 	   * <p>
-	   *  Then {@link ProAct.Actor#afterInit} is called to finish the initialization.
+	   *  Then {{#crossLink "ProAct.Actor/afterInit:method"}}{{/crossLink}} is called to finish the initialization.
 	   * </p>
 	   *
-	   * @memberof ProAct.Actor
+	   * @for ProAct.Actor
 	   * @instance
 	   * @method init
-	   * @see {@link ProAct.Actor#doInit}
-	   * @see {@link ProAct.Actor#afterInit}
 	   */
 	  init: function () {
 	    if (this.state !== P.States.init) {
@@ -1898,30 +1971,53 @@
 	   *  Empty by default.
 	   * </p>
 	   *
-	   * @memberof ProAct.Actor
+	   * @for ProAct.Actor
 	   * @instance
+	   * @protected
 	   * @method doInit
-	   * @see {@link ProAct.Actor#init}
 	   */
 	  doInit: function () {},
 	
 	  /**
 	   * Called automatically after initialization of this actor.
 	   * <p>
-	   *  By default it changes the state of <i>this</i> to {@link ProAct.States.ready}.
+	   *  By default it changes the state of <i>this</i> to {{#crossLink "ProAct.States/ready:property"}}{{/crossLink}}.
 	   * </p>
 	   * <p>
 	   *  It can be overridden to define more complex initialization logic.
 	   * </p>
 	   *
-	   * @memberof ProAct.Property
+	   * @for ProAct.Actor
 	   * @instance
+	   * @protected
 	   * @method afterInit
 	   */
 	  afterInit: function () {
 	    this.state = P.States.ready;
 	  },
 	
+	  /**
+	   * Closes this actor => it state becomes {{#crossLink "ProAct.States/closed:property"}}{{/crossLink}}.
+	   *
+	   * This sends a `close` event to all the subscribers to closing.
+	   *
+	   * After closing the actor it can't emit events anymore.
+	   *
+	   * Example:
+	   * ```
+	   *  var actor = new ProAct.Actor();
+	   *  actor.onClose(function () {
+	   *    console.log('Done!');
+	   *  });
+	   *
+	   *  actor.close(); // We will see 'Done!' on the console output.
+	   * ```
+	   *
+	   * @for ProAct.Actor
+	   * @instance
+	   * @method close
+	   * @return {ProAct.Actor} This instance - can be chained.
+	   */
 	  close: function () {
 	    if (this.state === P.States.closed) {
 	      return;
@@ -1929,6 +2025,34 @@
 	    return ActorUtil.update.call(this, P.Actor.Close, 'close');
 	  },
 	
+	  /**
+	   * Checks if <i>this</i> can be closed.
+	   * <p>
+	   *  Defaults to return true.
+	   * </p>
+	   *
+	   * @for ProAct.Actor
+	   * @instance
+	   * @method canClose
+	   */
+	  canClose: function () {
+	    return true;
+	  },
+	
+	  /**
+	   * This method is called when a `close` event is pushed to this `Actor`.
+	   *
+	   * It removes all the subscriptions to the `Actor` and sets its
+	   * state to {{#crossLink "ProAct.States/closed:property"}}{{/crossLink}}.
+	   *
+	   * Do not call this method; it is private!
+	   *
+	   * @for ProAct.Actor
+	   * @private
+	   * @instance
+	   * @protected
+	   * @method doClose
+	   */
 	  doClose: function () {
 	    this.state = P.States.closed;
 	    this.offAll();
@@ -1940,34 +2064,26 @@
 	  /**
 	   * Called immediately before destruction.
 	   *
-	   * @memberof ProAct.Actor
+	   * The idea is to be implemented by extenders to free additional resources on destroy.
+	   *
+	   * @for ProAct.Actor
 	   * @instance
 	   * @abstract
+	   * @protected
 	   * @method beforeDestroy
-	   * @see {@link ProAct.Actor#destroy}
 	   */
 	  beforeDestroy: function () {
 	  },
 	
 	  /**
-	   * Frees additional resources.
-	   *
-	   * @memberof ProAct.Actor
-	   * @instance
-	   * @abstract
-	   * @method doDestroy
-	   * @see {@link ProAct.Actor#destroy}
-	   */
-	  doDestroy: function () {
-	  },
-	
-	  /**
-	   * Destroys this ProAct.Actor instance.
+	   * Destroys this `ProAct.Actor` instance.
 	   * <p>
-	   *  The state of <i>this</i> is set to {@link ProAct.States.destroyed}.
+	   *  The state of <i>this</i> is set to {{#crossLink "ProAct.States/destroyed:property"}}{{/crossLink}}.
 	   * </p>
 	   *
-	   * @memberof ProAct.Actor
+	   * Calls {{#crossLink "ProAct.Actor/beforeDestroy:method"}}{{/crossLink}}
+	   *
+	   * @for ProAct.Actor
 	   * @instance
 	   * @method destroy
 	   */
@@ -1977,7 +2093,6 @@
 	    }
 	
 	    this.beforeDestroy();
-	    this.doDestroy();
 	
 	    this.listeners = undefined;
 	
@@ -1996,28 +2111,24 @@
 	  },
 	
 	  /**
-	   * Checks if <i>this</i> can be closed.
-	   * <p>
-	   *  Defaults to return true.
-	   * </p>
-	   *
-	   * @memberof ProAct.Actor
-	   * @instance
-	   * @method canClose
-	   */
-	  canClose: function () {
-	    return true;
-	  },
-	
-	  /**
-	   * Generates the initial listeners object. It can be overridden for alternative listeners collections.
+	   * Generates the initial listeners object.
+	   * It can be overridden for alternative listeners collections.
 	   * It is used for resetting all the listeners too.
 	   *
-	   * @memberof ProAct.Actor
+	   * The default types of listeners are:
+	   * ```
+	   *  {
+	   *    change: [],
+	   *    error: [],
+	   *    close: []
+	   *  }
+	   * ```
+	   *
+	   * @for ProAct.Actor
 	   * @instance
+	   * @protected
 	   * @method defaultListeners
-	   * @return {Object}
-	   *      A map containing the default listeners collections.
+	   * @return {Object} A map containing the default listeners collections.
 	   */
 	  defaultListeners: function () {
 	    return {
@@ -2030,13 +2141,15 @@
 	  /**
 	   * A list of actions or action to be used when no action is passed for the methods working with actions.
 	   *
-	   * @memberof ProAct.Actor
+	   * @for ProAct.Actor
 	   * @instance
 	   * @method defaultActions
+	   * @protected
 	   * @default 'change'
-	   * @return {Array|String}
-	   *      The actions to be used if no actions are provided to action related methods,
-	   *      like {@link ProAct.Actor#on}, {@link ProAct.Actor#off}, {@link ProAct.Actor#update}, {@link ProAct.Actor#willUpdate}.
+	   * @return {Array|String} The actions to be used if no actions are provided to action related methods, like
+	   *  {{#crossLink "ProAct.Actor/on:method"}}{{/crossLink}},
+	   *  {{#crossLink "ProAct.Actor/off:method"}}{{/crossLink}},
+	   *  {{#crossLink "ProAct.ActorUtil/update:method"}}{{/crossLink}}.
 	   */
 	  defaultActions: function () {
 	    return 'change';
@@ -2044,95 +2157,120 @@
 	
 	  /**
 	   * Creates the <i>listener</i> of this actor.
+	   *
 	   * Every actor should have one listener that should pass to other actors.
+	   *
 	   * <p>
 	   *  This listener turns the actor in a observer.
 	   * </p>
 	   * <p>
-	   *  Should be overriden with specific listener, by default it returns null.
+	   *  Should be overriden with specific listener, by default it returns {{#crossLink "ProAct/N:method"}}{{/crossLink}}.
 	   * </p>
 	   *
-	   * @memberof ProAct.Actor
+	   * @for ProAct.Actor
 	   * @instance
 	   * @abstract
 	   * @method makeListener
-	   * @default null
-	   * @return {Object}
-	   *      The <i>listener of this observer</i>.
+	   * @protected
+	   * @default {ProAct.N}
+	   * @return {Object} The <i>listener of this observer</i>.
 	   */
 	  makeListener: P.N,
 	
 	  /**
 	   * Creates the <i>error listener</i> of this actor.
+	   *
 	   * Every actor should have one error listener that should pass to other actors.
+	   *
 	   * <p>
 	   *  This listener turns the actor in a observer for errors.
 	   * </p>
 	   * <p>
-	   *  Should be overriden with specific listener, by default it returns null.
+	   *  Should be overriden with specific listener, by default it returns {{#crossLink "ProAct/N:method"}}{{/crossLink}}.
 	   * </p>
 	   *
-	   * @memberof ProAct.Actor
+	   * @for ProAct.Actor
 	   * @instance
 	   * @abstract
 	   * @method makeErrListener
-	   * @default null
-	   * @return {Object}
-	   *      The <i>error listener of this observer</i>.
+	   * @protected
+	   * @default {ProAct.N}
+	   * @return {Object} The <i>error listener of this observer</i>.
 	   */
 	  makeErrListener: P.N,
 	
 	  /**
 	   * Creates the <i>closing listener</i> of this actor.
+	   *
 	   * Every actor should have one closing listener that should pass to other actors.
+	   *
 	   * <p>
 	   *  This listener turns the actor in a observer for closing events.
 	   * </p>
 	   * <p>
-	   *  Should be overriden with specific listener, by default it returns null.
+	   *  Should be overriden with specific listener, by default it returns {{#crossLink "ProAct/N:method"}}{{/crossLink}}.
 	   * </p>
 	   *
-	   * @memberof ProAct.Actor
+	   * @for ProAct.Actor
 	   * @instance
 	   * @abstract
+	   * @protected
 	   * @method makeCloseListener
-	   * @default null
-	   * @return {Object}
-	   *      The <i>closing listener of this observer</i>.
+	   * @default {ProAct.N}
+	   * @return {Object} The <i>closing listener of this observer</i>.
 	   */
 	  makeCloseListener: P.N,
 	
 	  /**
 	   * Creates the <i>event</i> to be send to the listeners on update.
+	   *
 	   * <p>
-	   *  The <i>event</i> should be an instance of {@link ProAct.Event}.
-	   * </p>
-	   * <p>
-	   *  By default this method returns {@link ProAct.Event.Types.value} event.
+	   *  The <i>event</i> should be an instance of {{#crossLink "ProAct.Event"}}{{/crossLink}}.
 	   * </p>
 	   *
-	   * @memberof ProAct.Actor
+	   * <p>
+	   *  By default this method returns {{#crossLink "ProAct.Event.Types/value:property"}}{{/crossLink}} event.
+	   * </p>
+	   *
+	   * @for ProAct.Actor
 	   * @instance
 	   * @method makeEvent
-	   * @default {ProAct.Event} with type {@link ProAct.Event.Types.value}
-	   * @param {ProAct.Event} source
-	   *      The source event of the event. It can be null
-	   * @return {ProAct.Event}
-	   *      The event.
+	   * @default {ProAct.Event} with type {{#crossLink "ProAct.Event.Types/value:property"}}{{/crossLink}}.
+	   * @protected
+	   * @param {ProAct.Event} source The source event of the event. It can be null
+	   * @return {ProAct.Event} The event.
 	   */
 	  makeEvent: function (source) {
 	    return new P.Event(source, this, P.Event.Types.value);
 	  },
 	
 	  /**
-	   * Attaches a new listener to this ProAct.Actor.
+	   * Attaches a new listener to this `ProAct.Actor`.
+	   *
 	   * The listener may be function or object that defines a <i>call</i> method.
 	   *
-	   * @memberof ProAct.Actor
+	   * ```
+	   *   actor.on(function (v) {
+	   *    console.log(v);
+	   *   });
+	   *
+	   *   actor.on('error', function (v) {
+	   *    console.error(v);
+	   *   });
+	   *
+	   *   actor.on({
+	   *    call: function (v) {
+	   *      console.log(v);
+	   *    }
+	   *   });
+	   * ```
+	   *
+	   * @for ProAct.Actor
 	   * @instance
 	   * @method on
 	   * @param {Array|String} actions
-	   *      The action/actions to listen for. If this parameter is skipped or null/undefined, the actions from {@link ProAct.Actor#defaultActions} are used.
+	   *      The action/actions to listen for. If this parameter is skipped or null/undefined,
+	   *      the actions from {{#crossLink "ProAct.Actor/defaultActions:method"}}{{/crossLink}} are used.
 	   *      <p>
 	   *        The actions can be skipped and on their place as first parameter to be passed the <i>listener</i>.
 	   *      </p>
@@ -2140,7 +2278,6 @@
 	   *      The listener to attach. It must be instance of Function or object with a <i>call</i> method.
 	   * @return {ProAct.Actor}
 	   *      <b>this</b>
-	   * @see {@link ProAct.Actor#defaultActions}
 	   */
 	  on: function (actions, listener) {
 	    if (!P.U.isString(actions) && !P.U.isArray(actions)) {
@@ -2170,16 +2307,50 @@
 	
 	  /**
 	   * Removes a <i>listener</i> from the passed <i>action</i>.
+	   *
 	   * <p>
 	   *  If this method is called without parameters, all the listeners for all the actions are removed.
-	   *  The listeners are reset using {@link ProAct.Actor#defaultListeners}.
+	   *  The listeners are reset using {{#crossLink "ProAct.Actor/defaultActions:method"}}{{/crossLink}}.
 	   * </p>
 	   *
-	   * @memberof ProAct.Actor
+	   * Examples are:
+	   *
+	   * Removing a listener:
+	   * ```
+	   *  var listener = function (v) {
+	   *    console.log(v);
+	   *  };
+	   *  actor.on(listener);
+	   *  actor.off(listener);
+	   * ```
+	   *
+	   * Or for removing all the listeners attached to an actor:
+	   * ```
+	   *  actor.off();
+	   * ```
+	   *
+	   * Or for removing all the listeners of a given type attached to an actor:
+	   * ```
+	   *  actor.off('error');
+	   * ```
+	   *
+	   * Or for removing a listener from different type of actions:
+	   * ```
+	   *  var listener = function (v) {
+	   *    console.log(v);
+	   *  };
+	   *  actor.on(listener);
+	   *  actor.onErr(listener);
+	   *
+	   *  actor.off(['error', 'change'], listener);
+	   * ```
+	   *
+	   * @for ProAct.Actor
 	   * @instance
 	   * @method off
 	   * @param {Array|String} actions
-	   *      The action/actions to stop listening for. If this parameter is skipped or null/undefined, the actions from {@link ProAct.Actor#defaultActions} are used.
+	   *      The action/actions to stop listening for. If this parameter is skipped or null/undefined,
+	   *      the actions from {{#crossLink "ProAct.Actor/defaultActions:method"}}{{/crossLink}} are used.
 	   *      <p>
 	   *        The actions can be skipped and on their place as first parameter to be passed the <i>listener</i>.
 	   *      </p>
@@ -2187,9 +2358,6 @@
 	   *      The listener to detach. If it is skipped, null or undefined all the listeners are removed from this actor.
 	   * @return {ProAct.Actor}
 	   *      <b>this</b>
-	   * @see {@link ProAct.Actor#on}
-	   * @see {@link ProAct.Actor#defaultActions}
-	   * @see {@link ProAct.Actor#defaultListeners}
 	   */
 	  off: function (actions, listener) {
 	    if (!actions && !listener) {
@@ -2222,16 +2390,18 @@
 	
 	  /**
 	   * Attaches a new error listener to this ProAct.Actor.
+	   *
 	   * The listener may be function or object that defines a <i>call</i> method.
 	   *
-	   * @memberof ProAct.Actor
+	   * This is the same as calling `on('error', listener)` on an `Actor`...
+	   *
+	   * @for ProAct.Actor
 	   * @instance
 	   * @method onErr
 	   * @param {Object} listener
 	   *      The listener to attach. It must be instance of Function or object with a <i>call</i> method.
 	   * @return {ProAct.Actor}
 	   *      <b>this</b>
-	   * @see {@link ProAct.Actor#on}
 	   */
 	  onErr: function (listener) {
 	    return this.on('error', listener);
@@ -2240,14 +2410,15 @@
 	  /**
 	   * Removes an error <i>listener</i> from the passed <i>action</i>.
 	   *
-	   * @memberof ProAct.Actor
+	   * This is the same as calling `off('error', listener)` on an `Actor`...
+	   *
+	   * @for ProAct.Actor
 	   * @instance
 	   * @method offErr
 	   * @param {Object} listener
 	   *      The listener to detach. If it is skipped, null or undefined all the listeners are removed from this actor.
 	   * @return {ProAct.Actor}
 	   *      <b>this</b>
-	   * @see {@link ProAct.Actor#onErr}
 	   */
 	  offErr: function (listener) {
 	    return this.off('error', listener);
@@ -2279,18 +2450,33 @@
 	   *  stream, it is passed to the listening too. That way the source stream is plugged <b>into</b> the listening one.
 	   * </p>
 	   * <p>
-	   *  The listeners from {@link ProAct.Actor#makeListener} and {@link ProAct.Actor#makeErrListener} are used.
+	   *  The listeners from {{#crossLink "ProAct.Actor/makeListener:method"}}{{/crossLink}},
+	   *  {{#crossLink "ProAct.Actor/makeErrListener:method"}}{{/crossLink}} and {{#crossLink "ProAct.Actor/makeCloseListener:method"}}{{/crossLink}} are used.
 	   * </p>
 	   *
-	   * @memberof ProAct.Actor
+	   * Chaining actors is very powerful operation. It can be used to merge many source actors into one.
+	   *
+	   * ```
+	   *  var sourceActor1 = <Actor implementation>;
+	   *  var sourceActor2 = <Actor implementation>;
+	   *  var actor = <Actor implementation>;
+	   *
+	   *  actor.into(sourceActor1, sourceActor2);
+	   *  actor.on(function (v) {
+	   *    console.log(v);
+	   *  });
+	   *
+	   *  Now if the any of the source actors is updated, the update will be printed on the console by the `actor`.
+	   *
+	   * ```
+	   *
+	   * @for ProAct.Actor
 	   * @instance
 	   * @method into
 	   * @param [...]
 	   *      Zero or more source ProAct.Actors to set as sources.
 	   * @return {ProAct.Actor}
 	   *      <b>this</b>
-	   * @see {@link ProAct.Actor#makeListener}
-	   * @see {@link ProAct.Actor#makeErrListener}
 	   */
 	  into: function () {
 	    var args = slice.call(arguments),
@@ -2306,17 +2492,29 @@
 	  },
 	
 	  /**
-	   * The reverse of {@link ProAct.Actor#into} - sets <i>this actor</i> as a source
+	   * The reverse of {{#crossLink "ProAct.Actor/into:method"}}{{/crossLink}} - sets <i>this actor</i> as a source
 	   * to the passed <i>destination</i> actor.
 	   *
-	   * @memberof ProAct.Actor
+	   * ```
+	   *  var sourceActor = <Actor implementation>;
+	   *  var actor = <Actor implementation>;
+	   *
+	   *  sourceActor.out(actor);
+	   *  actor.on(function (v) {
+	   *    console.log(v);
+	   *  });
+	   *
+	   *  Now if the any of the source actors is updated, the update will be printed on the console by the `actor`.
+	   *
+	   * ```
+	   *
+	   * @for ProAct.Actor
 	   * @instance
 	   * @method out
 	   * @param {ProAct.Actor} destination
 	   *      The actor to set as source <i>this</i> to.
 	   * @return {ProAct.Actor}
 	   *      <b>this</b>
-	   * @see {@link ProAct.Actor#into}
 	   */
 	  out: function (destination) {
 	    destination.into(this);
@@ -2327,30 +2525,59 @@
 	  /**
 	   * Adds a new <i>transformation</i> to the list of transformations
 	   * of <i>this actor</i>.
+	   *
 	   * <p>
 	   *  A transformation is a function or an object that has a <i>call</i> method defined.
 	   *  This function or call method should have one argument and to return a transformed version of it.
 	   *  If the returned value is {@link ProAct.Actor.BadValue}, the next transformations are skipped and the updating
 	   *  value/event becomes - bad value.
 	   * </p>
+	   *
 	   * <p>
 	   *  Every value/event that updates <i>this actor</i> will be transformed using the new transformation.
 	   * </p>
 	   *
-	   * @memberof ProAct.Actor
+	   * @for ProAct.Actor
 	   * @instance
 	   * @method transform
+	   * @protected
 	   * @param {Object} transformation
 	   *      The transformation to add.
 	   * @return {ProAct.Actor}
 	   *      <b>this</b>
-	   * @see {@link ProAct.Actor.transform}
 	   */
 	  transform: function (transformation) {
 	    this.transforms.push(transformation);
 	    return this;
 	  },
 	
+	  /**
+	   * Adds a new <i>transformation</i> to the list of transformations
+	   * of <i>this actor</i>.
+	   *
+	   * <p>
+	   *  A transformation is a function or an object that has a <i>call</i> method defined.
+	   *  This function or call method should have one argument and to return a transformed version of it.
+	   *  If the returned value is {@link ProAct.Actor.BadValue}, the next transformations are skipped and the updating
+	   *  value/event becomes - bad value.
+	   * </p>
+	   *
+	   * <p>
+	   *  Every value/event that updates <i>this actor</i> will be transformed using the new transformation.
+	   * </p>
+	   *
+	   * This method uses {{#crossLink "ProAct.Actor/transform:method"}}{{/crossLink}}, but can read transformation
+	   * funtion/object stored in the registry (if the proact-dsl module is present) by it's string name.
+	   *
+	   * @for ProAct.Actor
+	   * @instance
+	   * @method transformStored
+	   * @protected
+	   * @param {Object|String} transformation The transformation to add. Can be string - to be retrieved by name.
+	   * @param {String} type The type of the transformation, for example `mapping`.
+	   * @return {ProAct.Actor}
+	   *      <b>this</b>
+	   */
 	  transformStored: function (transformation, type) {
 	    if (P.registry && P.U.isString(transformation)) {
 	      P.DSL.run(this, type + '(' + transformation + ')', P.registry);
@@ -2368,14 +2595,14 @@
 	   *  we'll get <i>9</i> as actual updating value.
 	   * </p>
 	   *
-	   * @memberof ProAct.Actor
+	   * @for ProAct.Actor
+	   * @protected
 	   * @instance
 	   * @method mapping
 	   * @param {Object} mappingFunction
 	   *      Function or object with a <i>call method</i> to use as map function.
 	   * @return {ProAct.Actor}
 	   *      <b>this</b>
-	   * @see {@link ProAct.Actor#transform}
 	   */
 	  mapping: function (mappingFunction) {
 	    return this.transformStored(mappingFunction, 'map');
@@ -2388,14 +2615,14 @@
 	   *  filter by only odd numbers as update values.
 	   * </p>
 	   *
-	   * @memberof ProAct.Actor
+	   * @for ProAct.Actor
 	   * @instance
+	   * @protected
 	   * @method filtering
 	   * @param {Object} filteringFunction
 	   *      The filtering function or object with a call method, should return boolean.
 	   * @return {ProAct.Actor}
 	   *      <b>this</b>
-	   * @see {@link ProAct.Actor#transform}
 	   */
 	  filtering: function(filteringFunction) {
 	    var self = this,
@@ -2415,8 +2642,9 @@
 	   *  Accumulation is used to compute a value based on the previous one.
 	   * </p>
 	   *
-	   * @memberof ProAct.Actor
+	   * @for ProAct.Actor
 	   * @instance
+	   * @protected
 	   * @method accumulation
 	   * @param {Object} initVal
 	   *      Initial value for the accumulation. For example '0' for sum.
@@ -2424,7 +2652,6 @@
 	   *      The function to accumulate.
 	   * @return {ProAct.Actor}
 	   *      <b>this</b>
-	   * @see {@link ProAct.Actor#transform}
 	   */
 	  accumulation: function (initVal, accumulationFunction) {
 	    if (!accumulationFunction) {
@@ -2448,15 +2675,27 @@
 	   *  Should be overridden with creating the right actor.
 	   * </p>
 	   *
-	   * @memberof ProAct.Actor
+	   * ```
+	   *  var actor = sourceActor.map(function (el) {
+	   *    return el * el;
+	   *  });
+	   * ```
+	   *
+	   * or
+	   *
+	   * ```
+	   *  var actor = sourceActor.map('+');
+	   * ```
+	   *
+	   * @for ProAct.Actor
 	   * @instance
 	   * @abstract
 	   * @method map
-	   * @param {Object} mappingFunction
+	   * @param {Object|Function|Strin} mappingFunction
 	   *      Function or object with a <i>call method</i> to use as map function.
+	   *      Can be string for predefined mapping functions.
 	   * @return {ProAct.Actor}
 	   *      A new ProAct.Actor instance with the <i>mapping</i> applied.
-	   * @see {@link ProAct.Actor#mapping}
 	   */
 	  map: P.N,
 	
@@ -2467,7 +2706,20 @@
 	   *  Should be overridden with creating the right actor.
 	   * </p>
 	   *
-	   * @memberof ProAct.Actor
+	   * ```
+	   *  var actor = sourceActor.filter(function (el) {
+	   *    return el % 2 == 0;
+	   *  });
+	   * ```
+	   *
+	   * or
+	   *
+	   * ```
+	   *  var actor = sourceActor.filter('odd');
+	   *
+	   * ```
+	   *
+	   * @for ProAct.Actor
 	   * @instance
 	   * @abstract
 	   * @method filter
@@ -2475,7 +2727,6 @@
 	   *      The filtering function or object with a call method, should return boolean.
 	   * @return {ProAct.Actor}
 	   *      A new ProAct.Actor instance with the <i>filtering</i> applied.
-	   * @see {@link ProAct.Actor#filtering}
 	   */
 	  filter: P.N,
 	
@@ -2486,7 +2737,19 @@
 	   *  Should be overridden with creating the right actor.
 	   * </p>
 	   *
-	   * @memberof ProAct.Actor
+	   * ```
+	   *  var actor = sourceActor.accumulate(0, function (current, el) {
+	   *    return current + el;
+	   *  });
+	   * ```
+	   *
+	   * or
+	   *
+	   * ```
+	   *  var actor = sourceActor.accumulate('+');
+	   * ```
+	   *
+	   * @for ProAct.Actor
 	   * @instance
 	   * @abstract
 	   * @method accumulate
@@ -2496,17 +2759,20 @@
 	   *      The function to accumulate.
 	   * @return {ProAct.Actor}
 	   *      A new ProAct.Actor instance with the <i>accumulation</i> applied.
-	   * @see {@link ProAct.Actor#accumulation}
 	   */
 	  accumulate: P.N,
 	
 	  /**
-	   * Generates a new {@link ProAct.Property} containing the state of an accumulations.
+	   * TODO - Move to the proact-properties module!
+	   *
+	   * Generates a new {{#crossLink "ProAct.Property"}}{{/crossLink}} containing the state of an accumulations.
+	   *
 	   * <p>
 	   *  The value will be updated with every update coming to this actor.
 	   * </p>
 	   *
-	   * @memberof ProAct.Actor
+	   *
+	   * @for ProAct.Actor
 	   * @instance
 	   * @method reduce
 	   * @param {Object} initVal
@@ -2514,9 +2780,7 @@
 	   * @param {Object} accumulationFunction
 	   *      The function to accumulate.
 	   * @return {ProAct.Property}
-	   *      A {@link ProAct.Property} instance observing <i>this</i> with the accumulation applied.
-	   * @see {@link ProAct.Actor#accumulate}
-	   * @see {@link ProAct.Property}
+	   *      A {{#crossLink "ProAct.Property"}}{{/crossLink}} instance observing <i>this</i> with the accumulation applied.
 	   */
 	  reduce: function (initVal, accumulationFunction) {
 	    return P.P.value(initVal).into(this.accumulate(initVal, accumulationFunction));
@@ -2526,11 +2790,17 @@
 	  /**
 	   * Defers a ProAct.Actor listener.
 	   * <p>
-	   *  By default this means that the listener is put into active {@link ProAct.Flow} using it's
-	   *  {@link ProAct.Flow#pushOnce} method, but it can be overridden.
+	   *  By default this means that the listener is put into active {{#crossLink "ProAct.Flow"}}{{/crossLink}} using it's
+	   *  {{#crossLink "ProAct.Flow/pushOnce:method"}}{{/crossLink}} method, but it can be overridden.
 	   * </p>
 	   *
-	   * @memberof ProAct.Actor
+	   * This method determines the order of actions, triggered by the changes in the data flow.
+	   * The default implementation is executing only one update on this Actor per data flow change.
+	   * This means that if the `Actor` depends on other three Actors, and all of them get updated,
+	   * it is updated only once with the last update value.
+	   *
+	   * @for ProAct.Actor
+	   * @protected
 	   * @instance
 	   * @method defer
 	   * @param {Object} event
@@ -2539,8 +2809,6 @@
 	   *      The listener to defer. It should be a function or object defining the <i>call</i> method.
 	   * @return {ProAct.Actor}
 	   *      <i>this</i>
-	   * @see {@link ProAct.Actor#makeListener}
-	   * @see {@link ProAct.flow}
 	   */
 	  defer: function (event, listener) {
 	    var queueName = (listener.queueName) ? listener.queueName : this.queueName;
@@ -2555,41 +2823,19 @@
 	};
 	
 	/**
-	 * <p>
-	 *  Constructs a ProAct.Observable. It can be used both as observer and actor.
-	 * </p>
-	 * <p>
-	 *  The observables in ProAct.js form the dependency graph.
-	 *  If some observable listens to changes from another - it depends on it.
-	 * </p>
-	 * <p>
-	 *  The observables can transform the values or events incoming to them.
-	 * </p>
-	 * <p>
-	 *  Every observable can have a parent observable, that will be notified for all the changes
-	 *  on the child-observable, it is something as special observer.
-	 * </p>
-	 * <p>
-	 *  ProAct.Observable is part of the core module of ProAct.js.
-	 * </p>
-	 *
-	 * @class ProAct.Observable
-	 * @param {Array} transforms
-	 *      A list of transformation to be used on all incoming chages.
-	 * @deprecated since version 1.1.1. Use {@link ProAct.Actor} instead.
-	 * @see {@link ProAct.Actor}
+	 * @module proact-core
 	 */
-	ProAct.Observable = ProAct.Actor;
 	
 	/**
 	 * <p>
-	 *  Constructs a ProAct.Event. The event contains information of the update.
+	 *  Constructs a `ProAct.Event`. The event contains information of the update.
 	 * </p>
 	 * <p>
-	 *  ProAct.Event is part of the core module of ProAct.js.
+	 *  `ProAct.Event` is part of the core module of ProAct.js.
 	 * </p>
 	 *
 	 * @class ProAct.Event
+	 * @constructor
 	 * @param {ProAct.Event} source
 	 *      If there is an event that coused this event - it is the source. Can be null - no source.
 	 * @param {Object} target
@@ -2615,7 +2861,7 @@
 	   *  NOTE: For now only works with arrays, because creating array events required a lot of code.
 	   * </p>
 	   *
-	   * @memberof ProAct.Event
+	   * @for ProAct.Event
 	   * @static
 	   * @param {ProAct.Event} source
 	   *      If there is an event that coused this event - it is the source. Can be null - no source.
@@ -2623,13 +2869,12 @@
 	   *      The thing that triggered this event.
 	   * @param {ProAct.Event.Types|String} type
 	   *      The type of the event. Can be string for ease.
-	   *      For now this method supports only {@link ProAct.Event.Types.array} events.
+	   *      For now this method supports only {{#crossLink "ProAct.Event.Types/array:property"}}{{/crossLink}} events.
 	   *      It is possible to pass the string 'array' for type.
 	   * @param {Array} data
 	   *      Arguments of the event.
 	   * @return {ProAct.Event}
 	   *      The new event.
-	   * @see {@link ProAct.Event.makeArray}
 	   */
 	  make: function (source, target, type, data) {
 	    if (type === 'array' || type === P.E.Types.array) {
@@ -2638,12 +2883,14 @@
 	  },
 	
 	  /**
-	   * Factory method for creating of new ProAct.Events of type ProAct.Event.Types.array  with ease.
+	   * Factory method for creating of new ProAct.Events of type {{#crossLink "ProAct.Event.Types/array:property"}}{{/crossLink}} with ease.
 	   * <p>
 	   *  NOTE: For now only array modifying events can be created - remove and splice (you can trigger a value for add).
 	   * </p>
 	   *
-	   * @memberof ProAct.Event
+	   * TODO Move to the proact-arrays package!
+	   *
+	   * @for ProAct.Event
 	   * @static
 	   * @param {ProAct.Event} source
 	   *      If there is an event that coused this event - it is the source. Can be null - no source.
@@ -2686,7 +2933,9 @@
 	   * This event can be passed to the ProAct.ArrayCore#update method of the core of a ProAct.Array and it will delete
 	   * the element in it.
 	   *
-	   * @memberof ProAct.Event
+	   * TODO Some of these types and comments should be undepended of the proact-arrays module.
+	   *
+	   * @for ProAct.Event
 	   * @static
 	   * @param {ProAct.Event.Types|String} eventType
 	   *      The type of the event. Can be string for ease.
@@ -2735,7 +2984,9 @@
 	/**
 	 * Defines the possible types of the ProAct.Events.
 	 *
-	 * @namespace ProAct.Event.Types
+	 * @namespace ProAct.Event
+	 * @class Types
+	 * @static
 	 */
 	ProAct.Event.Types = {
 	
@@ -2747,8 +2998,9 @@
 	   * </p>
 	   *
 	   * @type Number
-	   * @static
-	   * @constant
+	   * @property value
+	   * @final
+	   * @for ProAct.Event
 	   */
 	  value: 0,
 	
@@ -2758,10 +3010,12 @@
 	   *  The args should consist of operation, index, old values, new values.
 	   * </p>
 	   *
+	   * TODO Move it to the proact-arrays module.
+	   *
 	   * @type Number
-	   * @static
-	   * @constant
-	   * @see {@link ProAct.Array.Operations}
+	   * @property array
+	   * @final
+	   * @for ProAct.Event
 	   */
 	  array: 1,
 	
@@ -2769,8 +3023,9 @@
 	   * Close type events. Events for closing streams or destroying properties.
 	   *
 	   * @type Number
-	   * @static
-	   * @constant
+	   * @property close
+	   * @final
+	   * @for ProAct.Event
 	   */
 	  close: 2,
 	
@@ -2778,11 +3033,161 @@
 	   * Error type events. Events for errors.
 	   *
 	   * @type Number
-	   * @static
-	   * @constant
+	   * @property error
+	   * @final
+	   * @for ProAct.Event
 	   */
 	  error: 3
 	};
+	
+	/**
+	 * @module proact-core
+	 */
+	
+	/**
+	 * <p>
+	 *  Constructs a ProAct.Core. The core is an {{#crossLink "ProAct.Actor"}}{{/crossLink}} which can be used to manage other {@link ProAct.Actor} objects or groups many ProAct.Actor objects.
+	 * </p>
+	 * <p>
+	 *  For example a shell can be a plain old JavaScript object; The core will be in charge of creating dynamic properties for every field of the shell.
+	 * </p>
+	 * <p>
+	 *  The idea of the core is to inject observer-observable capabilities in normal objects, or just group many observables.
+	 * </p>
+	 * <p>
+	 *  `ProAct.Core` is an abstract class, that has a {{#crossLink "ProAct.States"}}{{/crossLink}} state. Its initializing logic should be implemented in an extender.
+	 * </p>
+	 * <p>
+	 *  ProAct.Core is used as a parent for the {{#crossLink "ProAct.Actor"}}{{/crossLink}}s it manages, so it can be passed as a listener object - defines a <i>call method</i>.
+	 * </p>
+	 * <p>
+	 *  ProAct.Core is part of the core module of ProAct.js.
+	 * </p>
+	 *
+	 * TODO Maybe should be renamed to something else? For example ActorGroup or ActorTroupe, or maybe ActorManager :).
+	 *
+	 * @class ProAct.Core
+	 * @extends ProAct.Actor
+	 * @param {Object} shell
+	 *      The shell arrounf this core. This ProAct.Core manages observer-observable behavior for this <i>shell</i> object.
+	 * @param {Object} meta
+	 *      Optional meta data to be used to define the observer-observable behavior of the <i>shell</i>.
+	 */
+	function Core (shell, meta) {
+	  this.shell = shell;
+	  this.state = P.States.init;
+	  this.meta = meta || {};
+	  this.queueName = (this.meta.p && this.meta.p.queueName &&
+	                    P.U.isString(this.meta.p.queueName)) ? this.meta.p.queueName : null;
+	
+	  P.Actor.call(this, this.queueName); // Super!
+	}
+	ProAct.Core = P.C = Core;
+	
+	ProAct.Core.prototype = P.U.ex(Object.create(P.Actor.prototype), {
+	
+	  /**
+	   * Reference to the constructor of this object.
+	   *
+	   * @property constructor
+	   * @type ProAct.Core
+	   * @final
+	   * @for ProAct.Core
+	   */
+	  constructor: ProAct.Core,
+	
+	  /**
+	   * A function to be set to the <i>shell</i> object's <b>p</b> field (if it is configured in {{#crossLink "ProAct.Configuration"}}{{/crossLink}}.
+	   * <p>
+	   *  This function is the link to the this ProAct.Core of the <i>shell</i>.
+	   *  It can be overridden to return different aspects of the core depending on parameters passed.
+	   * </p>
+	   *
+	   * @for ProAct.Core
+	   * @instance
+	   * @method value
+	   * @default {this}
+	   * @return {Object}
+	   *      Some aspects of <i>this</i> `ProAct.Core`.
+	   */
+	  value: function () {
+	    return this;
+	  },
+	
+	  /**
+	   * Initializes <i>this</i> ProAct.Core. This method should be called when the core should become active.
+	   * <p>
+	   *  The main idea of the method is to change the {{#crossLink "ProAct.States"}}{{/crossLink}}
+	   *  state of <i>this</i> to {{#crossLink "ProAct.States/ready:property"}}{{/crossLink}}, by
+	   *  settuping everything needed by the shell to has observer-observable logic.
+	   * </p>
+	   * <p>
+	   *  The abstract {{#crossLink "ProAct.Core/setup:method"}}{{/crossLink}} method is called for the actual setup.
+	   *  If it throws an error, <i>this</i> state is set to {{#crossLink "ProAct.States/error:property"}}{{/crossLink}}
+	   *  and the core stays inactive.
+	   * </p>
+	   *
+	   * @for ProAct.Core
+	   * @instance
+	   * @method prob
+	   * @return {ProAct.Core} <i>this</i>
+	   */
+	  prob: function () {
+	    var self = this,
+	        conf = ProAct.Configuration,
+	        keyprops = conf.keyprops,
+	        keypropList = conf.keypropList;
+	
+	    try {
+	      this.setup();
+	
+	      if (keyprops && keypropList.indexOf('p') !== -1) {
+	        P.U.defValProp(this.shell, 'p', false, false, false, P.U.bind(this, this.value));
+	      }
+	
+	      this.state = P.States.ready;
+	    } catch (e) {
+	      this.state = P.States.error;
+	      throw e;
+	    }
+	
+	    return this;
+	  },
+	
+	  /**
+	   * Abstract method called by {{#crossLink "ProAct.Core/prob:method"}}{{/crossLink}}
+	   * for the actual initialization of <i>this</i> core.
+	   *
+	   * By default it throws an exception.
+	   *
+	   * @for ProAct.Core
+	   * @instance
+	   * @abstract
+	   * @method setup
+	   */
+	  setup: function () {
+	    throw Error('Abstract, implement!');
+	  },
+	
+	  /**
+	   * `ProAct.Core` can be used as a parent listener for its managed
+	   * {{#crossLink "ProAct.Actor"}}{{/crossLink}}s, so it defines the <i>call</i> method.
+	   * <p>
+	   *  By default this method calls {{#crossLink "ProAct.ActorUtil/update:method"}}{{/crossLink}}
+	   *  with <i>this</i> and the passed <i>event</i>.
+	   * </p>
+	   *
+	   * @for ProAct.Core
+	   * @instance
+	   * @method call
+	   * @param {Object} event
+	   *      The value/event that this listener is notified for.
+	   */
+	  call: function (event) {
+	    ActorUtil.update.call(this, event);
+	  }
+	});
+	
 	
 	function ValueEvent (source, target) {
 	  var type = ProAct.Event.Types.value,
@@ -3998,38 +4403,60 @@
 	});
 	
 	/**
+	 * The `proact-properties` module provides stateful reactive values attached to normal JavaScript
+	 * object's fields.
+	 *
+	 * @module proact-properties
+	 * @main proact-properties
+	 */
+	
+	/**
 	 * <p>
-	 *  Constructs a ProAct.Property. The properties are simple {@link ProAct.Actor}s with state. The basic property
-	 *  has a state of a simple value - number/string/boolean.
+	 *  Constructs a `ProAct.Property`.
+	 *  The properties are simple {{#crossLink "ProAct.Actor"}}{{/crossLink}}s with state.
+	 *  The basic property has a state of a simple value - number/string/boolean.
 	 * </p>
 	 * <p>
-	 *  Every property represents a field in a plain javascript object. It makes it reactive, on reading the property value,
-	 *  if {@link ProAct.currentCaller} is set, it is added as a listener to the property changes.
+	 *  Every property could represent a field in a plain JavaScript object.
+	 *  It makes it reactive, on reading the property value,
+	 *  if {{#crossLink "ProAct/currentCaller:property"}}{{/crossLink}} is set,
+	 *  it is added as a listener to the property changes.
 	 * </p>
 	 * <p>
 	 *  Every property has a type the default property has a type of a simple value.
 	 * </p>
 	 * <p>
-	 *  All the properties of an object are managed by its {@link ProAct.ObjectCore}, which is set to a hidden field of the object - '__pro__'.
+	 *  All the properties of an object are managed by its {{#crossLink "ProAct.ObjectCore"}}{{/crossLink}},
+	 *  which is set to a hidden field of the object - '__pro__'.
 	 * </p>
 	 * <p>
-	 *  When created every property is in {@link ProAct.States.init} state, when it is functional, the state is changed to {@link ProAct.States.ready}.
-	 *  If the property is not in {@link ProAct.States.ready} state, it is not useable.
+	 *  When created every property is in {{#crossLink "ProAct.States/init:property"}}{{/crossLink}}, state,
+	 *  when it is functional, the state is changed to {{#crossLink "ProAct.States/ready:property"}}{{/crossLink}}.
+	 *  If the property is not in {{#crossLink "ProAct.States/ready:property"}}{{/crossLink}} state, it is not useable.
 	 * </p>
 	 * <p>
-	 *  {@link ProAct.Property#init} is called by this constructor for the property initialization. It should initialize the property and set its state to {@link ProAct.States.ready}.
+	 *  {{#crossLink "ProAct.Property/init:method"}}{{/crossLink}} is called by this constructor for the property initialization.
+	 *  It should initialize the property and set its state to {{#crossLink "ProAct.States/ready:property"}}{{/crossLink}}.
 	 * </p>
 	 * <p>
-	 *  ProAct.Property is part of the properties module of ProAct.js.
+	 *  ProAct.Property is part of the proact-properties module of ProAct.js.
 	 * </p>
+	 *
+	 * ```
+	 *  var property = new Property({v: 5}, 'v');
+	 *  property.get(); // This is 5
+	 *  property.set(4);
+	 *  property.get(); // This is 4
+	 * ```
 	 *
 	 * @class ProAct.Property
 	 * @extends ProAct.Actor
+	 * @constructor
 	 * @param {String} queueName
 	 *      The name of the queue all the updates should be pushed to.
 	 *      <p>
 	 *        If this parameter is null/undefined the default queue of
-	 *        {@link ProAct.flow} is used.
+	 *        {{#crossLink "ProAct/flow:property"}}{{/crossLink}} is used.
 	 *      </p>
 	 *      <p>
 	 *        If this parameter is not a string it is used as the
@@ -4040,15 +4467,11 @@
 	 * @param {String} property
 	 *      The name of the field of the object, this property should represent.
 	 * @param {Function} getter
-	 *      An optional getter to be used when the property is read. If this parameter is empty, a new {@link ProAct.Property.defaultGetter} is build for <i>this</i>.
+	 *      An optional getter to be used when the property is read.
+	 *      If this parameter is empty, a new {{#crossLink "ProAct.Property/defaultGetter:method"}}{{/crossLink}} is build for <i>this</i>.
 	 * @param {Function} setter
-	 *      An optional setter to be used when the property is written. If this parameter is empty, a new {@link ProAct.Property.defaultSetter} is build for <i>this</i>.
-	 * @see {@link ProAct.ObjectCore}
-	 * @see {@link ProAct.Property.defaultGetter}
-	 * @see {@link ProAct.Property.defaultSetter}
-	 * @see {@link ProAct.Property#init}
-	 * @see {@link ProAct.States.init}
-	 * @see {@link ProAct.States.ready}
+	 *      An optional setter to be used when the property is written.
+	 *      If this parameter is empty, a new {{#crossLink "ProAct.Property/defaultSetter:method"}}{{/crossLink}} is build for <i>this</i>.
 	 */
 	function Property (queueName, proObject, property, getter, setter) {
 	  if (queueName && !P.U.isString(queueName)) {
@@ -4093,64 +4516,71 @@
 	P.U.ex(ProAct.Property, {
 	
 	  /**
-	   * Defines the possible types of the ProAct.Property.
+	   * Defines the possible types of the `ProAct.Property`.
 	   *
-	   * @namespace ProAct.Property.Types
+	   * @class Types
+	   * @namespace ProAct.Property
+	   * @static
 	   */
 	  Types: {
 	
 	    /**
 	     * ProAct.Property for simple types - Numbers, Strings or Booleans.
 	     *
-	     * @memberof ProAct.Property.Types
-	     * @static
-	     * @constant
+	     * @property simple
+	     * @type Number
+	     * @final
+	     * @for ProAct.Property.Types
 	     */
 	    simple: 0, // strings, booleans and numbers
 	
 	    /**
 	     * ProAct.Property for auto computed types - Functions.
 	     *
-	     * @memberof ProAct.Property.Types
-	     * @static
-	     * @constant
+	     * @property auto
+	     * @type Number
+	     * @final
+	     * @for ProAct.Property.Types
 	     */
 	    auto: 1, // functions - dependent
 	
 	    /**
 	     * ProAct.Property for object types - fields containing objects.
 	     *
-	     * @memberof ProAct.Property.Types
-	     * @static
-	     * @constant
+	     * @property object
+	     * @type Number
+	     * @final
+	     * @for ProAct.Property.Types
 	     */
 	    object: 2, // references Pro objects
 	
 	    /**
 	     * ProAct.Property for array types - fields containing arrays.
 	     *
-	     * @memberof ProAct.Property.Types
-	     * @static
-	     * @constant
+	     * @property array
+	     * @type Number
+	     * @final
+	     * @for ProAct.Property.Types
 	     */
 	    array: 3, // arrays
 	
 	    /**
 	     * ProAct.Property for nil types - fields containing null or undefined.
 	     *
-	     * @memberof ProAct.Property.Types
-	     * @static
-	     * @constant
+	     * @property nil
+	     * @type Number
+	     * @final
+	     * @for ProAct.Property.Types
 	     */
 	    nil: 4, // nulls
 	
 	    /**
-	     * Retrieves the right ProAct.Property.Types value from a value.
+	     * Retrieves the right` ProAct.Property.Types` value from a value.
 	     *
-	     * @memberof ProAct.Property.Types
-	     * @static
+	     * @for ProAct.Property.Types
+	     * @method type
 	     * @param {Object} value
-	     *      The value to use to compute the ProAct.Property.Types member for.
+	     *      The value to use to compute the `ProAct.Property.Types` member for.
 	     * @return {Number}
 	     *      The type of the passed value.
 	     */
@@ -4170,20 +4600,23 @@
 	  },
 	
 	  /**
-	   * Generates a default getter function for a ProAct.Property instance.
+	   * Generates a default getter function for a `ProAct.Property` instance.
 	   * <p>
-	   *  Every ProAct.Property instance has a getter and a setter, they can be passed in the constructor, but if left blank,
+	   *  Every `ProAct.Property` instance has a getter and a setter,
+	   *  they can be passed in the constructor, but if left blank,
 	   *  this method is used for creating the getter function.
 	   * </p>
 	   * <p>
-	   *  The default getter function uses {@link ProAct.Property#addCaller} method to track the {@link ProAct.currentCaller} listener if set.
+	   *  The default getter function uses {{#crossLink "ProAct.Property/addCaller:method"}}{{/crossLink}}
+	   *  method to track the {{#crossLink "ProAct/currentCaller:property"}}{{/crossLink}} listener if set.
 	   *  If it is set it is added as a listener to the passed <i>property</i>.
 	   * </p>
 	   *
-	   * @memberof ProAct.Property
+	   * @for ProAct.Property
 	   * @static
+	   * @method defaultGetter
 	   * @param {ProAct.Property} property
-	   *      The ProAct.Property instance to generate a getter function for.
+	   *      The `ProAct.Property` instance to generate a getter function for.
 	   * @return {Function}
 	   *      The generated getter function.
 	   */
@@ -4198,23 +4631,27 @@
 	  /**
 	   * Generates a default setter function for a ProAct.Property instance.
 	   * <p>
-	   *  Every ProAct.Property instance has a setter and a getter, they can be passed in the constructor, but if left blank,
+	   *  Every `ProAct.Property` instance has a setter and a getter,
+	   *  they can be passed in the constructor, but if left blank,
 	   *  this method is used for creating the setter function.
 	   * </p>
 	   * <p>
-	   *  The default setter function uses {@link ProAct.Property#update} method to update all the listeners for <i>change</i>s for the passed
-	   *  <i>property</i>.
+	   *  The default setter function uses the {{#crossLink "ProAct.ActorUtil/update:method"}}{{/crossLink}}
+	   *  method to update all the listeners for <i>change</i>s for the passed <i>property</i>.
 	   * </p>
 	   * <p>
-	   *  It updates the listeners only if the new value of the property is different from the old one (using <i>===</i> for the comparison).
+	   *  It updates the listeners only if the new value of the property
+	   *  is different from the old one (using <i>===</i> for the comparison).
 	   * </p>
 	   *
-	   * @memberof ProAct.Property
+	   * @for ProAct.Property
+	   * @method defaultSetter
 	   * @static
 	   * @param {ProAct.Property} property
-	   *      The ProAct.Property instance to generate a setter function for.
+	   *      The `ProAct.Property` instance to generate a setter function for.
 	   * @param {Function} setter
-	   *      A setter function for the way of setting the value. It can be skipped if the value should be set using <i>=</i>.
+	   *      A setter function for the way of setting the value.
+	   *      It can be skipped if the value should be set using <i>=</i>.
 	   * @return {Function}
 	   *      The generated setter function.
 	   */
@@ -4236,7 +4673,6 @@
 	      }
 	
 	      if (property.type() !== P.P.Types.auto && P.P.Types.type(property.val) !== property.type()) {
-	      //if (property.val === null || property.val === undefined) {
 	        P.P.reProb(property).update();
 	        return;
 	      }
@@ -4246,12 +4682,13 @@
 	  },
 	
 	  /**
-	   * Used to define the managed by a ProAct.Property instance field of the passed <i>obj</i>.
+	   * Used to define the managed by a `ProAct.Property` instance field of the passed <i>obj</i>.
 	   * <p>
 	   *  The field is writable, enumerable and configurable.
 	   * </p>
 	   *
-	   * @memberof ProAct.Property
+	   * @for ProAct.Property
+	   * @method defineProp
 	   * @static
 	   * @param {Object} obj
 	   *      The object which field should be defined as a property.
@@ -4274,14 +4711,17 @@
 	  /**
 	   * Recreates a property, using its current value.
 	   * <p>
-	   *  The re-definition works by using {@link ProAct.Property#destroy} to destroy the passed <i>property</i> first, and then the
-	   *  {@link ProAct.ObjectCore#makeProp} method is called of the {@link ProAct.ObjectCore} of the object the <i>property</i> belongs to.
+	   *  The re-definition works by using {{#crossLink "ProAct.Property/destroy:method"}}{{/crossLink}}
+	   *  to destroy the passed <i>property</i> first, and then the
+	   *  {{#crossLink "ProAct.ObjectCore/makeProp:method"}}{{/crossLink}} method is called of the
+	   *  {{#crossLink "ProAct.ObjectCore"}}{{/crossLink}} of the object the <i>property</i> belongs to.
 	   * </p>
 	   * <p>
-	   *  This way a new ProAct.Property instance is created to replace the passed one.
+	   *  This way a new `ProAct.Property` instance is created to replace the passed one.
 	   * </p>
 	   *
-	   * @memberof ProAct.Property
+	   * @for ProAct.Property
+	   * @method reProb
 	   * @static
 	   * @param {ProAct.Property} property
 	   *      The ProAct.Property instance to re-define.
@@ -4301,10 +4741,52 @@
 	    return po.__pro__.makeProp(p, l);
 	  },
 	
+	  /**
+	   * Creates a constant property. It's value can not be changed.
+	   *
+	   * ```
+	   *  var property = ProAct.Property.constant(5);
+	   *
+	   *  console.log(property.get()); // 5
+	   *
+	   *  property.set(4);
+	   *  console.log(property.get()); // 5
+	   * ```
+	   *
+	   * @for ProAct.Property
+	   * @static
+	   * @method constant
+	   * @param {Object} val The value of the property. Can not be changed.
+	   * @param {Object} meta Optional meta data for the property.
+	   * @param {String} queueName The name of the queue all the updates should be pushed to. By default the default queue is used.
+	   * @return {ProAct.Property} The new constant property.
+	   */
 	  constant: function (val, meta, queueName) {
 	    return P.P.value(val, meta, queueName).close();
 	  },
 	
+	  /**
+	   * Creates a value property. It's value can be updated any time and other properties may depend on it.
+	   *
+	   * This propety is eager - this means that it is initialized automatically even if it's not used.
+	   *
+	   * ```
+	   *  var property = ProAct.Property.value(5);
+	   *
+	   *  console.log(property.get()); // 5
+	   *
+	   *  property.set(4);
+	   *  console.log(property.get()); // 4
+	   * ```
+	   *
+	   * @for ProAct.Property
+	   * @static
+	   * @method value
+	   * @param {Object} val The value of the property.
+	   * @param {Object} meta Optional meta data for the property.
+	   * @param {String} queueName The name of the queue all the updates should be pushed to. By default the default queue is used.
+	   * @return {ProAct.Property} The new value property.
+	   */
 	  value: function (val, meta, queueName) {
 	    var property = P.P.lazyValue(val, meta, queueName);
 	    property.get();
@@ -4312,6 +4794,28 @@
 	    return property;
 	  },
 	
+	  /**
+	   * Creates a lazy initialized value property. It's value can be updated any time and other properties may depend on it.
+	   *
+	   * Being lazy means, that the property won't be initialized until it is read (it's get() method is called).
+	   *
+	   * ```
+	   *  var property = ProAct.Property.lazyValue(5);
+	   *
+	   *  console.log(property.get()); // 5
+	   *
+	   *  property.set(4);
+	   *  console.log(property.get()); // 4
+	   * ```
+	   *
+	   * @for ProAct.Property
+	   * @static
+	   * @method lazyValue
+	   * @param {Object} val The value of the property.
+	   * @param {Object} meta Optional meta data for the property.
+	   * @param {String} queueName The name of the queue all the updates should be pushed to. By default the default queue is used.
+	   * @return {ProAct.Property} The new lazily initialized value property.
+	   */
 	  lazyValue: function (val, meta, queueName) {
 	    if (meta && (P.U.isString(meta) || P.U.isArray(meta))) {
 	      meta = {
@@ -4340,20 +4844,21 @@
 	  /**
 	   * Reference to the constructor of this object.
 	   *
-	   * @memberof ProAct.Property
-	   * @instance
-	   * @constant
-	   * @default ProAct.Property
+	   * @property constructor
+	   * @type ProAct.Property
+	   * @final
+	   * @for ProAct.Property
 	   */
 	  constructor: ProAct.Property,
 	
 	  /**
-	   * Retrieves the {@link ProAct.Property.Types} value of <i>this</i> property.
+	   * Retrieves the {{#crossLink "ProAct.Property.Types"}}{{/crossLink}} value of <i>this</i> property.
 	   * <p>
-	   *  For instances of the base class - ProAct.Property it is {@link ProAct.Property.Types.simple}.
+	   *  For instances of the base class - `ProAct.Property` it is
+	   *  {{#crossLink "ProAct.Property.Types/simple:property"}}{{/crossLink}}.
 	   * </p>
 	   *
-	   * @memberof ProAct.Property
+	   * @for ProAct.Property
 	   * @instance
 	   * @method type
 	   * @return {Number}
@@ -4364,23 +4869,23 @@
 	  },
 	
 	  /**
-	   * Creates the <i>event</i> to be send to the listeners of this ProAct.Property on update.
+	   * Creates the <i>event</i> to be send to the listeners of this `ProAct.Property` on update.
 	   * <p>
-	   *  The <i>event</i> should be an instance of {@link ProAct.Event}.
+	   *  The <i>event</i> should be an instance of {{#crossLink "ProAct.Event"}}{{/crossLink}}.
 	   * </p>
 	   * <p>
-	   *  By default this method returns {@link ProAct.Event.Types.value} event with target the property name and arguments:
+	   *  By default this method returns {{#crossLink "ProAct.Event.Types/value:property"}}{{/crossLink}} event with target the property name and arguments:
 	   *  <ul>
-	   *    <li>The object this ProAct.Property manages a field for.</li>
+	   *    <li>The object this `ProAct.Property` manages a field for.</li>
 	   *    <li>The old value of this property.</li>
 	   *    <li>The new value of this property.</li>
 	   *  </ul>
 	   * </p>
 	   *
-	   * @memberof ProAct.Property
+	   * @for ProAct.Property
 	   * @instance
 	   * @method makeEvent
-	   * @default {ProAct.Event} with type {@link ProAct.Event.Types.value}
+	   * @default {ProAct.Event} with type {{#crossLink "ProAct.Event.Types/value:property"}}{{/crossLink}}.
 	   * @param {ProAct.Event} source
 	   *      The source event of the event. It can be null
 	   * @return {ProAct.ValueEvent}
@@ -4391,7 +4896,7 @@
 	  },
 	
 	  /**
-	   * Creates the <i>listener</i> of this ProAct.Property.
+	   * Creates the <i>listener</i> of this `ProAct.Property`.
 	   * <p>
 	   *  This listener turns the observable in a observer.
 	   * </p>
@@ -4402,10 +4907,10 @@
 	   *  It has a <i>property</i> field set to <i>this</i>.
 	   * </p>
 	   * <p>
-	   *  On value changes the <i><this</i> value is set to the new value using the {@link ProAct.Actor#transform} to transform it.
+	   *  On value changes the <i><this</i> value is set to the new value using the {{#crossLink "ProAct.Actor/transform:method"}}{{/crossLink}} to transform it.
 	   * </p>
 	   *
-	   * @memberof ProAct.Property
+	   * @for ProAct.Property
 	   * @instance
 	   * @method makeListener
 	   * @return {Object}
@@ -4434,13 +4939,13 @@
 	  /**
 	   * Initializes this property.
 	   * <p>
-	   *  First the property is defined as a field in its object, using {@link ProAct.Property.defineProp}.
+	   *  First the property is defined as a field in its object,
+	   *  using {{#crossLink "ProAct.Property/defineProp:method"}}{{/crossLink}}.
 	   * </p>
 	   *
-	   * @memberof ProAct.Property
+	   * @for ProAct.Property
 	   * @instance
 	   * @method doInit
-	   * @see {@link ProAct.Actor#init}
 	   */
 	  doInit: function () {
 	    P.P.defineProp(this.proObject, this.property, this.get, this.set);
@@ -4465,7 +4970,7 @@
 	    }
 	  },
 	
-	  doDestroy: function () {
+	  beforeDestroy: function () {
 	    delete this.proObject.__pro__.properties[this.property];
 	    this.oldVal = undefined;
 	
@@ -5812,148 +6317,6 @@
 	P.PP.registerProvider(new P.AutoPropertyProvider());
 	P.PP.registerProvider(new P.ArrayPropertyProvider());
 	P.PP.registerProvider(new P.ObjectPropertyProvider());
-	
-	/**
-	 * <p>
-	 *  Constructs a ProAct.Core. The core is an ProAct.Actor which can be used to manage other {@link ProAct.Actor} objects or shells arround ProAct.Actor objects.
-	 * </p>
-	 * <p>
-	 *  For example a shell can be a plain old JavaScript object; The core will be in charge of creating {@link ProAct.Property} for every field of the shell.
-	 * </p>
-	 * <p>
-	 *  The idea of the core is to inject observer-observable capabilities in normal objects.
-	 * </p>
-	 * <p>
-	 *  ProAct.Core is an abstract class, that has a {@link ProAct.States} state. Its initializing logic should be implemented in an extender.
-	 * </p>
-	 * <p>
-	 *  ProAct.Core is used as a parent for the {@link ProAct.Actor}s it manages, so it can be passed as a listener object - defines a <i>call method</i>.
-	 * </p>
-	 * <p>
-	 *  ProAct.Core is part of the core module of ProAct.js.
-	 * </p>
-	 *
-	 * @class ProAct.Core
-	 * @extends ProAct.Actor
-	 * @param {Object} shell
-	 *      The shell arrounf this core. This ProAct.Core manages observer-observable behavior for this <i>shell</i> object.
-	 * @param {Object} meta
-	 *      Optional meta data to be used to define the observer-observable behavior of the <i>shell</i>.
-	 * @see {@link ProAct.States}
-	 */
-	function Core (shell, meta) {
-	  this.shell = shell;
-	  this.state = P.States.init;
-	  this.meta = meta || {};
-	  this.queueName = (this.meta.p && this.meta.p.queueName &&
-	                    P.U.isString(this.meta.p.queueName)) ? this.meta.p.queueName : null;
-	
-	  P.Actor.call(this, this.queueName); // Super!
-	}
-	ProAct.Core = P.C = Core;
-	
-	ProAct.Core.prototype = P.U.ex(Object.create(P.Actor.prototype), {
-	
-	  /**
-	   * Reference to the constructor of this object.
-	   *
-	   * @memberof ProAct.Core
-	   * @instance
-	   * @constant
-	   * @default ProAct.Core
-	   */
-	  constructor: ProAct.Core,
-	
-	  /**
-	   * A function to be set to the <i>shell</i> object's <b>p</b> field (if it is configured in @{link ProAct.Configuration}).
-	   * <p>
-	   *  This function is the link to the this ProAct.Core of the <i>shell</i>. It can be overridden to return different aspects of
-	   *  the core depending on parameters passed.
-	   * </p>
-	   *
-	   * @memberof ProAct.Core
-	   * @instance
-	   * @method value
-	   * @default {this}
-	   * @return {Object}
-	   *      Some aspects of <i>this</i> ProAct.Core.
-	   */
-	  value: function () {
-	    return this;
-	  },
-	
-	  /**
-	   * Initializes <i>this</i> ProAct.Core. This method should be called when the core should become active.
-	   * <p>
-	   *  The main idea of the method is to change the {@link ProAct.States} state of <i>this</i> to {@link ProAct.States.ready}, by
-	   *  settuping everything needed by the shell to has observer-observable logic.
-	   * </p>
-	   * <p>
-	   *  The abstract {@link ProAct.Core#setup} method is called for the actual setup. If it throws an error, <i>this</i> state
-	   *  is set to {@link ProAct.States.error} and the core stays inactive.
-	   * </p>
-	   *
-	   * @memberof ProAct.Core
-	   * @instance
-	   * @method prob
-	   * @return {ProAct.Core}
-	   *      <i>this</i>
-	   * @see {@link ProAct.Core#setup}
-	   * @see {@link ProAct.States}
-	   */
-	  prob: function () {
-	    var self = this,
-	        conf = ProAct.Configuration,
-	        keyprops = conf.keyprops,
-	        keypropList = conf.keypropList;
-	
-	    try {
-	      this.setup();
-	
-	      if (keyprops && keypropList.indexOf('p') !== -1) {
-	        P.U.defValProp(this.shell, 'p', false, false, false, P.U.bind(this, this.value));
-	      }
-	
-	      this.state = P.States.ready;
-	    } catch (e) {
-	      this.state = P.States.error;
-	      throw e;
-	    }
-	
-	    return this;
-	  },
-	
-	  /**
-	   * Abstract method called by {@link ProAct.Core#prob} for the actual initialization of <i>this</i> core.
-	   *
-	   * @memberof ProAct.Core
-	   * @instance
-	   * @abstract
-	   * @method setup
-	   * @see {@link ProAct.Core#prob}
-	   */
-	  setup: function () {
-	    throw Error('Abstract, implement!');
-	  },
-	
-	  /**
-	   * ProAct.Core can be used as a parent listener for other {@link ProAct.Actor}s, so it defines the <i>call</i> method.
-	   * <p>
-	   *  By default this method calls {@link ProAct.Actor#update} of <i>this</i> with the passed <i>event</i>.
-	   * </p>
-	   *
-	   * @memberof ProAct.Core
-	   * @instance
-	   * @method call
-	   * @param {Object} event
-	   *      The value/event that this listener is notified for.
-	   * @see {@link ProAct.Actor#update}
-	   */
-	  call: function (event) {
-	    ActorUtil.update.call(this, event);
-	  }
-	});
-	
 	
 	/**
 	 * <p>
