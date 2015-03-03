@@ -1,22 +1,24 @@
 /**
  * <p>
- *  Constructs a ProAct.ArrayProperty. The properties are simple {@link ProAct.Actor}s with state. The array property
- *  has a state of a JavaScript array value.
+ *  Constructs a `ProAct.ArrayProperty`. A property is a simple {{#crossLink "ProAct.Actor"}}{{/crossLink}} with state.
  * </p>
  * <p>
- *  The value of ProAct.ArrayProperty is array, turned to reactive ProAct.js array - {@link ProAct.Array}.
+ *  The value of `ProAct.ArrayProperty` is an array, turned to reactive ProAct.js array -
+ *  {{#crossLink "ProAct.Array"}}{{/crossLink}}.
  * </p>
  * <p>
  *  On changing the array value to another array the listeners for indices/length are moved from the old value to the new value.
  * </p>
  * <p>
- *  If set to null or undefined, the property is re-defined, using {@link ProAct.Property.reProb}
+ *  If set to null or undefined, the property is re-defined, using
+ *  {{#crossLink "ProAct.Property/reProb:method"}}{{/crossLink}}.
  * </p>
  * <p>
- *  ProAct.ArrayProperty is lazy - its object is made reactive on the first read of the property. Its state is set to {@link ProAct.States.ready} on the first read too.
+ *  `ProAct.ArrayProperty` is lazy - its object is made reactive on the first read of the property.
+ *  Its state is set to {{#crossLink "ProAct.States/ready:property"}}{{/crossLink}} on the first read too.
  * </p>
  * <p>
- *  ProAct.ArrayProperty is part of the properties module of ProAct.js.
+ *  `ProAct.ArrayProperty` is part of the proact-arrays module of ProAct.js.
  * </p>
  *
  * @class ProAct.ArrayProperty
