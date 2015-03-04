@@ -130,20 +130,21 @@ ProAct.ArrayProperty.prototype = P.U.ex(Object.create(P.P.prototype), {
   /**
    * Reference to the constructor of this object.
    *
-   * @memberof ProAct.ArrayProperty
-   * @instance
-   * @constant
-   * @default ProAct.ArrayProperty
+   * @property constructor
+   * @type ProAct.ArrayProperty
+   * @final
+   * @for ProAct.ArrayProperty
    */
   constructor: ProAct.ArrayProperty,
 
   /**
-   * Retrieves the {@link ProAct.Property.Types} value of <i>this</i> property.
+   * Retrieves the {{#crossLink "ProAct.Property.Types"}}{{/crossLink}} value of <i>this</i> property.
    * <p>
-   *  For ProAct.ArrayProperty this is {@link ProAct.Property.Types.array}
+   *  For instances of the `ProAct.ArrayProperty` class, it is
+   *  {{#crossLink "ProAct.Property.Types/array:property"}}{{/crossLink}}.
    * </p>
    *
-   * @memberof ProAct.ArrayProperty
+   * @for ProAct.ArrayProperty
    * @instance
    * @method type
    * @return {Number}
@@ -156,10 +157,12 @@ ProAct.ArrayProperty.prototype = P.U.ex(Object.create(P.P.prototype), {
   /**
    * Called automatically after initialization of this property.
    * <p>
-   *  For ProAct.ArrayProperty it does nothing - the real initialization is lazy and is performed on the first read of <i>this</i>.
+   *  For `ProAct.ArrayProperty` it does nothing -
+   *  the real initialization is lazy and is performed on the first read of <i>this</i>.
    * </p>
    *
-   * @memberof ProAct.ArrayProperty
+   * @for ProAct.ArrayProperty
+   * @protected
    * @instance
    * @method afterInit
    */
