@@ -1,6 +1,11 @@
 /**
+ * @module proact-properties
+ */
+
+/**
  * <p>
- *  Constructs a `ProAct.ArrayProperty`. A property is a simple {{#crossLink "ProAct.Actor"}}{{/crossLink}} with state.
+ *  Constructs a `ProAct.ArrayProperty`.
+ *  A property is a simple {{#crossLink "ProAct.Actor"}}{{/crossLink}} with state.
  * </p>
  * <p>
  *  The value of `ProAct.ArrayProperty` is an array, turned to reactive ProAct.js array -
