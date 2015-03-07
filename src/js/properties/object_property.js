@@ -140,20 +140,21 @@ ProAct.ObjectProperty.prototype = P.U.ex(Object.create(P.P.prototype), {
   /**
    * Reference to the constructor of this object.
    *
-   * @memberof ProAct.ObjectProperty
-   * @instance
-   * @constant
-   * @default ProAct.ObjectProperty
+   * @property constructor
+   * @type ProAct.ObjectProperty
+   * @final
+   * @for ProAct.ObjectProperty
    */
   constructor: ProAct.ObjectProperty,
 
   /**
-   * Retrieves the {@link ProAct.Property.Types} value of <i>this</i> property.
+   * Retrieves the {{#crossLink "ProAct.Property.Types"}}{{/crossLink}} value of <i>this</i> property.
    * <p>
-   *  For ProAct.ObjectProperty this is {@link ProAct.Property.Types.object}
+   *  For instances of the `ProAct.ObjectProperty` class, it is
+   *  {{#crossLink "ProAct.Property.Types/object:property"}}{{/crossLink}}.
    * </p>
    *
-   * @memberof ProAct.ObjectProperty
+   * @for ProAct.ObjectProperty
    * @instance
    * @method type
    * @return {Number}
@@ -166,10 +167,12 @@ ProAct.ObjectProperty.prototype = P.U.ex(Object.create(P.P.prototype), {
   /**
    * Called automatically after initialization of this property.
    * <p>
-   *  For ProAct.ObjectProperty it does nothing - the real initialization is lazy and is performed on the first read of <i>this</i>.
+   *  For `ProAct.ObjectProperty` it does nothing -
+   *  the real initialization is lazy and is performed on the first read of <i>this</i>.
    * </p>
    *
-   * @memberof ProAct.ObjectProperty
+   * @for ProAct.ObjectProperty
+   * @protected
    * @instance
    * @method afterInit
    */
