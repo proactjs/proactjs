@@ -1,26 +1,34 @@
 /**
+ * @module proact-properties
+ */
+
+/**
  * <p>
- *  Constructs a ProAct.ObjectProperty. The properties are simple {@link ProAct.Actor}s with state. The object property
+ *  Constructs a `ProAct.ObjectProperty`.
+ *  The properties are simple {{#crossLink "ProAct.Actor"}}{{/crossLink}}s with state. The object property
  *  has a state of a JavaScript object value.
  * </p>
  * <p>
- *  The value of ProAct.ObjectProperty is object, turned to reactive ProAct.js object recursively.
+ *  The value of `ProAct.ObjectProperty` is object, turned to reactive ProAct.js object recursively.
  * </p>
  * <p>
- *  On changing the object value to another object the listeners for fields with the same name in the objects, are moved from the old value's fields to the new value's fields.
+ *  On changing the object value to another object the listeners for fields with the same name in the objects,
+ *  are moved from the old value's fields to the new value's fields.
  * </p>
  * <p>
- *  If set to null or undefined, the property is re-defined, using {@link ProAct.Property.reProb}
+ *  If set to null or undefined, the property is re-defined, using {{#crossLink "ProAct.Property/reProb:method"}}{{/crossLink}}
  * </p>
  * <p>
- *  ProAct.ObjectProperty is lazy - its object is made reactive on the first read of the property. Its state is set to {@link ProAct.States.ready} on the first read too.
+ *  `ProAct.ObjectProperty` is lazy - its object is made reactive on the first read of the property.
+ *  Its state is set to {{#crossLink "ProAct.States/ready:property"}}{{/crossLink}} on the first read too.
  * </p>
  * <p>
- *  ProAct.ObjectProperty is part of the properties module of ProAct.js.
+ *  `ProAct.ObjectProperty` is part of the proact-properties module of ProAct.js.
  * </p>
  *
  * @class ProAct.ObjectProperty
  * @extends ProAct.Property
+ * @constructor
  * @param {String} queueName
  *      The name of the queue all the updates should be pushed to.
  *      <p>
@@ -35,9 +43,6 @@
  *      A plain JavaScript object, holding a field, this property will represent.
  * @param {String} property
  *      The name of the field of the object, this property should represent.
- * @see {@link ProAct.ObjectCore}
- * @see {@link ProAct.States.init}
- * @see {@link ProAct.States.ready}
  */
 function ObjectProperty (queueName, proObject, property) {
   if (queueName && !P.U.isString(queueName)) {
