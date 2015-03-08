@@ -4614,6 +4614,7 @@
 	   *
 	   * @for ProAct.Property
 	   * @static
+	   * @private
 	   * @method defaultGetter
 	   * @param {ProAct.Property} property
 	   *      The `ProAct.Property` instance to generate a getter function for.
@@ -4645,6 +4646,7 @@
 	   * </p>
 	   *
 	   * @for ProAct.Property
+	   * @private
 	   * @method defaultSetter
 	   * @static
 	   * @param {ProAct.Property} property
@@ -4689,6 +4691,7 @@
 	   *
 	   * @for ProAct.Property
 	   * @method defineProp
+	   * @private
 	   * @static
 	   * @param {Object} obj
 	   *      The object which field should be defined as a property.
@@ -4721,6 +4724,7 @@
 	   * </p>
 	   *
 	   * @for ProAct.Property
+	   * @private
 	   * @method reProb
 	   * @static
 	   * @param {ProAct.Property} property
@@ -4884,6 +4888,7 @@
 	   *
 	   * @for ProAct.Property
 	   * @instance
+	   * @protected
 	   * @method makeEvent
 	   * @default {ProAct.Event} with type {{#crossLink "ProAct.Event.Types/value:property"}}{{/crossLink}}.
 	   * @param {ProAct.Event} source
@@ -4912,6 +4917,7 @@
 	   *
 	   * @for ProAct.Property
 	   * @instance
+	   * @protected
 	   * @method makeListener
 	   * @return {Object}
 	   *      The <i>listener of this ProAct.Property</i>.
@@ -4945,6 +4951,7 @@
 	   *
 	   * @for ProAct.Property
 	   * @instance
+	   * @protected
 	   * @method doInit
 	   */
 	  doInit: function () {
@@ -4953,12 +4960,14 @@
 	  },
 	
 	  /**
-	   * Uses {@link ProAct.currentCaller} to automatically add a new listener to this property if the caller is set.
+	   * Uses {{#crossLink "ProAct/currentCaller:property"}}{{/crossLink}} to
+	   * automatically add a new listener to this property if the caller is set.
 	   * <p>
 	   *  This method is used by the default getter to make every reader of the property a listener to it.
 	   * </p>
 	   *
-	   * @memberof ProAct.Property
+	   * @for ProAct.Property
+	   * @protected
 	   * @instance
 	   * @method addCaller
 	   */
@@ -4970,6 +4979,18 @@
 	    }
 	  },
 	
+	  /**
+	   * A hook that is called right before destruction, the extenders use it to clean up resources.
+	   *
+	   * The `ProAct.Property` deletes its state and is removed from its core container.
+	   *
+	   * Don't override it.
+	   *
+	   * @for ProAct.Property
+	   * @protected
+	   * @instance
+	   * @method beforeDestroy
+	   */
 	  beforeDestroy: function () {
 	    delete this.proObject.__pro__.properties[this.property];
 	    this.oldVal = undefined;
@@ -4982,18 +5003,134 @@
 	    delete this.v;
 	  },
 	
+	  /**
+	   * Creates a new `ProAct.Property` instance with source <i>this</i> and mapping
+	   * the passed <i>mapping function</i>.
+	   *
+	   * When the source is changed, the product of this operator is updated too.
+	   *
+	   * ```
+	   *  var val = ProAct.Property.value(5);
+	   *  var plusOne = val.map(function (v) {
+	   *    return v + 1;
+	   *  });
+	   *
+	   *  plusOne.get(); // 6
+	   *
+	   *  val.set(4);
+	   *  plusOne.get(); // 5
+	   * ```
+	   *
+	   * or
+	   *
+	   * ```
+	   *  var positive = val.map('+');
+	   *
+	   *  val.set(-4);
+	   *
+	   *  positive.get(); // 4
+	   * ```
+	   *
+	   * @for ProAct.Property
+	   * @instance
+	   * @method map
+	   * @param {Object|Function|Strin} mappingFunction
+	   *      Function or object with a <i>call method</i> to use as map function.
+	   *      Can be string for predefined mapping functions.
+	   * @return {ProAct.Property}
+	   *      A new `ProAct.Property` instance with the <i>mapping</i> applied.
+	   */
 	  map: function (mappingFunction) {
 	    var prop = P.P.value(this.val, {}, this.queueName).mapping(mappingFunction).into(this);
 	    ActorUtil.update.call(this);
 	    return prop;
 	  },
 	
+	  /**
+	   * Creates a new `ProAct.Property` instance with source <i>this</i> and filtering
+	   * the passed <i>filtering function</i>.
+	   *
+	   * When the source changes, the product, may be updated.
+	   *
+	   * TODO On creation if the filter fails, the property keeps the original value.
+	   * What to do? Also these kinds of properties shouldn't be set manually.
+	   *
+	   * ```
+	   *  var prop = ProAct.Property.value(4);
+	   *  var even = sourceActor.filter(function (el) {
+	   *    return el % 2 == 0;
+	   *  });
+	   *
+	   *  even.get(); // 4
+	   *
+	   *  prop.set(5);
+	   *  even.get(); // 4
+	   *
+	   *  prop.set(6);
+	   *  even.get(); // 6
+	   * ```
+	   *
+	   * or
+	   *
+	   * ```
+	   *  var actor = sourceActor.filter('odd');
+	   *
+	   * ```
+	   *
+	   * @for ProAct.Actor
+	   * @instance
+	   * @method filter
+	   * @param {Object} filteringFunction
+	   *      The filtering function or object with a call method, should return boolean.
+	   * @return {ProAct.Property}
+	   *      A new ProAct.Actor instance with the <i>filtering</i> applied.
+	   */
 	  filter: function (filteringFunction) {
 	    var prop = P.P.value(this.val, {}, this.queueName).filtering(filteringFunction).into(this);
+	
 	    ActorUtil.update.call(this);
 	    return prop;
 	  },
 	
+	  /**
+	   * Creates a new `ProAct.Property` instance with source <i>this</i> and accumulation
+	   * the passed <i>accumulation function</i>.
+	   *
+	   * Some examples:
+	   *
+	   * ```
+	   *  var prop = ProAct.Property.value(3);
+	   *  var acc = prop.accumulate(0, function (current, el) {
+	   *    return current + el;
+	   *  });
+	   *
+	   *  acc.get(); // 3
+	   *
+	   *  prop.set(5);
+	   *
+	   *  acc.get(); // 8
+	   *
+	   *  prop.set(2);
+	   *
+	   *  acc.get(); // 10
+	   * ```
+	   *
+	   * or
+	   *
+	   * ```
+	   *  var acc = prop.accumulate('+'); // The same as the above if the DSL module is present.
+	   * ```
+	   *
+	   * @for ProAct.Property
+	   * @instance
+	   * @method accumulate
+	   * @param {Object} initVal
+	   *      Initial value for the accumulation. For example '0' for sum.
+	   * @param {Object} accumulationFunction
+	   *      The function to accumulate.
+	   * @return {ProAct.Property}
+	   *      A new `ProAct.Property` instance with the <i>accumulation</i> applied.
+	   */
 	  accumulate: function (initVal, accumulationFunction) {
 	    var prop = P.P.value(this.val, {}, this.queueName).accumulation(initVal, accumulationFunction).into(this);
 	    ActorUtil.update.call(this);
@@ -5001,12 +5138,12 @@
 	  },
 	
 	  /**
-	   * The <b>toString()</b> method returns a string representing this ProAct.Property.
+	   * The <b>toString()</b> method returns a string representing this `ProAct.Property`.
 	   * <p>
 	   *  The string representation is the value of <i>this</i> property.
 	   * </p>
 	   *
-	   * @memberof ProAct.Property
+	   * @for ProAct.Property
 	   * @instance
 	   * @method toString
 	   */
@@ -5020,6 +5157,16 @@
 	});
 	
 	P.U.ex(P.Actor.prototype, {
+	
+	  /**
+	   * Creates a {{{#crossLink "ProAct.Property"}}{{/crossLink}} instance,
+	   * dependent on this.
+	   * Comes from the `proact-properties` module.
+	   *
+	   * @for ProAct.Actor
+	   * @instance
+	   * @method toProperty
+	   */
 	  toProperty: function () {
 	    return P.P.value(this.val, {}, this.queueName).into(this);
 	  }
@@ -5400,27 +5547,30 @@
 	
 	/**
 	 * <p>
-	 *  Constructs a ProAct.ArrayProperty. The properties are simple {@link ProAct.Actor}s with state. The array property
-	 *  has a state of a JavaScript array value.
+	 *  Constructs a `ProAct.ArrayProperty`. A property is a simple {{#crossLink "ProAct.Actor"}}{{/crossLink}} with state.
 	 * </p>
 	 * <p>
-	 *  The value of ProAct.ArrayProperty is array, turned to reactive ProAct.js array - {@link ProAct.Array}.
+	 *  The value of `ProAct.ArrayProperty` is an array, turned to reactive ProAct.js array -
+	 *  {{#crossLink "ProAct.Array"}}{{/crossLink}}.
 	 * </p>
 	 * <p>
 	 *  On changing the array value to another array the listeners for indices/length are moved from the old value to the new value.
 	 * </p>
 	 * <p>
-	 *  If set to null or undefined, the property is re-defined, using {@link ProAct.Property.reProb}
+	 *  If set to null or undefined, the property is re-defined, using
+	 *  {{#crossLink "ProAct.Property/reProb:method"}}{{/crossLink}}.
 	 * </p>
 	 * <p>
-	 *  ProAct.ArrayProperty is lazy - its object is made reactive on the first read of the property. Its state is set to {@link ProAct.States.ready} on the first read too.
+	 *  `ProAct.ArrayProperty` is lazy - its object is made reactive on the first read of the property.
+	 *  Its state is set to {{#crossLink "ProAct.States/ready:property"}}{{/crossLink}} on the first read too.
 	 * </p>
 	 * <p>
-	 *  ProAct.ArrayProperty is part of the properties module of ProAct.js.
+	 *  `ProAct.ArrayProperty` is part of the proact-arrays module of ProAct.js.
 	 * </p>
 	 *
 	 * @class ProAct.ArrayProperty
 	 * @extends ProAct.Property
+	 * @constructor
 	 * @param {String} queueName
 	 *      The name of the queue all the updates should be pushed to.
 	 *      <p>
@@ -5435,9 +5585,6 @@
 	 *      A plain JavaScript object, holding a field, this property will represent.
 	 * @param {String} property
 	 *      The name of the field of the object, this property should represent.
-	 * @see {@link ProAct.ObjectCore}
-	 * @see {@link ProAct.States.init}
-	 * @see {@link ProAct.States.ready}
 	 */
 	function ArrayProperty (queueName, proObject, property) {
 	  if (queueName && !P.U.isString(queueName)) {
@@ -5530,20 +5677,21 @@
 	  /**
 	   * Reference to the constructor of this object.
 	   *
-	   * @memberof ProAct.ArrayProperty
-	   * @instance
-	   * @constant
-	   * @default ProAct.ArrayProperty
+	   * @property constructor
+	   * @type ProAct.ArrayProperty
+	   * @final
+	   * @for ProAct.ArrayProperty
 	   */
 	  constructor: ProAct.ArrayProperty,
 	
 	  /**
-	   * Retrieves the {@link ProAct.Property.Types} value of <i>this</i> property.
+	   * Retrieves the {{#crossLink "ProAct.Property.Types"}}{{/crossLink}} value of <i>this</i> property.
 	   * <p>
-	   *  For ProAct.ArrayProperty this is {@link ProAct.Property.Types.array}
+	   *  For instances of the `ProAct.ArrayProperty` class, it is
+	   *  {{#crossLink "ProAct.Property.Types/array:property"}}{{/crossLink}}.
 	   * </p>
 	   *
-	   * @memberof ProAct.ArrayProperty
+	   * @for ProAct.ArrayProperty
 	   * @instance
 	   * @method type
 	   * @return {Number}
@@ -5556,10 +5704,12 @@
 	  /**
 	   * Called automatically after initialization of this property.
 	   * <p>
-	   *  For ProAct.ArrayProperty it does nothing - the real initialization is lazy and is performed on the first read of <i>this</i>.
+	   *  For `ProAct.ArrayProperty` it does nothing -
+	   *  the real initialization is lazy and is performed on the first read of <i>this</i>.
 	   * </p>
 	   *
-	   * @memberof ProAct.ArrayProperty
+	   * @for ProAct.ArrayProperty
+	   * @protected
 	   * @instance
 	   * @method afterInit
 	   */
