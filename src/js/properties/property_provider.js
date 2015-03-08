@@ -1,6 +1,10 @@
 /**
+ * @module proact-properties
+ */
+
+/**
  * <p>
- *  Constructor for ProAct.PropertyProvider. The ProAct.PropertyProvider is an abstract class.
+ *  The `ProAct.PropertyProvider` is an abstract class.
  * </p>
  * <p>
  *  Many providers can be registered for many kinds of properties.
@@ -8,68 +12,71 @@
  * <p>
  *  When a ProAct.js object is initialized its fields are turned into properties.
  *  Depending on the type and the name of the field, as well as meta information the valid
- *  type of {@link ProAct.Property} is created and used. The PropertyProviders have 'filter'
- *  method and depending on it the valid kind is decided.
+ *  type of {{#crossLink "ProAct.Property"}}{{/crossLink}} is created and used.
+ *  The `PropertyProviders` have 'filter' method and depending on it the valid kind is decided.
  * </p>
  * <p>
- *  ProAct.PropertyProvider is part of the properties module of ProAct.js.
+ *  ProAct.PropertyProvider is part of the proact-properties module of ProAct.js.
  * </p>
  *
  * @class ProAct.PropertyProvider
- * @see {@link ProAct.ObjectCore}
+ * @constructor
  */
 function PropertyProvider () {}
 ProAct.PropertyProvider = P.PP = PropertyProvider;
 
 
 (function (P) {
-  var providers =  [];
+  var providers = [];
 
   P.U.ex(P.PP, {
 
 
     /**
-     * Registers a ProAct.PropertyProvider.
+     * Registers a `ProAct.PropertyProvider`.
      * <p>
-     *  The provider is appended in the end of the list of ProAct.PropertyProviders.
+     *  The provider is appended in the end of the list of `ProAct.PropertyProviders`.
      * </p>
      * <p>
-     *  When a property must be provided if there is a ProAct.PropertyProvider registered before
+     *  When a property must be provided if there is a `ProAct.PropertyProvider` registered before
      *  the passed <i>propertyProvider</i>, with valid filtering for the passed field, it will
      *  be used instead.
      * </p>
      *
-     * @memberof ProAct.PropertyProvider
+     * @for ProAct.PropertyProvider
+     * @method registerProvider
      * @static
      * @param {ProAct.PropertyProvider} propertyProvider
-     *      The ProAct.PropertyProvider to register.
+     *      The `ProAct.PropertyProvider` to register.
      */
     registerProvider: function (propertyProvider) {
       providers.push(propertyProvider);
     },
 
     /**
-     * Registers a ProAct.PropertyProvider.
+     * Registers a `ProAct.PropertyProvider`.
      * <p>
-     *  The provider is prepended in the beginning of the list of ProAct.PropertyProviders.
+     *  The provider is prepended in the beginning of the list of `ProAct.PropertyProviders`.
      * </p>
      * <p>
      *  It's filtering will be called before any other registered provider.
      * </p>
      *
-     * @memberof ProAct.PropertyProvider
+     * @for ProAct.PropertyProvider
+     * @method prependProvider
      * @static
      * @param {ProAct.PropertyProvider} propertyProvider
-     *      The ProAct.PropertyProvider to register.
+     *      The `ProAct.PropertyProvider` to register.
      */
     prependProvider: function (propertyProvider) {
       providers.unshift(propertyProvider);
     },
 
     /**
-     * Removes a ProAct.PropertyProvider from the list of ProAct.PropertyProviders.
+     * Removes a `ProAct.PropertyProvider` from the list of the registered `ProAct.PropertyProviders`.
      *
-     * @memberof ProAct.PropertyProvider
+     * @for ProAct.PropertyProvider
+     * @method unregisterProvider
      * @static
      * @param {ProAct.PropertyProvider} propertyProvider
      *      The ProAct.PropertyProvider to unregister.
@@ -79,10 +86,11 @@ ProAct.PropertyProvider = P.PP = PropertyProvider;
     },
 
     /**
-     * Removes all ProAct.PropertyProviders from the list of ProAct.PropertyProviders.
+     * Removes all `ProAct.PropertyProviders` from the list of the registered `ProAct.PropertyProviders`.
      *
-     * @memberof ProAct.PropertyProvider
+     * @for ProAct.PropertyProvider
      * @static
+     * @method clearProviders
      */
     clearProviders: function () {
       providers = [];
@@ -101,7 +109,7 @@ ProAct.PropertyProvider = P.PP = PropertyProvider;
      *  If a compliant provider is found, its {@link ProAct.PropertyProvider#provide} method is used to provide the {@link ProAct.Property} instance.
      * </p>
      *
-     * @memberof ProAct.PropertyProvider
+     * @for ProAct.PropertyProvider
      * @static
      * @param {String} queueName
      *      The name of the queue all the updates should be pushed to.
