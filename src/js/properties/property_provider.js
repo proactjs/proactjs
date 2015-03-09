@@ -97,16 +97,19 @@ ProAct.PropertyProvider = P.PP = PropertyProvider;
     },
 
     /**
-     * Provides a {@link ProAct.Property} instance using the list of the registered
-     * ProAct.PropertyProviders.
+     * Provides a {{#crossLink "ProAct.Property"}}{{/crossLink}} instance using the list of the registered
+     * `ProAct.PropertyProviders`.
      * <p>
-     *  The providers are tried in the order of their registration (the order can be changed using {@link ProAct.PropertyProvider.prependProvider}).
+     *  The providers are tried in the order of their registration
+     *  (the order can be changed using {{#crossLink "ProAct.PropertyProvider/prependProvider:method"}}{{/crossLink}}).
      * </p>
      * <p>
-     *  The {@link ProAct.PropertyProvider#filter} method is used to check if a provider is compliant with the passed arguments.
+     *  The {{#crossLink "ProAct.PropertyProvider/filter:method"}}{{/crossLink}} method is used to check
+     *  if a provider is compliant with the passed arguments.
      * </p>
      * <p>
-     *  If a compliant provider is found, its {@link ProAct.PropertyProvider#provide} method is used to provide the {@link ProAct.Property} instance.
+     *  If a compliant provider is found, its {{#crossLink "ProAct.PropertyProvider/provide:method"}}{{/crossLink}} method
+     *  is used to provide the {{#crossLink "ProAct.Property"}}{{/crossLink}} instance.
      * </p>
      *
      * @for ProAct.PropertyProvider
@@ -115,18 +118,18 @@ ProAct.PropertyProvider = P.PP = PropertyProvider;
      *      The name of the queue all the updates should be pushed to.
      *      <p>
      *        If this parameter is null/undefined the default queue of
-     *        {@link ProAct.flow} is used.
+     *        {{#crossLink "ProAct/flow:property"}}{{/crossLink}} is used.
      *      </p>
      *      <p>
      *        If this parameter is not a string it is used as the
      *        <i>object</i>.
      *      </p>
      * @param {Object} object
-     *      The object to provide a {@link ProAct.Property} instance for.
+     *      The object to provide a {{#crossLink "ProAct.Property"}}{{/crossLink}} instance for.
      * @param {String} property
-     *      The field name of the <i>object</i> to turn into a {@link ProAct.Property}.
+     *      The field name of the <i>object</i> to turn into a {{#crossLink "ProAct.Property"}}{{/crossLink}}.
      * @param {String|Array} meta
-     *      Meta information to be used for filtering and configuration of the {@link ProAct.Property} instance to be provided.
+     *      Meta information to be used for filtering and configuration of the {{#crossLink "ProAct.Property"}}{{/crossLink}} instance to be provided.
      * @return {ProAct.Property}
      *      A property provided by registered provider, or null if there is no compliant provider.
      */
@@ -165,10 +168,10 @@ ProAct.PropertyProvider.prototype = {
   /**
    * Reference to the constructor of this object.
    *
-   * @memberof ProAct.PropertyProvider
-   * @instance
-   * @constant
-   * @default ProAct.PropertyProvider
+   * @property constructor
+   * @type ProAct.PropertyProvider
+   * @final
+   * @for ProAct.PropertyProvider
    */
   constructor: ProAct.PropertyProvider,
 
