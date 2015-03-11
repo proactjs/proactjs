@@ -176,25 +176,27 @@ ProAct.PropertyProvider.prototype = {
   constructor: ProAct.PropertyProvider,
 
   /**
-   * Used to check if this {@link ProAct.PropertyProvider} is compliant with the field and meta data
-   * to be used for creating a {@link ProAct.Property} instance with {@link ProAct.PropertyProvider#provide}.
+   * Used to check if this `ProAct.PropertyProvider` is compliant with the field and meta data
+   * to be used for creating a {{#crossLink "ProAct.Property"}}{{/crossLink}} instance with
+   * {{#crossLink "ProAct.PropertyProvider/provide:method"}}{{/crossLink}}.
    * <p>
-   *  Abstract - must be implemented in an extender.
+   *  Abstract - must be implemented by an extender.
    * </p>
    *
-   * @memberof ProAct.PropertyProvider
+   * @for ProAct.PropertyProvider
    * @abstract
    * @instance
    * @method filter
    * @param {Object} object
-   *      The object to which a new {@link ProAct.Property} instance should be provided.
+   *      The object to which a new {{#crossLink "ProAct.Property"}}{{/crossLink}} instance should be provided.
    * @param {String} property
-   *      The field name of the <i>object</i> to turn into a {@link ProAct.Property}. Can be used in the filtering process.
+   *      The field name of the <i>object</i> to turn into a {{#crossLink "ProAct.Property"}}{{/crossLink}}.
+   *      Can be used in the filtering process.
    *      <p>
    *        For example field name beginning with foo. Can be turned into a FooProperty.
    *      </p>
    * @param {String|Array} meta
-   *      Meta information to be used for filtering and configuration of the {@link ProAct.Property} instance to be provided.
+   *      Meta information to be used for filtering and configuration of the {{#crossLink "ProAct.Property"}}{{/crossLink}} instance to be provided.
    * @return {Boolean}
    *      If <i>this</i> provider is compliant with the passed arguments.
    */
