@@ -317,18 +317,18 @@ ProAct.SimplePropertyProvider.prototype = P.U.ex(Object.create(P.PP.prototype), 
 
 /**
  * <p>
- *  Constructor for ProAct.AutoPropertyProvider.
+ *  Constructor for `ProAct.AutoPropertyProvider`.
  * </p>
  * <p>
- *  Provides {@link ProAct.AutoProperty} instances for fields pointing to functions.
+ *  Provides {{#crossLink "ProAct.AutoProperty"}}{{/crossLink}} instances for fields pointing to functions.
  * </p>
  * <p>
- *  ProAct.AutoPropertyProvider is part of the properties module of ProAct.js.
+ *  `ProAct.AutoPropertyProvider` is part of the `proact-properties` module of ProAct.js.
  * </p>
  *
  * @class ProAct.AutoPropertyProvider
  * @extends ProAct.PropertyProvider
- * @see {@link ProAct.AutoProperty}
+ * @constructor
  */
 ProAct.AutoPropertyProvider = P.FPP = function () {
   P.PP.call(this);
@@ -339,25 +339,25 @@ ProAct.AutoPropertyProvider.prototype = P.U.ex(Object.create(P.PP.prototype), {
   /**
    * Reference to the constructor of this object.
    *
-   * @memberof ProAct.AutoPropertyProvider
-   * @instance
-   * @constant
-   * @default ProAct.AutoPropertyProvider
+   * @property constructor
+   * @type ProAct.AutoPropertyProvider
+   * @final
+   * @for ProAct.AutoPropertyProvider
    */
   constructor: ProAct.AutoPropertyProvider,
 
   /**
-   * Used to check if this {@link ProAct.AutoPropertyProvider} is compliant with the field and meta data.
+   * Used to check if this `ProAct.AutoPropertyProvider` is compliant with the field and meta data.
    *
-   * @memberof ProAct.AutoPropertyProvider
+   * @for ProAct.AutoPropertyProvider
    * @instance
    * @method filter
    * @param {Object} object
-   *      The object to which a new {@link ProAct.AutoProperty} instance should be provided.
+   *      The object to which a new {{#crossLink "ProAct.AutoProperty"}}{{/crossLink}} instance should be provided.
    * @param {String} property
-   *      The field name of the <i>object</i> to turn into a {@link ProAct.AutoProperty}.
+   *      The field name of the <i>object</i> to turn into a {{#crossLink "ProAct.AutoProperty"}}{{/crossLink}}.
    * @param {String|Array} meta
-   *      Meta information to be used for filtering and configuration of the {@link ProAct.AutoProperty} instance to be provided.
+   *      Meta information to be used for filtering and configuration of the {{#crossLink "ProAct.AutoProperty"}}{{/crossLink}} instance to be provided.
    * @return {Boolean}
    *      True if the value of <b>object[property]</b> a function.
    */
@@ -366,9 +366,9 @@ ProAct.AutoPropertyProvider.prototype = P.U.ex(Object.create(P.PP.prototype), {
   },
 
   /**
-   * Provides an instance of {@link ProAct.AutoProperty}.
+   * Provides an instance of {{#crossLink "ProAct.AutoProperty"}}{{/crossLink}}.
    *
-   * @memberof ProAct.AutoPropertyProvider
+   * @for ProAct.AutoPropertyProvider
    * @instance
    * @method provide
    * @param {String} queueName
@@ -378,13 +378,13 @@ ProAct.AutoPropertyProvider.prototype = P.U.ex(Object.create(P.PP.prototype), {
    *        {{#crossLink "ProAct/flow:property"}}{{/crossLink}} is used.
    *      </p>
    * @param {Object} object
-   *      The object to which a new {@link ProAct.AutoProperty} instance should be provided.
+   *      The object to which a new {{#crossLink "ProAct.AutoProperty"}}{{/crossLink}} instance should be provided.
    * @param {String} property
-   *      The field of the <i>object</i> to turn into a {@link ProAct.AutoProperty}.
+   *      The field of the <i>object</i> to turn into a {{#crossLink "ProAct.AutoProperty"}}{{/crossLink}}.
    * @param {String|Array} meta
-   *      Meta information to be used for filtering and configuration of the {@link ProAct.AutoProperty} instance to be provided.
+   *      Meta information to be used for filtering and configuration of the {{#crossLink "ProAct.AutoProperty"}}{{/crossLink}} instance to be provided.
    * @return {ProAct.AutoProperty}
-   *      A {@link ProAct.AutoProperty} instance provided by <i>this</i> provider.
+   *      A {{#crossLink "ProAct.AutoProperty"}}{{/crossLink}} instance provided by <i>this</i> provider.
    */
   provide: function (queueName, object, property, meta) {
     return new P.FP(queueName, object, property);
@@ -393,18 +393,18 @@ ProAct.AutoPropertyProvider.prototype = P.U.ex(Object.create(P.PP.prototype), {
 
 /**
  * <p>
- *  Constructor for ProAct.ArrayPropertyProvider.
+ *  Constructor for `ProAct.ArrayPropertyProvider`.
  * </p>
  * <p>
- *  Provides {@link ProAct.ArrayProperty} instances for fields pointing to arrays.
+ *  Provides {{#crossLink "ProAct.ArrayProperty"}}{{/crossLink}} instances for fields pointing to arrays.
  * </p>
  * <p>
- *  ProAct.ArrayPropertyProvider is part of the properties module of ProAct.js.
+ *  `ProAct.ArrayPropertyProvider` is part of the proact-properties module of ProAct.js.
  * </p>
  *
- * @class ProAct.ArrayPropertyProvider
+ * @for ProAct.ArrayPropertyProvider
  * @extends ProAct.PropertyProvider
- * @see {@link ProAct.ArrayProperty}
+ * @constructor
  */
 ProAct.ArrayPropertyProvider = P.APP = function () {
   P.PP.call(this);
@@ -415,25 +415,25 @@ ProAct.ArrayPropertyProvider.prototype = P.U.ex(Object.create(P.PP.prototype), {
   /**
    * Reference to the constructor of this object.
    *
-   * @memberof ProAct.ArrayPropertyProvider
-   * @instance
-   * @constant
-   * @default ProAct.ArrayPropertyProvider
+   * @property constructor
+   * @type ProAct.ArrayPropertyProvider
+   * @final
+   * @for ProAct.ArrayPropertyProvider
    */
   constructor: ProAct.ArrayPropertyProvider,
 
   /**
-   * Used to check if this {@link ProAct.ArrayPropertyProvider} is compliant with the field and meta data.
+   * Used to check if this `ProAct.ArrayPropertyProvider` is compliant with the field and meta data.
    *
-   * @memberof ProAct.ArrayPropertyProvider
+   * @for ProAct.ArrayPropertyProvider
    * @instance
    * @method filter
    * @param {Object} object
-   *      The object to which a new {@link ProAct.ArrayProperty} instance should be provided.
+   *      The object to which a new {{#crossLink "ProAct.ArrayProperty"}}{{/crossLink}} instance should be provided.
    * @param {String} property
-   *      The field name of the <i>object</i> to turn into a {@link ProAct.ArrayProperty}.
+   *      The field name of the <i>object</i> to turn into a {{#crossLink "ProAct.ArrayProperty"}}{{/crossLink}}.
    * @param {String|Array} meta
-   *      Meta information to be used for filtering and configuration of the {@link ProAct.ArrayProperty} instance to be provided.
+   *      Meta information to be used for filtering and configuration of the {{#crossLink "ProAct.ArrayProperty"}}{{/crossLink}} instance to be provided.
    * @return {Boolean}
    *      True if the value of <b>object[property]</b> an array.
    */
@@ -442,9 +442,9 @@ ProAct.ArrayPropertyProvider.prototype = P.U.ex(Object.create(P.PP.prototype), {
   },
 
   /**
-   * Provides an instance of {@link ProAct.ArrayProperty}.
+   * Provides an instance of {{#crossLink "ProAct.ArrayProperty"}}{{/crossLink}}.
    *
-   * @memberof ProAct.ArrayPropertyProvider
+   * @for ProAct.ArrayPropertyProvider
    * @instance
    * @method provide
    * @param {String} queueName
@@ -454,13 +454,13 @@ ProAct.ArrayPropertyProvider.prototype = P.U.ex(Object.create(P.PP.prototype), {
    *        {{#crossLink "ProAct/flow:property"}}{{/crossLink}} is used.
    *      </p>
    * @param {Object} object
-   *      The object to which a new {@link ProAct.ArrayProperty} instance should be provided.
+   *      The object to which a new {{#crossLink "ProAct.ArrayProperty"}}{{/crossLink}} instance should be provided.
    * @param {String} property
-   *      The field of the <i>object</i> to turn into a {@link ProAct.ArrayProperty}.
+   *      The field of the <i>object</i> to turn into a {{#crossLink "ProAct.ArrayProperty"}}{{/crossLink}}.
    * @param {String|Array} meta
-   *      Meta information to be used for filtering and configuration of the {@link ProAct.ArrayProperty} instance to be provided.
+   *      Meta information to be used for filtering and configuration of the {{#crossLink "ProAct.ArrayProperty"}}{{/crossLink}} instance to be provided.
    * @return {ProAct.ArrayProperty}
-   *      A {@link ProAct.ArrayProperty} instance provided by <i>this</i> provider.
+   *      A {{#crossLink "ProAct.ArrayProperty"}}{{/crossLink}} instance provided by <i>this</i> provider.
    */
   provide: function (queueName, object, property, meta) {
     return new P.AP(queueName, object, property);
@@ -472,15 +472,15 @@ ProAct.ArrayPropertyProvider.prototype = P.U.ex(Object.create(P.PP.prototype), {
  *  Constructor for ProAct.ObjectPropertyProvider.
  * </p>
  * <p>
- *  Provides {@link ProAct.ObjectProperty} instances for fields pointing to objects, different from arrays or functions.
+ *  Provides {{#crossLink "ProAct.ObjectProperty"}}{{/crossLink}} instances for fields pointing to objects, different from arrays or functions.
  * </p>
  * <p>
- *  ProAct.ObjectPropertyProvider is part of the properties module of ProAct.js.
+ *  `ProAct.ObjectPropertyProvider` is part of the proact-properties module of ProAct.js.
  * </p>
  *
  * @class ProAct.ObjectPropertyProvider
  * @extends ProAct.PropertyProvider
- * @see {@link ProAct.ObjectProperty}
+ * @constructor
  */
 ProAct.ObjectPropertyProvider = P.OPP = function () {
   P.PP.call(this);
@@ -491,25 +491,25 @@ ProAct.ObjectPropertyProvider.prototype = P.U.ex(Object.create(P.PP.prototype), 
   /**
    * Reference to the constructor of this object.
    *
-   * @memberof ProAct.ObjectPropertyProvider
-   * @instance
-   * @constant
-   * @default ProAct.ObjectPropertyProvider
+   * @property constructor
+   * @type ProAct.ObjectPropertyProvider
+   * @final
+   * @for ProAct.ObjectPropertyProvider
    */
   constructor: ProAct.ObjectPropertyProvider,
 
   /**
-   * Used to check if this {@link ProAct.ObjectPropertyProvider} is compliant with the field and meta data.
+   * Used to check if this `ProAct.ObjectPropertyProvider` is compliant with the field and meta data.
    *
-   * @memberof ProAct.ObjectPropertyProvider
+   * @for ProAct.ObjectPropertyProvider
    * @instance
    * @method filter
    * @param {Object} object
-   *      The object to which a new {@link ProAct.ObjectProperty} instance should be provided.
+   *      The object to which a new {{#crossLink "ProAct.ObjectProperty"}}{{/crossLink}} instance should be provided.
    * @param {String} property
-   *      The field name of the <i>object</i> to turn into a {@link ProAct.ObjectProperty}.
+   *      The field name of the <i>object</i> to turn into a {{#crossLink "ProAct.ObjectProperty"}}{{/crossLink}}.
    * @param {String|Array} meta
-   *      Meta information to be used for filtering and configuration of the {@link ProAct.ObjectProperty} instance to be provided.
+   *      Meta information to be used for filtering and configuration of the {{#crossLink "ProAct.ObjectProperty"}}{{/crossLink}} instance to be provided.
    * @return {Boolean}
    *      True if the value of <b>object[property]</b> an object, different from array or function.
    */
@@ -518,9 +518,9 @@ ProAct.ObjectPropertyProvider.prototype = P.U.ex(Object.create(P.PP.prototype), 
   },
 
   /**
-   * Provides an instance of {@link ProAct.ObjectProperty}.
+   * Provides an instance of {{#crossLink "ProAct.ObjectProperty"}}{{/crossLink}}.
    *
-   * @memberof ProAct.ObjectPropertyProvider
+   * @for ProAct.ObjectPropertyProvider
    * @instance
    * @method provide
    * @param {String} queueName
@@ -530,13 +530,13 @@ ProAct.ObjectPropertyProvider.prototype = P.U.ex(Object.create(P.PP.prototype), 
    *        {{#crossLink "ProAct/flow:property"}}{{/crossLink}} is used.
    *      </p>
    * @param {Object} object
-   *      The object to which a new {@link ProAct.ObjectProperty} instance should be provided.
+   *      The object to which a new {{#crossLink "ProAct.ObjectProperty"}}{{/crossLink}} instance should be provided.
    * @param {String} property
-   *      The field of the <i>object</i> to turn into a {@link ProAct.ObjectProperty}.
+   *      The field of the <i>object</i> to turn into a {{#crossLink "ProAct.ObjectProperty"}}{{/crossLink}}.
    * @param {String|Array} meta
-   *      Meta information to be used for filtering and configuration of the {@link ProAct.ObjectProperty} instance to be provided.
+   *      Meta information to be used for filtering and configuration of the {{#crossLink "ProAct.ObjectProperty"}}{{/crossLink}} instance to be provided.
    * @return {ProAct.ObjectProperty}
-   *      A {@link ProAct.ObjectProperty} instance provided by <i>this</i> provider.
+   *      A {{#crossLink "ProAct.ObjectProperty"}}{{/crossLink}} instance provided by <i>this</i> provider.
    */
   provide: function (queueName, object, property, meta) {
     return new P.OP(queueName, object, property);
@@ -545,18 +545,18 @@ ProAct.ObjectPropertyProvider.prototype = P.U.ex(Object.create(P.PP.prototype), 
 
 /**
  * <p>
- *  Constructor for ProAct.ProxyPropertyProvider.
+ *  Constructor for `ProAct.ProxyPropertyProvider`.
  * </p>
  * <p>
- *  Provides {@link ProAct.ProxyProperty} instances for fields that should point to properties.
+ *  Provides {{#crossLink "ProAct.ProxyProperty"}}{{/crossLink}} instances for fields that should point to properties.
  * </p>
  * <p>
- *  ProAct.ProxyPropertyProvider is part of the properties module of ProAct.js.
+ *  `ProAct.ProxyPropertyProvider` is part of the proact-properties module of ProAct.js.
  * </p>
  *
  * @class ProAct.ProxyPropertyProvider
  * @extends ProAct.PropertyProvider
- * @see {@link ProAct.ProxyProperty}
+ * @constructor
  */
 ProAct.ProxyPropertyProvider = P.PXPP = function () {
   P.PP.call(this);
@@ -567,26 +567,26 @@ ProAct.ProxyPropertyProvider.prototype = P.U.ex(Object.create(P.PP.prototype), {
   /**
    * Reference to the constructor of this object.
    *
-   * @memberof ProAct.ProxyPropertyProvider
-   * @instance
-   * @constant
-   * @default ProAct.ProxyPropertyProvider
+   * @property constructor
+   * @type ProAct.ProxyPropertyProvider
+   * @final
+   * @for ProAct.ProxyPropertyProvider
    */
   constructor: ProAct.ProxyPropertyProvider,
 
   /**
-   * Used to check if this {@link ProAct.ProxyPropertyProvider} is compliant with the meta data.
+   * Used to check if this `ProAct.ProxyPropertyProvider` is compliant with the meta data.
    *
-   * @memberof ProAct.ProxyPropertyProvider
+   * @for ProAct.ProxyPropertyProvider
    * @instance
    * @method filter
    * @param {Object} object
-   *      The object to which a new {@link ProAct.ProxyProperty} instance should be provided.
+   *      The object to which a new {{#crossLink "ProAct.ProxyProperty"}}{{/crossLink}} instance should be provided.
    * @param {String} property
-   *      The field name of the <i>object</i> to turn into a {@link ProAct.ProxyProperty}.
+   *      The field name of the <i>object</i> to turn into a {{#crossLink "ProAct.ProxyProperty"}}{{/crossLink}}.
    * @param {ProAct.Property} meta
    *      If the meta is present and of type {{#crossLink "ProAct.Property"}}{{/crossLink}}, it becomes the target property of the
-   *      {@link ProAct.ProxyProperty} that will be provided.
+   *      {{#crossLink "ProAct.ProxyProperty"}}{{/crossLink}} that will be provided.
    * @return {Boolean}
    *      True if <i>meta</i> argument is present and is instance of {{#crossLink "ProAct.Property"}}{{/crossLink}}.
    */
@@ -599,9 +599,9 @@ ProAct.ProxyPropertyProvider.prototype = P.U.ex(Object.create(P.PP.prototype), {
   },
 
   /**
-   * Provides an instance of {@link ProAct.ProxyProperty}.
+   * Provides an instance of {{#crossLink "ProAct.ProxyProperty"}}{{/crossLink}}.
    *
-   * @memberof ProAct.ProxyPropertyProvider
+   * @for ProAct.ProxyPropertyProvider
    * @instance
    * @method provide
    * @param {String} queueName
@@ -611,13 +611,13 @@ ProAct.ProxyPropertyProvider.prototype = P.U.ex(Object.create(P.PP.prototype), {
    *        {{#crossLink "ProAct/flow:property"}}{{/crossLink}} is used.
    *      </p>
    * @param {Object} object
-   *      The object to which a new {@link ProAct.ProxyProperty} instance should be provided.
+   *      The object to which a new {{#crossLink "ProAct.ProxyProperty"}}{{/crossLink}} instance should be provided.
    * @param {String} property
-   *      The field of the <i>object</i> to turn into a {@link ProAct.ProxyProperty}.
+   *      The field of the <i>object</i> to turn into a {{#crossLink "ProAct.ProxyProperty"}}{{/crossLink}}.
    * @param {ProAct.Property} meta
-   *      The target {{#crossLink "ProAct.Property"}}{{/crossLink}} of the {@link ProAct.ProxyProperty} to be created.
+   *      The target {{#crossLink "ProAct.Property"}}{{/crossLink}} of the {{#crossLink "ProAct.ProxyProperty"}}{{/crossLink}} to be created.
    * @return {ProAct.ProxyProperty}
-   *      A {@link ProAct.ProxyProperty} instance provided by <i>this</i> provider.
+   *      A {{#crossLink "ProAct.ProxyProperty"}}{{/crossLink}} instance provided by <i>this</i> provider.
    */
   provide: function (queueName, object, property, meta) {
     return new P.PXP(queueName, object, property, meta);
