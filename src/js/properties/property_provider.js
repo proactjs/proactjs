@@ -240,18 +240,18 @@ ProAct.PropertyProvider.prototype = {
 
 /**
  * <p>
- *  Constructor for ProAct.SimplePropertyProvider.
+ *  Constructor for `ProAct.SimplePropertyProvider`.
  * </p>
  * <p>
  *  Provides {{#crossLink "ProAct.Property"}}{{/crossLink}} instances for fields of simple types - strings, numbers, booleans.
  * </p>
  * <p>
- *  ProAct.SimplePropertyProvider is part of the properties module of ProAct.js.
+ *  `ProAct.SimplePropertyProvider` is part of the proact-properties module of ProAct.js.
  * </p>
  *
  * @class ProAct.SimplePropertyProvider
  * @extends ProAct.PropertyProvider
- * @see {{#crossLink "ProAct.Property"}}{{/crossLink}}
+ * @constructor
  */
 ProAct.SimplePropertyProvider = P.SPP = function () {
   P.PP.call(this);
@@ -262,17 +262,18 @@ ProAct.SimplePropertyProvider.prototype = P.U.ex(Object.create(P.PP.prototype), 
   /**
    * Reference to the constructor of this object.
    *
-   * @memberof ProAct.SimplePropertyProvider
-   * @instance
-   * @constant
-   * @default ProAct.SimplePropertyProvider
+   * @property constructor
+   * @type ProAct.SimplePropertyProvider
+   * @final
+   * @for ProAct.SimplePropertyProvider
    */
+  constructor: ProAct.AutoPropertyProvider,
   constructor: ProAct.SimplePropertyProvider,
 
   /**
-   * Used to check if this {@link ProAct.SimplePropertyProvider} is compliant with the field and meta data.
+   * Used to check if this `ProAct.SimplePropertyProvider` is compliant with the field and meta data.
    *
-   * @memberof ProAct.SimplePropertyProvider
+   * @for ProAct.SimplePropertyProvider
    * @instance
    * @method filter
    * @param {Object} object
@@ -292,7 +293,7 @@ ProAct.SimplePropertyProvider.prototype = P.U.ex(Object.create(P.PP.prototype), 
   /**
    * Provides an instance of {{#crossLink "ProAct.Property"}}{{/crossLink}}.
    *
-   * @memberof ProAct.SimplePropertyProvider
+   * @for ProAct.SimplePropertyProvider
    * @instance
    * @method provide
    * @param {String} queueName
