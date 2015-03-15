@@ -1,20 +1,21 @@
 /**
  * <p>
- *  Constructs a ProAct.ProxyProperty. This is a property, pointing to another {@link ProAct.Property}.
+ *  Constructs a `ProAct.ProxyProperty`. This is a property, pointing to another {{#crossLink "ProAct.Property"}}{{/crossLink}}.
  * </p>
  * <p>
- *  The value of ProAct.ProxyProperty is the value of its target, if the target is updated, the proxy is updated.
+ *  The value of `ProAct.ProxyProperty` is the value of its target, if the target is updated, the proxy is updated.
  * </p>
  * <p>
  *  By setting the value of the proxy, the value of the target is updated, the proxy doesn't have its own value, it uses
  *  the value of the target.
  * </p>
  * <p>
- *  ProAct.ProxyProperty is part of the properties module of ProAct.js.
+ *  `ProAct.ProxyProperty` is part of the proact-properties module of ProAct.js.
  * </p>
  *
  * @class ProAct.ProxyProperty
  * @extends ProAct.Property
+ * @constructor
  * @param {String} queueName
  *      The name of the queue all the updates should be pushed to.
  *      <p>
@@ -30,7 +31,7 @@
  * @param {String} property
  *      The name of the field of the object, this property should represent.
  * @param {ProAct.Property} target
- *      The target {@link ProAct.Property}, that will provide the value of the new ProAct.ProxyProperty.
+ *      The target {{#crossLink "ProAct.Property"}}{{/crossLink}}, that will provide the value of the new `ProAct.ProxyProperty`.
  */
 function ProxyProperty (queueName, proObject, property, target) {
   if (queueName && !P.U.isString(queueName)) {
@@ -74,20 +75,20 @@ ProAct.ProxyProperty.prototype = P.U.ex(Object.create(P.P.prototype), {
   /**
    * Reference to the constructor of this object.
    *
-   * @memberof ProAct.ProxyProperty
-   * @instance
-   * @constant
-   * @default ProAct.ProxyProperty
+   * @property constructor
+   * @type ProAct.ProxyProperty
+   * @final
+   * @for ProAct.ProxyProperty
    */
   constructor: ProAct.ProxyProperty,
 
   /**
-   * Retrieves the {@link ProAct.Property.Types} value of <i>this</i> property.
+   * Retrieves the {{#crossLink "ProAct.Property.Types"}}{{/crossLink}} value of <i>this</i> property.
    * <p>
-   *  For ProAct.ProxyProperty this is the type if its <i>target</i>.
+   *  For `ProAct.ProxyProperty` this is the type if its <i>target</i>.
    * </p>
    *
-   * @memberof ProAct.ProxyProperty
+   * @for ProAct.ProxyProperty
    * @instance
    * @method type
    * @return {Number}
@@ -98,7 +99,7 @@ ProAct.ProxyProperty.prototype = P.U.ex(Object.create(P.P.prototype), {
   },
 
   /**
-   * Creates the <i>listener</i> of this ProAct.ProxyProperty.
+   * Creates the <i>listener</i> of this `ProAct.ProxyProperty`.
    * <p>
    *  This listener turns the observable in a observer.
    * </p>
@@ -109,11 +110,12 @@ ProAct.ProxyProperty.prototype = P.U.ex(Object.create(P.P.prototype), {
    *  It has a <i>property</i> field set to <i>this</i>.
    * </p>
    *
-   * @memberof ProAct.ProxyProperty
+   * @for ProAct.ProxyProperty
+   * @protected
    * @instance
    * @method makeListener
    * @return {Object}
-   *      The <i>listener of this ProAct.ProxyProperty</i>.
+   *      The <i>listener of this `ProAct.ProxyProperty`</i>.
    */
   makeListener: function () {
     if (!this.listener) {
@@ -127,6 +129,6 @@ ProAct.ProxyProperty.prototype = P.U.ex(Object.create(P.P.prototype), {
     }
 
     return this.listener;
-  },
+  }
 
 });
