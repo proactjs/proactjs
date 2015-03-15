@@ -203,7 +203,7 @@ module.exports = function(grunt) {
           'properties/array_property',
           'properties/proxy_property',
           'properties/property_provider',
-          'cores/object_core',
+          'properties/object_core',
           'cores/array_core',
           'arrays/array',
           'arrays/listeners',
