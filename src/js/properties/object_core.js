@@ -1,21 +1,48 @@
 /**
  * <p>
- *  Constructs a ProAct.ObjectCore. ProAct.ObjectCore is a {@link ProAct.Core} that manages all the {@link ProAct.Property} instances for a reactive ProAct.js object.
+ *  Constructs a `ProAct.ObjectCore`.
+ *  `ProAct.ObjectCore` is a {{#crossLink "ProAct.Core"}}{{/crossLink}} that manages all the
+ *  {{#crossLink "ProAct.Property"}}{{/crossLink}} instances for a reactive ProAct.js object.
  * </p>
  * <p>
- *  It is responsible for all the {@link ProAct.Property} instances as well initializing them and deciding which type of property corresponds to which field.
+ *  It is responsible for all the {{#crossLink "ProAct.Property"}}{{/crossLink}} instances as well as
+ *  initializing them and deciding which type of property corresponds to which field.
  * </p>
  * <p>
- *  ProAct.ObjectCore is part of the properties module of ProAct.js.
+ *  `ProAct.ObjectCore` is part of the proact-properties module of ProAct.js.
  * </p>
+ *
+ * ```
+ *  
+ *  var object = {
+ *    a: 4,
+ *    b: 5,
+ *    c: function () {
+ *      return this.a + this.b;
+ *    }
+ *  };
+ *  var core = new ProAct.ObjectCore(object);
+ *
+ *  console.log(object.c); // 9
+ *
+ *  object.a = 1;
+ *  console.log(object.c); // 6
+ *
+ *  console.log(core.value('c')); // 6
+ *
+ *  core.set('b', 2));
+ *  console.log(object.b); // 2
+ *  console.log(object.c); // 3
+ * ```
  *
  * @class ProAct.ObjectCore
  * @extends ProAct.Core
+ * @constructor
  * @param {Object} object
  *      The shell objec arround this core. This should be plain JavaScript object.
  * @param {Object} meta
- *      Optional meta data to be used to define the observer-observable behavior of the <i>object</i>. For example transformations for its properties.
- * @see {@link ProAct.Property}
+ *      Optional meta data to be used to define the observer-observable behavior of the <i>object</i>.
+ *      For example transformations for its properties.
  */
 function ObjectCore (object, meta) {
   this.properties = {};
@@ -39,7 +66,7 @@ ProAct.ObjectCore.prototype = P.U.ex(Object.create(P.C.prototype), {
   /**
    * A function to be set to the <i>shell</i> object's <b>p</b> field (if it is configured in @{link ProAct.Configuration}).
    * <p>
-   *  It uses its <i>p</i> argument if it is string to return the right {@link ProAct.Property} for passed field name.
+   *  It uses its <i>p</i> argument if it is string to return the right {{#crossLink "ProAct.Property"}}{{/crossLink}} for passed field name.
    * </p>
    * <p>
    *  If the <i>p</i> argument is <b>*</b> or empty <i>this</i> ProAct.ObjectCore instance is returned.
@@ -49,10 +76,10 @@ ProAct.ObjectCore.prototype = P.U.ex(Object.create(P.C.prototype), {
    * @instance
    * @method value
    * @param {String} p
-   *      The name of the managed {@link ProAct.Property} to retrieve. It can be set to <b>*</b> or skipped for <i>this</i> itself to be retrieved.
+   *      The name of the managed {{#crossLink "ProAct.Property"}}{{/crossLink}} to retrieve. It can be set to <b>*</b> or skipped for <i>this</i> itself to be retrieved.
    * @return {Object}
-   *      Managed {@link ProAct.Property} instance with field name equal to the passed <i>p</i> parameter or <i>this</i>.
-   * @see {@link ProAct.Property}
+   *      Managed {{#crossLink "ProAct.Property"}}{{/crossLink}} instance with field name equal to the passed <i>p</i> parameter or <i>this</i>.
+   * @see {{#crossLink "ProAct.Property"}}{{/crossLink}}
    */
   value: function (p) {
     if (!p || p === '*') {
@@ -63,9 +90,9 @@ ProAct.ObjectCore.prototype = P.U.ex(Object.create(P.C.prototype), {
   },
 
   /**
-   * Initializes all the {@link ProAct.Property} instances for the <i>shell</i>of <i>this</i> ProAct.ObjectCore.
+   * Initializes all the {{#crossLink "ProAct.Property"}}{{/crossLink}} instances for the <i>shell</i>of <i>this</i> ProAct.ObjectCore.
    * <p>
-   *  Using the types of the fields of the <i>shell</i> object the right {@link ProAct.Property} instances are created and stored
+   *  Using the types of the fields of the <i>shell</i> object the right {{#crossLink "ProAct.Property"}}{{/crossLink}} instances are created and stored
    *  in <i>this</i> using {@link ProAct.ObjectCore#makeProp}.
    * </p>
    *
@@ -84,7 +111,7 @@ ProAct.ObjectCore.prototype = P.U.ex(Object.create(P.C.prototype), {
   },
 
   /**
-   * Creates a {@link ProAct.Property} instance for <i>this</i>'s shell.
+   * Creates a {{#crossLink "ProAct.Property"}}{{/crossLink}} instance for <i>this</i>'s shell.
    *
    * @memberof ProAct.ObjectCore
    * @instance
