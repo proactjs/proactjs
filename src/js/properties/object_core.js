@@ -1,4 +1,8 @@
 /**
+ * @module proact-properties
+ */
+
+/**
  * <p>
  *  Constructs a `ProAct.ObjectCore`.
  *  `ProAct.ObjectCore` is a {{#crossLink "ProAct.Core"}}{{/crossLink}} that manages all the
@@ -56,30 +60,36 @@ ProAct.ObjectCore.prototype = P.U.ex(Object.create(P.C.prototype), {
   /**
    * Reference to the constructor of this object.
    *
-   * @memberof ProAct.ObjectCore
-   * @instance
-   * @constant
-   * @default ProAct.ObjectCore
+   * @property constructor
+   * @type ProAct.ObjectCore
+   * @final
+   * @for ProAct.ObjectCore
    */
   constructor: ProAct.ObjectCore,
 
   /**
-   * A function to be set to the <i>shell</i> object's <b>p</b> field (if it is configured in @{link ProAct.Configuration}).
+   * A function to be set to the <i>shell</i> object's <b>p</b> field (if it is configured in {{#crossLink "ProAct.Configuration"}}{{/crossLink}}).
    * <p>
    *  It uses its <i>p</i> argument if it is string to return the right {{#crossLink "ProAct.Property"}}{{/crossLink}} for passed field name.
    * </p>
    * <p>
-   *  If the <i>p</i> argument is <b>*</b> or empty <i>this</i> ProAct.ObjectCore instance is returned.
+   *  If the <i>p</i> argument is <b>*</b> or empty <i>this</i> `ProAct.ObjectCore` instance is returned.
    * </p>
    *
-   * @memberof ProAct.ObjectCore
+   * ```
+   *  core.value('a'); // returns the shell's 'a' value - shell.a.
+   *  core.value('*'); // returns this.
+   *  core.value(); // returns this.
+   * ```
+   *
+   * @for ProAct.ObjectCore
    * @instance
    * @method value
    * @param {String} p
-   *      The name of the managed {{#crossLink "ProAct.Property"}}{{/crossLink}} to retrieve. It can be set to <b>*</b> or skipped for <i>this</i> itself to be retrieved.
+   *      The name of the managed {{#crossLink "ProAct.Property"}}{{/crossLink}} to retrieve.
+   *      It can be set to <b>*</b> or skipped for <i>this</i> itself to be retrieved.
    * @return {Object}
    *      Managed {{#crossLink "ProAct.Property"}}{{/crossLink}} instance with field name equal to the passed <i>p</i> parameter or <i>this</i>.
-   * @see {{#crossLink "ProAct.Property"}}{{/crossLink}}
    */
   value: function (p) {
     if (!p || p === '*') {
@@ -93,13 +103,13 @@ ProAct.ObjectCore.prototype = P.U.ex(Object.create(P.C.prototype), {
    * Initializes all the {{#crossLink "ProAct.Property"}}{{/crossLink}} instances for the <i>shell</i>of <i>this</i> ProAct.ObjectCore.
    * <p>
    *  Using the types of the fields of the <i>shell</i> object the right {{#crossLink "ProAct.Property"}}{{/crossLink}} instances are created and stored
-   *  in <i>this</i> using {@link ProAct.ObjectCore#makeProp}.
+   *  in <i>this</i> using {{#crossLink "ProAct.Configuration/makeProp:method"}}{{/crossLink}}.
    * </p>
    *
-   * @memberof ProAct.ObjectCore
+   * @for ProAct.ObjectCore
+   * @protected
    * @instance
    * @method setup
-   * @see {@link ProAct.ObjectCore#makeProp}
    */
   setup: function () {
     var object = this.shell,
@@ -113,7 +123,20 @@ ProAct.ObjectCore.prototype = P.U.ex(Object.create(P.C.prototype), {
   /**
    * Creates a {{#crossLink "ProAct.Property"}}{{/crossLink}} instance for <i>this</i>'s shell.
    *
-   * @memberof ProAct.ObjectCore
+   * ```
+   *  var shell = {a: 3};
+   *  var core = new ProAct.Core(shell);
+   *
+   *  shell.b = function () { return this.a + 5; };
+   *  core.makeProp('b');
+   *
+   *  console.log(shell.b); // 8
+   *
+   *  shell.a = 5;
+   *  console.log(shell.b); // 10
+   * ```
+   *
+   * @for ProAct.ObjectCore
    * @instance
    * @method makeProp
    * @param {String} property
@@ -122,13 +145,11 @@ ProAct.ObjectCore.prototype = P.U.ex(Object.create(P.C.prototype), {
    *      Initial listeners for 'change' of the property, can be skipped.
    * @param {String|Array} meta
    *      Meta information for the property to create, for example if the meta contains 'noprop', no property is created,
-   *      and the initial value of the field is preserved. The meta is in format of the {@link ProAct.DSL}.
+   *      and the initial value of the field is preserved. The meta is in format of the {{#crossLink "ProAct.DSL"}}{{/crossLink}}.
    * @return {ProAct.Property}
    *      The newly crated and stored in <i>this</i> property, or null if no property was created.
    * @throws {Error}
    *      If there is no field defined in the <i>shell</i> named as the passed <i>property</i>.
-   * @see {@link ProAct.ObjectCore#setup}
-   * @see {@link ProAct.DSL}
    */
   makeProp: function (property, listeners, meta) {
     var object = this.shell,
@@ -182,14 +203,25 @@ ProAct.ObjectCore.prototype = P.U.ex(Object.create(P.C.prototype), {
    *  The new field is reactive.
    * </p>
    *
-   * @memberof ProAct.ObjectCore
+   * ```
+   *  var shell = {a: 3};
+   *  var core = new ProAct.Core(shell);
+   *
+   *  core.set('b', function () { return this.a + 5; });
+   *
+   *  console.log(shell.b); // 8
+   *
+   *  shell.a = 5;
+   *  console.log(shell.b); // 10
+   * ```
+   *
+   * @for ProAct.ObjectCore
    * @instance
    * @method set
    * @param {String} property
    *      The name of the property to update/create.
    * @param {Object} value
    *      The value of the property to be set.
-   * @see {@link ProAct.ObjectCore#makeProp}
    */
   set: function (property, value) {
     var object = this.shell;
