@@ -1,3 +1,12 @@
+/**
+ * The `proact-streams` module provides stateless streams to the ProAct.js API.
+ * FRP reactive streams.
+ *
+ * @module proact-streams
+ * @main proact-streams
+ */
+
+// PRIVATE
 StreamUtil = {
   go: function (event, useTransformations) {
     if (this.listeners.change.length === 0) {
@@ -41,31 +50,34 @@ StreamUtil = {
 
 /**
  * <p>
- *  Constructs a ProAct.Stream. The stream is a simple {@link ProAct.Actor}, without state.
+ *  Constructs a `ProAct.Stream`.
+ *  The stream is a simple {{#crossLink "ProAct.Actor"}}{{/crossLink}}, without state.
  * </p>
  * <p>
- *  The streams are ment to emit values, events, changes and can be plugged into another actor.
- *  For example you can connect many streams, to merge them and to divide them, to plug them into properties.
+ *  The streams are ment to emit values, events, changes and can be plugged into other `Actors`.
+ *  For example it is possible to connect multiple streams, to merge them and to separate them,
+ *  to plug them into properties.
  * </p>
  * <p>
  *  The reactive environment consists of the properties and the objects containing them, but
- *  the outside world is not reactive. It is possible to use the ProAct.Streams as connections from the
+ *  the outside world is not reactive. It is possible to use the `ProAct.Streams` as connections from the
  *  outside world to the reactive environment.
  * </p>
  * <p>
  *    The transformations can be used to change the events or values emitetted.
  * </p>
  * <p>
- *  ProAct.Stream is part of the streams module of ProAct.js.
+ *  `ProAct.Stream` is part of the proact-streams module of ProAct.js.
  * </p>
  *
  * @class ProAct.Stream
  * @extends ProAct.Actor
+ * @constructor
  * @param {String} queueName
  *      The name of the queue all the updates should be pushed to.
  *      <p>
  *        If this parameter is null/undefined the default queue of
- *        {@link ProAct.flow} is used.
+ *        {{#crossLink "ProAct/flow:property"}}{{/crossLink}} is used.
  *      </p>
  *      <p>
  *        If this parameter is not a string it is used as the
@@ -213,8 +225,6 @@ ProAct.Stream.prototype = P.U.ex(Object.create(P.Actor.prototype), {
    *      The listener to defer. It should be a function or object defining the <i>call</i> method.
    * @return {ProAct.Actor}
    *      <i>this</i>
-   * @see {@link ProAct.Actor#makeListener}
-   * @see {@link ProAct.flow}
    */
   defer: function (event, listener) {
     if (!listener) {
