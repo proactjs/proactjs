@@ -119,6 +119,7 @@ ProAct.Core.prototype = P.U.ex(Object.create(P.Actor.prototype), {
    * By default it throws an exception.
    *
    * @for ProAct.Core
+   * @protected
    * @instance
    * @abstract
    * @method setup
