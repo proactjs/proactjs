@@ -416,21 +416,13 @@ P.F.prototype = {
  */
 ProAct.flow = new ProAct.Flow(['proq'], {
   err: function (e) {
-    if (P.flow.errStream) {
-      P.flow.errStream().triggerErr(e);
-    } else {
-      console.log(e);
-    }
+    console.log(e);
   },
   flowInstance: {
     queue: {
       err: function (queue, e) {
         e.queue = queue;
-        if (P.flow.errStream) {
-          P.flow.errStream().triggerErr(e);
-        } else {
-          console.log(e);
-        }
+        console.log(e);
       }
     }
   }

@@ -2,24 +2,15 @@
 
 describe('ProAct.Flow, ProAct.Property and ProAct.Stream', function () {
   it ('all errors from the flow go to the ProAct.flow#errStream', function () {
-    var res = [];
-    ProAct.flow.errStream().onErr(function (e) {
-      res.push(e)
-    });
-
     ProAct.flow.run(function () {
       throw new Error('1');
     });
 
-    expect(res.length).toBe(1);
-    expect(res[0].message).toBe('1');
+    expect(errs.length).toBe(1);
+    expect(errs[0].message).toBe('1');
   });
 
   it ('all errors from pushed actions in the ProAct.flow go to the ProAct.flow#errStream', function () {
-    var res = [];
-    ProAct.flow.errStream().onErr(function (e) {
-      res.push(e)
-    });
 
     ProAct.flow.run(function () {
       ProAct.flow.push(function () {
@@ -28,9 +19,9 @@ describe('ProAct.Flow, ProAct.Property and ProAct.Stream', function () {
       throw new Error('1');
     });
 
-    expect(res.length).toBe(2);
-    expect(res[0].message).toEqual('1');
-    expect(res[1].message).toEqual('2');
+    expect(errs.length).toBe(2);
+    expect(errs[0].message).toEqual('1');
+    expect(errs[1].message).toEqual('2');
   });
 
   it ('Errors from property objects go to the ProAct.flow#errStream', function () {
@@ -44,11 +35,7 @@ describe('ProAct.Flow, ProAct.Property and ProAct.Stream', function () {
 
             return this.a / this.b;
           }
-        }),
-        errs = [];
-    ProAct.flow.errStream().onErr(function (e) {
-      errs.push(e);
-    });
+        });
 
     expect(obj.d).toEqual(0);
 
@@ -69,11 +56,7 @@ describe('ProAct.Flow, ProAct.Property and ProAct.Stream', function () {
           d: function () {
             return this.c;
           }
-        }),
-        errs = [];
-    ProAct.flow.errStream().onErr(function (e) {
-      errs.push(e);
-    });
+        });
 
     obj.d;
     expect(errs.length).toBe(1);

@@ -120,6 +120,8 @@ function stream (subscribe, transformations, source, queueName) {
   }
 
   stream.trigger = StreamUtil.trigger;
+  stream.triggerErr = StreamUtil.triggerErr;
+  stream.triggerClose= StreamUtil.triggerClose;
 
   return stream;
 }

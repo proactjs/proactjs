@@ -234,40 +234,5 @@ describe('ProAct.Flow', function () {
       expect(ProAct.flow instanceof ProAct.Flow).toBe(true);
     });
 
-    it ('has error stream', function () {
-      expect(ProAct.flow.errStream()).toNotBe(null);
-      expect(ProAct.flow.errStream() instanceof ProAct.Stream).toBe(true);
-    });
-
-    it ('the #errStream stream dispatches errors in the flow', function () {
-      var res = [];
-
-      ProAct.flow.errStream().onErr(function (e) {
-        res.push(e);
-      });
-
-      ProAct.flow.run(function () {
-        var c = a + 4; // a is non existent.
-      });
-
-      expect(res.length).toBe(1);
-    });
-
-    it ('the #errStream stream dispatches errors deep in the flow', function () {
-      var res = [];
-
-      ProAct.flow.errStream().onErr(function (e) {
-        res.push(e);
-      });
-
-      ProAct.flow.run(function () {
-        ProAct.flow.defer(function () {
-          var c = a + 4; // a is non existent.
-        });
-      });
-
-      expect(res.length).toBe(1);
-      expect(res[0].queue).toNotBe(null);
-    });
   });
 });

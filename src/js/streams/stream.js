@@ -16,7 +16,7 @@ StreamUtil = {
       try {
         event = P.Actor.transform(this, event);
       } catch (e) {
-        this.triggerErr(e);
+        StreamUtil.triggerErr.call(this, e);
         return this;
       }
     }
@@ -44,6 +44,14 @@ StreamUtil = {
     }
 
     return StreamUtil.go.call(this, event, useTransformations);
+  },
+
+  triggerErr: function (err) {
+    return ActorUtil.update.call(this, err, 'error');
+  },
+
+  triggerClose: function (data) {
+    return ActorUtil.update.call(this, data, 'close');
   }
 
 };
@@ -109,11 +117,10 @@ ProAct.Stream.prototype = P.U.ex(Object.create(P.Actor.prototype), {
   /**
    * Reference to the constructor of this object.
    *
-   * @memberof ProAct.Stream
-   * @instance
-   * @constant
-   * @type {Object}
-   * @default ProAct.Stream
+   * @property constructor
+   * @type ProAct.Stream
+   * @final
+   * @for ProAct.Stream
    */
   constructor: ProAct.Stream,
 
@@ -123,7 +130,8 @@ ProAct.Stream.prototype = P.U.ex(Object.create(P.Actor.prototype), {
    *  Streams don't create new events by default, the event is the source.
    * </p>
    *
-   * @memberof ProAct.Stream
+   * @for ProAct.Stream
+   * @protected
    * @instance
    * @method makeEvent
    * @param {ProAct.Event} source
@@ -137,11 +145,9 @@ ProAct.Stream.prototype = P.U.ex(Object.create(P.Actor.prototype), {
 
   /**
    * Creates the <i>listener</i> of this stream.
-   * <p>
-   *  The listener of the stream just calls the method {@link ProAct.Stream#trigger} with the incoming event/value.
-   * </p>
    *
-   * @memberof ProAct.Stream
+   * @for ProAct.Stream
+   * @protected
    * @instance
    * @method makeListener
    * @return {Object}
@@ -165,10 +171,11 @@ ProAct.Stream.prototype = P.U.ex(Object.create(P.Actor.prototype), {
   /**
    * Creates the <i>error listener</i> of this stream.
    * <p>
-   *  The listener just calls {@link ProAct.Stream#triggerErr} of <i>this</i> with the incoming error.
+   *  The listener pushes the incoming event into `this Stream` by default.
    * </p>
    *
-   * @memberof ProAct.Stream
+   * @for ProAct.Stream
+   * @protected
    * @instance
    * @method makeErrListener
    * @return {Object}
@@ -178,7 +185,11 @@ ProAct.Stream.prototype = P.U.ex(Object.create(P.Actor.prototype), {
     if (!this.errListener) {
       var stream = this;
       this.errListener = function (error) {
-        stream.triggerErr(error);
+        if (stream.triggerErr) {
+          stream.triggerErr(event);
+        } else {
+          StreamUtil.triggerErr.call(stream, error);
+        }
       };
     }
 
@@ -187,12 +198,12 @@ ProAct.Stream.prototype = P.U.ex(Object.create(P.Actor.prototype), {
 
   /**
    * Creates the <i>closing listener</i> of this stream.
-   * <p>
-   *  The listener just calls {@link ProAct.Stream#triggerClose} of <i>this</i> with the incoming closing data.
-   * </p>
    *
-   * @memberof ProAct.Stream
+   * Pushes a closing notification into the stream by default.
+   *
+   * @for ProAct.Stream
    * @instance
+   * @protected
    * @method makeCloseListener
    * @return {Object}
    *      The <i>closing listener of this stream</i>.
@@ -200,8 +211,12 @@ ProAct.Stream.prototype = P.U.ex(Object.create(P.Actor.prototype), {
   makeCloseListener: function () {
     if (!this.closeListener) {
       var stream = this;
-      this.closeListener = function (error) {
-        stream.triggerClose(error);
+      this.closeListener = function (data) {
+        if (stream.triggerClose) {
+          stream.triggerClose(data);
+        } else {
+          StreamUtil.triggerClose.call(stream, data);
+        }
       };
     }
 
@@ -209,14 +224,15 @@ ProAct.Stream.prototype = P.U.ex(Object.create(P.Actor.prototype), {
   },
 
   /**
-   * Defers a ProAct.Actor listener.
+   * Defers a `ProAct.Actor` listener.
    * <p>
-   *  For streams this means pushing it to active flow using {@link ProAct.Flow#push}.
-   *  If the listener is object with 'property' field, it is done using {@link ProAct.Actor#defer}.
+   *  For streams this means pushing it to active flow using {{#crossLink "ProAct.Flow/push:method"}}{{/crossLink}}.
+   *  If the listener is object with 'property' field, it is done using {{#crossLink "ProAct.Actor/defer:method"}}{{/crossLink}}.
    *  That way the reactive environment is updated only once, but the streams are not part of it.
    * </p>
    *
-   * @memberof ProAct.Stream
+   * @for ProAct.Stream
+   * @protected
    * @instance
    * @method defer
    * @param {Object} event
@@ -245,61 +261,26 @@ ProAct.Stream.prototype = P.U.ex(Object.create(P.Actor.prototype), {
   },
 
   /**
-   * <p>
-   *  Triggers a new error to the stream. Anything that is listening for errors from
-   *  this stream will get updated.
-   * </p>
-   * <p>
-   *  ProAct.Stream.te is alias of this method.
-   * </p>
-   *
-   * @memberof ProAct.Stream
-   * @instance
-   * @method triggerErr
-   * @param {Error} err
-   *      The error to trigger.
-   * @return {ProAct.Stream}
-   *      <i>this</i>
-   * @see {@link ProAct.Actor#update}
-   */
-  triggerErr: function (err) {
-    return ActorUtil.update.call(this, err, 'error');
-  },
-
-  /**
-   * <p>
-   *  Triggers a closing event to the stream. Anything that is listening for closing events from
-   *  this stream will get updated.
-   * </p>
-   * <p>
-   *  The stream will be closed and unusable.
-   * </p>
-   *
-   * @memberof ProAct.Stream
-   * @instance
-   * @method triggerClose
-   * @param {Object} data
-   *      Data connected to the closing event.
-   * @return {ProAct.Stream}
-   *      <i>this</i>
-   * @see {@link ProAct.Actor#update}
-   */
-  triggerClose: function (data) {
-    return ActorUtil.update.call(this, data, 'close');
-  },
-
-  /**
-   * Creates a new ProAct.Stream instance with source <i>this</i> and mapping
+   * Creates a new `ProAct.Stream` instance with source <i>this</i> and mapping
    * the passed <i>mapping function</i>.
    *
-   * @memberof ProAct.Stream
+   * ```
+   *   var mapped = stream.map(function (v) {
+   *     return v * v;
+   *   });
+   *
+   *   mapped.on(function (v) {
+   *     console.log(v);
+   *   });
+   * ```
+   *
+   * @for ProAct.Stream
    * @instance
    * @method map
    * @param {Object} mappingFunction
    *      Function or object with a <i>call method</i> to use as map function.
    * @return {ProAct.Stream}
    *      A new ProAct.Stream instance with the <i>mapping</i> applied.
-   * @see {@link ProAct.Actor#mapping}
    */
   map: function (mappingFunction) {
     return new P.S(this).mapping(mappingFunction);
@@ -574,4 +555,3 @@ P.U.ex(P.Actor.prototype, {
 
 P.S.prototype.t = P.S.prototype.trigger;
 P.S.prototype.tt = P.S.prototype.triggerMany;
-P.S.prototype.te = P.S.prototype.triggerErr;

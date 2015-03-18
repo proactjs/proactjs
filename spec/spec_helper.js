@@ -1,5 +1,6 @@
 'use strict';
 
+var errs;
 beforeEach(function() {
   ProAct.currentCaller = null;
 
@@ -10,23 +11,16 @@ beforeEach(function() {
   P.PP.registerProvider(new P.ArrayPropertyProvider());
   P.PP.registerProvider(new P.ObjectPropertyProvider());
 
+  errs = [];
   ProAct.flow = new ProAct.Flow(['proq'], {
     err: function (e) {
-      if (P.flow.errStream) {
-        P.flow.errStream().triggerErr(e);
-      } else {
-        console.log(e);
-      }
+      errs.push(e);
     },
     flowInstance: {
       queue: {
         err: function (queue, e) {
           e.queue = queue;
-          if (P.flow.errStream) {
-            P.flow.errStream().triggerErr(e);
-          } else {
-            console.log(e);
-          }
+          errs.push(e);
         }
       }
     }
