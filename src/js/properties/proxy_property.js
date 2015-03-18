@@ -1,4 +1,8 @@
 /**
+ * @module proact-properties
+ */
+
+/**
  * <p>
  *  Constructs a `ProAct.ProxyProperty`. This is a property, pointing to another {{#crossLink "ProAct.Property"}}{{/crossLink}}.
  * </p>
