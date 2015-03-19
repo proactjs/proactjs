@@ -270,7 +270,7 @@ ProAct.Stream.prototype = P.U.ex(Object.create(P.Actor.prototype), {
    *   });
    *
    *   mapped.on(function (v) {
-   *     console.log(v);
+   *     console.log(v); // squares
    *   });
    * ```
    *
@@ -280,34 +280,51 @@ ProAct.Stream.prototype = P.U.ex(Object.create(P.Actor.prototype), {
    * @param {Object} mappingFunction
    *      Function or object with a <i>call method</i> to use as map function.
    * @return {ProAct.Stream}
-   *      A new ProAct.Stream instance with the <i>mapping</i> applied.
+   *      A new `ProAct.Stream` instance with the <i>mapping</i> applied.
    */
   map: function (mappingFunction) {
     return new P.S(this).mapping(mappingFunction);
   },
 
   /**
-   * Creates a new ProAct.Stream instance with source <i>this</i> and filtering
+   * Creates a new `ProAct.Stream` instance with source <i>this</i> and filtering
    * the passed <i>filtering function</i>.
    *
-   * @memberof ProAct.Stream
+   * ```
+   *   var filtered = stream.filter(function (v) {
+   *     return v % 2 === 1;
+   *   });
+   *
+   *   filtered.on(function (v) {
+   *     console.log(v); // odds
+   *   });
+   * ```
+   *
+   * @for ProAct.Stream
    * @instance
    * @method filter
    * @param {Object} filteringFunction
    *      The filtering function or object with a call method, should return boolean.
    * @return {ProAct.Stream}
-   *      A new ProAct.Stream instance with the <i>filtering</i> applied.
-   * @see {@link ProAct.Actor#filtering}
+   *      A new `ProAct.Stream` instance with the <i>filtering</i> applied.
    */
   filter: function (filteringFunction) {
     return new P.S(this).filtering(filteringFunction);
   },
 
   /**
-   * Creates a new ProAct.Stream instance with source <i>this</i> and accumulation
+   * Creates a new `ProAct.Stream` instance with source <i>this</i> and accumulation
    * the passed <i>accumulation function</i>.
    *
-   * @memberof ProAct.Stream
+   * ```
+   *  var acc = stream.accumulate(0, function (p, v) {
+   *    return p + v;
+   *  });
+   *
+   *  acc.on(console.log); // sums
+   * ```
+   *
+   * @for ProAct.Stream
    * @instance
    * @method accumulate
    * @param {Object} initVal
@@ -315,24 +332,36 @@ ProAct.Stream.prototype = P.U.ex(Object.create(P.Actor.prototype), {
    * @param {Object} accumulationFunction
    *      The function to accumulate.
    * @return {ProAct.Stream}
-   *      A new ProAct.Stream instance with the <i>accumulation</i> applied.
-   * @see {@link ProAct.Actor#accumulation}
+   *      A new `ProAct.Stream` instance with the <i>accumulation</i> applied.
    */
   accumulate: function (initVal, accumulationFunction) {
     return new P.S(this).accumulation(initVal, accumulationFunction);
   },
 
   /**
-   * Creates a new ProAct.Stream instance that merges this with other streams.
+   * Creates a new `ProAct.Stream` instance that merges this with other streams.
    * The new instance will have new value on value from any of the source streams.
    *
-   * @memberof ProAct.Stream
+   * ```
+   *  var merged = stream1.merge(stream2);
+   * ```
+   *
+   * Here if `stream1` emits:
+   * 1--2---3----5-----X
+   *
+   * and `steam2` emits:
+   * ----A-----B-----C-----D--X
+   *
+   * `merged` will emit:
+   * 1--2A--3--B-5---C-----D--X
+   *
+   * @for ProAct.Stream
    * @instance
    * @method merge
    * @param [...]
    *      A list of streams to be set as sources.
    * @return {ProAct.Stream}
-   *      A new ProAct.Stream instance with the sources this and all the passed streams.
+   *      A new `ProAct.Stream` instance with the sources this and all the passed streams.
    */
   merge: function () {
     var sources = [this].concat(slice.call(arguments)),
@@ -341,6 +370,35 @@ ProAct.Stream.prototype = P.U.ex(Object.create(P.Actor.prototype), {
     return P.S.prototype.into.apply(result, sources);
   },
 
+  /**
+   * Links source actors into this `ProAct.Stream`. This means that <i>this stream</i>
+   * is listening for changes from the <i>sources</i>.
+   *
+   * The streams count their sources and when the sources are zero, they become inactive.
+   *
+   * ```
+   *  var stream1 = ProAct.stream();
+   *  var stream2 = ProAct.stream();
+   *  var stream = ProAct.stream();
+   *
+   *  stream.into(stream1, stream2);
+   *  stream.on(function (v) {
+   *    console.log(v);
+   *  });
+   *
+   * ```
+   *
+   * Now if the any of the source streams is emits,
+   * the notification will be printed on the output.
+   *
+   * @for ProAct.Stream
+   * @instance
+   * @method into
+   * @param [...]
+   *      Zero or more source {{#crossLink "ProAct.Actor"}}{{/crossLink}}s to set as sources.
+   * @return {ProAct.Stream}
+   *      <b>this</b>
+   */
   into: function () {
     ProAct.Actor.prototype.into.apply(this, arguments);
 
