@@ -613,6 +613,21 @@ P.Actor.prototype = {
     return this.off('error', listener);
   },
 
+  /**
+   * Attaches a new close notifcation listener to this `ProAct.Actor`.
+   *
+   * The listener may be function or object that defines a <i>call</i> method.
+   *
+   * This is the same as calling `on('close', listener)` on an `Actor`...
+   *
+   * @for ProAct.Actor
+   * @instance
+   * @method onClose
+   * @param {Object} listener
+   *      The listener to attach. It must be instance of Function or object with a <i>call</i> method.
+   * @return {ProAct.Actor}
+   *      <b>this</b>
+   */
   onClose: function (listener) {
     return this.on('close', listener);
   },
@@ -655,9 +670,9 @@ P.Actor.prototype = {
    *    console.log(v);
    *  });
    *
-   *  Now if the any of the source actors is updated, the update will be printed on the console by the `actor`.
-   *
    * ```
+   *
+   * Now if the any of the source actors is updated, the update will be printed on the console by the `actor`.
    *
    * @for ProAct.Actor
    * @instance
