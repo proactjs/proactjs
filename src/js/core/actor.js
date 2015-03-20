@@ -632,6 +632,19 @@ P.Actor.prototype = {
     return this.on('close', listener);
   },
 
+  /**
+   * Removes a close notification <i>listener</i> from the passed <i>action</i>.
+   *
+   * This is the same as calling `off('close', listener)` on an `Actor`...
+   *
+   * @for ProAct.Actor
+   * @instance
+   * @method offClose
+   * @param {Object} listener
+   *      The listener to detach. If it is skipped, null or undefined all the listeners are removed from this actor.
+   * @return {ProAct.Actor}
+   *      <b>this</b>
+   */
   offClose: function (listener) {
     return this.off('close', listener);
   },
