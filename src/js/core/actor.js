@@ -221,6 +221,7 @@ P.Actor.prototype = {
    * </p>
    *
    * @for ProAct.Actor
+   * @protected
    * @instance
    * @method canClose
    */
@@ -666,6 +667,17 @@ P.Actor.prototype = {
     return this.on(listener).onClose(listener).onErr(listener);
   },
 
+  /**
+   * Removes all notifications <i>listener</i> from the passed <i>action</i>.
+   *
+   * @for ProAct.Actor
+   * @instance
+   * @method offAll
+   * @param {Object} listener
+   *      The listener to detach. If it is skipped, null or undefined all the listeners are removed from this actor.
+   * @return {ProAct.Actor}
+   *      <b>this</b>
+   */
   offAll: function (listener) {
     this.off(listener);
     this.off('error', listener);
