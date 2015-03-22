@@ -407,6 +407,17 @@ ProAct.Stream.prototype = P.U.ex(Object.create(P.Actor.prototype), {
     return this;
   },
 
+  /**
+   * Checks if <i>this</i> can be closed.
+   *
+   * Uses the number of the active sources to decide if `this stream` is ready to be closed.
+   * If the active sources are zero - it can.
+   *
+   * @for ProAct.Stream
+   * @protected
+   * @instance
+   * @method canClose
+   */
   canClose: function () {
     this.sourceNumber -= 1;
 
@@ -414,28 +425,18 @@ ProAct.Stream.prototype = P.U.ex(Object.create(P.Actor.prototype), {
   }
 });
 
-P.U.ex(P.F.prototype, {
+// Methods added to the ProAct.Actor from the proact-streams module.
+P.U.ex(P.Actor.prototype, {
 
   /**
-   * Retrieves the errStream for logging errors from this flow.
-   * If there is no error stream, it is created.
+   * Turns this `ProAct.Actor` to a {{#crossLink "ProAct.Stream"}}{{/crossLink}}.
    *
-   * @memberof ProAct.Flow
+   * In reality this method creates a new `Stream` with source this.
+   *
+   * @for ProAct.Actor
    * @instance
-   * @method errStream
-   * @return {ProAct.Stream}
-   *      The error stream of the flow.
+   * @method toStream
    */
-  errStream: function () {
-    if (!this.errStreamVar) {
-      this.errStreamVar = new P.S();
-    }
-
-    return this.errStreamVar;
-  }
-});
-
-P.U.ex(P.Actor.prototype, {
   toStream: function () {
     return new P.S(this.queueName, this);
   },
