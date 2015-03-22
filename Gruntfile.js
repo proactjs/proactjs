@@ -94,7 +94,8 @@ module.exports = function(grunt) {
           linkNatives: true,
           paths: [
             'src/js/core',
-            'src/js/properties'
+            'src/js/properties',
+            'src/js/streams'
           ],
           exclude: [
             'arrays',
