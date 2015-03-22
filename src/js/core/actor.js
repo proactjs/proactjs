@@ -649,6 +649,19 @@ P.Actor.prototype = {
     return this.off('close', listener);
   },
 
+  /**
+   * Attaches the passed listener to listen to values, errors and the close notification from this `ProAct.Actor`.
+   *
+   * The listener may be function or object that defines a <i>call</i> method.
+   *
+   * @for ProAct.Actor
+   * @instance
+   * @method onAll
+   * @param {Object} listener
+   *      The listener to attach. It must be instance of Function or object with a <i>call</i> method.
+   * @return {ProAct.Actor}
+   *      <b>this</b>
+   */
   onAll: function (listener) {
     return this.on(listener).onClose(listener).onErr(listener);
   },
