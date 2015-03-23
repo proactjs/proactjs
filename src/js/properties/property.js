@@ -19,7 +19,7 @@
  *  it is added as a listener to the property changes.
  * </p>
  * <p>
- *  Every property has a type the default property has a type of a simple value.
+ *  Every property has a type. The default property has a type of a simple value.
  * </p>
  * <p>
  *  All the properties of an object are managed by its {{#crossLink "ProAct.ObjectCore"}}{{/crossLink}},
@@ -31,13 +31,14 @@
  *  If the property is not in {{#crossLink "ProAct.States/ready:property"}}{{/crossLink}} state, it is not useable.
  * </p>
  * <p>
- *  {{#crossLink "ProAct.Property/init:method"}}{{/crossLink}} is called by this constructor for the property initialization.
+ *  {{#crossLink "ProAct.Actor/init:method"}}{{/crossLink}} is called by this constructor for the property initialization.
  *  It should initialize the property and set its state to {{#crossLink "ProAct.States/ready:property"}}{{/crossLink}}.
  * </p>
  * <p>
- *  ProAct.Property is part of the proact-properties module of ProAct.js.
+ *  ProAct.Property is part of the `proact-properties` module of `ProAct.js`.
  * </p>
  *
+ * Examples:
  * ```
  *  var property = new Property({v: 5}, 'v');
  *  property.get(); // This is 5
