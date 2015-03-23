@@ -441,6 +441,18 @@ P.U.ex(P.Actor.prototype, {
     return new P.S(this.queueName, this);
   },
 
+  /**
+   * Creates a new {{#crossLink "ProAct.Stream"}}{{/crossLink}} with source - `this`.
+   * It skips the first `n` updates incoming from `this`.
+   *
+   * source : --3---4---5--4---3---4---5--|->
+   * skip(3): -------------4---3---4---5--|->
+   *
+   * @for ProAct.Actor
+   * @instance
+   * @method skip
+   * @param {Number} n The number of notifications to skip.
+   */
   skip: function (n) {
     var i = n, self = this;
     return this.fromLambda(function (stream, event) {
@@ -458,6 +470,31 @@ P.U.ex(P.Actor.prototype, {
     });
   },
 
+  /**
+   * Creates a new {{#crossLink "ProAct.Stream"}}{{/crossLink}} with source - `this`.
+   * It skips notifications from its source, while a condition is true.
+   *
+   * ```
+   *
+   *  source.skipWhile(function (v) {
+   *      return v % 2 === 1;
+   *  });
+   *
+   *  // source :
+   *  // --3---5---2--4---3---4---5--|->
+   *  // skipWhlie:
+   *  // ----------2--4---3---4---5--|->
+   *
+   * ```
+   *
+   * @for ProAct.Actor
+   * @instance
+   * @method skipWhile
+   * @param {Function} condition
+   *        A condition function, which is called for each of the incoming values
+   *        While it returns true, the elements are skipped,
+   *        after it returns false for the first time, the current and all the following values are emitted.
+   */
   skipWhile: function (condition) {
     var self = this,
         cond = condition ? condition : function (e) {
