@@ -514,6 +514,28 @@ P.U.ex(P.Actor.prototype, {
     });
   },
 
+  /**
+   * Creates a new {{#crossLink "ProAct.Stream"}}{{/crossLink}} with source - `this`.
+   * It skips dublicating elements, comming one after another.
+   *
+   * ```
+   *
+   *  source.skipDuplicates();
+   *
+   *  // source :
+   *  // --3---5---5--4---3---3---5--|->
+   *  // skipDuplicates:
+   *  // --3---5------4---3-------5--|->
+   *
+   * ```
+   *
+   * @for ProAct.Actor
+   * @instance
+   * @method skipDuplicates
+   * @param {Function} comparator
+   *      A function used to compare the elements.
+   *      If nothing is passed it defaults to comparing using `===`.
+   */
   skipDuplicates: function (comparator) {
     var last = undefined,
         cmp = comparator ? comparator : function (a, b) {
@@ -527,6 +549,32 @@ P.U.ex(P.Actor.prototype, {
     });
   },
 
+  /**
+   * Creates a new {{#crossLink "ProAct.Stream"}}{{/crossLink}} with source - `this`.
+   * It emits the difference between the last update and the current incomming update from the source.
+   *
+   * ```
+   *
+   *  source.diff(0, function(prev, v) {
+   *      return v - prev;
+   *  });
+   *
+   *  // source :
+   *  // --3---5------6---|->
+   *  // skipWhlie:
+   *  // --3---2------1---|->
+   *
+   * ```
+   *
+   * @for ProAct.Actor
+   * @instance
+   * @method diff
+   * @param {Object} seed
+   *      A value to pass the `differ` function as previous on the inital notification from the source.
+   * @param {Function} differ
+   *      Creates the difference, receives two params - the previous update and the current.
+   *      It can be skipped - the default `differ` function returns array with two elements - the previous and the curren updates.
+   */
   diff: function(seed, differ) {
     var last = seed,
         fn = differ ? differ : function (last, next) {
