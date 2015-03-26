@@ -621,6 +621,31 @@ P.U.ex(P.Actor.prototype, {
     });
   },
 
+  /**
+   * Creates a new {{#crossLink "ProAct.Stream"}}{{/crossLink}} with source - `this`.
+   * It emits notifications from its source, while a condition is true.
+   *
+   * ```
+   *
+   *  source.takeWhile(function (v) {
+   *      return v % 2 === 1;
+   *  });
+   *
+   *  // source :
+   *  // --3---5---2--4---3---4---5--|->
+   *  // skipWhlie:
+   *  // --3---5--|->
+   *
+   * ```
+   *
+   * @for ProAct.Actor
+   * @instance
+   * @method takeWhile
+   * @param {Function} condition
+   *        A condition function, which is called for each of the incoming values
+   *        While it returns true, the elements are emitted,
+   *        after it returns false for the first time, the stream created by takeWhile closes.
+   */
   takeWhile: function (condition) {
     return this.fromLambda(function (stream, event) {
       if (condition.call(null, event)) {
