@@ -596,6 +596,18 @@ P.U.ex(P.Actor.prototype, {
     });
   },
 
+  /**
+   * Creates a new {{#crossLink "ProAct.Stream"}}{{/crossLink}} with source - `this`.
+   * It takes the first `limit` updates incoming from `this`.
+   *
+   * source : --3---4---5--4---3---4---5--|->
+   * skip(3): --3---4---5--|->
+   *
+   * @for ProAct.Actor
+   * @instance
+   * @method take
+   * @param {Number} limit The number of notifications to emit.
+   */
   take: function (limit) {
     var left = limit;
     return this.fromLambda(function (stream, event) {
