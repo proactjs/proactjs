@@ -656,12 +656,41 @@ P.U.ex(P.Actor.prototype, {
     });
   },
 
+  /**
+   * Creates a new {{#crossLink "ProAct.Stream"}}{{/crossLink}} with source - `this`.
+   * The logic of the stream is implemented through the passed `lambda` parameter.
+   *
+   * TODO The first parameter of the lambda should be called something else and not stream.
+   *
+   * ```
+   *  source.fromLambda(function (stream, notification) {
+   *    stream.trigger(notification);
+   *  });
+   *
+   *  // Just forwards notifications..
+   *
+   * ```
+   *
+   * @for ProAct.Actor
+   * @instance
+   * @method fromLambda
+   * @param {Function} lambda
+   *      A function, with two arguments - the returned by this function stream and notification.
+   *      For every update comming from `this`, the lambda is called with the update and the stream in it.
+   *      Has the `trigger`, `triggerErr` and `triggerClose` methods.
+   */
   fromLambda: function (lambda) {
     var stream = new ProAct.Stream(this.queueName),
         listener = function (e) {
           stream.trigger = StreamUtil.trigger;
+          stream.triggerErr = StreamUtil.triggerErr;
+          stream.triggerClose = StreamUtil.triggerClose;
+
           lambda.call(null, stream, e);
+
           stream.trigger = undefined;
+          stream.triggerErr = undefined;
+          stream.triggerClose = undefined;
         };
     this.onAll(listener);
     stream.lambda = listener;
