@@ -698,6 +698,31 @@ P.U.ex(P.Actor.prototype, {
     return stream;
   },
 
+  /**
+   * Creates a new {{#crossLink "ProAct.Stream"}}{{/crossLink}} with source - `this`.
+   * For every update incomming from the source, a new `Actor` is created using the `mapper`
+   * function. ALl the updates, emitted by the streams, returned by the `mapper` are emitted by the
+   * `Actor` created by `flatMap`
+   *
+   *
+   * ```
+   *  source.flatMap(function (v) {
+   *    return ProAct.seq(100, v, v +1);
+   *  });
+   *
+   *  // source:
+   *  // -1---2----4-----3-----2-----1---->
+   *  // flatMap
+   *  // -1-2-2-3--4-5---3-4---2-3---1-2-->
+   *
+   * ```
+   *
+   * @for ProAct.Actor
+   * @instance
+   * @method flatMap
+   * @param {Function} mapper
+   *      A function that returns an `ProAct.Actor` using the incomming notification.
+   */
   flatMap: function (mapper) {
     return this.fromLambda(function (stream, e) {
       if (e !== P.Actor.Close) {
