@@ -701,13 +701,13 @@ P.U.ex(P.Actor.prototype, {
   /**
    * Creates a new {{#crossLink "ProAct.Stream"}}{{/crossLink}} with source - `this`.
    * For every update incomming from the source, a new `Actor` is created using the `mapper`
-   * function. ALl the updates, emitted by the streams, returned by the `mapper` are emitted by the
+   * function. All the updates, emitted by the streams, returned by the `mapper` are emitted by the
    * `Actor` created by `flatMap`
    *
    *
    * ```
    *  source.flatMap(function (v) {
-   *    return ProAct.seq(100, v, v +1);
+   *    return ProAct.seq(100, [v, v +1 ]);
    *  });
    *
    *  // source:
@@ -732,6 +732,22 @@ P.U.ex(P.Actor.prototype, {
     });
   },
 
+  /**
+   * Creates a new {{#crossLink "ProAct.Stream"}}{{/crossLink}} with source - `this`.
+   * For every update incomming from the source, a new `Actor` is created using the `mapper`
+   * function. ALl the updates, emitted by the streams, returned by the `mapper` are emitted by the
+   * `Actor` created by `flatMap`. The number of the currently active sources is limited by the
+   * passed `limit`. All the sources created after the limit is reached are queued and reused as sources later.
+   *
+   *
+   * @for ProAct.Actor
+   * @instance
+   * @method flatMapLimited
+   * @param {Function} mapper
+   *      A function that returns an `ProAct.Actor` using the incomming notification.
+   * @param {Number} limit
+   *      The number of the currently active sources.
+   */
   flatMapLimited: function (mapper, limit) {
     var queue = [], current = 0, addActor = function (stream, actor) {
       if (!actor) {
@@ -759,6 +775,32 @@ P.U.ex(P.Actor.prototype, {
     });
   },
 
+  /**
+   * Creates a new {{#crossLink "ProAct.Stream"}}{{/crossLink}} with source - `this`.
+   * For every update comming from `this`, a new `ProAct.Actor` is created using the logic
+   * passed through `mapper`. This new `Actor` becomes the current source of the `ProAct.Stream`,
+   * returned by this method. The next update will create a new source, which will become
+   * the current one and replace the old one. This is the same as {{#crossLink "ProAct.Actor/flatMapLimited:method"}}{{/crossLink}},
+   * with `limit` of `1`.
+   *
+   * ```
+   *  source.flatMapLast(function (v) {
+   *    return ProAct.seq(100, [v, v + 1, v + 2, v + 3]);
+   *  });
+   *
+   *  // source:
+   *  // -1---2----4-----3-----2-----1----|->
+   *  // flatMap
+   *  // -1-2-2-3-44-5-6-3-4-5-2-3-4-1-2-3-4-|->
+   *
+   * ```
+   *
+   * @for ProAct.Actor
+   * @instance
+   * @method flatMapLast
+   * @param {Function} mapper
+   *      A function that returns an `ProAct.Actor` using the incomming notification.
+   */
   flatMapLast: function (mapper) {
     var oldActor;
     return this.fromLambda(function (stream, e) {
