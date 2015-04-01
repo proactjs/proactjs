@@ -1,6 +1,10 @@
 /**
+ * @module proact-streams
+ */
+
+/**
  * <p>
- *  Constructs a ProAct.BufferedStream. This is a {@link ProAct.Stream} with a buffer.
+ *  Constructs a `ProAct.BufferedStream`. This is a {{#crossLink "ProAct.Stream"}}{{/crossLink}} with a buffer.
  * </p>
  * <p>
  *  On new value/event the listeners are not updated, but the value/event is stored in the buffer.
@@ -18,6 +22,7 @@
  *
  * @class ProAct.BufferedStream
  * @extends ProAct.Stream
+ * @constructor
  * @param {String} queueName
  *      The name of the queue all the updates should be pushed to.
  *      <p>
