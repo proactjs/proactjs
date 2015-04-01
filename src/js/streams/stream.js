@@ -790,7 +790,7 @@ P.U.ex(P.Actor.prototype, {
    *
    *  // source:
    *  // -1---2----4-----3-----2-----1----|->
-   *  // flatMap
+   *  // flatMapLast
    *  // -1-2-2-3-44-5-6-3-4-5-2-3-4-1-2-3-4-|->
    *
    * ```
@@ -813,6 +813,30 @@ P.U.ex(P.Actor.prototype, {
     });
   },
 
+  /**
+   * Creates a new {{#crossLink "ProAct.Stream"}}{{/crossLink}} with source - `this`.
+   * For every update comming from `this`, a new `ProAct.Actor` is created using the logic
+   * passed through `mapper`. The first such `Actor` becomes the source of the `Actor`, returned by this
+   * method. When it finishes, if a new `Actor` is emitted, it becomes the source.
+   *
+   * ```
+   *  source.flatMapLast(function (v) {
+   *    return ProAct.seq(100, [v, v + 1, v + 2, v + 3]);
+   *  });
+   *
+   *  // source:
+   *  // -1---2----4-----3-----2-----1----|->
+   *  // flatMapFirst
+   *  // -1-2-3-4--4-5-6-7-----2-3-4-5-|->
+   *
+   * ```
+   *
+   * @for ProAct.Actor
+   * @instance
+   * @method flatMapFirst
+   * @param {Function} mapper
+   *      A function that returns an `ProAct.Actor` using the incomming notification.
+   */
   flatMapFirst: function (mapper) {
     var oldActor;
     return this.fromLambda(function (stream, e) {
