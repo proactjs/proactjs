@@ -9,6 +9,8 @@
  * <p>
  *  On new value/event the listeners are not updated, but the value/event is stored in the buffer.
  * </p>
+ *
+ * `ProAct.BufferedStream` is an abstract class.
  * <p>
  *  When the buffer is flushed every value/event is emitted to the listeners. In case with property listeners
  *  they are updated only once with the last event/value. Good for performance optimizations.
@@ -17,17 +19,18 @@
  *  For example if it is set to stream mouse move events, we don't care for each of the event but for a portion of them.
  * </p>
  * <p>
- *  ProAct.BufferedStream is part of the streams module of ProAct.js.
+ *  `ProAct.BufferedStream` is part of the `proact-streams` module of ProAct.js.
  * </p>
  *
  * @class ProAct.BufferedStream
  * @extends ProAct.Stream
  * @constructor
+ * @abstract
  * @param {String} queueName
  *      The name of the queue all the updates should be pushed to.
  *      <p>
  *        If this parameter is null/undefined the default queue of
- *        {@link ProAct.flow} is used.
+ *        {{#crossLink "ProAct/flow:property"}}{{/crossLink}} is used.
  *      </p>
  *      <p>
  *        If this parameter is not a string it is used as the
@@ -55,11 +58,10 @@ ProAct.BufferedStream.prototype = P.U.ex(Object.create(P.S.prototype), {
   /**
    * Reference to the constructor of this object.
    *
-   * @memberof ProAct.BufferedStream
-   * @instance
-   * @constant
-   * @type {Object}
-   * @default ProAct.BufferedStream
+   * @property constructor
+   * @type ProAct.BufferedStream
+   * @final
+   * @for ProAct.BufferedStream
    */
   constructor: ProAct.BufferedStream,
 
@@ -67,7 +69,7 @@ ProAct.BufferedStream.prototype = P.U.ex(Object.create(P.S.prototype), {
    * Flushes the stream by emitting all the events/values stored in its buffer.
    * The buffer becomes empty.
    *
-   * @memberof ProAct.BufferedStream
+   * @for ProAct.BufferedStream
    * @instance
    * @method flush
    * @return {ProAct.BufferedStream}

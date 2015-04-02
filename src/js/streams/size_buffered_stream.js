@@ -87,7 +87,6 @@ ProAct.SizeBufferedStream.prototype = P.U.ex(Object.create(P.BS.prototype), {
    *      If the stream should transform the triggered value. By default it is true (if not passed)
    * @return {ProAct.Stream}
    *      <i>this</i>
-   * @see {@link ProAct.BufferedStream#flush}
    */
   trigger: function (event, useTransformations) {
     this.buffer.push(event, useTransformations);
