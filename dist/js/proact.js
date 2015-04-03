@@ -1605,21 +1605,13 @@
 	 */
 	ProAct.flow = new ProAct.Flow(['proq'], {
 	  err: function (e) {
-	    if (P.flow.errStream) {
-	      P.flow.errStream().triggerErr(e);
-	    } else {
-	      console.log(e);
-	    }
+	    console.log(e);
 	  },
 	  flowInstance: {
 	    queue: {
 	      err: function (queue, e) {
 	        e.queue = queue;
-	        if (P.flow.errStream) {
-	          P.flow.errStream().triggerErr(e);
-	        } else {
-	          console.log(e);
-	        }
+	        console.log(e);
 	      }
 	    }
 	  }
@@ -2032,6 +2024,7 @@
 	   * </p>
 	   *
 	   * @for ProAct.Actor
+	   * @protected
 	   * @instance
 	   * @method canClose
 	   */
@@ -2424,18 +2417,70 @@
 	    return this.off('error', listener);
 	  },
 	
+	  /**
+	   * Attaches a new close notifcation listener to this `ProAct.Actor`.
+	   *
+	   * The listener may be function or object that defines a <i>call</i> method.
+	   *
+	   * This is the same as calling `on('close', listener)` on an `Actor`...
+	   *
+	   * @for ProAct.Actor
+	   * @instance
+	   * @method onClose
+	   * @param {Object} listener
+	   *      The listener to attach. It must be instance of Function or object with a <i>call</i> method.
+	   * @return {ProAct.Actor}
+	   *      <b>this</b>
+	   */
 	  onClose: function (listener) {
 	    return this.on('close', listener);
 	  },
 	
+	  /**
+	   * Removes a close notification <i>listener</i> from the passed <i>action</i>.
+	   *
+	   * This is the same as calling `off('close', listener)` on an `Actor`...
+	   *
+	   * @for ProAct.Actor
+	   * @instance
+	   * @method offClose
+	   * @param {Object} listener
+	   *      The listener to detach. If it is skipped, null or undefined all the listeners are removed from this actor.
+	   * @return {ProAct.Actor}
+	   *      <b>this</b>
+	   */
 	  offClose: function (listener) {
 	    return this.off('close', listener);
 	  },
 	
+	  /**
+	   * Attaches the passed listener to listen to values, errors and the close notification from this `ProAct.Actor`.
+	   *
+	   * The listener may be function or object that defines a <i>call</i> method.
+	   *
+	   * @for ProAct.Actor
+	   * @instance
+	   * @method onAll
+	   * @param {Object} listener
+	   *      The listener to attach. It must be instance of Function or object with a <i>call</i> method.
+	   * @return {ProAct.Actor}
+	   *      <b>this</b>
+	   */
 	  onAll: function (listener) {
 	    return this.on(listener).onClose(listener).onErr(listener);
 	  },
 	
+	  /**
+	   * Removes all notifications <i>listener</i> from the passed <i>action</i>.
+	   *
+	   * @for ProAct.Actor
+	   * @instance
+	   * @method offAll
+	   * @param {Object} listener
+	   *      The listener to detach. If it is skipped, null or undefined all the listeners are removed from this actor.
+	   * @return {ProAct.Actor}
+	   *      <b>this</b>
+	   */
 	  offAll: function (listener) {
 	    this.off(listener);
 	    this.off('error', listener);
@@ -2466,9 +2511,9 @@
 	   *    console.log(v);
 	   *  });
 	   *
-	   *  Now if the any of the source actors is updated, the update will be printed on the console by the `actor`.
-	   *
 	   * ```
+	   *
+	   * Now if the any of the source actors is updated, the update will be printed on the console by the `actor`.
 	   *
 	   * @for ProAct.Actor
 	   * @instance
@@ -3161,6 +3206,7 @@
 	   * By default it throws an exception.
 	   *
 	   * @for ProAct.Core
+	   * @protected
 	   * @instance
 	   * @abstract
 	   * @method setup
@@ -3223,6 +3269,15 @@
 	});
 	
 	
+	/**
+	 * The `proact-streams` module provides stateless streams to the ProAct.js API.
+	 * FRP reactive streams.
+	 *
+	 * @module proact-streams
+	 * @main proact-streams
+	 */
+	
+	// PRIVATE
 	StreamUtil = {
 	  go: function (event, useTransformations) {
 	    if (this.listeners.change.length === 0) {
@@ -3232,7 +3287,7 @@
 	      try {
 	        event = P.Actor.transform(this, event);
 	      } catch (e) {
-	        this.triggerErr(e);
+	        StreamUtil.triggerErr.call(this, e);
 	        return this;
 	      }
 	    }
@@ -3260,37 +3315,48 @@
 	    }
 	
 	    return StreamUtil.go.call(this, event, useTransformations);
+	  },
+	
+	  triggerErr: function (err) {
+	    return ActorUtil.update.call(this, err, 'error');
+	  },
+	
+	  triggerClose: function (data) {
+	    return ActorUtil.update.call(this, data, 'close');
 	  }
 	
 	};
 	
 	/**
 	 * <p>
-	 *  Constructs a ProAct.Stream. The stream is a simple {@link ProAct.Actor}, without state.
+	 *  Constructs a `ProAct.Stream`.
+	 *  The stream is a simple {{#crossLink "ProAct.Actor"}}{{/crossLink}}, without state.
 	 * </p>
 	 * <p>
-	 *  The streams are ment to emit values, events, changes and can be plugged into another actor.
-	 *  For example you can connect many streams, to merge them and to divide them, to plug them into properties.
+	 *  The streams are ment to emit values, events, changes and can be plugged into other `Actors`.
+	 *  For example it is possible to connect multiple streams, to merge them and to separate them,
+	 *  to plug them into properties.
 	 * </p>
 	 * <p>
 	 *  The reactive environment consists of the properties and the objects containing them, but
-	 *  the outside world is not reactive. It is possible to use the ProAct.Streams as connections from the
+	 *  the outside world is not reactive. It is possible to use the `ProAct.Streams` as connections from the
 	 *  outside world to the reactive environment.
 	 * </p>
 	 * <p>
 	 *    The transformations can be used to change the events or values emitetted.
 	 * </p>
 	 * <p>
-	 *  ProAct.Stream is part of the streams module of ProAct.js.
+	 *  `ProAct.Stream` is part of the proact-streams module of ProAct.js.
 	 * </p>
 	 *
 	 * @class ProAct.Stream
 	 * @extends ProAct.Actor
+	 * @constructor
 	 * @param {String} queueName
 	 *      The name of the queue all the updates should be pushed to.
 	 *      <p>
 	 *        If this parameter is null/undefined the default queue of
-	 *        {@link ProAct.flow} is used.
+	 *        {{#crossLink "ProAct/flow:property"}}{{/crossLink}} is used.
 	 *      </p>
 	 *      <p>
 	 *        If this parameter is not a string it is used as the
@@ -3322,11 +3388,10 @@
 	  /**
 	   * Reference to the constructor of this object.
 	   *
-	   * @memberof ProAct.Stream
-	   * @instance
-	   * @constant
-	   * @type {Object}
-	   * @default ProAct.Stream
+	   * @property constructor
+	   * @type ProAct.Stream
+	   * @final
+	   * @for ProAct.Stream
 	   */
 	  constructor: ProAct.Stream,
 	
@@ -3336,7 +3401,8 @@
 	   *  Streams don't create new events by default, the event is the source.
 	   * </p>
 	   *
-	   * @memberof ProAct.Stream
+	   * @for ProAct.Stream
+	   * @protected
 	   * @instance
 	   * @method makeEvent
 	   * @param {ProAct.Event} source
@@ -3350,11 +3416,9 @@
 	
 	  /**
 	   * Creates the <i>listener</i> of this stream.
-	   * <p>
-	   *  The listener of the stream just calls the method {@link ProAct.Stream#trigger} with the incoming event/value.
-	   * </p>
 	   *
-	   * @memberof ProAct.Stream
+	   * @for ProAct.Stream
+	   * @protected
 	   * @instance
 	   * @method makeListener
 	   * @return {Object}
@@ -3378,10 +3442,11 @@
 	  /**
 	   * Creates the <i>error listener</i> of this stream.
 	   * <p>
-	   *  The listener just calls {@link ProAct.Stream#triggerErr} of <i>this</i> with the incoming error.
+	   *  The listener pushes the incoming event into `this Stream` by default.
 	   * </p>
 	   *
-	   * @memberof ProAct.Stream
+	   * @for ProAct.Stream
+	   * @protected
 	   * @instance
 	   * @method makeErrListener
 	   * @return {Object}
@@ -3391,7 +3456,11 @@
 	    if (!this.errListener) {
 	      var stream = this;
 	      this.errListener = function (error) {
-	        stream.triggerErr(error);
+	        if (stream.triggerErr) {
+	          stream.triggerErr(event);
+	        } else {
+	          StreamUtil.triggerErr.call(stream, error);
+	        }
 	      };
 	    }
 	
@@ -3400,12 +3469,12 @@
 	
 	  /**
 	   * Creates the <i>closing listener</i> of this stream.
-	   * <p>
-	   *  The listener just calls {@link ProAct.Stream#triggerClose} of <i>this</i> with the incoming closing data.
-	   * </p>
 	   *
-	   * @memberof ProAct.Stream
+	   * Pushes a closing notification into the stream by default.
+	   *
+	   * @for ProAct.Stream
 	   * @instance
+	   * @protected
 	   * @method makeCloseListener
 	   * @return {Object}
 	   *      The <i>closing listener of this stream</i>.
@@ -3413,8 +3482,12 @@
 	  makeCloseListener: function () {
 	    if (!this.closeListener) {
 	      var stream = this;
-	      this.closeListener = function (error) {
-	        stream.triggerClose(error);
+	      this.closeListener = function (data) {
+	        if (stream.triggerClose) {
+	          stream.triggerClose(data);
+	        } else {
+	          StreamUtil.triggerClose.call(stream, data);
+	        }
 	      };
 	    }
 	
@@ -3422,14 +3495,15 @@
 	  },
 	
 	  /**
-	   * Defers a ProAct.Actor listener.
+	   * Defers a `ProAct.Actor` listener.
 	   * <p>
-	   *  For streams this means pushing it to active flow using {@link ProAct.Flow#push}.
-	   *  If the listener is object with 'property' field, it is done using {@link ProAct.Actor#defer}.
+	   *  For streams this means pushing it to active flow using {{#crossLink "ProAct.Flow/push:method"}}{{/crossLink}}.
+	   *  If the listener is object with 'property' field, it is done using {{#crossLink "ProAct.Actor/defer:method"}}{{/crossLink}}.
 	   *  That way the reactive environment is updated only once, but the streams are not part of it.
 	   * </p>
 	   *
-	   * @memberof ProAct.Stream
+	   * @for ProAct.Stream
+	   * @protected
 	   * @instance
 	   * @method defer
 	   * @param {Object} event
@@ -3438,8 +3512,6 @@
 	   *      The listener to defer. It should be a function or object defining the <i>call</i> method.
 	   * @return {ProAct.Actor}
 	   *      <i>this</i>
-	   * @see {@link ProAct.Actor#makeListener}
-	   * @see {@link ProAct.flow}
 	   */
 	  defer: function (event, listener) {
 	    if (!listener) {
@@ -3460,88 +3532,70 @@
 	  },
 	
 	  /**
-	   * <p>
-	   *  Triggers a new error to the stream. Anything that is listening for errors from
-	   *  this stream will get updated.
-	   * </p>
-	   * <p>
-	   *  ProAct.Stream.te is alias of this method.
-	   * </p>
-	   *
-	   * @memberof ProAct.Stream
-	   * @instance
-	   * @method triggerErr
-	   * @param {Error} err
-	   *      The error to trigger.
-	   * @return {ProAct.Stream}
-	   *      <i>this</i>
-	   * @see {@link ProAct.Actor#update}
-	   */
-	  triggerErr: function (err) {
-	    return ActorUtil.update.call(this, err, 'error');
-	  },
-	
-	  /**
-	   * <p>
-	   *  Triggers a closing event to the stream. Anything that is listening for closing events from
-	   *  this stream will get updated.
-	   * </p>
-	   * <p>
-	   *  The stream will be closed and unusable.
-	   * </p>
-	   *
-	   * @memberof ProAct.Stream
-	   * @instance
-	   * @method triggerClose
-	   * @param {Object} data
-	   *      Data connected to the closing event.
-	   * @return {ProAct.Stream}
-	   *      <i>this</i>
-	   * @see {@link ProAct.Actor#update}
-	   */
-	  triggerClose: function (data) {
-	    return ActorUtil.update.call(this, data, 'close');
-	  },
-	
-	  /**
-	   * Creates a new ProAct.Stream instance with source <i>this</i> and mapping
+	   * Creates a new `ProAct.Stream` instance with source <i>this</i> and mapping
 	   * the passed <i>mapping function</i>.
 	   *
-	   * @memberof ProAct.Stream
+	   * ```
+	   *   var mapped = stream.map(function (v) {
+	   *     return v * v;
+	   *   });
+	   *
+	   *   mapped.on(function (v) {
+	   *     console.log(v); // squares
+	   *   });
+	   * ```
+	   *
+	   * @for ProAct.Stream
 	   * @instance
 	   * @method map
 	   * @param {Object} mappingFunction
 	   *      Function or object with a <i>call method</i> to use as map function.
 	   * @return {ProAct.Stream}
-	   *      A new ProAct.Stream instance with the <i>mapping</i> applied.
-	   * @see {@link ProAct.Actor#mapping}
+	   *      A new `ProAct.Stream` instance with the <i>mapping</i> applied.
 	   */
 	  map: function (mappingFunction) {
 	    return new P.S(this).mapping(mappingFunction);
 	  },
 	
 	  /**
-	   * Creates a new ProAct.Stream instance with source <i>this</i> and filtering
+	   * Creates a new `ProAct.Stream` instance with source <i>this</i> and filtering
 	   * the passed <i>filtering function</i>.
 	   *
-	   * @memberof ProAct.Stream
+	   * ```
+	   *   var filtered = stream.filter(function (v) {
+	   *     return v % 2 === 1;
+	   *   });
+	   *
+	   *   filtered.on(function (v) {
+	   *     console.log(v); // odds
+	   *   });
+	   * ```
+	   *
+	   * @for ProAct.Stream
 	   * @instance
 	   * @method filter
 	   * @param {Object} filteringFunction
 	   *      The filtering function or object with a call method, should return boolean.
 	   * @return {ProAct.Stream}
-	   *      A new ProAct.Stream instance with the <i>filtering</i> applied.
-	   * @see {@link ProAct.Actor#filtering}
+	   *      A new `ProAct.Stream` instance with the <i>filtering</i> applied.
 	   */
 	  filter: function (filteringFunction) {
 	    return new P.S(this).filtering(filteringFunction);
 	  },
 	
 	  /**
-	   * Creates a new ProAct.Stream instance with source <i>this</i> and accumulation
+	   * Creates a new `ProAct.Stream` instance with source <i>this</i> and accumulation
 	   * the passed <i>accumulation function</i>.
 	   *
-	   * @memberof ProAct.Stream
+	   * ```
+	   *  var acc = stream.accumulate(0, function (p, v) {
+	   *    return p + v;
+	   *  });
+	   *
+	   *  acc.on(console.log); // sums
+	   * ```
+	   *
+	   * @for ProAct.Stream
 	   * @instance
 	   * @method accumulate
 	   * @param {Object} initVal
@@ -3549,24 +3603,36 @@
 	   * @param {Object} accumulationFunction
 	   *      The function to accumulate.
 	   * @return {ProAct.Stream}
-	   *      A new ProAct.Stream instance with the <i>accumulation</i> applied.
-	   * @see {@link ProAct.Actor#accumulation}
+	   *      A new `ProAct.Stream` instance with the <i>accumulation</i> applied.
 	   */
 	  accumulate: function (initVal, accumulationFunction) {
 	    return new P.S(this).accumulation(initVal, accumulationFunction);
 	  },
 	
 	  /**
-	   * Creates a new ProAct.Stream instance that merges this with other streams.
+	   * Creates a new `ProAct.Stream` instance that merges this with other streams.
 	   * The new instance will have new value on value from any of the source streams.
 	   *
-	   * @memberof ProAct.Stream
+	   * ```
+	   *  var merged = stream1.merge(stream2);
+	   * ```
+	   *
+	   * Here if `stream1` emits:
+	   * 1--2---3----5-----X
+	   *
+	   * and `steam2` emits:
+	   * ----A-----B-----C-----D--X
+	   *
+	   * `merged` will emit:
+	   * 1--2A--3--B-5---C-----D--X
+	   *
+	   * @for ProAct.Stream
 	   * @instance
 	   * @method merge
 	   * @param [...]
 	   *      A list of streams to be set as sources.
 	   * @return {ProAct.Stream}
-	   *      A new ProAct.Stream instance with the sources this and all the passed streams.
+	   *      A new `ProAct.Stream` instance with the sources this and all the passed streams.
 	   */
 	  merge: function () {
 	    var sources = [this].concat(slice.call(arguments)),
@@ -3575,6 +3641,35 @@
 	    return P.S.prototype.into.apply(result, sources);
 	  },
 	
+	  /**
+	   * Links source actors into this `ProAct.Stream`. This means that <i>this stream</i>
+	   * is listening for changes from the <i>sources</i>.
+	   *
+	   * The streams count their sources and when the sources are zero, they become inactive.
+	   *
+	   * ```
+	   *  var stream1 = ProAct.stream();
+	   *  var stream2 = ProAct.stream();
+	   *  var stream = ProAct.stream();
+	   *
+	   *  stream.into(stream1, stream2);
+	   *  stream.on(function (v) {
+	   *    console.log(v);
+	   *  });
+	   *
+	   * ```
+	   *
+	   * Now if the any of the source streams is emits,
+	   * the notification will be printed on the output.
+	   *
+	   * @for ProAct.Stream
+	   * @instance
+	   * @method into
+	   * @param [...]
+	   *      Zero or more source {{#crossLink "ProAct.Actor"}}{{/crossLink}}s to set as sources.
+	   * @return {ProAct.Stream}
+	   *      <b>this</b>
+	   */
 	  into: function () {
 	    ProAct.Actor.prototype.into.apply(this, arguments);
 	
@@ -3583,6 +3678,17 @@
 	    return this;
 	  },
 	
+	  /**
+	   * Checks if <i>this</i> can be closed.
+	   *
+	   * Uses the number of the active sources to decide if `this stream` is ready to be closed.
+	   * If the active sources are zero - it can.
+	   *
+	   * @for ProAct.Stream
+	   * @protected
+	   * @instance
+	   * @method canClose
+	   */
 	  canClose: function () {
 	    this.sourceNumber -= 1;
 	
@@ -3590,32 +3696,34 @@
 	  }
 	});
 	
-	P.U.ex(P.F.prototype, {
+	// Methods added to the ProAct.Actor from the proact-streams module.
+	P.U.ex(P.Actor.prototype, {
 	
 	  /**
-	   * Retrieves the errStream for logging errors from this flow.
-	   * If there is no error stream, it is created.
+	   * Turns this `ProAct.Actor` to a {{#crossLink "ProAct.Stream"}}{{/crossLink}}.
 	   *
-	   * @memberof ProAct.Flow
+	   * In reality this method creates a new `Stream` with source this.
+	   *
+	   * @for ProAct.Actor
 	   * @instance
-	   * @method errStream
-	   * @return {ProAct.Stream}
-	   *      The error stream of the flow.
+	   * @method toStream
 	   */
-	  errStream: function () {
-	    if (!this.errStreamVar) {
-	      this.errStreamVar = new P.S();
-	    }
-	
-	    return this.errStreamVar;
-	  }
-	});
-	
-	P.U.ex(P.Actor.prototype, {
 	  toStream: function () {
 	    return new P.S(this.queueName, this);
 	  },
 	
+	  /**
+	   * Creates a new {{#crossLink "ProAct.Stream"}}{{/crossLink}} with source - `this`.
+	   * It skips the first `n` updates incoming from `this`.
+	   *
+	   * source : --3---4---5--4---3---4---5--|->
+	   * skip(3): -------------4---3---4---5--|->
+	   *
+	   * @for ProAct.Actor
+	   * @instance
+	   * @method skip
+	   * @param {Number} n The number of notifications to skip.
+	   */
 	  skip: function (n) {
 	    var i = n, self = this;
 	    return this.fromLambda(function (stream, event) {
@@ -3633,6 +3741,31 @@
 	    });
 	  },
 	
+	  /**
+	   * Creates a new {{#crossLink "ProAct.Stream"}}{{/crossLink}} with source - `this`.
+	   * It skips notifications from its source, while a condition is true.
+	   *
+	   * ```
+	   *
+	   *  source.skipWhile(function (v) {
+	   *      return v % 2 === 1;
+	   *  });
+	   *
+	   *  // source :
+	   *  // --3---5---2--4---3---4---5--|->
+	   *  // skipWhlie:
+	   *  // ----------2--4---3---4---5--|->
+	   *
+	   * ```
+	   *
+	   * @for ProAct.Actor
+	   * @instance
+	   * @method skipWhile
+	   * @param {Function} condition
+	   *        A condition function, which is called for each of the incoming values
+	   *        While it returns true, the elements are skipped,
+	   *        after it returns false for the first time, the current and all the following values are emitted.
+	   */
 	  skipWhile: function (condition) {
 	    var self = this,
 	        cond = condition ? condition : function (e) {
@@ -3652,6 +3785,28 @@
 	    });
 	  },
 	
+	  /**
+	   * Creates a new {{#crossLink "ProAct.Stream"}}{{/crossLink}} with source - `this`.
+	   * It skips dublicating elements, comming one after another.
+	   *
+	   * ```
+	   *
+	   *  source.skipDuplicates();
+	   *
+	   *  // source :
+	   *  // --3---5---5--4---3---3---5--|->
+	   *  // skipDuplicates:
+	   *  // --3---5------4---3-------5--|->
+	   *
+	   * ```
+	   *
+	   * @for ProAct.Actor
+	   * @instance
+	   * @method skipDuplicates
+	   * @param {Function} comparator
+	   *      A function used to compare the elements.
+	   *      If nothing is passed it defaults to comparing using `===`.
+	   */
 	  skipDuplicates: function (comparator) {
 	    var last = undefined,
 	        cmp = comparator ? comparator : function (a, b) {
@@ -3665,6 +3820,32 @@
 	    });
 	  },
 	
+	  /**
+	   * Creates a new {{#crossLink "ProAct.Stream"}}{{/crossLink}} with source - `this`.
+	   * It emits the difference between the last update and the current incomming update from the source.
+	   *
+	   * ```
+	   *
+	   *  source.diff(0, function(prev, v) {
+	   *      return v - prev;
+	   *  });
+	   *
+	   *  // source :
+	   *  // --3---5------6---|->
+	   *  // skipWhlie:
+	   *  // --3---2------1---|->
+	   *
+	   * ```
+	   *
+	   * @for ProAct.Actor
+	   * @instance
+	   * @method diff
+	   * @param {Object} seed
+	   *      A value to pass the `differ` function as previous on the inital notification from the source.
+	   * @param {Function} differ
+	   *      Creates the difference, receives two params - the previous update and the current.
+	   *      It can be skipped - the default `differ` function returns array with two elements - the previous and the curren updates.
+	   */
 	  diff: function(seed, differ) {
 	    var last = seed,
 	        fn = differ ? differ : function (last, next) {
@@ -3686,6 +3867,18 @@
 	    });
 	  },
 	
+	  /**
+	   * Creates a new {{#crossLink "ProAct.Stream"}}{{/crossLink}} with source - `this`.
+	   * It takes the first `limit` updates incoming from `this`.
+	   *
+	   * source : --3---4---5--4---3---4---5--|->
+	   * skip(3): --3---4---5--|->
+	   *
+	   * @for ProAct.Actor
+	   * @instance
+	   * @method take
+	   * @param {Number} limit The number of notifications to emit.
+	   */
 	  take: function (limit) {
 	    var left = limit;
 	    return this.fromLambda(function (stream, event) {
@@ -3699,6 +3892,31 @@
 	    });
 	  },
 	
+	  /**
+	   * Creates a new {{#crossLink "ProAct.Stream"}}{{/crossLink}} with source - `this`.
+	   * It emits notifications from its source, while a condition is true.
+	   *
+	   * ```
+	   *
+	   *  source.takeWhile(function (v) {
+	   *      return v % 2 === 1;
+	   *  });
+	   *
+	   *  // source :
+	   *  // --3---5---2--4---3---4---5--|->
+	   *  // skipWhlie:
+	   *  // --3---5--|->
+	   *
+	   * ```
+	   *
+	   * @for ProAct.Actor
+	   * @instance
+	   * @method takeWhile
+	   * @param {Function} condition
+	   *        A condition function, which is called for each of the incoming values
+	   *        While it returns true, the elements are emitted,
+	   *        after it returns false for the first time, the stream created by takeWhile closes.
+	   */
 	  takeWhile: function (condition) {
 	    return this.fromLambda(function (stream, event) {
 	      if (condition.call(null, event)) {
@@ -3709,12 +3927,41 @@
 	    });
 	  },
 	
+	  /**
+	   * Creates a new {{#crossLink "ProAct.Stream"}}{{/crossLink}} with source - `this`.
+	   * The logic of the stream is implemented through the passed `lambda` parameter.
+	   *
+	   * TODO The first parameter of the lambda should be called something else and not stream.
+	   *
+	   * ```
+	   *  source.fromLambda(function (stream, notification) {
+	   *    stream.trigger(notification);
+	   *  });
+	   *
+	   *  // Just forwards notifications..
+	   *
+	   * ```
+	   *
+	   * @for ProAct.Actor
+	   * @instance
+	   * @method fromLambda
+	   * @param {Function} lambda
+	   *      A function, with two arguments - the returned by this function stream and notification.
+	   *      For every update comming from `this`, the lambda is called with the update and the stream in it.
+	   *      Has the `trigger`, `triggerErr` and `triggerClose` methods.
+	   */
 	  fromLambda: function (lambda) {
 	    var stream = new ProAct.Stream(this.queueName),
 	        listener = function (e) {
 	          stream.trigger = StreamUtil.trigger;
+	          stream.triggerErr = StreamUtil.triggerErr;
+	          stream.triggerClose = StreamUtil.triggerClose;
+	
 	          lambda.call(null, stream, e);
+	
 	          stream.trigger = undefined;
+	          stream.triggerErr = undefined;
+	          stream.triggerClose = undefined;
 	        };
 	    this.onAll(listener);
 	    stream.lambda = listener;
@@ -3789,7 +4036,6 @@
 	
 	P.S.prototype.t = P.S.prototype.trigger;
 	P.S.prototype.tt = P.S.prototype.triggerMany;
-	P.S.prototype.te = P.S.prototype.triggerErr;
 	
 	/**
 	 * <p>
@@ -4423,7 +4669,7 @@
 	 *  it is added as a listener to the property changes.
 	 * </p>
 	 * <p>
-	 *  Every property has a type the default property has a type of a simple value.
+	 *  Every property has a type. The default property has a type of a simple value.
 	 * </p>
 	 * <p>
 	 *  All the properties of an object are managed by its {{#crossLink "ProAct.ObjectCore"}}{{/crossLink}},
@@ -4435,13 +4681,14 @@
 	 *  If the property is not in {{#crossLink "ProAct.States/ready:property"}}{{/crossLink}} state, it is not useable.
 	 * </p>
 	 * <p>
-	 *  {{#crossLink "ProAct.Property/init:method"}}{{/crossLink}} is called by this constructor for the property initialization.
+	 *  {{#crossLink "ProAct.Actor/init:method"}}{{/crossLink}} is called by this constructor for the property initialization.
 	 *  It should initialize the property and set its state to {{#crossLink "ProAct.States/ready:property"}}{{/crossLink}}.
 	 * </p>
 	 * <p>
-	 *  ProAct.Property is part of the proact-properties module of ProAct.js.
+	 *  ProAct.Property is part of the `proact-properties` module of `ProAct.js`.
 	 * </p>
 	 *
+	 * Examples:
 	 * ```
 	 *  var property = new Property({v: 5}, 'v');
 	 *  property.get(); // This is 5
@@ -5173,15 +5420,22 @@
 	});
 	
 	/**
+	 * @module proact-properties
+	 */
+	
+	/**
 	 * <p>
-	 *  Constructs a ProAct.AutoProperty. The properties are simple {@link ProAct.Actor}s with state. The auto-computed or functional property
-	 *  has a state of a Function value.
+	 *  Constructs a `ProAct.AutoProperty`.
+	 *  The properties are simple {{#crossLink "ProAct.Actor"}}{{/crossLink}}s with state.
+	 *  The auto-computed or functional property has a state of a function return value.
 	 * </p>
 	 * <p>
-	 *  Auto-computed properties are functions which are turned to {@link ProAct.Property}s by a {@link ProAct.ObjectCore}.
+	 *  Auto-computed properties are functions which are turned
+	 *  to {{#crossLink "ProAct.Property"}}{{/crossLink}}s by a {{#crossLink "ProAct.ObjectCore"}}{{/crossLink}}.
 	 * </p>
 	 * <p>
-	 *  If these functions are reading another fields of ProAct.js objects, they authomatically become dependent on them.
+	 *  If these functions are reading another fields of ProAct.js objects,
+	 *  they authomatically become dependent on them.
 	 * </p>
 	 * <p>
 	 *  For example:
@@ -5194,7 +5448,8 @@
 	 *      }
 	 *    };
 	 *  </pre>
-	 *  If this object - <i>obj</i> is turned to a reactive ProAct.js object, it becomes a simple object with three fields:
+	 *  If this object - <i>obj</i> is turned to a reactive ProAct.js object,
+	 *  it becomes a simple object with three fields:
 	 *  <pre>
 	 *    {
 	 *      a: 1,
@@ -5202,7 +5457,8 @@
 	 *      c: -1
 	 *    }
 	 *  </pre>
-	 *  But now <i>c</i> is dependent on <i>a</i> and <i>b</i>, so if <i>a</i> is set to <b>4</b>, <i>obj</i> becomes:
+	 *  But now <i>c</i> is dependent on <i>a</i> and <i>b</i>,
+	 *  so if <i>a</i> is set to <b>4</b>, <i>obj</i> becomes:
 	 *  <pre>
 	 *    {
 	 *      a: 1,
@@ -5214,28 +5470,33 @@
 	 * <p>
 	 *  The logic is the following:
 	 *  <ul>
-	 *    <li>The property is initialized to be lazy, so its state is {@link ProAct.States.init}</li>
-	 *    <li>On its first read, the {@link ProAct.currentCaller} is set to the listener of the property, so all the properties read in the function body became observed by it. The value of the property is computed using the original function of the field.</li>
-	 *    <li>On this first read the state of the property is updated to {@link ProAct.States.ready}.</li>
+	 *    <li>The property is initialized to be lazy, so its state is {{#crossLink "ProAct.States/init:property"}}{{/crossLink}}</li>
+	 *    <li>
+	 *      On its first read, the {{#crossLink "ProAct/currentCaller:property"}}{{/crossLink}} is set to the listener of the property,
+	 *      so all the properties read in the function body become observed by it.
+	 *      The value of the property is computed using the original function of the field.
+	 *    </li>
+	 *    <li>On this first read the state of the property is updated to {{#crossLink "ProAct.States/ready:property"}}{{/crossLink}}.</li>
 	 *    <li>On its following reads it is a simple value, computed from the first read. No re-computations on get.</li>
 	 *    <li>If a property, this auto-computed property depends changes, the value of <i>this</i> ProAct.AutoProperty is recomputed.</li>
 	 *    <li>Setting the property can be implemented easy, because on set, the original function of the property is called with the new value.</li>
 	 *  </ul>
 	 * </p>
 	 * <p>
-	 *  ProAct.AutoProperty can be depend on another ProAct.AutoProperty.
+	 *  `ProAct.AutoProperty` can be dependant on another `ProAct.AutoProperty`.
 	 * </p>
 	 * <p>
-	 *  ProAct.AutoProperty is part of the properties module of ProAct.js.
+	 *  `ProAct.AutoProperty` is part of the proact-properties module of ProAct.js.
 	 * </p>
 	 *
 	 * @class ProAct.AutoProperty
 	 * @extends ProAct.Property
+	 * @constructor
 	 * @param {String} queueName
 	 *      The name of the queue all the updates should be pushed to.
 	 *      <p>
 	 *        If this parameter is null/undefined the default queue of
-	 *        {@link ProAct.flow} is used.
+	 *        {{#crossLink "ProAct/flow:property"}}{{/crossLink}} is used.
 	 *      </p>
 	 *      <p>
 	 *        If this parameter is not a string it is used as the
@@ -5245,9 +5506,6 @@
 	 *      A plain JavaScript object, holding a field, this property will represent.
 	 * @param {String} property
 	 *      The name of the field of the object, this property should represent.
-	 * @see {@link ProAct.ObjectCore}
-	 * @see {@link ProAct.States.init}
-	 * @see {@link ProAct.States.ready}
 	 */
 	function AutoProperty (queueName, proObject, property) {
 	  if (queueName && !P.U.isString(queueName)) {
@@ -5297,20 +5555,21 @@
 	  /**
 	   * Reference to the constructor of this object.
 	   *
-	   * @memberof ProAct.AutoProperty
-	   * @instance
-	   * @constant
-	   * @default ProAct.AutoProperty
+	   * @property constructor
+	   * @type ProAct.AutoProperty
+	   * @final
+	   * @for ProAct.AutoProperty
 	   */
 	  constructor: ProAct.AutoProperty,
 	
 	  /**
-	   * Retrieves the {@link ProAct.Property.Types} value of <i>this</i> property.
+	   * Retrieves the {{#crossLink "ProAct.Property.Types"}}{{/crossLink}} value of <i>this</i> property.
 	   * <p>
-	   *  For ProAct.AutoProperty this is {@link ProAct.Property.Types.auto}
+	   *  For instances of the `ProAct.AutoProperty` class, it is
+	   *  {{#crossLink "ProAct.Property.Types/auto:property"}}{{/crossLink}}.
 	   * </p>
 	   *
-	   * @memberof ProAct.AutoProperty
+	   * @for ProAct.AutoProperty
 	   * @instance
 	   * @method type
 	   * @return {Number}
@@ -5321,22 +5580,23 @@
 	  },
 	
 	  /**
-	   * Creates the <i>listener</i> of this ProAct.AutoProperty.
+	   * Creates the <i>listener</i> of this `ProAct.AutoProperty`.
 	   * <p>
 	   *  This listener turns the observable in a observer.
 	   * </p>
 	   * <p>
-	   *  The listener for ProAct.AutoProperty is an object defining the <i>call</i> method.
+	   *  The listener for `ProAct.AutoProperty` is an object defining the <i>call</i> method.
 	   * </p>
 	   * <p>
 	   *  It has a <i>property</i> field set to <i>this</i>.
 	   * </p>
 	   * <p>
 	   *  On value changes the <i><this</i> value is set to the value computed by the original function,
-	   *  using the {@link ProAct.Actor#transform} to transform it.
+	   *  using the {{#crossLink "ProAct.Actor/transform:method"}}{{/crossLink}} to transform it.
 	   * </p>
 	   *
-	   * @memberof ProAct.AutoProperty
+	   * @for ProAct.AutoProperty
+	   * @protected
 	   * @instance
 	   * @method makeListener
 	   * @return {Object}
@@ -5362,10 +5622,12 @@
 	  /**
 	   * Called automatically after initialization of this property.
 	   * <p>
-	   *  For ProAct.AutoProperty it does nothing - the real initialization is lazy and is performed on the first read of <i>this</i>.
+	   *  For `ProAct.AutoProperty` it does nothing -
+	   *  the real initialization is lazy and is performed on the first read of <i>this</i>.
 	   * </p>
 	   *
-	   * @memberof ProAct.AutoProperty
+	   * @for ProAct.AutoProperty
+	   * @protected
 	   * @instance
 	   * @method afterInit
 	   */
@@ -5373,33 +5635,41 @@
 	});
 	
 	/**
+	 * @module proact-properties
+	 */
+	
+	/**
 	 * <p>
-	 *  Constructs a ProAct.ObjectProperty. The properties are simple {@link ProAct.Actor}s with state. The object property
+	 *  Constructs a `ProAct.ObjectProperty`.
+	 *  The properties are simple {{#crossLink "ProAct.Actor"}}{{/crossLink}}s with state. The object property
 	 *  has a state of a JavaScript object value.
 	 * </p>
 	 * <p>
-	 *  The value of ProAct.ObjectProperty is object, turned to reactive ProAct.js object recursively.
+	 *  The value of `ProAct.ObjectProperty` is object, turned to reactive ProAct.js object recursively.
 	 * </p>
 	 * <p>
-	 *  On changing the object value to another object the listeners for fields with the same name in the objects, are moved from the old value's fields to the new value's fields.
+	 *  On changing the object value to another object the listeners for fields with the same name in the objects,
+	 *  are moved from the old value's fields to the new value's fields.
 	 * </p>
 	 * <p>
-	 *  If set to null or undefined, the property is re-defined, using {@link ProAct.Property.reProb}
+	 *  If set to null or undefined, the property is re-defined, using {{#crossLink "ProAct.Property/reProb:method"}}{{/crossLink}}
 	 * </p>
 	 * <p>
-	 *  ProAct.ObjectProperty is lazy - its object is made reactive on the first read of the property. Its state is set to {@link ProAct.States.ready} on the first read too.
+	 *  `ProAct.ObjectProperty` is lazy - its object is made reactive on the first read of the property.
+	 *  Its state is set to {{#crossLink "ProAct.States/ready:property"}}{{/crossLink}} on the first read too.
 	 * </p>
 	 * <p>
-	 *  ProAct.ObjectProperty is part of the properties module of ProAct.js.
+	 *  `ProAct.ObjectProperty` is part of the proact-properties module of ProAct.js.
 	 * </p>
 	 *
 	 * @class ProAct.ObjectProperty
 	 * @extends ProAct.Property
+	 * @constructor
 	 * @param {String} queueName
 	 *      The name of the queue all the updates should be pushed to.
 	 *      <p>
 	 *        If this parameter is null/undefined the default queue of
-	 *        {@link ProAct.flow} is used.
+	 *        {{#crossLink "ProAct/flow:property"}}{{/crossLink}} is used.
 	 *      </p>
 	 *      <p>
 	 *        If this parameter is not a string it is used as the
@@ -5409,9 +5679,6 @@
 	 *      A plain JavaScript object, holding a field, this property will represent.
 	 * @param {String} property
 	 *      The name of the field of the object, this property should represent.
-	 * @see {@link ProAct.ObjectCore}
-	 * @see {@link ProAct.States.init}
-	 * @see {@link ProAct.States.ready}
 	 */
 	function ObjectProperty (queueName, proObject, property) {
 	  if (queueName && !P.U.isString(queueName)) {
@@ -5509,20 +5776,21 @@
 	  /**
 	   * Reference to the constructor of this object.
 	   *
-	   * @memberof ProAct.ObjectProperty
-	   * @instance
-	   * @constant
-	   * @default ProAct.ObjectProperty
+	   * @property constructor
+	   * @type ProAct.ObjectProperty
+	   * @final
+	   * @for ProAct.ObjectProperty
 	   */
 	  constructor: ProAct.ObjectProperty,
 	
 	  /**
-	   * Retrieves the {@link ProAct.Property.Types} value of <i>this</i> property.
+	   * Retrieves the {{#crossLink "ProAct.Property.Types"}}{{/crossLink}} value of <i>this</i> property.
 	   * <p>
-	   *  For ProAct.ObjectProperty this is {@link ProAct.Property.Types.object}
+	   *  For instances of the `ProAct.ObjectProperty` class, it is
+	   *  {{#crossLink "ProAct.Property.Types/object:property"}}{{/crossLink}}.
 	   * </p>
 	   *
-	   * @memberof ProAct.ObjectProperty
+	   * @for ProAct.ObjectProperty
 	   * @instance
 	   * @method type
 	   * @return {Number}
@@ -5535,10 +5803,12 @@
 	  /**
 	   * Called automatically after initialization of this property.
 	   * <p>
-	   *  For ProAct.ObjectProperty it does nothing - the real initialization is lazy and is performed on the first read of <i>this</i>.
+	   *  For `ProAct.ObjectProperty` it does nothing -
+	   *  the real initialization is lazy and is performed on the first read of <i>this</i>.
 	   * </p>
 	   *
-	   * @memberof ProAct.ObjectProperty
+	   * @for ProAct.ObjectProperty
+	   * @protected
 	   * @instance
 	   * @method afterInit
 	   */
@@ -5546,8 +5816,13 @@
 	});
 	
 	/**
+	 * @module proact-properties
+	 */
+	
+	/**
 	 * <p>
-	 *  Constructs a `ProAct.ArrayProperty`. A property is a simple {{#crossLink "ProAct.Actor"}}{{/crossLink}} with state.
+	 *  Constructs a `ProAct.ArrayProperty`.
+	 *  A property is a simple {{#crossLink "ProAct.Actor"}}{{/crossLink}} with state.
 	 * </p>
 	 * <p>
 	 *  The value of `ProAct.ArrayProperty` is an array, turned to reactive ProAct.js array -
@@ -5575,7 +5850,7 @@
 	 *      The name of the queue all the updates should be pushed to.
 	 *      <p>
 	 *        If this parameter is null/undefined the default queue of
-	 *        {@link ProAct.flow} is used.
+	 *        {{#crossLink "ProAct/flow:property"}}{{/crossLink}} is used.
 	 *      </p>
 	 *      <p>
 	 *        If this parameter is not a string it is used as the
@@ -5717,22 +5992,27 @@
 	});
 	
 	/**
+	 * @module proact-properties
+	 */
+	
+	/**
 	 * <p>
-	 *  Constructs a ProAct.ProxyProperty. This is a property, pointing to another {@link ProAct.Property}.
+	 *  Constructs a `ProAct.ProxyProperty`. This is a property, pointing to another {{#crossLink "ProAct.Property"}}{{/crossLink}}.
 	 * </p>
 	 * <p>
-	 *  The value of ProAct.ProxyProperty is the value of its target, if the target is updated, the proxy is updated.
+	 *  The value of `ProAct.ProxyProperty` is the value of its target, if the target is updated, the proxy is updated.
 	 * </p>
 	 * <p>
 	 *  By setting the value of the proxy, the value of the target is updated, the proxy doesn't have its own value, it uses
 	 *  the value of the target.
 	 * </p>
 	 * <p>
-	 *  ProAct.ProxyProperty is part of the properties module of ProAct.js.
+	 *  `ProAct.ProxyProperty` is part of the proact-properties module of ProAct.js.
 	 * </p>
 	 *
 	 * @class ProAct.ProxyProperty
 	 * @extends ProAct.Property
+	 * @constructor
 	 * @param {String} queueName
 	 *      The name of the queue all the updates should be pushed to.
 	 *      <p>
@@ -5748,7 +6028,7 @@
 	 * @param {String} property
 	 *      The name of the field of the object, this property should represent.
 	 * @param {ProAct.Property} target
-	 *      The target {@link ProAct.Property}, that will provide the value of the new ProAct.ProxyProperty.
+	 *      The target {{#crossLink "ProAct.Property"}}{{/crossLink}}, that will provide the value of the new `ProAct.ProxyProperty`.
 	 */
 	function ProxyProperty (queueName, proObject, property, target) {
 	  if (queueName && !P.U.isString(queueName)) {
@@ -5792,20 +6072,20 @@
 	  /**
 	   * Reference to the constructor of this object.
 	   *
-	   * @memberof ProAct.ProxyProperty
-	   * @instance
-	   * @constant
-	   * @default ProAct.ProxyProperty
+	   * @property constructor
+	   * @type ProAct.ProxyProperty
+	   * @final
+	   * @for ProAct.ProxyProperty
 	   */
 	  constructor: ProAct.ProxyProperty,
 	
 	  /**
-	   * Retrieves the {@link ProAct.Property.Types} value of <i>this</i> property.
+	   * Retrieves the {{#crossLink "ProAct.Property.Types"}}{{/crossLink}} value of <i>this</i> property.
 	   * <p>
-	   *  For ProAct.ProxyProperty this is the type if its <i>target</i>.
+	   *  For `ProAct.ProxyProperty` this is the type if its <i>target</i>.
 	   * </p>
 	   *
-	   * @memberof ProAct.ProxyProperty
+	   * @for ProAct.ProxyProperty
 	   * @instance
 	   * @method type
 	   * @return {Number}
@@ -5816,7 +6096,7 @@
 	  },
 	
 	  /**
-	   * Creates the <i>listener</i> of this ProAct.ProxyProperty.
+	   * Creates the <i>listener</i> of this `ProAct.ProxyProperty`.
 	   * <p>
 	   *  This listener turns the observable in a observer.
 	   * </p>
@@ -5827,11 +6107,12 @@
 	   *  It has a <i>property</i> field set to <i>this</i>.
 	   * </p>
 	   *
-	   * @memberof ProAct.ProxyProperty
+	   * @for ProAct.ProxyProperty
+	   * @protected
 	   * @instance
 	   * @method makeListener
 	   * @return {Object}
-	   *      The <i>listener of this ProAct.ProxyProperty</i>.
+	   *      The <i>listener of this `ProAct.ProxyProperty`</i>.
 	   */
 	  makeListener: function () {
 	    if (!this.listener) {
@@ -5845,13 +6126,17 @@
 	    }
 	
 	    return this.listener;
-	  },
+	  }
 	
 	});
 	
 	/**
+	 * @module proact-properties
+	 */
+	
+	/**
 	 * <p>
-	 *  Constructor for ProAct.PropertyProvider. The ProAct.PropertyProvider is an abstract class.
+	 *  The `ProAct.PropertyProvider` is an abstract class.
 	 * </p>
 	 * <p>
 	 *  Many providers can be registered for many kinds of properties.
@@ -5859,68 +6144,71 @@
 	 * <p>
 	 *  When a ProAct.js object is initialized its fields are turned into properties.
 	 *  Depending on the type and the name of the field, as well as meta information the valid
-	 *  type of {@link ProAct.Property} is created and used. The PropertyProviders have 'filter'
-	 *  method and depending on it the valid kind is decided.
+	 *  type of {{#crossLink "ProAct.Property"}}{{/crossLink}} is created and used.
+	 *  The `PropertyProviders` have 'filter' method and depending on it the valid kind is decided.
 	 * </p>
 	 * <p>
-	 *  ProAct.PropertyProvider is part of the properties module of ProAct.js.
+	 *  ProAct.PropertyProvider is part of the proact-properties module of ProAct.js.
 	 * </p>
 	 *
 	 * @class ProAct.PropertyProvider
-	 * @see {@link ProAct.ObjectCore}
+	 * @constructor
 	 */
 	function PropertyProvider () {}
 	ProAct.PropertyProvider = P.PP = PropertyProvider;
 	
 	
 	(function (P) {
-	  var providers =  [];
+	  var providers = [];
 	
 	  P.U.ex(P.PP, {
 	
 	
 	    /**
-	     * Registers a ProAct.PropertyProvider.
+	     * Registers a `ProAct.PropertyProvider`.
 	     * <p>
-	     *  The provider is appended in the end of the list of ProAct.PropertyProviders.
+	     *  The provider is appended in the end of the list of `ProAct.PropertyProviders`.
 	     * </p>
 	     * <p>
-	     *  When a property must be provided if there is a ProAct.PropertyProvider registered before
+	     *  When a property must be provided if there is a `ProAct.PropertyProvider` registered before
 	     *  the passed <i>propertyProvider</i>, with valid filtering for the passed field, it will
 	     *  be used instead.
 	     * </p>
 	     *
-	     * @memberof ProAct.PropertyProvider
+	     * @for ProAct.PropertyProvider
+	     * @method registerProvider
 	     * @static
 	     * @param {ProAct.PropertyProvider} propertyProvider
-	     *      The ProAct.PropertyProvider to register.
+	     *      The `ProAct.PropertyProvider` to register.
 	     */
 	    registerProvider: function (propertyProvider) {
 	      providers.push(propertyProvider);
 	    },
 	
 	    /**
-	     * Registers a ProAct.PropertyProvider.
+	     * Registers a `ProAct.PropertyProvider`.
 	     * <p>
-	     *  The provider is prepended in the beginning of the list of ProAct.PropertyProviders.
+	     *  The provider is prepended in the beginning of the list of `ProAct.PropertyProviders`.
 	     * </p>
 	     * <p>
 	     *  It's filtering will be called before any other registered provider.
 	     * </p>
 	     *
-	     * @memberof ProAct.PropertyProvider
+	     * @for ProAct.PropertyProvider
+	     * @method prependProvider
 	     * @static
 	     * @param {ProAct.PropertyProvider} propertyProvider
-	     *      The ProAct.PropertyProvider to register.
+	     *      The `ProAct.PropertyProvider` to register.
 	     */
 	    prependProvider: function (propertyProvider) {
 	      providers.unshift(propertyProvider);
 	    },
 	
 	    /**
-	     * Removes a ProAct.PropertyProvider from the list of ProAct.PropertyProviders.
+	     * Removes a `ProAct.PropertyProvider` from the list of the registered `ProAct.PropertyProviders`.
 	     *
-	     * @memberof ProAct.PropertyProvider
+	     * @for ProAct.PropertyProvider
+	     * @method unregisterProvider
 	     * @static
 	     * @param {ProAct.PropertyProvider} propertyProvider
 	     *      The ProAct.PropertyProvider to unregister.
@@ -5930,46 +6218,50 @@
 	    },
 	
 	    /**
-	     * Removes all ProAct.PropertyProviders from the list of ProAct.PropertyProviders.
+	     * Removes all `ProAct.PropertyProviders` from the list of the registered `ProAct.PropertyProviders`.
 	     *
-	     * @memberof ProAct.PropertyProvider
+	     * @for ProAct.PropertyProvider
 	     * @static
+	     * @method clearProviders
 	     */
 	    clearProviders: function () {
 	      providers = [];
 	    },
 	
 	    /**
-	     * Provides a {@link ProAct.Property} instance using the list of the registered
-	     * ProAct.PropertyProviders.
+	     * Provides a {{#crossLink "ProAct.Property"}}{{/crossLink}} instance using the list of the registered
+	     * `ProAct.PropertyProviders`.
 	     * <p>
-	     *  The providers are tried in the order of their registration (the order can be changed using {@link ProAct.PropertyProvider.prependProvider}).
+	     *  The providers are tried in the order of their registration
+	     *  (the order can be changed using {{#crossLink "ProAct.PropertyProvider/prependProvider:method"}}{{/crossLink}}).
 	     * </p>
 	     * <p>
-	     *  The {@link ProAct.PropertyProvider#filter} method is used to check if a provider is compliant with the passed arguments.
+	     *  The {{#crossLink "ProAct.PropertyProvider/filter:method"}}{{/crossLink}} method is used to check
+	     *  if a provider is compliant with the passed arguments.
 	     * </p>
 	     * <p>
-	     *  If a compliant provider is found, its {@link ProAct.PropertyProvider#provide} method is used to provide the {@link ProAct.Property} instance.
+	     *  If a compliant provider is found, its {{#crossLink "ProAct.PropertyProvider/provide:method"}}{{/crossLink}} method
+	     *  is used to provide the {{#crossLink "ProAct.Property"}}{{/crossLink}} instance.
 	     * </p>
 	     *
-	     * @memberof ProAct.PropertyProvider
+	     * @for ProAct.PropertyProvider
 	     * @static
 	     * @param {String} queueName
 	     *      The name of the queue all the updates should be pushed to.
 	     *      <p>
 	     *        If this parameter is null/undefined the default queue of
-	     *        {@link ProAct.flow} is used.
+	     *        {{#crossLink "ProAct/flow:property"}}{{/crossLink}} is used.
 	     *      </p>
 	     *      <p>
 	     *        If this parameter is not a string it is used as the
 	     *        <i>object</i>.
 	     *      </p>
 	     * @param {Object} object
-	     *      The object to provide a {@link ProAct.Property} instance for.
+	     *      The object to provide a {{#crossLink "ProAct.Property"}}{{/crossLink}} instance for.
 	     * @param {String} property
-	     *      The field name of the <i>object</i> to turn into a {@link ProAct.Property}.
+	     *      The field name of the <i>object</i> to turn into a {{#crossLink "ProAct.Property"}}{{/crossLink}}.
 	     * @param {String|Array} meta
-	     *      Meta information to be used for filtering and configuration of the {@link ProAct.Property} instance to be provided.
+	     *      Meta information to be used for filtering and configuration of the {{#crossLink "ProAct.Property"}}{{/crossLink}} instance to be provided.
 	     * @return {ProAct.Property}
 	     *      A property provided by registered provider, or null if there is no compliant provider.
 	     */
@@ -6008,33 +6300,35 @@
 	  /**
 	   * Reference to the constructor of this object.
 	   *
-	   * @memberof ProAct.PropertyProvider
-	   * @instance
-	   * @constant
-	   * @default ProAct.PropertyProvider
+	   * @property constructor
+	   * @type ProAct.PropertyProvider
+	   * @final
+	   * @for ProAct.PropertyProvider
 	   */
 	  constructor: ProAct.PropertyProvider,
 	
 	  /**
-	   * Used to check if this {@link ProAct.PropertyProvider} is compliant with the field and meta data
-	   * to be used for creating a {@link ProAct.Property} instance with {@link ProAct.PropertyProvider#provide}.
+	   * Used to check if this `ProAct.PropertyProvider` is compliant with the field and meta data
+	   * to be used for creating a {{#crossLink "ProAct.Property"}}{{/crossLink}} instance with
+	   * {{#crossLink "ProAct.PropertyProvider/provide:method"}}{{/crossLink}}.
 	   * <p>
-	   *  Abstract - must be implemented in an extender.
+	   *  Abstract - must be implemented by an extender.
 	   * </p>
 	   *
-	   * @memberof ProAct.PropertyProvider
+	   * @for ProAct.PropertyProvider
 	   * @abstract
 	   * @instance
 	   * @method filter
 	   * @param {Object} object
-	   *      The object to which a new {@link ProAct.Property} instance should be provided.
+	   *      The object to which a new {{#crossLink "ProAct.Property"}}{{/crossLink}} instance should be provided.
 	   * @param {String} property
-	   *      The field name of the <i>object</i> to turn into a {@link ProAct.Property}. Can be used in the filtering process.
+	   *      The field name of the <i>object</i> to turn into a {{#crossLink "ProAct.Property"}}{{/crossLink}}.
+	   *      Can be used in the filtering process.
 	   *      <p>
 	   *        For example field name beginning with foo. Can be turned into a FooProperty.
 	   *      </p>
 	   * @param {String|Array} meta
-	   *      Meta information to be used for filtering and configuration of the {@link ProAct.Property} instance to be provided.
+	   *      Meta information to be used for filtering and configuration of the {{#crossLink "ProAct.Property"}}{{/crossLink}} instance to be provided.
 	   * @return {Boolean}
 	   *      If <i>this</i> provider is compliant with the passed arguments.
 	   */
@@ -6043,16 +6337,16 @@
 	  },
 	
 	  /**
-	   * Provides an instance of {@link ProAct.Property}.
+	   * Provides an instance of {{#crossLink "ProAct.Property"}}{{/crossLink}}.
 	   * <p>
-	   *  It should be called only after <i>this</i> {@link ProAct.PropertyProvider#filter} method,
+	   *  It should be called only after <i>this</i> {{#crossLink "ProAct.PropertyProvider/filter:method"}}{{/crossLink}} method,
 	   *  called with the same arguments returns true.
 	   * </p>
 	   * <p>
 	   *  Abstract - must be implemented in an extender.
 	   * </p>
 	   *
-	   * @memberof ProAct.PropertyProvider
+	   * @for ProAct.PropertyProvider
 	   * @abstract
 	   * @instance
 	   * @method provide
@@ -6060,14 +6354,14 @@
 	   *      The name of the queue all the updates should be pushed to.
 	   *      <p>
 	   *        If this parameter is null/undefined the default queue of
-	   *        {@link ProAct.flow} is used.
+	   *        {{#crossLink "ProAct/flow:property"}}{{/crossLink}} is used.
 	   *      </p>
 	   * @param {Object} object
-	   *      The object to which a new {@link ProAct.Property} instance should be provided.
+	   *      The object to which a new {{#crossLink "ProAct.Property"}}{{/crossLink}} instance should be provided.
 	   * @param {String} property
-	   *      The field of the <i>object</i> to turn into a {@link ProAct.Property}. Can be used in the filtering process.
+	   *      The field of the <i>object</i> to turn into a {{#crossLink "ProAct.Property"}}{{/crossLink}}. Can be used in the filtering process.
 	   * @param {String|Array} meta
-	   *      Meta information to be used for filtering and configuration of the {@link ProAct.Property} instance to be provided.
+	   *      Meta information to be used for filtering and configuration of the {{#crossLink "ProAct.Property"}}{{/crossLink}} instance to be provided.
 	   * @return {ProAct.Property}
 	   *      A property provided by <i>this</i> provider.
 	   */
@@ -6078,18 +6372,18 @@
 	
 	/**
 	 * <p>
-	 *  Constructor for ProAct.SimplePropertyProvider.
+	 *  Constructor for `ProAct.SimplePropertyProvider`.
 	 * </p>
 	 * <p>
-	 *  Provides {@link ProAct.Property} instances for fields of simple types - strings, numbers, booleans.
+	 *  Provides {{#crossLink "ProAct.Property"}}{{/crossLink}} instances for fields of simple types - strings, numbers, booleans.
 	 * </p>
 	 * <p>
-	 *  ProAct.SimplePropertyProvider is part of the properties module of ProAct.js.
+	 *  `ProAct.SimplePropertyProvider` is part of the proact-properties module of ProAct.js.
 	 * </p>
 	 *
 	 * @class ProAct.SimplePropertyProvider
 	 * @extends ProAct.PropertyProvider
-	 * @see {@link ProAct.Property}
+	 * @constructor
 	 */
 	ProAct.SimplePropertyProvider = P.SPP = function () {
 	  P.PP.call(this);
@@ -6100,25 +6394,26 @@
 	  /**
 	   * Reference to the constructor of this object.
 	   *
-	   * @memberof ProAct.SimplePropertyProvider
-	   * @instance
-	   * @constant
-	   * @default ProAct.SimplePropertyProvider
+	   * @property constructor
+	   * @type ProAct.SimplePropertyProvider
+	   * @final
+	   * @for ProAct.SimplePropertyProvider
 	   */
+	  constructor: ProAct.AutoPropertyProvider,
 	  constructor: ProAct.SimplePropertyProvider,
 	
 	  /**
-	   * Used to check if this {@link ProAct.SimplePropertyProvider} is compliant with the field and meta data.
+	   * Used to check if this `ProAct.SimplePropertyProvider` is compliant with the field and meta data.
 	   *
-	   * @memberof ProAct.SimplePropertyProvider
+	   * @for ProAct.SimplePropertyProvider
 	   * @instance
 	   * @method filter
 	   * @param {Object} object
-	   *      The object to which a new {@link ProAct.Property} instance should be provided.
+	   *      The object to which a new {{#crossLink "ProAct.Property"}}{{/crossLink}} instance should be provided.
 	   * @param {String} property
-	   *      The field name of the <i>object</i> to turn into a {@link ProAct.Property}. Can be used in the filtering process.
+	   *      The field name of the <i>object</i> to turn into a {{#crossLink "ProAct.Property"}}{{/crossLink}}. Can be used in the filtering process.
 	   * @param {String|Array} meta
-	   *      Meta information to be used for filtering and configuration of the {@link ProAct.Property} instance to be provided.
+	   *      Meta information to be used for filtering and configuration of the {{#crossLink "ProAct.Property"}}{{/crossLink}} instance to be provided.
 	   * @return {Boolean}
 	   *      True if the value of <b>object[property]</b> not undefined or null as well as object, array ot function.
 	   */
@@ -6128,25 +6423,25 @@
 	  },
 	
 	  /**
-	   * Provides an instance of {@link ProAct.Property}.
+	   * Provides an instance of {{#crossLink "ProAct.Property"}}{{/crossLink}}.
 	   *
-	   * @memberof ProAct.SimplePropertyProvider
+	   * @for ProAct.SimplePropertyProvider
 	   * @instance
 	   * @method provide
 	   * @param {String} queueName
 	   *      The name of the queue all the updates should be pushed to.
 	   *      <p>
 	   *        If this parameter is null/undefined the default queue of
-	   *        {@link ProAct.flow} is used.
+	   *        {{#crossLink "ProAct/flow:property"}}{{/crossLink}} is used.
 	   *      </p>
 	   * @param {Object} object
-	   *      The object to which a new {@link ProAct.Property} instance should be provided.
+	   *      The object to which a new {{#crossLink "ProAct.Property"}}{{/crossLink}} instance should be provided.
 	   * @param {String} property
-	   *      The field of the <i>object</i> to turn into a {@link ProAct.Property}.
+	   *      The field of the <i>object</i> to turn into a {{#crossLink "ProAct.Property"}}{{/crossLink}}.
 	   * @param {String|Array} meta
-	   *      Meta information to be used for filtering and configuration of the {@link ProAct.Property} instance to be provided.
+	   *      Meta information to be used for filtering and configuration of the {{#crossLink "ProAct.Property"}}{{/crossLink}} instance to be provided.
 	   * @return {ProAct.Property}
-	   *      A {@link ProAct.Property} instance provided by <i>this</i> provider.
+	   *      A {{#crossLink "ProAct.Property"}}{{/crossLink}} instance provided by <i>this</i> provider.
 	   */
 	  provide: function (queueName, object, property, meta) {
 	    return new P.P(queueName, object, property);
@@ -6155,18 +6450,18 @@
 	
 	/**
 	 * <p>
-	 *  Constructor for ProAct.AutoPropertyProvider.
+	 *  Constructor for `ProAct.AutoPropertyProvider`.
 	 * </p>
 	 * <p>
-	 *  Provides {@link ProAct.AutoProperty} instances for fields pointing to functions.
+	 *  Provides {{#crossLink "ProAct.AutoProperty"}}{{/crossLink}} instances for fields pointing to functions.
 	 * </p>
 	 * <p>
-	 *  ProAct.AutoPropertyProvider is part of the properties module of ProAct.js.
+	 *  `ProAct.AutoPropertyProvider` is part of the `proact-properties` module of ProAct.js.
 	 * </p>
 	 *
 	 * @class ProAct.AutoPropertyProvider
 	 * @extends ProAct.PropertyProvider
-	 * @see {@link ProAct.AutoProperty}
+	 * @constructor
 	 */
 	ProAct.AutoPropertyProvider = P.FPP = function () {
 	  P.PP.call(this);
@@ -6177,25 +6472,25 @@
 	  /**
 	   * Reference to the constructor of this object.
 	   *
-	   * @memberof ProAct.AutoPropertyProvider
-	   * @instance
-	   * @constant
-	   * @default ProAct.AutoPropertyProvider
+	   * @property constructor
+	   * @type ProAct.AutoPropertyProvider
+	   * @final
+	   * @for ProAct.AutoPropertyProvider
 	   */
 	  constructor: ProAct.AutoPropertyProvider,
 	
 	  /**
-	   * Used to check if this {@link ProAct.AutoPropertyProvider} is compliant with the field and meta data.
+	   * Used to check if this `ProAct.AutoPropertyProvider` is compliant with the field and meta data.
 	   *
-	   * @memberof ProAct.AutoPropertyProvider
+	   * @for ProAct.AutoPropertyProvider
 	   * @instance
 	   * @method filter
 	   * @param {Object} object
-	   *      The object to which a new {@link ProAct.AutoProperty} instance should be provided.
+	   *      The object to which a new {{#crossLink "ProAct.AutoProperty"}}{{/crossLink}} instance should be provided.
 	   * @param {String} property
-	   *      The field name of the <i>object</i> to turn into a {@link ProAct.AutoProperty}.
+	   *      The field name of the <i>object</i> to turn into a {{#crossLink "ProAct.AutoProperty"}}{{/crossLink}}.
 	   * @param {String|Array} meta
-	   *      Meta information to be used for filtering and configuration of the {@link ProAct.AutoProperty} instance to be provided.
+	   *      Meta information to be used for filtering and configuration of the {{#crossLink "ProAct.AutoProperty"}}{{/crossLink}} instance to be provided.
 	   * @return {Boolean}
 	   *      True if the value of <b>object[property]</b> a function.
 	   */
@@ -6204,25 +6499,25 @@
 	  },
 	
 	  /**
-	   * Provides an instance of {@link ProAct.AutoProperty}.
+	   * Provides an instance of {{#crossLink "ProAct.AutoProperty"}}{{/crossLink}}.
 	   *
-	   * @memberof ProAct.AutoPropertyProvider
+	   * @for ProAct.AutoPropertyProvider
 	   * @instance
 	   * @method provide
 	   * @param {String} queueName
 	   *      The name of the queue all the updates should be pushed to.
 	   *      <p>
 	   *        If this parameter is null/undefined the default queue of
-	   *        {@link ProAct.flow} is used.
+	   *        {{#crossLink "ProAct/flow:property"}}{{/crossLink}} is used.
 	   *      </p>
 	   * @param {Object} object
-	   *      The object to which a new {@link ProAct.AutoProperty} instance should be provided.
+	   *      The object to which a new {{#crossLink "ProAct.AutoProperty"}}{{/crossLink}} instance should be provided.
 	   * @param {String} property
-	   *      The field of the <i>object</i> to turn into a {@link ProAct.AutoProperty}.
+	   *      The field of the <i>object</i> to turn into a {{#crossLink "ProAct.AutoProperty"}}{{/crossLink}}.
 	   * @param {String|Array} meta
-	   *      Meta information to be used for filtering and configuration of the {@link ProAct.AutoProperty} instance to be provided.
+	   *      Meta information to be used for filtering and configuration of the {{#crossLink "ProAct.AutoProperty"}}{{/crossLink}} instance to be provided.
 	   * @return {ProAct.AutoProperty}
-	   *      A {@link ProAct.AutoProperty} instance provided by <i>this</i> provider.
+	   *      A {{#crossLink "ProAct.AutoProperty"}}{{/crossLink}} instance provided by <i>this</i> provider.
 	   */
 	  provide: function (queueName, object, property, meta) {
 	    return new P.FP(queueName, object, property);
@@ -6231,18 +6526,18 @@
 	
 	/**
 	 * <p>
-	 *  Constructor for ProAct.ArrayPropertyProvider.
+	 *  Constructor for `ProAct.ArrayPropertyProvider`.
 	 * </p>
 	 * <p>
-	 *  Provides {@link ProAct.ArrayProperty} instances for fields pointing to arrays.
+	 *  Provides {{#crossLink "ProAct.ArrayProperty"}}{{/crossLink}} instances for fields pointing to arrays.
 	 * </p>
 	 * <p>
-	 *  ProAct.ArrayPropertyProvider is part of the properties module of ProAct.js.
+	 *  `ProAct.ArrayPropertyProvider` is part of the proact-properties module of ProAct.js.
 	 * </p>
 	 *
-	 * @class ProAct.ArrayPropertyProvider
+	 * @for ProAct.ArrayPropertyProvider
 	 * @extends ProAct.PropertyProvider
-	 * @see {@link ProAct.ArrayProperty}
+	 * @constructor
 	 */
 	ProAct.ArrayPropertyProvider = P.APP = function () {
 	  P.PP.call(this);
@@ -6253,25 +6548,25 @@
 	  /**
 	   * Reference to the constructor of this object.
 	   *
-	   * @memberof ProAct.ArrayPropertyProvider
-	   * @instance
-	   * @constant
-	   * @default ProAct.ArrayPropertyProvider
+	   * @property constructor
+	   * @type ProAct.ArrayPropertyProvider
+	   * @final
+	   * @for ProAct.ArrayPropertyProvider
 	   */
 	  constructor: ProAct.ArrayPropertyProvider,
 	
 	  /**
-	   * Used to check if this {@link ProAct.ArrayPropertyProvider} is compliant with the field and meta data.
+	   * Used to check if this `ProAct.ArrayPropertyProvider` is compliant with the field and meta data.
 	   *
-	   * @memberof ProAct.ArrayPropertyProvider
+	   * @for ProAct.ArrayPropertyProvider
 	   * @instance
 	   * @method filter
 	   * @param {Object} object
-	   *      The object to which a new {@link ProAct.ArrayProperty} instance should be provided.
+	   *      The object to which a new {{#crossLink "ProAct.ArrayProperty"}}{{/crossLink}} instance should be provided.
 	   * @param {String} property
-	   *      The field name of the <i>object</i> to turn into a {@link ProAct.ArrayProperty}.
+	   *      The field name of the <i>object</i> to turn into a {{#crossLink "ProAct.ArrayProperty"}}{{/crossLink}}.
 	   * @param {String|Array} meta
-	   *      Meta information to be used for filtering and configuration of the {@link ProAct.ArrayProperty} instance to be provided.
+	   *      Meta information to be used for filtering and configuration of the {{#crossLink "ProAct.ArrayProperty"}}{{/crossLink}} instance to be provided.
 	   * @return {Boolean}
 	   *      True if the value of <b>object[property]</b> an array.
 	   */
@@ -6280,25 +6575,25 @@
 	  },
 	
 	  /**
-	   * Provides an instance of {@link ProAct.ArrayProperty}.
+	   * Provides an instance of {{#crossLink "ProAct.ArrayProperty"}}{{/crossLink}}.
 	   *
-	   * @memberof ProAct.ArrayPropertyProvider
+	   * @for ProAct.ArrayPropertyProvider
 	   * @instance
 	   * @method provide
 	   * @param {String} queueName
 	   *      The name of the queue all the updates should be pushed to.
 	   *      <p>
 	   *        If this parameter is null/undefined the default queue of
-	   *        {@link ProAct.flow} is used.
+	   *        {{#crossLink "ProAct/flow:property"}}{{/crossLink}} is used.
 	   *      </p>
 	   * @param {Object} object
-	   *      The object to which a new {@link ProAct.ArrayProperty} instance should be provided.
+	   *      The object to which a new {{#crossLink "ProAct.ArrayProperty"}}{{/crossLink}} instance should be provided.
 	   * @param {String} property
-	   *      The field of the <i>object</i> to turn into a {@link ProAct.ArrayProperty}.
+	   *      The field of the <i>object</i> to turn into a {{#crossLink "ProAct.ArrayProperty"}}{{/crossLink}}.
 	   * @param {String|Array} meta
-	   *      Meta information to be used for filtering and configuration of the {@link ProAct.ArrayProperty} instance to be provided.
+	   *      Meta information to be used for filtering and configuration of the {{#crossLink "ProAct.ArrayProperty"}}{{/crossLink}} instance to be provided.
 	   * @return {ProAct.ArrayProperty}
-	   *      A {@link ProAct.ArrayProperty} instance provided by <i>this</i> provider.
+	   *      A {{#crossLink "ProAct.ArrayProperty"}}{{/crossLink}} instance provided by <i>this</i> provider.
 	   */
 	  provide: function (queueName, object, property, meta) {
 	    return new P.AP(queueName, object, property);
@@ -6310,15 +6605,15 @@
 	 *  Constructor for ProAct.ObjectPropertyProvider.
 	 * </p>
 	 * <p>
-	 *  Provides {@link ProAct.ObjectProperty} instances for fields pointing to objects, different from arrays or functions.
+	 *  Provides {{#crossLink "ProAct.ObjectProperty"}}{{/crossLink}} instances for fields pointing to objects, different from arrays or functions.
 	 * </p>
 	 * <p>
-	 *  ProAct.ObjectPropertyProvider is part of the properties module of ProAct.js.
+	 *  `ProAct.ObjectPropertyProvider` is part of the proact-properties module of ProAct.js.
 	 * </p>
 	 *
 	 * @class ProAct.ObjectPropertyProvider
 	 * @extends ProAct.PropertyProvider
-	 * @see {@link ProAct.ObjectProperty}
+	 * @constructor
 	 */
 	ProAct.ObjectPropertyProvider = P.OPP = function () {
 	  P.PP.call(this);
@@ -6329,25 +6624,25 @@
 	  /**
 	   * Reference to the constructor of this object.
 	   *
-	   * @memberof ProAct.ObjectPropertyProvider
-	   * @instance
-	   * @constant
-	   * @default ProAct.ObjectPropertyProvider
+	   * @property constructor
+	   * @type ProAct.ObjectPropertyProvider
+	   * @final
+	   * @for ProAct.ObjectPropertyProvider
 	   */
 	  constructor: ProAct.ObjectPropertyProvider,
 	
 	  /**
-	   * Used to check if this {@link ProAct.ObjectPropertyProvider} is compliant with the field and meta data.
+	   * Used to check if this `ProAct.ObjectPropertyProvider` is compliant with the field and meta data.
 	   *
-	   * @memberof ProAct.ObjectPropertyProvider
+	   * @for ProAct.ObjectPropertyProvider
 	   * @instance
 	   * @method filter
 	   * @param {Object} object
-	   *      The object to which a new {@link ProAct.ObjectProperty} instance should be provided.
+	   *      The object to which a new {{#crossLink "ProAct.ObjectProperty"}}{{/crossLink}} instance should be provided.
 	   * @param {String} property
-	   *      The field name of the <i>object</i> to turn into a {@link ProAct.ObjectProperty}.
+	   *      The field name of the <i>object</i> to turn into a {{#crossLink "ProAct.ObjectProperty"}}{{/crossLink}}.
 	   * @param {String|Array} meta
-	   *      Meta information to be used for filtering and configuration of the {@link ProAct.ObjectProperty} instance to be provided.
+	   *      Meta information to be used for filtering and configuration of the {{#crossLink "ProAct.ObjectProperty"}}{{/crossLink}} instance to be provided.
 	   * @return {Boolean}
 	   *      True if the value of <b>object[property]</b> an object, different from array or function.
 	   */
@@ -6356,25 +6651,25 @@
 	  },
 	
 	  /**
-	   * Provides an instance of {@link ProAct.ObjectProperty}.
+	   * Provides an instance of {{#crossLink "ProAct.ObjectProperty"}}{{/crossLink}}.
 	   *
-	   * @memberof ProAct.ObjectPropertyProvider
+	   * @for ProAct.ObjectPropertyProvider
 	   * @instance
 	   * @method provide
 	   * @param {String} queueName
 	   *      The name of the queue all the updates should be pushed to.
 	   *      <p>
 	   *        If this parameter is null/undefined the default queue of
-	   *        {@link ProAct.flow} is used.
+	   *        {{#crossLink "ProAct/flow:property"}}{{/crossLink}} is used.
 	   *      </p>
 	   * @param {Object} object
-	   *      The object to which a new {@link ProAct.ObjectProperty} instance should be provided.
+	   *      The object to which a new {{#crossLink "ProAct.ObjectProperty"}}{{/crossLink}} instance should be provided.
 	   * @param {String} property
-	   *      The field of the <i>object</i> to turn into a {@link ProAct.ObjectProperty}.
+	   *      The field of the <i>object</i> to turn into a {{#crossLink "ProAct.ObjectProperty"}}{{/crossLink}}.
 	   * @param {String|Array} meta
-	   *      Meta information to be used for filtering and configuration of the {@link ProAct.ObjectProperty} instance to be provided.
+	   *      Meta information to be used for filtering and configuration of the {{#crossLink "ProAct.ObjectProperty"}}{{/crossLink}} instance to be provided.
 	   * @return {ProAct.ObjectProperty}
-	   *      A {@link ProAct.ObjectProperty} instance provided by <i>this</i> provider.
+	   *      A {{#crossLink "ProAct.ObjectProperty"}}{{/crossLink}} instance provided by <i>this</i> provider.
 	   */
 	  provide: function (queueName, object, property, meta) {
 	    return new P.OP(queueName, object, property);
@@ -6383,18 +6678,18 @@
 	
 	/**
 	 * <p>
-	 *  Constructor for ProAct.ProxyPropertyProvider.
+	 *  Constructor for `ProAct.ProxyPropertyProvider`.
 	 * </p>
 	 * <p>
-	 *  Provides {@link ProAct.ProxyProperty} instances for fields that should point to properties.
+	 *  Provides {{#crossLink "ProAct.ProxyProperty"}}{{/crossLink}} instances for fields that should point to properties.
 	 * </p>
 	 * <p>
-	 *  ProAct.ProxyPropertyProvider is part of the properties module of ProAct.js.
+	 *  `ProAct.ProxyPropertyProvider` is part of the proact-properties module of ProAct.js.
 	 * </p>
 	 *
 	 * @class ProAct.ProxyPropertyProvider
 	 * @extends ProAct.PropertyProvider
-	 * @see {@link ProAct.ProxyProperty}
+	 * @constructor
 	 */
 	ProAct.ProxyPropertyProvider = P.PXPP = function () {
 	  P.PP.call(this);
@@ -6405,28 +6700,28 @@
 	  /**
 	   * Reference to the constructor of this object.
 	   *
-	   * @memberof ProAct.ProxyPropertyProvider
-	   * @instance
-	   * @constant
-	   * @default ProAct.ProxyPropertyProvider
+	   * @property constructor
+	   * @type ProAct.ProxyPropertyProvider
+	   * @final
+	   * @for ProAct.ProxyPropertyProvider
 	   */
 	  constructor: ProAct.ProxyPropertyProvider,
 	
 	  /**
-	   * Used to check if this {@link ProAct.ProxyPropertyProvider} is compliant with the meta data.
+	   * Used to check if this `ProAct.ProxyPropertyProvider` is compliant with the meta data.
 	   *
-	   * @memberof ProAct.ProxyPropertyProvider
+	   * @for ProAct.ProxyPropertyProvider
 	   * @instance
 	   * @method filter
 	   * @param {Object} object
-	   *      The object to which a new {@link ProAct.ProxyProperty} instance should be provided.
+	   *      The object to which a new {{#crossLink "ProAct.ProxyProperty"}}{{/crossLink}} instance should be provided.
 	   * @param {String} property
-	   *      The field name of the <i>object</i> to turn into a {@link ProAct.ProxyProperty}.
+	   *      The field name of the <i>object</i> to turn into a {{#crossLink "ProAct.ProxyProperty"}}{{/crossLink}}.
 	   * @param {ProAct.Property} meta
-	   *      If the meta is present and of type {@link ProAct.Property}, it becomes the target property of the
-	   *      {@link ProAct.ProxyProperty} that will be provided.
+	   *      If the meta is present and of type {{#crossLink "ProAct.Property"}}{{/crossLink}}, it becomes the target property of the
+	   *      {{#crossLink "ProAct.ProxyProperty"}}{{/crossLink}} that will be provided.
 	   * @return {Boolean}
-	   *      True if <i>meta</i> argument is present and is instance of {@link ProAct.Property}.
+	   *      True if <i>meta</i> argument is present and is instance of {{#crossLink "ProAct.Property"}}{{/crossLink}}.
 	   */
 	  filter: function (object, property, meta) {
 	    if (!meta || !(meta instanceof ProAct.Property)) {
@@ -6437,25 +6732,25 @@
 	  },
 	
 	  /**
-	   * Provides an instance of {@link ProAct.ProxyProperty}.
+	   * Provides an instance of {{#crossLink "ProAct.ProxyProperty"}}{{/crossLink}}.
 	   *
-	   * @memberof ProAct.ProxyPropertyProvider
+	   * @for ProAct.ProxyPropertyProvider
 	   * @instance
 	   * @method provide
 	   * @param {String} queueName
 	   *      The name of the queue all the updates should be pushed to.
 	   *      <p>
 	   *        If this parameter is null/undefined the default queue of
-	   *        {@link ProAct.flow} is used.
+	   *        {{#crossLink "ProAct/flow:property"}}{{/crossLink}} is used.
 	   *      </p>
 	   * @param {Object} object
-	   *      The object to which a new {@link ProAct.ProxyProperty} instance should be provided.
+	   *      The object to which a new {{#crossLink "ProAct.ProxyProperty"}}{{/crossLink}} instance should be provided.
 	   * @param {String} property
-	   *      The field of the <i>object</i> to turn into a {@link ProAct.ProxyProperty}.
+	   *      The field of the <i>object</i> to turn into a {{#crossLink "ProAct.ProxyProperty"}}{{/crossLink}}.
 	   * @param {ProAct.Property} meta
-	   *      The target {@link ProAct.Property} of the {@link ProAct.ProxyProperty} to be created.
+	   *      The target {{#crossLink "ProAct.Property"}}{{/crossLink}} of the {{#crossLink "ProAct.ProxyProperty"}}{{/crossLink}} to be created.
 	   * @return {ProAct.ProxyProperty}
-	   *      A {@link ProAct.ProxyProperty} instance provided by <i>this</i> provider.
+	   *      A {{#crossLink "ProAct.ProxyProperty"}}{{/crossLink}} instance provided by <i>this</i> provider.
 	   */
 	  provide: function (queueName, object, property, meta) {
 	    return new P.PXP(queueName, object, property, meta);
@@ -6469,23 +6764,54 @@
 	P.PP.registerProvider(new P.ObjectPropertyProvider());
 	
 	/**
+	 * @module proact-properties
+	 */
+	
+	/**
 	 * <p>
-	 *  Constructs a ProAct.ObjectCore. ProAct.ObjectCore is a {@link ProAct.Core} that manages all the {@link ProAct.Property} instances for a reactive ProAct.js object.
+	 *  Constructs a `ProAct.ObjectCore`.
+	 *  `ProAct.ObjectCore` is a {{#crossLink "ProAct.Core"}}{{/crossLink}} that manages all the
+	 *  {{#crossLink "ProAct.Property"}}{{/crossLink}} instances for a reactive ProAct.js object.
 	 * </p>
 	 * <p>
-	 *  It is responsible for all the {@link ProAct.Property} instances as well initializing them and deciding which type of property corresponds to which field.
+	 *  It is responsible for all the {{#crossLink "ProAct.Property"}}{{/crossLink}} instances as well as
+	 *  initializing them and deciding which type of property corresponds to which field.
 	 * </p>
 	 * <p>
-	 *  ProAct.ObjectCore is part of the properties module of ProAct.js.
+	 *  `ProAct.ObjectCore` is part of the proact-properties module of ProAct.js.
 	 * </p>
+	 *
+	 * ```
+	 *  
+	 *  var object = {
+	 *    a: 4,
+	 *    b: 5,
+	 *    c: function () {
+	 *      return this.a + this.b;
+	 *    }
+	 *  };
+	 *  var core = new ProAct.ObjectCore(object);
+	 *
+	 *  console.log(object.c); // 9
+	 *
+	 *  object.a = 1;
+	 *  console.log(object.c); // 6
+	 *
+	 *  console.log(core.value('c')); // 6
+	 *
+	 *  core.set('b', 2));
+	 *  console.log(object.b); // 2
+	 *  console.log(object.c); // 3
+	 * ```
 	 *
 	 * @class ProAct.ObjectCore
 	 * @extends ProAct.Core
+	 * @constructor
 	 * @param {Object} object
 	 *      The shell objec arround this core. This should be plain JavaScript object.
 	 * @param {Object} meta
-	 *      Optional meta data to be used to define the observer-observable behavior of the <i>object</i>. For example transformations for its properties.
-	 * @see {@link ProAct.Property}
+	 *      Optional meta data to be used to define the observer-observable behavior of the <i>object</i>.
+	 *      For example transformations for its properties.
 	 */
 	function ObjectCore (object, meta) {
 	  this.properties = {};
@@ -6499,30 +6825,36 @@
 	  /**
 	   * Reference to the constructor of this object.
 	   *
-	   * @memberof ProAct.ObjectCore
-	   * @instance
-	   * @constant
-	   * @default ProAct.ObjectCore
+	   * @property constructor
+	   * @type ProAct.ObjectCore
+	   * @final
+	   * @for ProAct.ObjectCore
 	   */
 	  constructor: ProAct.ObjectCore,
 	
 	  /**
-	   * A function to be set to the <i>shell</i> object's <b>p</b> field (if it is configured in @{link ProAct.Configuration}).
+	   * A function to be set to the <i>shell</i> object's <b>p</b> field (if it is configured in {{#crossLink "ProAct.Configuration"}}{{/crossLink}}).
 	   * <p>
-	   *  It uses its <i>p</i> argument if it is string to return the right {@link ProAct.Property} for passed field name.
+	   *  It uses its <i>p</i> argument if it is string to return the right {{#crossLink "ProAct.Property"}}{{/crossLink}} for passed field name.
 	   * </p>
 	   * <p>
-	   *  If the <i>p</i> argument is <b>*</b> or empty <i>this</i> ProAct.ObjectCore instance is returned.
+	   *  If the <i>p</i> argument is <b>*</b> or empty <i>this</i> `ProAct.ObjectCore` instance is returned.
 	   * </p>
 	   *
-	   * @memberof ProAct.ObjectCore
+	   * ```
+	   *  core.value('a'); // returns the shell's 'a' value - shell.a.
+	   *  core.value('*'); // returns this.
+	   *  core.value(); // returns this.
+	   * ```
+	   *
+	   * @for ProAct.ObjectCore
 	   * @instance
 	   * @method value
 	   * @param {String} p
-	   *      The name of the managed {@link ProAct.Property} to retrieve. It can be set to <b>*</b> or skipped for <i>this</i> itself to be retrieved.
+	   *      The name of the managed {{#crossLink "ProAct.Property"}}{{/crossLink}} to retrieve.
+	   *      It can be set to <b>*</b> or skipped for <i>this</i> itself to be retrieved.
 	   * @return {Object}
-	   *      Managed {@link ProAct.Property} instance with field name equal to the passed <i>p</i> parameter or <i>this</i>.
-	   * @see {@link ProAct.Property}
+	   *      Managed {{#crossLink "ProAct.Property"}}{{/crossLink}} instance with field name equal to the passed <i>p</i> parameter or <i>this</i>.
 	   */
 	  value: function (p) {
 	    if (!p || p === '*') {
@@ -6533,16 +6865,16 @@
 	  },
 	
 	  /**
-	   * Initializes all the {@link ProAct.Property} instances for the <i>shell</i>of <i>this</i> ProAct.ObjectCore.
+	   * Initializes all the {{#crossLink "ProAct.Property"}}{{/crossLink}} instances for the <i>shell</i>of <i>this</i> ProAct.ObjectCore.
 	   * <p>
-	   *  Using the types of the fields of the <i>shell</i> object the right {@link ProAct.Property} instances are created and stored
-	   *  in <i>this</i> using {@link ProAct.ObjectCore#makeProp}.
+	   *  Using the types of the fields of the <i>shell</i> object the right {{#crossLink "ProAct.Property"}}{{/crossLink}} instances are created and stored
+	   *  in <i>this</i> using {{#crossLink "ProAct.Configuration/makeProp:method"}}{{/crossLink}}.
 	   * </p>
 	   *
-	   * @memberof ProAct.ObjectCore
+	   * @for ProAct.ObjectCore
+	   * @protected
 	   * @instance
 	   * @method setup
-	   * @see {@link ProAct.ObjectCore#makeProp}
 	   */
 	  setup: function () {
 	    var object = this.shell,
@@ -6554,9 +6886,22 @@
 	  },
 	
 	  /**
-	   * Creates a {@link ProAct.Property} instance for <i>this</i>'s shell.
+	   * Creates a {{#crossLink "ProAct.Property"}}{{/crossLink}} instance for <i>this</i>'s shell.
 	   *
-	   * @memberof ProAct.ObjectCore
+	   * ```
+	   *  var shell = {a: 3};
+	   *  var core = new ProAct.Core(shell);
+	   *
+	   *  shell.b = function () { return this.a + 5; };
+	   *  core.makeProp('b');
+	   *
+	   *  console.log(shell.b); // 8
+	   *
+	   *  shell.a = 5;
+	   *  console.log(shell.b); // 10
+	   * ```
+	   *
+	   * @for ProAct.ObjectCore
 	   * @instance
 	   * @method makeProp
 	   * @param {String} property
@@ -6565,13 +6910,11 @@
 	   *      Initial listeners for 'change' of the property, can be skipped.
 	   * @param {String|Array} meta
 	   *      Meta information for the property to create, for example if the meta contains 'noprop', no property is created,
-	   *      and the initial value of the field is preserved. The meta is in format of the {@link ProAct.DSL}.
+	   *      and the initial value of the field is preserved. The meta is in format of the {{#crossLink "ProAct.DSL"}}{{/crossLink}}.
 	   * @return {ProAct.Property}
 	   *      The newly crated and stored in <i>this</i> property, or null if no property was created.
 	   * @throws {Error}
 	   *      If there is no field defined in the <i>shell</i> named as the passed <i>property</i>.
-	   * @see {@link ProAct.ObjectCore#setup}
-	   * @see {@link ProAct.DSL}
 	   */
 	  makeProp: function (property, listeners, meta) {
 	    var object = this.shell,
@@ -6625,14 +6968,25 @@
 	   *  The new field is reactive.
 	   * </p>
 	   *
-	   * @memberof ProAct.ObjectCore
+	   * ```
+	   *  var shell = {a: 3};
+	   *  var core = new ProAct.Core(shell);
+	   *
+	   *  core.set('b', function () { return this.a + 5; });
+	   *
+	   *  console.log(shell.b); // 8
+	   *
+	   *  shell.a = 5;
+	   *  console.log(shell.b); // 10
+	   * ```
+	   *
+	   * @for ProAct.ObjectCore
 	   * @instance
 	   * @method set
 	   * @param {String} property
 	   *      The name of the property to update/create.
 	   * @param {Object} value
 	   *      The value of the property to be set.
-	   * @see {@link ProAct.ObjectCore#makeProp}
 	   */
 	  set: function (property, value) {
 	    var object = this.shell;
@@ -9250,6 +9604,8 @@
 	  }
 	
 	  stream.trigger = StreamUtil.trigger;
+	  stream.triggerErr = StreamUtil.triggerErr;
+	  stream.triggerClose= StreamUtil.triggerClose;
 	
 	  return stream;
 	}
