@@ -267,7 +267,6 @@ ProAct.SimplePropertyProvider.prototype = P.U.ex(Object.create(P.PP.prototype), 
    * @final
    * @for ProAct.SimplePropertyProvider
    */
-  constructor: ProAct.AutoPropertyProvider,
   constructor: ProAct.SimplePropertyProvider,
 
   /**

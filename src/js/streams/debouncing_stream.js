@@ -42,11 +42,10 @@ ProAct.DebouncingStream.prototype = P.U.ex(Object.create(P.DBS.prototype), {
   /**
    * Reference to the constructor of this object.
    *
-   * @memberof ProAct.DebouncingStream
-   * @instance
-   * @constant
-   * @type {Object}
-   * @default ProAct.DebouncingStream
+   * @property constructor
+   * @type ProAct.DebouncingStream
+   * @final
+   * @for ProAct.DebouncingStream
    */
   constructor: ProAct.DebouncingStream,
 
