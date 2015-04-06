@@ -1,19 +1,20 @@
 /**
  * <p>
- *  Constructs a ProAct.DelayedStream. A {@link ProAct.DelayedStream} that resets its flushing interval on every new value/event.
+ *  Constructs a `ProAct.DebouncingStream`. It is a {{#crossLink "ProAct.DelayedStream"}}{{/crossLink}} that resets its flushing interval on every new value/event.
  *  Only the last event/value triggered in given interval will be emitted.
  * </p>
  * <p>
- *  ProAct.DebouncingStream is part of the streams module of ProAct.js.
+ *  `ProAct.DebouncingStream` is part of the proact-streams module of ProAct.js.
  * </p>
  *
  * @class ProAct.DebouncingStream
  * @extends ProAct.DelayedStream
+ * @constructor
  * @param {String} queueName
  *      The name of the queue all the updates should be pushed to.
  *      <p>
  *        If this parameter is null/undefined the default queue of
- *        {@link ProAct.flow} is used.
+ *        {{#crossLink "ProAct/flow:property"}}{{/crossLink}} is used.
  *      </p>
  *      <p>
  *        If this parameter is not a string it is used as the
