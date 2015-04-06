@@ -53,22 +53,23 @@ ProAct.DebouncingStream.prototype = P.U.ex(Object.create(P.DBS.prototype), {
   /**
    * <p>
    *  Triggers a new event/value to the stream. It is stored in the buffer of the stream and not emitted.
-   *  But the buffer of ProAct.DebouncingStream can store only one value/event, so when the delay passes only
-   *  the last value/event triggered into the stream by this method is emitted. On every call of this method the delay is reset.
+   *  But the buffer of `ProAct.DebouncingStream` can store only one value/event, so when the delay passes only
+   *  the last value/event triggered into the stream by this method is emitted.
+   *  On every call of this method the delay is reset.
    *  So for example if you have mouse move as source, it will emit only the last mouse move event, that was send <i>delay</i> milliseconds ago.
    * </p>
    * <p>
    *  ProAct.DebouncingStream.t is alias of this method.
    * </p>
    *
-   * @memberof ProAct.ThrottlingStream
+   * @for ProAct.DebouncingStream
    * @instance
    * @method trigger
    * @param {Object} event
    *      The event/value to pass to trigger.
    * @param {Boolean} useTransformations
    *      If the stream should transform the triggered value. By default it is true (if not passed)
-   * @return {ProAct.ThrottlingStream}
+   * @return {ProAct.DebouncingStream}
    *      <i>this</i>
    */
   trigger: function (event, useTransformations) {
@@ -82,7 +83,7 @@ ProAct.DebouncingStream.prototype = P.U.ex(Object.create(P.DBS.prototype), {
 P.U.ex(P.Stream.prototype, {
 
   /**
-   * Creates a new {@link ProAct.DebouncingStream} instance having as source <i>this</i>.
+   * Creates a new {{#crossLink "ProAct.DebouncingStream"}}{{/crossLink}} instance having as source <i>this</i>.
    *
    * @memberof ProAct.Stream
    * @instance
@@ -90,7 +91,7 @@ P.U.ex(P.Stream.prototype, {
    * @param {Number} delay
    *      The time delay to be used for flushing the buffer of the new stream.
    * @return {ProAct.DebouncingStream}
-   *      A {@link ProAct.DebouncingStream} instance.
+   *      A {{#crossLink "ProAct.DebouncingStream"}}{{/crossLink}} instance.
    */
   debounce: function (delay) {
     return new P.DDS(this, this.queueName, delay);
