@@ -1,13 +1,14 @@
 /**
  * <p>
- *  Constructs a ProAct.DelayedStream. When a given time interval passes the buffer of the stream is flushed authomatically.
+ *  Constructs a `ProAct.DelayedStream`. When a given time interval passes the buffer of the stream is flushed authomatically.
  * </p>
  * <p>
- *  ProAct.DelayedStream is part of the streams module of ProAct.js.
+ *  `ProAct.DelayedStream` is part of the streams module of ProAct.js.
  * </p>
  *
  * @class ProAct.DelayedStream
  * @extends ProAct.BufferedStream
+ * @constructor
  * @param {String} queueName
  *      The name of the queue all the updates should be pushed to.
  *      <p>
