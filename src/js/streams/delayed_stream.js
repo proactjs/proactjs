@@ -13,7 +13,7 @@
  *      The name of the queue all the updates should be pushed to.
  *      <p>
  *        If this parameter is null/undefined the default queue of
- *        {@link ProAct.flow} is used.
+ *        {{#crossLink "ProAct/flow:property"}}{{/crossLink}} is used.
  *      </p>
  *      <p>
  *        If this parameter is not a string it is used as the
@@ -58,11 +58,10 @@ ProAct.DelayedStream.prototype = P.U.ex(Object.create(P.BS.prototype), {
   /**
    * Reference to the constructor of this object.
    *
-   * @memberof ProAct.DelayedStream
-   * @instance
-   * @constant
-   * @type {Object}
-   * @default ProAct.DelayedStream
+   * @property constructor
+   * @type ProAct.DelayedStream
+   * @final
+   * @for ProAct.DelayedStream
    */
   constructor: ProAct.DelayedStream,
 
@@ -71,10 +70,11 @@ ProAct.DelayedStream.prototype = P.U.ex(Object.create(P.BS.prototype), {
    *  Triggers a new event/value to the stream. It is stored in the buffer of the stream and not emitted.
    * </p>
    * <p>
-   *  ProAct.DelayedStream.t is alias of this method.
+   *  `ProAct.DelayedStream.t` is alias of this method.
    * </p>
+   * TODO - this method shoudl be private, we don't want manual triggering...
    *
-   * @memberof ProAct.DelayedStream
+   * @for ProAct.DelayedStream
    * @instance
    * @method trigger
    * @param {Object} event
