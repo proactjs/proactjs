@@ -92,15 +92,14 @@ ProAct.DelayedStream.prototype = P.U.ex(Object.create(P.BS.prototype), {
   /**
    * <p>
    *  Cancels the delay interval flushes. If this method is called the stream will stop emitting incoming values/event,
-   *  until the {@link ProAct.DelayedStream#setDelay} method is called.
+   *  until the {{#crossLink "ProAct.DelayedStream/setDelay:method"}}{{/crossLink}} method is called.
    * </p>
    *
-   * @memberof ProAct.DelayedStream
+   * @for ProAct.DelayedStream
    * @instance
    * @method cancelDelay
    * @return {ProAct.DelayedStream}
    *      <i>this</i>
-   * @see {@link ProAct.DelayedStream#setDelay}
    */
   cancelDelay: function () {
     if (this.delayId !== null){
@@ -113,10 +112,10 @@ ProAct.DelayedStream.prototype = P.U.ex(Object.create(P.BS.prototype), {
 
   /**
    * <p>
-   *  Modifies the delay of the stream. The current delay is canceled using the {@link ProAct.DelayedStream#cancelDelay} method.
+   *  Modifies the delay of the stream. The current delay is canceled using the {{#crossLink "ProAct.DelayedStream/cancelDelay:method"}}{{/crossLink}} method.
    * </p>
    *
-   * @memberof ProAct.DelayedStream
+   * @for ProAct.DelayedStream
    * @instance
    * @method setDelay
    * @param {Number} delay
@@ -144,15 +143,15 @@ ProAct.DelayedStream.prototype = P.U.ex(Object.create(P.BS.prototype), {
 P.U.ex(P.S.prototype, {
 
   /**
-   * Creates a new {@link ProAct.DelayedStream} instance having as source <i>this</i>.
+   * Creates a new {{#crossLink "ProAct.DelayedStream"}}{{/crossLink}} instance having as source <i>this</i>.
    *
-   * @memberof ProAct.Stream
+   * @for ProAct.Stream
    * @instance
    * @method delay
    * @param {Number} delay
    *      The time delay to be used for flushing the buffer of the new stream.
    * @return {ProAct.DelayedStream}
-   *      A {@link ProAct.DelayedStream} instance.
+   *      A {{#crossLink "ProAct.DelayedStream"}}{{/crossLink}} instance.
    */
   delay: function (delay) {
     return new P.DBS(this, this.queueName, delay);
