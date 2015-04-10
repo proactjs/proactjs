@@ -3969,6 +3969,31 @@
 	    return stream;
 	  },
 	
+	  /**
+	   * Creates a new {{#crossLink "ProAct.Stream"}}{{/crossLink}} with source - `this`.
+	   * For every update incomming from the source, a new `Actor` is created using the `mapper`
+	   * function. All the updates, emitted by the streams, returned by the `mapper` are emitted by the
+	   * `Actor` created by `flatMap`
+	   *
+	   *
+	   * ```
+	   *  source.flatMap(function (v) {
+	   *    return ProAct.seq(100, [v, v +1 ]);
+	   *  });
+	   *
+	   *  // source:
+	   *  // -1---2----4-----3-----2-----1---->
+	   *  // flatMap
+	   *  // -1-2-2-3--4-5---3-4---2-3---1-2-->
+	   *
+	   * ```
+	   *
+	   * @for ProAct.Actor
+	   * @instance
+	   * @method flatMap
+	   * @param {Function} mapper
+	   *      A function that returns an `ProAct.Actor` using the incomming notification.
+	   */
 	  flatMap: function (mapper) {
 	    return this.fromLambda(function (stream, e) {
 	      if (e !== P.Actor.Close) {
@@ -3978,6 +4003,22 @@
 	    });
 	  },
 	
+	  /**
+	   * Creates a new {{#crossLink "ProAct.Stream"}}{{/crossLink}} with source - `this`.
+	   * For every update incomming from the source, a new `Actor` is created using the `mapper`
+	   * function. ALl the updates, emitted by the streams, returned by the `mapper` are emitted by the
+	   * `Actor` created by `flatMap`. The number of the currently active sources is limited by the
+	   * passed `limit`. All the sources created after the limit is reached are queued and reused as sources later.
+	   *
+	   *
+	   * @for ProAct.Actor
+	   * @instance
+	   * @method flatMapLimited
+	   * @param {Function} mapper
+	   *      A function that returns an `ProAct.Actor` using the incomming notification.
+	   * @param {Number} limit
+	   *      The number of the currently active sources.
+	   */
 	  flatMapLimited: function (mapper, limit) {
 	    var queue = [], current = 0, addActor = function (stream, actor) {
 	      if (!actor) {
@@ -4005,6 +4046,32 @@
 	    });
 	  },
 	
+	  /**
+	   * Creates a new {{#crossLink "ProAct.Stream"}}{{/crossLink}} with source - `this`.
+	   * For every update comming from `this`, a new `ProAct.Actor` is created using the logic
+	   * passed through `mapper`. This new `Actor` becomes the current source of the `ProAct.Stream`,
+	   * returned by this method. The next update will create a new source, which will become
+	   * the current one and replace the old one. This is the same as {{#crossLink "ProAct.Actor/flatMapLimited:method"}}{{/crossLink}},
+	   * with `limit` of `1`.
+	   *
+	   * ```
+	   *  source.flatMapLast(function (v) {
+	   *    return ProAct.seq(100, [v, v + 1, v + 2, v + 3]);
+	   *  });
+	   *
+	   *  // source:
+	   *  // -1---2----4-----3-----2-----1----|->
+	   *  // flatMapLast
+	   *  // -1-2-2-3-44-5-6-3-4-5-2-3-4-1-2-3-4-|->
+	   *
+	   * ```
+	   *
+	   * @for ProAct.Actor
+	   * @instance
+	   * @method flatMapLast
+	   * @param {Function} mapper
+	   *      A function that returns an `ProAct.Actor` using the incomming notification.
+	   */
 	  flatMapLast: function (mapper) {
 	    var oldActor;
 	    return this.fromLambda(function (stream, e) {
@@ -4017,6 +4084,30 @@
 	    });
 	  },
 	
+	  /**
+	   * Creates a new {{#crossLink "ProAct.Stream"}}{{/crossLink}} with source - `this`.
+	   * For every update comming from `this`, a new `ProAct.Actor` is created using the logic
+	   * passed through `mapper`. The first such `Actor` becomes the source of the `Actor`, returned by this
+	   * method. When it finishes, if a new `Actor` is emitted, it becomes the source.
+	   *
+	   * ```
+	   *  source.flatMapLast(function (v) {
+	   *    return ProAct.seq(100, [v, v + 1, v + 2, v + 3]);
+	   *  });
+	   *
+	   *  // source:
+	   *  // -1---2----4-----3-----2-----1----|->
+	   *  // flatMapFirst
+	   *  // -1-2-3-4--4-5-6-7-----2-3-4-5-|->
+	   *
+	   * ```
+	   *
+	   * @for ProAct.Actor
+	   * @instance
+	   * @method flatMapFirst
+	   * @param {Function} mapper
+	   *      A function that returns an `ProAct.Actor` using the incomming notification.
+	   */
 	  flatMapFirst: function (mapper) {
 	    var oldActor;
 	    return this.fromLambda(function (stream, e) {
@@ -4038,12 +4129,18 @@
 	P.S.prototype.tt = P.S.prototype.triggerMany;
 	
 	/**
+	 * @module proact-streams
+	 */
+	
+	/**
 	 * <p>
-	 *  Constructs a ProAct.BufferedStream. This is a {@link ProAct.Stream} with a buffer.
+	 *  Constructs a `ProAct.BufferedStream`. This is a {{#crossLink "ProAct.Stream"}}{{/crossLink}} with a buffer.
 	 * </p>
 	 * <p>
 	 *  On new value/event the listeners are not updated, but the value/event is stored in the buffer.
 	 * </p>
+	 *
+	 * `ProAct.BufferedStream` is an abstract class.
 	 * <p>
 	 *  When the buffer is flushed every value/event is emitted to the listeners. In case with property listeners
 	 *  they are updated only once with the last event/value. Good for performance optimizations.
@@ -4052,16 +4149,18 @@
 	 *  For example if it is set to stream mouse move events, we don't care for each of the event but for a portion of them.
 	 * </p>
 	 * <p>
-	 *  ProAct.BufferedStream is part of the streams module of ProAct.js.
+	 *  `ProAct.BufferedStream` is part of the `proact-streams` module of ProAct.js.
 	 * </p>
 	 *
 	 * @class ProAct.BufferedStream
 	 * @extends ProAct.Stream
+	 * @constructor
+	 * @abstract
 	 * @param {String} queueName
 	 *      The name of the queue all the updates should be pushed to.
 	 *      <p>
 	 *        If this parameter is null/undefined the default queue of
-	 *        {@link ProAct.flow} is used.
+	 *        {{#crossLink "ProAct/flow:property"}}{{/crossLink}} is used.
 	 *      </p>
 	 *      <p>
 	 *        If this parameter is not a string it is used as the
@@ -4089,11 +4188,10 @@
 	  /**
 	   * Reference to the constructor of this object.
 	   *
-	   * @memberof ProAct.BufferedStream
-	   * @instance
-	   * @constant
-	   * @type {Object}
-	   * @default ProAct.BufferedStream
+	   * @property constructor
+	   * @type ProAct.BufferedStream
+	   * @final
+	   * @for ProAct.BufferedStream
 	   */
 	  constructor: ProAct.BufferedStream,
 	
@@ -4101,7 +4199,7 @@
 	   * Flushes the stream by emitting all the events/values stored in its buffer.
 	   * The buffer becomes empty.
 	   *
-	   * @memberof ProAct.BufferedStream
+	   * @for ProAct.BufferedStream
 	   * @instance
 	   * @method flush
 	   * @return {ProAct.BufferedStream}
@@ -4210,7 +4308,6 @@
 	   *      If the stream should transform the triggered value. By default it is true (if not passed)
 	   * @return {ProAct.Stream}
 	   *      <i>this</i>
-	   * @see {@link ProAct.BufferedStream#flush}
 	   */
 	  trigger: function (event, useTransformations) {
 	    this.buffer.push(event, useTransformations);
@@ -4245,19 +4342,20 @@
 	
 	/**
 	 * <p>
-	 *  Constructs a ProAct.DelayedStream. When a given time interval passes the buffer of the stream is flushed authomatically.
+	 *  Constructs a `ProAct.DelayedStream`. When a given time interval passes the buffer of the stream is flushed authomatically.
 	 * </p>
 	 * <p>
-	 *  ProAct.DelayedStream is part of the streams module of ProAct.js.
+	 *  `ProAct.DelayedStream` is part of the streams module of ProAct.js.
 	 * </p>
 	 *
 	 * @class ProAct.DelayedStream
 	 * @extends ProAct.BufferedStream
+	 * @constructor
 	 * @param {String} queueName
 	 *      The name of the queue all the updates should be pushed to.
 	 *      <p>
 	 *        If this parameter is null/undefined the default queue of
-	 *        {@link ProAct.flow} is used.
+	 *        {{#crossLink "ProAct/flow:property"}}{{/crossLink}} is used.
 	 *      </p>
 	 *      <p>
 	 *        If this parameter is not a string it is used as the
@@ -4302,11 +4400,10 @@
 	  /**
 	   * Reference to the constructor of this object.
 	   *
-	   * @memberof ProAct.DelayedStream
-	   * @instance
-	   * @constant
-	   * @type {Object}
-	   * @default ProAct.DelayedStream
+	   * @property constructor
+	   * @type ProAct.DelayedStream
+	   * @final
+	   * @for ProAct.DelayedStream
 	   */
 	  constructor: ProAct.DelayedStream,
 	
@@ -4315,10 +4412,11 @@
 	   *  Triggers a new event/value to the stream. It is stored in the buffer of the stream and not emitted.
 	   * </p>
 	   * <p>
-	   *  ProAct.DelayedStream.t is alias of this method.
+	   *  `ProAct.DelayedStream.t` is alias of this method.
 	   * </p>
+	   * TODO - this method shoudl be private, we don't want manual triggering...
 	   *
-	   * @memberof ProAct.DelayedStream
+	   * @for ProAct.DelayedStream
 	   * @instance
 	   * @method trigger
 	   * @param {Object} event
@@ -4336,15 +4434,14 @@
 	  /**
 	   * <p>
 	   *  Cancels the delay interval flushes. If this method is called the stream will stop emitting incoming values/event,
-	   *  until the {@link ProAct.DelayedStream#setDelay} method is called.
+	   *  until the {{#crossLink "ProAct.DelayedStream/setDelay:method"}}{{/crossLink}} method is called.
 	   * </p>
 	   *
-	   * @memberof ProAct.DelayedStream
+	   * @for ProAct.DelayedStream
 	   * @instance
 	   * @method cancelDelay
 	   * @return {ProAct.DelayedStream}
 	   *      <i>this</i>
-	   * @see {@link ProAct.DelayedStream#setDelay}
 	   */
 	  cancelDelay: function () {
 	    if (this.delayId !== null){
@@ -4357,10 +4454,10 @@
 	
 	  /**
 	   * <p>
-	   *  Modifies the delay of the stream. The current delay is canceled using the {@link ProAct.DelayedStream#cancelDelay} method.
+	   *  Modifies the delay of the stream. The current delay is canceled using the {{#crossLink "ProAct.DelayedStream/cancelDelay:method"}}{{/crossLink}} method.
 	   * </p>
 	   *
-	   * @memberof ProAct.DelayedStream
+	   * @for ProAct.DelayedStream
 	   * @instance
 	   * @method setDelay
 	   * @param {Number} delay
@@ -4388,15 +4485,15 @@
 	P.U.ex(P.S.prototype, {
 	
 	  /**
-	   * Creates a new {@link ProAct.DelayedStream} instance having as source <i>this</i>.
+	   * Creates a new {{#crossLink "ProAct.DelayedStream"}}{{/crossLink}} instance having as source <i>this</i>.
 	   *
-	   * @memberof ProAct.Stream
+	   * @for ProAct.Stream
 	   * @instance
 	   * @method delay
 	   * @param {Number} delay
 	   *      The time delay to be used for flushing the buffer of the new stream.
 	   * @return {ProAct.DelayedStream}
-	   *      A {@link ProAct.DelayedStream} instance.
+	   *      A {{#crossLink "ProAct.DelayedStream"}}{{/crossLink}} instance.
 	   */
 	  delay: function (delay) {
 	    return new P.DBS(this, this.queueName, delay);
@@ -4510,20 +4607,21 @@
 	
 	/**
 	 * <p>
-	 *  Constructs a ProAct.DelayedStream. A {@link ProAct.DelayedStream} that resets its flushing interval on every new value/event.
+	 *  Constructs a `ProAct.DebouncingStream`. It is a {{#crossLink "ProAct.DelayedStream"}}{{/crossLink}} that resets its flushing interval on every new value/event.
 	 *  Only the last event/value triggered in given interval will be emitted.
 	 * </p>
 	 * <p>
-	 *  ProAct.DebouncingStream is part of the streams module of ProAct.js.
+	 *  `ProAct.DebouncingStream` is part of the proact-streams module of ProAct.js.
 	 * </p>
 	 *
 	 * @class ProAct.DebouncingStream
 	 * @extends ProAct.DelayedStream
+	 * @constructor
 	 * @param {String} queueName
 	 *      The name of the queue all the updates should be pushed to.
 	 *      <p>
 	 *        If this parameter is null/undefined the default queue of
-	 *        {@link ProAct.flow} is used.
+	 *        {{#crossLink "ProAct/flow:property"}}{{/crossLink}} is used.
 	 *      </p>
 	 *      <p>
 	 *        If this parameter is not a string it is used as the
@@ -4552,33 +4650,33 @@
 	  /**
 	   * Reference to the constructor of this object.
 	   *
-	   * @memberof ProAct.DebouncingStream
-	   * @instance
-	   * @constant
-	   * @type {Object}
-	   * @default ProAct.DebouncingStream
+	   * @property constructor
+	   * @type ProAct.DebouncingStream
+	   * @final
+	   * @for ProAct.DebouncingStream
 	   */
 	  constructor: ProAct.DebouncingStream,
 	
 	  /**
 	   * <p>
 	   *  Triggers a new event/value to the stream. It is stored in the buffer of the stream and not emitted.
-	   *  But the buffer of ProAct.DebouncingStream can store only one value/event, so when the delay passes only
-	   *  the last value/event triggered into the stream by this method is emitted. On every call of this method the delay is reset.
+	   *  But the buffer of `ProAct.DebouncingStream` can store only one value/event, so when the delay passes only
+	   *  the last value/event triggered into the stream by this method is emitted.
+	   *  On every call of this method the delay is reset.
 	   *  So for example if you have mouse move as source, it will emit only the last mouse move event, that was send <i>delay</i> milliseconds ago.
 	   * </p>
 	   * <p>
 	   *  ProAct.DebouncingStream.t is alias of this method.
 	   * </p>
 	   *
-	   * @memberof ProAct.ThrottlingStream
+	   * @for ProAct.DebouncingStream
 	   * @instance
 	   * @method trigger
 	   * @param {Object} event
 	   *      The event/value to pass to trigger.
 	   * @param {Boolean} useTransformations
 	   *      If the stream should transform the triggered value. By default it is true (if not passed)
-	   * @return {ProAct.ThrottlingStream}
+	   * @return {ProAct.DebouncingStream}
 	   *      <i>this</i>
 	   */
 	  trigger: function (event, useTransformations) {
@@ -4592,7 +4690,7 @@
 	P.U.ex(P.Stream.prototype, {
 	
 	  /**
-	   * Creates a new {@link ProAct.DebouncingStream} instance having as source <i>this</i>.
+	   * Creates a new {{#crossLink "ProAct.DebouncingStream"}}{{/crossLink}} instance having as source <i>this</i>.
 	   *
 	   * @memberof ProAct.Stream
 	   * @instance
@@ -4600,7 +4698,7 @@
 	   * @param {Number} delay
 	   *      The time delay to be used for flushing the buffer of the new stream.
 	   * @return {ProAct.DebouncingStream}
-	   *      A {@link ProAct.DebouncingStream} instance.
+	   *      A {{#crossLink "ProAct.DebouncingStream"}}{{/crossLink}} instance.
 	   */
 	  debounce: function (delay) {
 	    return new P.DDS(this, this.queueName, delay);
@@ -6399,7 +6497,6 @@
 	   * @final
 	   * @for ProAct.SimplePropertyProvider
 	   */
-	  constructor: ProAct.AutoPropertyProvider,
 	  constructor: ProAct.SimplePropertyProvider,
 	
 	  /**
