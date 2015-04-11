@@ -1,18 +1,23 @@
 /**
+ * @module proact-streams
+ */
+
+/**
  * <p>
- *  Constructs a ProAct.SizeBufferedStream. When the buffer is full (has the same size as <i>this</i> size), it is flushed.
+ *  Constructs a `ProAct.SizeBufferedStream`. When the buffer is full (has the same size as <i>this</i> size), it is flushed.
  * </p>
  * <p>
- *  ProAct.SizeBufferedStream is part of the streams module of ProAct.js.
+ *  `ProAct.SizeBufferedStream` is part of the `proact-streams` module of ProAct.js.
  * </p>
  *
  * @class ProAct.SizeBufferedStream
+ * @constructor
  * @extends ProAct.BufferedStream
  * @param {String} queueName
  *      The name of the queue all the updates should be pushed to.
  *      <p>
  *        If this parameter is null/undefined the default queue of
- *        {@link ProAct.flow} is used.
+ *        {{#crossLink "ProAct/flow:property"}}{{/crossLink}} is used.
  *      </p>
  *      <p>
  *        If this parameter is not a string it is used as the

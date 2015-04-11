@@ -1,4 +1,8 @@
 /**
+ * @module proact-streams
+ */
+
+/**
  * <p>
  *  Constructs a `ProAct.DelayedStream`. When a given time interval passes the buffer of the stream is flushed authomatically.
  * </p>

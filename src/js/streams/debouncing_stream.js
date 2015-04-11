@@ -1,4 +1,8 @@
 /**
+ * @module proact-streams
+ */
+
+/**
  * <p>
  *  Constructs a `ProAct.DebouncingStream`. It is a {{#crossLink "ProAct.DelayedStream"}}{{/crossLink}} that resets its flushing interval on every new value/event.
  *  Only the last event/value triggered in given interval will be emitted.
