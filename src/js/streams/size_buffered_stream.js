@@ -105,16 +105,16 @@ ProAct.SizeBufferedStream.prototype = P.U.ex(Object.create(P.BS.prototype), {
 P.U.ex(P.S.prototype, {
 
   /**
-   * Creates a new {@link ProAct.SizeBufferedStream} instance having as source <i>this</i>.
+   * Creates a new {{#crossLink "ProAct.SizeBufferedStream"}}{{/crossLink}} instance having as source <i>this</i>.
    *
-   * @memberof ProAct.Stream
+   * @for ProAct.Stream
    * @instance
    * @method bufferit
    * @param {Number} size
    *      The size of the buffer of the new ProAct.SizeBufferedStream.
    * @return {ProAct.SizeBufferedStream}
-   *      A {@link ProAct.SizeBufferedStream} instance.
-   * @throws {Error} SizeBufferedStream must contain size, if there is no size passed to it.
+   *      A {{#crossLink "ProAct.SizeBufferedStream"}}{{/crossLink}} instance.
+   * @throws {Error} `SizeBufferedStream` must contain size, if there is no size passed to it.
    */
   bufferit: function (size) {
     return new P.SBS(this, this.queueName, size);
