@@ -66,11 +66,10 @@ ProAct.SizeBufferedStream.prototype = P.U.ex(Object.create(P.BS.prototype), {
   /**
    * Reference to the constructor of this object.
    *
-   * @memberof ProAct.SizeBufferedStream
-   * @instance
-   * @constant
-   * @type {Object}
-   * @default ProAct.SizeBufferedStream
+   * @property constructor
+   * @type ProAct.SizeBufferedStream
+   * @final
+   * @for ProAct.SizeBufferedStream
    */
   constructor: ProAct.SizeBufferedStream,
 
@@ -83,7 +82,7 @@ ProAct.SizeBufferedStream.prototype = P.U.ex(Object.create(P.BS.prototype), {
    *  ProAct.Stream.t is alias of this method.
    * </p>
    *
-   * @memberof ProAct.SizeBufferedStream
+   * @for ProAct.SizeBufferedStream
    * @instance
    * @method trigger
    * @param {Object} event
