@@ -50,6 +50,15 @@ function SubscribableStream (subscribe, queueName, source, transforms) {
 ProAct.SubscribableStream = P.SUS = SubscribableStream;
 
 ProAct.SubscribableStream.prototype = P.U.ex(Object.create(P.S.prototype), {
+
+  /**
+   * Reference to the constructor of this object.
+   *
+   * @property constructor
+   * @type ProAct.SubscribableStream
+   * @final
+   * @for ProAct.SubscribableStream
+   */
   constructor: ProAct.SubscribableStream,
 
   on: function (actions, listener) {
