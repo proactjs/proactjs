@@ -61,6 +61,43 @@ ProAct.SubscribableStream.prototype = P.U.ex(Object.create(P.S.prototype), {
    */
   constructor: ProAct.SubscribableStream,
 
+  /**
+   * Attaches a new listener to this `ProAct.SubscribableStream`.
+   *
+   * The listener may be function or object that defines a <i>call</i> method.
+   * On the first attached listener the `subscribe` function passed to the constructor will be called.
+   * That way the stream will be subscribed to custom data source.
+   *
+   * ```
+   *   stream.on(function (v) {
+   *    console.log(v);
+   *   });
+   *
+   *   stream.on('error', function (v) {
+   *    console.error(v);
+   *   });
+   *
+   *   stream.on({
+   *    call: function (v) {
+   *      console.log(v);
+   *    }
+   *   });
+   * ```
+   *
+   * @for ProAct.SubscribableStream
+   * @instance
+   * @method on
+   * @param {Array|String} actions
+   *      The action/actions to listen for. If this parameter is skipped or null/undefined,
+   *      the actions from {{#crossLink "ProAct.Actor/defaultActions:method"}}{{/crossLink}} are used.
+   *      <p>
+   *        The actions can be skipped and on their place as first parameter to be passed the <i>listener</i>.
+   *      </p>
+   * @param {Object} listener
+   *      The listener to attach. It must be instance of Function or object with a <i>call</i> method.
+   * @return {ProAct.SubscribableStream}
+   *      <b>this</b>
+   */
   on: function (actions, listener) {
     if (this.subscribtions === 0) {
       this.unsubscribe = this.subscribe(this);
