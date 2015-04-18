@@ -15,12 +15,13 @@
  * </p>
  *
  * @class ProAct.ThrottlingStream
+ * @constructor
  * @extends ProAct.DelayedStream
  * @param {String} queueName
  *      The name of the queue all the updates should be pushed to.
  *      <p>
  *        If this parameter is null/undefined the default queue of
- *        {@link ProAct.flow} is used.
+ *        {{#crossLink "ProAct/flow:property"}}{{/crossLink}} is used.
  *      </p>
  *      <p>
  *        If this parameter is not a string it is used as the
@@ -49,25 +50,26 @@ ProAct.ThrottlingStream.prototype = P.U.ex(Object.create(P.DBS.prototype), {
   /**
    * Reference to the constructor of this object.
    *
-   * @memberof ProAct.ThrottlingStream
-   * @instance
-   * @constant
-   * @type {Object}
-   * @default ProAct.ThrottlingStream
+   * @property constructor
+   * @type ProAct.ThrottlingStream
+   * @final
+   * @for ProAct.ThrottlingStream
    */
   constructor: ProAct.ThrottlingStream,
 
   /**
    * <p>
    *  Triggers a new event/value to the stream. It is stored in the buffer of the stream and not emitted.
-   *  But the buffer of ProAct.ThrottlingStream can store only one value/event, so when the delay passes only
+   *  But the buffer of `ProAct.ThrottlingStream` can store only one value/event, so when the delay passes only
    *  the last value/event triggered into the stream by this method is emitted.
    * </p>
    * <p>
-   *  ProAct.ThrottlingStream.t is alias of this method.
+   *  `ProAct.ThrottlingStream.t` is alias of this method.
    * </p>
    *
-   * @memberof ProAct.ThrottlingStream
+   * TODO - should be moved to StreamUtil.
+   *
+   * @for ProAct.ThrottlingStream
    * @instance
    * @method trigger
    * @param {Object} event
@@ -88,15 +90,15 @@ ProAct.ThrottlingStream.prototype = P.U.ex(Object.create(P.DBS.prototype), {
 P.U.ex(P.Stream.prototype, {
 
   /**
-   * Creates a new {@link ProAct.ThrottlingStream} instance having as source <i>this</i>.
+   * Creates a new {{#crossLink "ProAct.ThrottlingStream"}}{{/crossLink}} instance having as source <i>this</i>.
    *
-   * @memberof ProAct.Stream
+   * @for ProAct.Stream
    * @instance
    * @method throttle
    * @param {Number} delay
    *      The time delay to be used for flushing the buffer of the new stream.
    * @return {ProAct.ThrottlingStream}
-   *      A {@link ProAct.ThrottlingStream} instance.
+   *      A {{#crossLink "ProAct.ThrottlingStream"}}{{/crossLink}} instance.
    */
   throttle: function (delay) {
     return new P.TDS(this, delay);
