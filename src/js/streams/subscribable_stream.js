@@ -107,6 +107,61 @@ ProAct.SubscribableStream.prototype = P.U.ex(Object.create(P.S.prototype), {
     return P.S.prototype.on.call(this, actions, listener);
   },
 
+  /**
+   * Removes a <i>listener</i> from the passed <i>action</i>.
+   *
+   * If this method is called without parameters, all the listeners for all the actions are removed.
+   * The listeners are reset using {{#crossLink "ProAct.Actor/defaultActions:method"}}{{/crossLink}}.
+   *
+   * If the last listener is removed using this method, `this stream` authomatically unsubscribes
+   * from the source, using the function, returned by the `subscribe` function passed to the constructor.
+   *
+   * Examples are:
+   *
+   * Removing a listener:
+   * ```
+   *  var listener = function (v) {
+   *    console.log(v);
+   *  };
+   *  stream.on(listener);
+   *  stream.off(listener);
+   * ```
+   *
+   * Or for removing all the listeners attached to an stream:
+   * ```
+   *  stream.off();
+   * ```
+   *
+   * Or for removing all the listeners of a given type attached to an stream:
+   * ```
+   *  stream.off('error');
+   * ```
+   *
+   * Or for removing a listener from different type of actions:
+   * ```
+   *  var listener = function (v) {
+   *    console.log(v);
+   *  };
+   *  stream.on(listener);
+   *  stream.onErr(listener);
+   *
+   *  stream.off(['error', 'change'], listener);
+   * ```
+   *
+   * @for ProAct.SubscribableStream
+   * @instance
+   * @method off
+   * @param {Array|String} actions
+   *      The action/actions to stop listening for. If this parameter is skipped or null/undefined,
+   *      the actions from {{#crossLink "ProAct.Actor/defaultActions:method"}}{{/crossLink}} are used.
+   *      <p>
+   *        The actions can be skipped and on their place as first parameter to be passed the <i>listener</i>.
+   *      </p>
+   * @param {Object} listener
+   *      The listener to detach. If it is skipped, null or undefined all the listeners are removed from this actor.
+   * @return {ProAct.SubscribableStream}
+   *      <b>this</b>
+   */
   off: function (actions, listener) {
     this.subscribtions--;
 

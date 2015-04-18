@@ -1,13 +1,17 @@
 /**
+ * @module proact-streams
+ */
+
+/**
  * <p>
- *  Constructs a ProAct.ThrottlingStream. This is special kind of {@link ProAct.DelayedStream}.
+ *  Constructs a `ProAct.ThrottlingStream`. This is special kind of {{#crossLink "ProAct.DelayedStream"}}{{/crossLink}}.
  * </p>
  * <p>
  *  The main idea is the following : if <i>n</i> values/events are triggered to this stream before the time delay for
  *  flushing passes, only the last one, the <i>n</i>-th is emitted.
  * </p>
  * <p>
- *  ProAct.ThrottlingStream is part of the streams module of ProAct.js.
+ *  `ProAct.ThrottlingStream` is part of the `proact-streams` module of ProAct.js.
  * </p>
  *
  * @class ProAct.ThrottlingStream
