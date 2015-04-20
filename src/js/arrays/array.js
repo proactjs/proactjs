@@ -1,4 +1,13 @@
 /**
+ * The `proact-arrays` module provides reactive arrays.
+ * All the modification operations over arrays, like `push` for example could be listened to.
+ *
+ *
+ * @module proact-arrays
+ * @main proact-arrays
+ */
+
+/**
  * Creates a wrapper around a plain JavaScript array that is capable of tracking changes on the array and notifying listeners.
  * <p>
  *  It has a {@link ProAct.ArrayCore} which it uses to observe the array for changes or to update the array on changes.
