@@ -10,22 +10,22 @@
 /**
  * Creates a wrapper around a plain JavaScript array that is capable of tracking changes on the array and notifying listeners.
  * <p>
- *  It has a {@link ProAct.ArrayCore} which it uses to observe the array for changes or to update the array on changes.
+ *  It has a {{#crossLink "ProAct.ArrayCore"}}{{/crossLink}} which it uses to observe the array for changes or to update the array on changes.
  * </p>
  * <p>
- *  ProAct.Array is array-like object, it has all the methods defined in the JavaScript Array class, length property and indices.
+ *  `ProAct.Array` is array-like object, it has all the methods defined in the JavaScript Array class, length property and indices.
  * </p>
  * <p>
- *  ProAct.Array is part of the arrays module of ProAct.js.
+ *  `ProAct.Array` is part of the `proact-arrays` module of ProAct.js.
  * </p>
  *
  * @class ProAct.Array
+ * @constructor
  * @extends Array
  * @param [...]
  *      I can take an array as a parameter and it becomes reactive wrapper around it.
  *      It can take a list of arguments which become the wrapped array.
  *      If nothing is passed it becomes wrapper arround an empty array.
- * @see {@link ProAct.ArrayCore}
  */
 ProAct.Array = P.A = pArray = function () {
   var self = this,
@@ -55,7 +55,9 @@ P.U.ex(P.A, {
   /**
    * Defines a set of the possible operations over an array.
    *
-   * @namespace ProAct.Array.Operations
+   * @class Operations
+   * @namespace ProAct.Array
+   * @static
    */
   Operations: {
 
@@ -65,9 +67,10 @@ P.U.ex(P.A, {
      *  array[3] = 12;
      * </pre>
      *
-     * @memberof ProAct.Array.Operations
-     * @static
-     * @constant
+     * @property set
+     * @type Number
+     * @final
+     * @for ProAct.Array.Operations
      */
     set: 0,
 
@@ -78,9 +81,10 @@ P.U.ex(P.A, {
      *  array.unshift(12);
      * </pre>
      *
-     * @memberof ProAct.Array.Operations
-     * @static
-     * @constant
+     * @property add
+     * @type Number
+     * @final
+     * @for ProAct.Array.Operations
      */
     add: 1,
 
@@ -91,9 +95,10 @@ P.U.ex(P.A, {
      *  array.shift();
      * </pre>
      *
-     * @memberof ProAct.Array.Operations
-     * @static
-     * @constant
+     * @property remove
+     * @type Number
+     * @final
+     * @for ProAct.Array.Operations
      */
     remove: 2,
 
@@ -103,9 +108,10 @@ P.U.ex(P.A, {
      *  array.length = 5;
      * </pre>
      *
-     * @memberof ProAct.Array.Operations
-     * @static
-     * @constant
+     * @property setLength
+     * @type Number
+     * @final
+     * @for ProAct.Array.Operations
      */
     setLength: 3,
 
@@ -115,9 +121,10 @@ P.U.ex(P.A, {
      *  array.reverse();
      * </pre>
      *
-     * @memberof ProAct.Array.Operations
-     * @static
-     * @constant
+     * @property reverse
+     * @type Number
+     * @final
+     * @for ProAct.Array.Operations
      */
     reverse: 4,
 
@@ -127,9 +134,10 @@ P.U.ex(P.A, {
      *  array.sort();
      * </pre>
      *
-     * @memberof ProAct.Array.Operations
-     * @static
-     * @constant
+     * @property sort
+     * @type Number
+     * @final
+     * @for ProAct.Array.Operations
      */
     sort: 5,
 
@@ -139,9 +147,10 @@ P.U.ex(P.A, {
      *  array.splice(2, 3, 4, 15, 6);
      * </pre>
      *
-     * @memberof ProAct.Array.Operations
-     * @static
-     * @constant
+     * @property splice
+     * @type Number
+     * @final
+     * @for ProAct.Array.Operations
      */
     splice: 6,
   },
@@ -149,12 +158,13 @@ P.U.ex(P.A, {
   /**
    * A helper method for filtering an array and notifying the right listeners of the filtered result.
    * <p>
-   *  This is used if there is an ProAct.Array created by filtering another ProAct.Array. If the original is
-   *  changed, the filtered array should be changed in some cases. So refilter does this - changes the dependent filtered array, using
-   *  {@link ProAct.ArrayCore#updateByDiff}.
+   *  This is used if there is an `ProAct.Array` created by filtering another `ProAct.Array`.
+   *  If the original is changed, the filtered array should be changed in some cases.
+   *  So refilter does this - changes the dependent filtered array, using
+   *  {{#crossLink "ProAct.ArrayCore/updateByDiff:method"}}{{/crossLink}}.
    * </p>
    *
-   * @memberof ProAct.Array
+   * @for ProAct.Array
    * @static
    * @param {ProAct.Array} original
    *      The original array to filter by.
@@ -162,7 +172,6 @@ P.U.ex(P.A, {
    *      The array to be filtered - changed by a filter function, applied on the original.
    * @param {Array} filterArgs
    *      Arguments of the filtering - filtering function and data.
-   * @see {@link ProAct.ArrayCore#updateByDiff}
    */
   reFilter: function (original, filtered, filterArgs) {
     var oarr = filtered._array;
@@ -178,32 +187,30 @@ ProAct.Array.prototype = pArrayProto = P.U.ex(Object.create(arrayProto), {
   /**
    * Reference to the constructor of this object.
    *
-   * @memberof ProAct.Array
-   * @instance
-   * @constant
-   * @default ProAct.Array
+   * @property constructor
+   * @type ProAct.Array
+   * @final
+   * @for ProAct.Array
    */
   constructor: ProAct.Array,
 
   /**
    * The <b>concat()</b> method returns a new array comprised of this array joined with other array(s) and/or value(s).
    * <p>
-   *  The result ProAct.Array is dependent on <i>this</i>, so if <i>this</i> changes, the concatenation resut will be updated.
+   *  The result `ProAct.Array` is dependent on <i>this</i>, so if <i>this</i> changes, the concatenation resut will be updated.
    * </p>
    * <p>
-   *  If the argument passed is another ProAct.Array the result array is dependent on it too.
+   *  If the argument passed is another `ProAct.Array` the result array is dependent on it too.
    * </p>
    *
-   * @memberof ProAct.Array
+   * @for ProAct.Array
    * @instance
    * @method concat
    * @param [...]
    *      Arrays and/or values to concatenate to the resulting array.
    * @return {ProAct.Array}
-   *      A new ProAct.Array consisting of the elements in the <i>this</i> object on which it is called, followed in order by,
+   *      A new `ProAct.Array` consisting of the elements in the <i>this</i> object on which it is called, followed in order by,
    *      for each argument, the elements of that argument (if the argument is an array) or the argument itself (if the argument is not an array).
-   * @see {@link ProAct.Array.Listeners.leftConcat}
-   * @see {@link ProAct.Array.Listeners.rightConcat}
    */
   concat: function () {
     var res, rightProArray;
@@ -795,7 +802,7 @@ ProAct.Array.prototype = pArrayProto = P.U.ex(Object.create(arrayProto), {
   /**
    * The <b>reverse()</b> method reverses an ProAct.Array in place. The first array element becomes the last and the last becomes the first.
    * <p>
-   *  This method notifies the 'index' listeners attached to <i>this</i>' {@link ProAct.ArrayCore}.
+   *  This method notifies the 'index' listeners attached to <i>this</i>' {{#crossLink "ProAct.ArrayCore"}}{{/crossLink}}.
    * </p>
    *
    * @memberof ProAct.Array
@@ -817,7 +824,7 @@ ProAct.Array.prototype = pArrayProto = P.U.ex(Object.create(arrayProto), {
    * The <b>sort()</b> method sorts the elements of <i>this</i> ProAct.Array in place and returns the <i>this</i>. The sort is not necessarily stable.
    * The default sort order is according to string Unicode code points.
    * <p>
-   *  This method notifies the 'index' listeners attached to <i>this</i>' {@link ProAct.ArrayCore}.
+   *  This method notifies the 'index' listeners attached to <i>this</i>' {{#crossLink "ProAct.ArrayCore"}}{{/crossLink}}.
    * </p>
    *
    * @memberof ProAct.Array
@@ -841,7 +848,7 @@ ProAct.Array.prototype = pArrayProto = P.U.ex(Object.create(arrayProto), {
   /**
    * The <b>splice()</b> method changes the content of <i>this</i> ProAct.Array, adding new elements while removing old elements.
    * <p>
-   *  This method may notify the 'index' listeners or the 'length' listeners, or even the both types of listeners, attached to <i>this</i>' {@link ProAct.ArrayCore}, depending
+   *  This method may notify the 'index' listeners or the 'length' listeners, or even the both types of listeners, attached to <i>this</i>' {{#crossLink "ProAct.ArrayCore"}}{{/crossLink}}, depending
    *  on what the splicing does - removing, adding or changing elements (removing and adding).
    * </p>
    *
@@ -896,7 +903,7 @@ ProAct.Array.prototype = pArrayProto = P.U.ex(Object.create(arrayProto), {
   /**
    * The <b>pop()</b> method removes the last element from an ProAct.Array and returns that element.
    * <p>
-   *  This method notifies the 'length' listeners, attached to <i>this</i>' {@link ProAct.ArrayCore}.
+   *  This method notifies the 'length' listeners, attached to <i>this</i>' {{#crossLink "ProAct.ArrayCore"}}{{/crossLink}}.
    * </p>
    * <p>
    *  This method removes the special index accessor of the deleted element's index - the last index.
@@ -925,11 +932,11 @@ ProAct.Array.prototype = pArrayProto = P.U.ex(Object.create(arrayProto), {
   /**
    * The <b>push()</b> method adds one or more elements to the end of an ProAct.Array and returns the new length of the ProAct.Array.
    * <p>
-   *  This method notifies the 'length' listeners, attached to <i>this</i>' {@link ProAct.ArrayCore}.
+   *  This method notifies the 'length' listeners, attached to <i>this</i>' {{#crossLink "ProAct.ArrayCore"}}{{/crossLink}}.
    * </p>
    * <p>
    *  This method defines new index accessors for the elements on the new indexes. So these indexes can be set and read, and
-   *  will attatch listeners to the {@link ProAct.ArrayCore} or update them.
+   *  will attatch listeners to the {{#crossLink "ProAct.ArrayCore"}}{{/crossLink}} or update them.
    * </p>
    *
    * @memberof ProAct.Array
@@ -959,7 +966,7 @@ ProAct.Array.prototype = pArrayProto = P.U.ex(Object.create(arrayProto), {
   /**
    * The <b>shift()</b> method removes the first element from an ProAct.Array and returns that element. This method changes the length of the ProAct.Array.
    * <p>
-   *  This method notifies the 'length' listeners, attached to <i>this</i>' {@link ProAct.ArrayCore}.
+   *  This method notifies the 'length' listeners, attached to <i>this</i>' {{#crossLink "ProAct.ArrayCore"}}{{/crossLink}}.
    * </p>
    * <p>
    *  This method removes the special index accessor of the deleted element's index - the zero index.
@@ -988,11 +995,11 @@ ProAct.Array.prototype = pArrayProto = P.U.ex(Object.create(arrayProto), {
   /**
    * The <b>unshift()</b> method adds one or more elements to the beginning of an ProAct.Array and returns the new length of the ProAct.Array.
    * <p>
-   *  This method notifies the 'length' listeners, attached to <i>this</i>' {@link ProAct.ArrayCore}.
+   *  This method notifies the 'length' listeners, attached to <i>this</i>' {{#crossLink "ProAct.ArrayCore"}}{{/crossLink}}.
    * </p>
    * <p>
    *  This method defines new index accessors for the elements on the new indexes. So these indexes can be set and read, and
-   *  will attatch listeners to the {@link ProAct.ArrayCore} or update them.
+   *  will attatch listeners to the {{#crossLink "ProAct.ArrayCore"}}{{/crossLink}} or update them.
    * </p>
    *
    * @memberof ProAct.Array
