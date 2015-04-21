@@ -232,12 +232,12 @@ ProAct.Array.prototype = pArrayProto = P.U.ex(Object.create(arrayProto), {
   },
 
   /**
-   * The <b>every()</b> method tests whether all elements in the ProAct.Array pass the test implemented by the provided function.
+   * The <b>every()</b> method tests whether all elements in the `ProAct.Array` pass the test implemented by the provided function.
    * <p>
-   *  This method adds the {@link ProAct.currentCaller} as a listener to both 'index' type and 'length' type of changes.
+   *  This method adds the {{#crossLink "ProAct/currentCaller:property"}}{{/crossLink}} as a listener to both 'index' type and 'length' type of changes.
    * </p>
    *
-   * @memberof ProAct.Array
+   * @for ProAct.Array
    * @instance
    * @method every
    * @param {Function} callback
@@ -246,7 +246,6 @@ ProAct.Array.prototype = pArrayProto = P.U.ex(Object.create(arrayProto), {
    *      Value to use as this when executing <i>callback</i>.
    * @return {Boolean}
    *      True if all the elements in the <i>this</i> ProAct.Array pass the test implemented by the <i>callback</i>, false otherwise.
-   * @see {@link ProAct.ArrayCore#addCaller}
    */
   every: function (fun, thisArg) {
     this.core.addCaller();
@@ -284,7 +283,7 @@ ProAct.Array.prototype = pArrayProto = P.U.ex(Object.create(arrayProto), {
   /**
    * The <b>some()</b> method tests whether some element in the array passes the test implemented by the provided function.
    * <p>
-   *  This method adds the {@link ProAct.currentCaller} as a listener to both 'index' type and 'length' type of changes.
+   *  This method adds the {{#crossLink "ProAct/currentCaller:property"}}{{/crossLink}} as a listener to both 'index' type and 'length' type of changes.
    * </p>
    *
    * @memberof ProAct.Array
@@ -331,7 +330,7 @@ ProAct.Array.prototype = pArrayProto = P.U.ex(Object.create(arrayProto), {
   /**
    * The <b>forEach()</b> method executes a provided function once per array element.
    * <p>
-   *  This method adds the {@link ProAct.currentCaller} as a listener to both 'index' type and 'length' type of changes.
+   *  This method adds the {{#crossLink "ProAct/currentCaller:property"}}{{/crossLink}} as a listener to both 'index' type and 'length' type of changes.
    * </p>
    *
    * @memberof ProAct.Array
@@ -413,7 +412,7 @@ ProAct.Array.prototype = pArrayProto = P.U.ex(Object.create(arrayProto), {
   /**
    * The <b>reduce()</b> method applies a function against an accumulator and each value of the ProAct.Array (from left-to-right) has to reduce it to a single value.
    * <p>
-   *  This method adds the {@link ProAct.currentCaller} as a listener to both 'index' type and 'length' type of changes.
+   *  This method adds the {{#crossLink "ProAct/currentCaller:property"}}{{/crossLink}} as a listener to both 'index' type and 'length' type of changes.
    * </p>
    *
    * @memberof ProAct.Array
@@ -471,7 +470,7 @@ ProAct.Array.prototype = pArrayProto = P.U.ex(Object.create(arrayProto), {
   /**
    * The <b>reduceRight()</b> method applies a function against an accumulator and each value of the ProAct.Array (from right-to-left) as to reduce it to a single value.
    * <p>
-   *  This method adds the {@link ProAct.currentCaller} as a listener to both 'index' type and 'length' type of changes.
+   *  This method adds the {{#crossLink "ProAct/currentCaller:property"}}{{/crossLink}} as a listener to both 'index' type and 'length' type of changes.
    * </p>
    *
    * @memberof ProAct.Array
@@ -529,7 +528,7 @@ ProAct.Array.prototype = pArrayProto = P.U.ex(Object.create(arrayProto), {
   /**
    * The <b>indexOf()</b> method returns the first index at which a given element can be found in the ProAct.Array, or -1 if it is not present.
    * <p>
-   *  This method adds the {@link ProAct.currentCaller} as a listener to both 'index' type and 'length' type of changes.
+   *  This method adds the {{#crossLink "ProAct/currentCaller:property"}}{{/crossLink}} as a listener to both 'index' type and 'length' type of changes.
    * </p>
    *
    * @memberof ProAct.Array
@@ -598,7 +597,7 @@ ProAct.Array.prototype = pArrayProto = P.U.ex(Object.create(arrayProto), {
    * The <b>lastIndexOf()</b> method returns the last index at which a given element can be found in the ProAct.Array, or -1 if it is not present.
    * The ProAct.Array is searched backwards, starting at <i>fromIndex</i>.
    * <p>
-   *  This method adds the {@link ProAct.currentCaller} as a listener to both 'index' type and 'length' type of changes.
+   *  This method adds the {{#crossLink "ProAct/currentCaller:property"}}{{/crossLink}} as a listener to both 'index' type and 'length' type of changes.
    * </p>
    *
    * @memberof ProAct.Array
@@ -664,7 +663,7 @@ ProAct.Array.prototype = pArrayProto = P.U.ex(Object.create(arrayProto), {
   /**
    * The <b>join()</b> method joins all elements of an ProAct.Array into a string.
    * <p>
-   *  This method adds the {@link ProAct.currentCaller} as a listener to both 'index' type and 'length' type of changes.
+   *  This method adds the {{#crossLink "ProAct/currentCaller:property"}}{{/crossLink}} as a listener to both 'index' type and 'length' type of changes.
    * </p>
    *
    * @memberof ProAct.Array
@@ -720,7 +719,7 @@ ProAct.Array.prototype = pArrayProto = P.U.ex(Object.create(arrayProto), {
    * The <b>toLocaleString()</b> method returns a string representing the elements of the ProAct.Array.
    * The elements are converted to Strings using their toLocaleString methods and these Strings are separated by a locale-specific String (such as a comma ",").
    * <p>
-   *  This method adds the {@link ProAct.currentCaller} as a listener to both 'index' type and 'length' type of changes.
+   *  This method adds the {{#crossLink "ProAct/currentCaller:property"}}{{/crossLink}} as a listener to both 'index' type and 'length' type of changes.
    * </p>
    *
    * @memberof ProAct.Array
@@ -740,7 +739,7 @@ ProAct.Array.prototype = pArrayProto = P.U.ex(Object.create(arrayProto), {
    * The <b>toString()</b> method returns a string representing the specified ProAct.Array and its elements.
    * The elements are converted to Strings using their toLocaleString methods and these Strings are separated by a locale-specific String (such as a comma ",").
    * <p>
-   *  This method adds the {@link ProAct.currentCaller} as a listener to both 'index' type and 'length' type of changes.
+   *  This method adds the {{#crossLink "ProAct/currentCaller:property"}}{{/crossLink}} as a listener to both 'index' type and 'length' type of changes.
    * </p>
    *
    * @memberof ProAct.Array
