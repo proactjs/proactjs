@@ -257,9 +257,9 @@ ProAct.Array.prototype = pArrayProto = P.U.ex(Object.create(arrayProto), {
   },
 
   /**
-   * Does the same as the {@link ProAct.Array#every} method, but the result is a {@link ProAct.Property} depending on changes on the array.
+   * Does the same as the {{#crossLink "ProAct.Array/every:method"}}{{/crossLink}} method, but the result is a {{#crossLink "ProAct.Property"}}{{/crossLink}} depending on changes on the array.
    *
-   * @memberof ProAct.Array
+   * @for ProAct.Array
    * @instance
    * @method pevery
    * @param {Function} fun
@@ -267,10 +267,7 @@ ProAct.Array.prototype = pArrayProto = P.U.ex(Object.create(arrayProto), {
    * @param {Object} thisArg
    *      Value to use as this when executing <i>callback</i>.
    * @return {ProAct.Property}
-   *      {@link ProAct.Property} with value of true if all the elements in <i>this</i> ProAct.Array pass the test implemented by the <i>fun</i>, false otherwise.
-   * @see {@link ProAct.ArrayCore#addCaller}
-   * @see {@link ProAct.Property}
-   * @see {@link ProAct.Array.Listeners.every}
+   *      {{#crossLink "ProAct.Property"}}{{/crossLink}} with value of true if all the elements in <i>this</i> `ProAct.Array` pass the test implemented by the <i>fun</i>, false otherwise.
    */
   pevery: function (fun, thisArg) {
     var val = P.P.lazyValue(every.apply(this._array, arguments));
@@ -286,7 +283,7 @@ ProAct.Array.prototype = pArrayProto = P.U.ex(Object.create(arrayProto), {
    *  This method adds the {{#crossLink "ProAct/currentCaller:property"}}{{/crossLink}} as a listener to both 'index' type and 'length' type of changes.
    * </p>
    *
-   * @memberof ProAct.Array
+   * @for ProAct.Array
    * @instance
    * @method some
    * @param {Function} callback
@@ -294,8 +291,7 @@ ProAct.Array.prototype = pArrayProto = P.U.ex(Object.create(arrayProto), {
    * @param {Object} thisArg
    *      Value to use as this when executing <i>callback</i>.
    * @return {Boolean}
-   *      True if one or more of the elements in <i>this</i> ProAct.Array pass the test implemented by the <i>callback</i>, false otherwise.
-   * @see {@link ProAct.ArrayCore#addCaller}
+   *      True if one or more of the elements in <i>this</i> `ProAct.Array` pass the test implemented by the <i>callback</i>, false otherwise.
    */
   some: function () {
     this.core.addCaller();
@@ -304,9 +300,9 @@ ProAct.Array.prototype = pArrayProto = P.U.ex(Object.create(arrayProto), {
   },
 
   /**
-   * Does the same as the {@link ProAct.Array#some} method, but the result is a {@link ProAct.Property} depending on changes on the array.
+   * Does the same as the {{#crossLink "ProAct.Array/some:method"}}{{/crossLink}} method, but the result is a {{#crossLink "ProAct.Property"}}{{/crossLink}} depending on changes on the array.
    *
-   * @memberof ProAct.Array
+   * @for ProAct.Array
    * @instance
    * @method psome
    * @param {Function} fun
@@ -314,10 +310,7 @@ ProAct.Array.prototype = pArrayProto = P.U.ex(Object.create(arrayProto), {
    * @param {Object} thisArg
    *      Value to use as this when executing <i>callback</i>.
    * @return {ProAct.Property}
-   *      {@link ProAct.Property} with value of true if one or more of the elements in <i>this</i> ProAct.Array pass the test implemented by the <i>fun</i>, false otherwise.
-   * @see {@link ProAct.ArrayCore#addCaller}
-   * @see {@link ProAct.Property}
-   * @see {@link ProAct.Array.Listeners.some}
+   *      {{#crossLink "ProAct.Property"}}{{/crossLink}} with value of true if one or more of the elements in <i>this</i> `ProAct.Array` pass the test implemented by the <i>fun</i>, false otherwise.
    */
   psome: function (fun, thisArg) {
     var val = P.P.lazyValue(some.apply(this._array, arguments));
@@ -439,7 +432,7 @@ ProAct.Array.prototype = pArrayProto = P.U.ex(Object.create(arrayProto), {
   },
 
   /**
-   * Does the same as the {@link ProAct.Array#reduce} method, but the result is a {@link ProAct.Property} depending on changes on <i>this</i> ProAct.Array.
+   * Does the same as the {@link ProAct.Array#reduce} method, but the result is a {{#crossLink "ProAct.Property"}}{{/crossLink}} depending on changes on <i>this</i> ProAct.Array.
    *
    * @memberof ProAct.Array
    * @instance
@@ -455,9 +448,9 @@ ProAct.Array.prototype = pArrayProto = P.U.ex(Object.create(arrayProto), {
    * @param {Object} initialValue
    *      Object to use as the first argument to the first call of the <i>fun</i> .
    * @return {ProAct.Property}
-   *      {@link ProAct.Property} with value of the last <i>fun</i> invocation.
+   *      {{#crossLink "ProAct.Property"}}{{/crossLink}} with value of the last <i>fun</i> invocation.
    * @see {@link ProAct.ArrayCore#addCaller}
-   * @see {@link ProAct.Property}
+   * @see {{#crossLink "ProAct.Property"}}{{/crossLink}}
    * @see {@link ProAct.Array.Listeners.reduce}
    */
   preduce: function (fun /*, initialValue */) {
@@ -497,7 +490,7 @@ ProAct.Array.prototype = pArrayProto = P.U.ex(Object.create(arrayProto), {
   },
 
   /**
-   * Does the same as the {@link ProAct.Array#reduceRight} method, but the result is a {@link ProAct.Property} depending on changes on <i>this</i> ProAct.Array.
+   * Does the same as the {@link ProAct.Array#reduceRight} method, but the result is a {{#crossLink "ProAct.Property"}}{{/crossLink}} depending on changes on <i>this</i> ProAct.Array.
    *
    * @memberof ProAct.Array
    * @instance
@@ -513,9 +506,9 @@ ProAct.Array.prototype = pArrayProto = P.U.ex(Object.create(arrayProto), {
    * @param {Object} initialValue
    *      Object to use as the first argument to the first call of the <i>fun</i> .
    * @return {ProAct.Property}
-   *      {@link ProAct.Property} with value of the last <i>fun</i> invocation.
+   *      {{#crossLink "ProAct.Property"}}{{/crossLink}} with value of the last <i>fun</i> invocation.
    * @see {@link ProAct.ArrayCore#addCaller}
-   * @see {@link ProAct.Property}
+   * @see {{#crossLink "ProAct.Property"}}{{/crossLink}}
    * @see {@link ProAct.Array.Listeners.reduceRight}
    */
   preduceRight: function (fun /*, initialValue */) {
@@ -560,7 +553,7 @@ ProAct.Array.prototype = pArrayProto = P.U.ex(Object.create(arrayProto), {
   },
 
   /**
-   * Does the same as the {@link ProAct.Array#indexOf} method, but the result is a {@link ProAct.Property} depending on changes on <i>this</i> ProAct.Array.
+   * Does the same as the {@link ProAct.Array#indexOf} method, but the result is a {{#crossLink "ProAct.Property"}}{{/crossLink}} depending on changes on <i>this</i> ProAct.Array.
    *
    * @memberof ProAct.Array
    * @instance
@@ -581,9 +574,9 @@ ProAct.Array.prototype = pArrayProto = P.U.ex(Object.create(arrayProto), {
    *        If the calculated index is less than 0, then the whole ProAct.Array will be searched.
    *      </p>
    * @return {ProAct.Property}
-   *      A {@link ProAct.Property} instance with value, the index of the searched element or '-1' if it is not found in <i>this</i> ProAct.Array.
+   *      A {{#crossLink "ProAct.Property"}}{{/crossLink}} instance with value, the index of the searched element or '-1' if it is not found in <i>this</i> ProAct.Array.
    * @see {@link ProAct.ArrayCore#addCaller}
-   * @see {@link ProAct.Property}
+   * @see {{#crossLink "ProAct.Property"}}{{/crossLink}}
    * @see {@link ProAct.Array.Listeners.indexOf}
    */
   pindexOf: function () {
@@ -628,7 +621,7 @@ ProAct.Array.prototype = pArrayProto = P.U.ex(Object.create(arrayProto), {
   },
 
   /**
-   * Does the same as the {@link ProAct.Array#lastIndexOf} method, but the result is a {@link ProAct.Property} depending on changes on <i>this</i> ProAct.Array.
+   * Does the same as the {@link ProAct.Array#lastIndexOf} method, but the result is a {{#crossLink "ProAct.Property"}}{{/crossLink}} depending on changes on <i>this</i> ProAct.Array.
    *
    * @memberof ProAct.Array
    * @instance
@@ -648,9 +641,9 @@ ProAct.Array.prototype = pArrayProto = P.U.ex(Object.create(arrayProto), {
    *        If the calculated index is less than 0, -1 is returned, i.e. the ProAct.Array will not be searched.
    *      </p>
    * @return {ProAct.Property}
-   *      A {@link ProAct.Property} instance with value, the index of the backwards searched element or '-1' if it is not found in <i>this</i> ProAct.Array.
+   *      A {{#crossLink "ProAct.Property"}}{{/crossLink}} instance with value, the index of the backwards searched element or '-1' if it is not found in <i>this</i> ProAct.Array.
    * @see {@link ProAct.ArrayCore#addCaller}
-   * @see {@link ProAct.Property}
+   * @see {{#crossLink "ProAct.Property"}}{{/crossLink}}
    * @see {@link ProAct.Array.Listeners.lastIndexOf}
    */
   plastindexOf: function () {
@@ -686,7 +679,7 @@ ProAct.Array.prototype = pArrayProto = P.U.ex(Object.create(arrayProto), {
   },
 
   /**
-   * Does the same as the {@link ProAct.Array#join} method, but the result is a {@link ProAct.Property} depending on changes on <i>this</i> ProAct.Array.
+   * Does the same as the {@link ProAct.Array#join} method, but the result is a {{#crossLink "ProAct.Property"}}{{/crossLink}} depending on changes on <i>this</i> ProAct.Array.
    *
    * @memberof ProAct.Array
    * @instance
@@ -698,10 +691,10 @@ ProAct.Array.prototype = pArrayProto = P.U.ex(Object.create(arrayProto), {
    *       If omitted, the ProAct.Array elements are separated with a comma.
    *      </p>
    * @return {ProAct.Property}
-   *      A {@link ProAct.Property} instance with value : string representation of all the elements in <i>this</i> ProAct.Array, separated by the provided <i>separator</i>.
+   *      A {{#crossLink "ProAct.Property"}}{{/crossLink}} instance with value : string representation of all the elements in <i>this</i> ProAct.Array, separated by the provided <i>separator</i>.
    * @see {@link ProAct.ArrayCore#addCaller}
    * @see {@link ProAct.ArrayCore#preduce}
-   * @see {@link ProAct.Property}
+   * @see {{#crossLink "ProAct.Property"}}{{/crossLink}}
    */
   pjoin: function (separator) {
     var reduced = this.preduce(function (i, el) {
