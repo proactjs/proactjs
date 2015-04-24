@@ -326,14 +326,13 @@ ProAct.Array.prototype = pArrayProto = P.U.ex(Object.create(arrayProto), {
    *  This method adds the {{#crossLink "ProAct/currentCaller:property"}}{{/crossLink}} as a listener to both 'index' type and 'length' type of changes.
    * </p>
    *
-   * @memberof ProAct.Array
+   * @for ProAct.Array
    * @instance
    * @method forEach
    * @param {Function} fun
    *      Function to execute for each element.
    * @param {Object} thisArg
    *      Value to use as <i>this</i> when executing <i>callback</i>.
-   * @see {@link ProAct.ArrayCore#addCaller}
    */
   forEach: function (fun /*, thisArg */) {
     this.core.addCaller();
@@ -342,12 +341,12 @@ ProAct.Array.prototype = pArrayProto = P.U.ex(Object.create(arrayProto), {
   },
 
   /**
-   * The <b>filter()</b> method creates a new ProAct.Array with all elements that pass the test implemented by the provided function.
+   * The <b>filter()</b> method creates a new `ProAct.Array` with all elements that pass the test implemented by the provided function.
    * <p>
-   *  The result ProAct.Array is dependent on <i>this</i>, so if <i>this</i> changes, the filtered resut will be updated.
+   *  The result `ProAct.Array` is dependent on <i>this</i>, so if <i>this</i> changes, the filtered resut will be updated.
    * </p>
    *
-   * @memberof ProAct.Array
+   * @for ProAct.Array
    * @instance
    * @method filter
    * @param {Function} fun
@@ -355,9 +354,7 @@ ProAct.Array.prototype = pArrayProto = P.U.ex(Object.create(arrayProto), {
    * @param {Object} thisArg
    *      Value to use as this when executing <i>fun</i>.
    * @return {ProAct.Array}
-   *      A new ProAct.Array consisting of the elements in <i>this</i> ProAct.Array that pass the test implemented by <i>fun</i>.
-   * @see {@link ProAct.Array.Listeners.filter}
-   * @see {@link ProAct.Array.reFilter}
+   *      A new `ProAct.Array` consisting of the elements in <i>this</i> `ProAct.Array` that pass the test implemented by <i>fun</i>.
    */
   filter: function (fun, thisArg, isComplex) {
     if (this.core.isComplex || isComplex) {
@@ -374,16 +371,16 @@ ProAct.Array.prototype = pArrayProto = P.U.ex(Object.create(arrayProto), {
   },
 
   /**
-   * The <b>map()</b> method creates a new ProAct with the results of calling a provided function on every element in <i>this</i> ProAct.Array.
+   * The <b>map()</b> method creates a new `ProAct.Array` with the results of calling a provided function on every element in <i>this</i> `ProAct.Array`.
    * <p>
-   *  The result ProAct.Array is dependent on <i>this</i>, so if <i>this</i> changes, the mapped resut will be updated.
+   *  The result `ProAct.Array` is dependent on <i>this</i>, so if <i>this</i> changes, the mapped resut will be updated.
    * </p>
    *
-   * @memberof ProAct.Array
+   * @for ProAct.Array
    * @instance
    * @method map
    * @param {Function} fun
-   *      Function that produces an element of the new ProAct.Array, taking three arguments:
+   *      Function that produces an element of the new `ProAct.Array`, taking three arguments:
    *      <ol>
    *        <li><b>currentValue</b> : The current element being processed in the array.</li>
    *        <li><b>index</b> : The index of the current element being processed in the array.</li>
@@ -392,8 +389,7 @@ ProAct.Array.prototype = pArrayProto = P.U.ex(Object.create(arrayProto), {
    * @param {Object} thisArg
    *      Value to use as this when executing <i>fun</i>.
    * @return {ProAct.Array}
-   *      A new ProAct.Array consisting of the elements in <i>this</i> ProAct.Array transformed by <i>fun</i>.
-   * @see {@link ProAct.Array.Listeners.map}
+   *      A new `ProAct.Array` consisting of the elements in <i>this</i> `ProAct.Array` transformed by <i>fun</i>.
    */
   map: function (fun, thisArg) {
     var mapped = new P.A(map.apply(this._array, arguments));
@@ -403,27 +399,26 @@ ProAct.Array.prototype = pArrayProto = P.U.ex(Object.create(arrayProto), {
   },
 
   /**
-   * The <b>reduce()</b> method applies a function against an accumulator and each value of the ProAct.Array (from left-to-right) has to reduce it to a single value.
+   * The <b>reduce()</b> method applies a function against an accumulator and each value of the `ProAct.Array` (from left-to-right) has to reduce it to a single value.
    * <p>
    *  This method adds the {{#crossLink "ProAct/currentCaller:property"}}{{/crossLink}} as a listener to both 'index' type and 'length' type of changes.
    * </p>
    *
-   * @memberof ProAct.Array
+   * @for ProAct.Array
    * @instance
    * @method reduce
    * @param {Function} fun
    *      Function to execute on each value in the array, taking four arguments:
    *      <ol>
    *        <li><b>previousValue</b> : The value previously returned in the last invocation of the <i>fun</i>, or <i>initialValue</i>, if supplied.</li>
-   *        <li><b>currentValue</b> : The current element being processed in the ProAct.Array.</li>
-   *        <li><b>index</b> : The index of the current element being processed in the ProAct.Array.</li>
+   *        <li><b>currentValue</b> : The current element being processed in the `ProAct.Array`.</li>
+   *        <li><b>index</b> : The index of the current element being processed in the `ProAct.Array`.</li>
    *        <li><b>array</b> : The array reduce was called upon.</li>
    *      </ol>
    * @param {Object} initialValue
    *      Object to use as the first argument to the first call of the <i>fun</i> .
    * @return {Object}
    *      The value of the last <i>fun</i> invocation.
-   * @see {@link ProAct.ArrayCore#addCaller}
    */
   reduce: function (fun /*, initialValue */) {
     this.core.addCaller();
@@ -432,26 +427,23 @@ ProAct.Array.prototype = pArrayProto = P.U.ex(Object.create(arrayProto), {
   },
 
   /**
-   * Does the same as the {@link ProAct.Array#reduce} method, but the result is a {{#crossLink "ProAct.Property"}}{{/crossLink}} depending on changes on <i>this</i> ProAct.Array.
+   * Does the same as the {{#crossLink "ProAct.Array/reduce:method"}}{{/crossLink}} method, but the result is a {{#crossLink "ProAct.Property"}}{{/crossLink}} depending on changes on <i>this</i> `ProAct.Array`.
    *
-   * @memberof ProAct.Array
+   * @for ProAct.Array
    * @instance
    * @method preduce
    * @param {Function} fun
    *      Function to execute on each value in the array, taking four arguments:
    *      <ol>
    *        <li><b>previousValue</b> : The value previously returned in the last invocation of the <i>fun</i>, or <i>initialValue</i>, if supplied.</li>
-   *        <li><b>currentValue</b> : The current element being processed in the ProAct.Array.</li>
-   *        <li><b>index</b> : The index of the current element being processed in the ProAct.Array.</li>
+   *        <li><b>currentValue</b> : The current element being processed in the `ProAct.Array`.</li>
+   *        <li><b>index</b> : The index of the current element being processed in the `ProAct.Array`.</li>
    *        <li><b>array</b> : The array reduce was called upon.</li>
    *      </ol>
    * @param {Object} initialValue
    *      Object to use as the first argument to the first call of the <i>fun</i> .
    * @return {ProAct.Property}
    *      {{#crossLink "ProAct.Property"}}{{/crossLink}} with value of the last <i>fun</i> invocation.
-   * @see {@link ProAct.ArrayCore#addCaller}
-   * @see {{#crossLink "ProAct.Property"}}{{/crossLink}}
-   * @see {@link ProAct.Array.Listeners.reduce}
    */
   preduce: function (fun /*, initialValue */) {
     var val = P.P.lazyValue(reduce.apply(this._array, arguments));
@@ -461,27 +453,26 @@ ProAct.Array.prototype = pArrayProto = P.U.ex(Object.create(arrayProto), {
   },
 
   /**
-   * The <b>reduceRight()</b> method applies a function against an accumulator and each value of the ProAct.Array (from right-to-left) as to reduce it to a single value.
+   * The <b>reduceRight()</b> method applies a function against an accumulator and each value of the `ProAct.Array` (from right-to-left) as to reduce it to a single value.
    * <p>
    *  This method adds the {{#crossLink "ProAct/currentCaller:property"}}{{/crossLink}} as a listener to both 'index' type and 'length' type of changes.
    * </p>
    *
-   * @memberof ProAct.Array
+   * @for ProAct.Array
    * @instance
    * @method reduceRight
    * @param {Function} fun
    *      Function to execute on each value in the array, taking four arguments:
    *      <ol>
    *        <li><b>previousValue</b> : The value previously returned in the last invocation of the <i>fun</i>, or <i>initialValue</i>, if supplied.</li>
-   *        <li><b>currentValue</b> : The current element being processed in the ProAct.Array.</li>
-   *        <li><b>index</b> : The index of the current element being processed in the ProAct.Array.</li>
+   *        <li><b>currentValue</b> : The current element being processed in the `ProAct.Array`.</li>
+   *        <li><b>index</b> : The index of the current element being processed in the `ProAct.Array`.</li>
    *        <li><b>array</b> : The array reduce was called upon.</li>
    *      </ol>
    * @param {Object} initialValue
    *      Object to use as the first argument to the first call of the <i>fun</i> .
    * @return {Object}
    *      The value of the last <i>fun</i> invocation.
-   * @see {@link ProAct.ArrayCore#addCaller}
    */
   reduceRight: function (fun /*, initialValue */) {
     this.core.addCaller();
