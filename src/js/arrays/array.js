@@ -481,26 +481,23 @@ ProAct.Array.prototype = pArrayProto = P.U.ex(Object.create(arrayProto), {
   },
 
   /**
-   * Does the same as the {@link ProAct.Array#reduceRight} method, but the result is a {{#crossLink "ProAct.Property"}}{{/crossLink}} depending on changes on <i>this</i> ProAct.Array.
+   * Does the same as the {{#crossLink "ProAct.Array/reduceRight:method"}}{{/crossLink}} method, but the result is a {{#crossLink "ProAct.Property"}}{{/crossLink}} depending on changes on <i>this</i> `ProAct.Array`.
    *
-   * @memberof ProAct.Array
+   * @for ProAct.Array
    * @instance
    * @method preduceRight
    * @param {Function} fun
    *      Function to execute on each value in the array, taking four arguments:
    *      <ol>
    *        <li><b>previousValue</b> : The value previously returned in the last invocation of the <i>fun</i>, or <i>initialValue</i>, if supplied.</li>
-   *        <li><b>currentValue</b> : The current element being processed in the ProAct.Array.</li>
-   *        <li><b>index</b> : The index of the current element being processed in the ProAct.Array.</li>
+   *        <li><b>currentValue</b> : The current element being processed in the `ProAct.Array`.</li>
+   *        <li><b>index</b> : The index of the current element being processed in the `ProAct.Array`.</li>
    *        <li><b>array</b> : The array reduce was called upon.</li>
    *      </ol>
    * @param {Object} initialValue
    *      Object to use as the first argument to the first call of the <i>fun</i> .
    * @return {ProAct.Property}
    *      {{#crossLink "ProAct.Property"}}{{/crossLink}} with value of the last <i>fun</i> invocation.
-   * @see {@link ProAct.ArrayCore#addCaller}
-   * @see {{#crossLink "ProAct.Property"}}{{/crossLink}}
-   * @see {@link ProAct.Array.Listeners.reduceRight}
    */
   preduceRight: function (fun /*, initialValue */) {
     var val = P.P.lazyValue(reduceRight.apply(this._array, arguments));
@@ -515,7 +512,7 @@ ProAct.Array.prototype = pArrayProto = P.U.ex(Object.create(arrayProto), {
    *  This method adds the {{#crossLink "ProAct/currentCaller:property"}}{{/crossLink}} as a listener to both 'index' type and 'length' type of changes.
    * </p>
    *
-   * @memberof ProAct.Array
+   * @for ProAct.Array
    * @instance
    * @method indexOf
    * @param {Object} searchElement
