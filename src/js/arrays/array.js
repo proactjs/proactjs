@@ -521,18 +521,17 @@ ProAct.Array.prototype = pArrayProto = P.U.ex(Object.create(arrayProto), {
    *      Default: 0 (Entire array is searched)
    *      <p>
    *        The index to start the search at.
-   *        If the index is greater than or equal to the ProAct.Array's length, -1 is returned,
+   *        If the index is greater than or equal to the `ProAct.Array`'s length, -1 is returned,
    *        which means the array will not be searched.
    *        If the provided index value is a negative number,
-   *        it is taken as the offset from the end of the ProAct.Array.
+   *        it is taken as the offset from the end of the `ProAct.Array`.
    *      </p>
    *      <p>
-   *        Note: if the provided index is negative, the ProAct.Array is still searched from front to back.
-   *        If the calculated index is less than 0, then the whole ProAct.Array will be searched.
+   *        Note: if the provided index is negative, the `ProAct.Array` is still searched from front to back.
+   *        If the calculated index is less than 0, then the whole `ProAct.Array` will be searched.
    *      </p>
    * @return {Number}
-   *      The index of the searched element or '-1' if it is not found in <i>this</i> ProAct.Array.
-   * @see {@link ProAct.ArrayCore#addCaller}
+   *      The index of the searched element or '-1' if it is not found in <i>this</i> `ProAct.Array`.
    */
   indexOf: function () {
     this.core.addCaller();
@@ -541,31 +540,28 @@ ProAct.Array.prototype = pArrayProto = P.U.ex(Object.create(arrayProto), {
   },
 
   /**
-   * Does the same as the {@link ProAct.Array#indexOf} method, but the result is a {{#crossLink "ProAct.Property"}}{{/crossLink}} depending on changes on <i>this</i> ProAct.Array.
+   * Does the same as the {{#crossLink "ProAct.Array/indexOf:method"}}{{/crossLink}} method, but the result is a {{#crossLink "ProAct.Property"}}{{/crossLink}} depending on changes on <i>this</i> `ProAct.Array`.
    *
-   * @memberof ProAct.Array
+   * @for ProAct.Array
    * @instance
    * @method pindexOf
    * @param {Object} searchElement
-   *      Element to locate in the ProAct.Array.
+   *      Element to locate in the `ProAct.Array`.
    * @param {Number} fromIndex
    *      Default: 0 (Entire array is searched)
    *      <p>
    *        The index to start the search at.
-   *        If the index is greater than or equal to the ProAct.Array's length, -1 is returned,
+   *        If the index is greater than or equal to the `ProAct.Array`'s length, -1 is returned,
    *        which means the array will not be searched.
    *        If the provided index value is a negative number,
-   *        it is taken as the offset from the end of the ProAct.Array.
+   *        it is taken as the offset from the end of the `ProAct.Array`.
    *      </p>
    *      <p>
-   *        Note: if the provided index is negative, the ProAct.Array is still searched from front to back.
+   *        Note: if the provided index is negative, the `ProAct.Array` is still searched from front to back.
    *        If the calculated index is less than 0, then the whole ProAct.Array will be searched.
    *      </p>
    * @return {ProAct.Property}
-   *      A {{#crossLink "ProAct.Property"}}{{/crossLink}} instance with value, the index of the searched element or '-1' if it is not found in <i>this</i> ProAct.Array.
-   * @see {@link ProAct.ArrayCore#addCaller}
-   * @see {{#crossLink "ProAct.Property"}}{{/crossLink}}
-   * @see {@link ProAct.Array.Listeners.indexOf}
+   *      A {{#crossLink "ProAct.Property"}}{{/crossLink}} instance with value, the index of the searched element or '-1' if it is not found in <i>this</i> `ProAct.Array`.
    */
   pindexOf: function () {
     var val = P.P.lazyValue(indexOf.apply(this._array, arguments));
