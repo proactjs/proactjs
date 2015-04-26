@@ -571,13 +571,13 @@ ProAct.Array.prototype = pArrayProto = P.U.ex(Object.create(arrayProto), {
   },
 
   /**
-   * The <b>lastIndexOf()</b> method returns the last index at which a given element can be found in the ProAct.Array, or -1 if it is not present.
+   * The <b>lastIndexOf()</b> method returns the last index at which a given element can be found in the `ProAct.Array`, or -1 if it is not present.
    * The ProAct.Array is searched backwards, starting at <i>fromIndex</i>.
    * <p>
    *  This method adds the {{#crossLink "ProAct/currentCaller:property"}}{{/crossLink}} as a listener to both 'index' type and 'length' type of changes.
    * </p>
    *
-   * @memberof ProAct.Array
+   * @for ProAct.Array
    * @instance
    * @method lastIndexOf
    * @param {Object} searchElement
@@ -586,17 +586,16 @@ ProAct.Array.prototype = pArrayProto = P.U.ex(Object.create(arrayProto), {
    *      <p>
    *        The index at which to start searching backwards.
    *        Defaults to the ProAct.Array's length, i.e. the whole array will be searched.
-   *        If the index is greater than or equal to the length of the ProAct.Array, the whole ProAct.Array will be searched.
-   *        If negative, it is taken as the offset from the end of the ProAct.Array.
+   *        If the index is greater than or equal to the length of the `ProAct.Array`, the whole `ProAct.Array` will be searched.
+   *        If negative, it is taken as the offset from the end of the `ProAct.Array`.
    *      </p>
    *      <p>
    *        Note that even when the index is negative,
    *        the ProAct.Array is still searched from back to front.
-   *        If the calculated index is less than 0, -1 is returned, i.e. the ProAct.Array will not be searched.
+   *        If the calculated index is less than 0, -1 is returned, i.e. the `ProAct.Array` will not be searched.
    *      </p>
    * @return {Number}
-   *      The index of the searched backwards element or '-1' if it is not found in <i>this</i> ProAct.Array.
-   * @see {@link ProAct.ArrayCore#addCaller}
+   *      The index of the searched backwards element or '-1' if it is not found in <i>this</i> `ProAct.Array`.
    */
   lastIndexOf: function () {
     this.core.addCaller();
@@ -605,30 +604,27 @@ ProAct.Array.prototype = pArrayProto = P.U.ex(Object.create(arrayProto), {
   },
 
   /**
-   * Does the same as the {@link ProAct.Array#lastIndexOf} method, but the result is a {{#crossLink "ProAct.Property"}}{{/crossLink}} depending on changes on <i>this</i> ProAct.Array.
+   * Does the same as the {{#crossLink "ProAct.Array/lastIndexOf:method"}}{{/crossLink}} method, but the result is a {{#crossLink "ProAct.Property"}}{{/crossLink}} depending on changes on <i>this</i> `ProAct.Array`.
    *
-   * @memberof ProAct.Array
+   * @for ProAct.Array
    * @instance
    * @method plastindexOf
    * @param {Object} searchElement
-   *      Element to locate in the ProAct.Array.
+   *      Element to locate in the `ProAct.Array`.
    * @param {Number} fromIndex
    *      <p>
    *        The index at which to start searching backwards.
-   *        Defaults to the ProAct.Array's length, i.e. the whole array will be searched.
-   *        If the index is greater than or equal to the length of the ProAct.Array, the whole ProAct.Array will be searched.
-   *        If negative, it is taken as the offset from the end of the ProAct.Array.
+   *        Defaults to the `ProAct.Array`'s length, i.e. the whole array will be searched.
+   *        If the index is greater than or equal to the length of the `ProAct.Array`, the whole ProAct.Array will be searched.
+   *        If negative, it is taken as the offset from the end of the` ProAct.Array`.
    *      </p>
    *      <p>
    *        Note that even when the index is negative,
    *        the ProAct.Array is still searched from back to front.
-   *        If the calculated index is less than 0, -1 is returned, i.e. the ProAct.Array will not be searched.
+   *        If the calculated index is less than 0, -1 is returned, i.e. the `ProAct.Array` will not be searched.
    *      </p>
    * @return {ProAct.Property}
-   *      A {{#crossLink "ProAct.Property"}}{{/crossLink}} instance with value, the index of the backwards searched element or '-1' if it is not found in <i>this</i> ProAct.Array.
-   * @see {@link ProAct.ArrayCore#addCaller}
-   * @see {{#crossLink "ProAct.Property"}}{{/crossLink}}
-   * @see {@link ProAct.Array.Listeners.lastIndexOf}
+   *      A {{#crossLink "ProAct.Property"}}{{/crossLink}} instance with value, the index of the backwards searched element or '-1' if it is not found in <i>this</i> `ProAct.Array`.
    */
   plastindexOf: function () {
     var val = P.P.lazyValue(lastIndexOf.apply(this._array, arguments));
@@ -638,12 +634,12 @@ ProAct.Array.prototype = pArrayProto = P.U.ex(Object.create(arrayProto), {
   },
 
   /**
-   * The <b>join()</b> method joins all elements of an ProAct.Array into a string.
+   * The <b>join()</b> method joins all elements of an `ProAct.Array` into a string.
    * <p>
    *  This method adds the {{#crossLink "ProAct/currentCaller:property"}}{{/crossLink}} as a listener to both 'index' type and 'length' type of changes.
    * </p>
    *
-   * @memberof ProAct.Array
+   * @for ProAct.Array
    * @instance
    * @method join
    * @param {String} separator
@@ -653,8 +649,7 @@ ProAct.Array.prototype = pArrayProto = P.U.ex(Object.create(arrayProto), {
    *       If omitted, the ProAct.Array elements are separated with a comma.
    *      </p>
    * @return {String}
-   *      A string representation of all the elements in <i>this</i> ProAct.Array, separated by the provided <i>separator</i>.
-   * @see {@link ProAct.ArrayCore#addCaller}
+   *      A string representation of all the elements in <i>this</i> `ProAct.Array`, separated by the provided <i>separator</i>.
    */
   join: function () {
     this.core.addCaller();
@@ -676,9 +671,6 @@ ProAct.Array.prototype = pArrayProto = P.U.ex(Object.create(arrayProto), {
    *      </p>
    * @return {ProAct.Property}
    *      A {{#crossLink "ProAct.Property"}}{{/crossLink}} instance with value : string representation of all the elements in <i>this</i> ProAct.Array, separated by the provided <i>separator</i>.
-   * @see {@link ProAct.ArrayCore#addCaller}
-   * @see {@link ProAct.ArrayCore#preduce}
-   * @see {{#crossLink "ProAct.Property"}}{{/crossLink}}
    */
   pjoin: function (separator) {
     var reduced = this.preduce(function (i, el) {
