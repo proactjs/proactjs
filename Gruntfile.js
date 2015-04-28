@@ -95,16 +95,15 @@ module.exports = function(grunt) {
           paths: [
             'src/js/core',
             'src/js/properties',
-            'src/js/streams'
+            'src/js/streams',
+            'src/js/arrays'
           ],
           exclude: [
-            'arrays',
             'cores',
             'events',
             'flow',
             'objects',
-            'registry',
-            'streams'
+            'registry'
           ].join(','),
           outdir: 'doc',
           themedir: '../yuidoc-bootstrap-theme',

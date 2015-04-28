@@ -4220,20 +4220,25 @@
 	});
 	
 	/**
+	 * @module proact-streams
+	 */
+	
+	/**
 	 * <p>
-	 *  Constructs a ProAct.SizeBufferedStream. When the buffer is full (has the same size as <i>this</i> size), it is flushed.
+	 *  Constructs a `ProAct.SizeBufferedStream`. When the buffer is full (has the same size as <i>this</i> size), it is flushed.
 	 * </p>
 	 * <p>
-	 *  ProAct.SizeBufferedStream is part of the streams module of ProAct.js.
+	 *  `ProAct.SizeBufferedStream` is part of the `proact-streams` module of ProAct.js.
 	 * </p>
 	 *
 	 * @class ProAct.SizeBufferedStream
+	 * @constructor
 	 * @extends ProAct.BufferedStream
 	 * @param {String} queueName
 	 *      The name of the queue all the updates should be pushed to.
 	 *      <p>
 	 *        If this parameter is null/undefined the default queue of
-	 *        {@link ProAct.flow} is used.
+	 *        {{#crossLink "ProAct/flow:property"}}{{/crossLink}} is used.
 	 *      </p>
 	 *      <p>
 	 *        If this parameter is not a string it is used as the
@@ -4282,11 +4287,10 @@
 	  /**
 	   * Reference to the constructor of this object.
 	   *
-	   * @memberof ProAct.SizeBufferedStream
-	   * @instance
-	   * @constant
-	   * @type {Object}
-	   * @default ProAct.SizeBufferedStream
+	   * @property constructor
+	   * @type ProAct.SizeBufferedStream
+	   * @final
+	   * @for ProAct.SizeBufferedStream
 	   */
 	  constructor: ProAct.SizeBufferedStream,
 	
@@ -4299,7 +4303,7 @@
 	   *  ProAct.Stream.t is alias of this method.
 	   * </p>
 	   *
-	   * @memberof ProAct.SizeBufferedStream
+	   * @for ProAct.SizeBufferedStream
 	   * @instance
 	   * @method trigger
 	   * @param {Object} event
@@ -4322,16 +4326,16 @@
 	P.U.ex(P.S.prototype, {
 	
 	  /**
-	   * Creates a new {@link ProAct.SizeBufferedStream} instance having as source <i>this</i>.
+	   * Creates a new {{#crossLink "ProAct.SizeBufferedStream"}}{{/crossLink}} instance having as source <i>this</i>.
 	   *
-	   * @memberof ProAct.Stream
+	   * @for ProAct.Stream
 	   * @instance
 	   * @method bufferit
 	   * @param {Number} size
 	   *      The size of the buffer of the new ProAct.SizeBufferedStream.
 	   * @return {ProAct.SizeBufferedStream}
-	   *      A {@link ProAct.SizeBufferedStream} instance.
-	   * @throws {Error} SizeBufferedStream must contain size, if there is no size passed to it.
+	   *      A {{#crossLink "ProAct.SizeBufferedStream"}}{{/crossLink}} instance.
+	   * @throws {Error} `SizeBufferedStream` must contain size, if there is no size passed to it.
 	   */
 	  bufferit: function (size) {
 	    return new P.SBS(this, this.queueName, size);
@@ -4339,6 +4343,10 @@
 	});
 	
 	P.SBS.prototype.t = P.SBS.prototype.trigger;
+	
+	/**
+	 * @module proact-streams
+	 */
 	
 	/**
 	 * <p>
@@ -4503,24 +4511,29 @@
 	P.DBS.prototype.t = P.DBS.prototype.trigger;
 	
 	/**
+	 * @module proact-streams
+	 */
+	
+	/**
 	 * <p>
-	 *  Constructs a ProAct.ThrottlingStream. This is special kind of {@link ProAct.DelayedStream}.
+	 *  Constructs a `ProAct.ThrottlingStream`. This is special kind of {{#crossLink "ProAct.DelayedStream"}}{{/crossLink}}.
 	 * </p>
 	 * <p>
 	 *  The main idea is the following : if <i>n</i> values/events are triggered to this stream before the time delay for
 	 *  flushing passes, only the last one, the <i>n</i>-th is emitted.
 	 * </p>
 	 * <p>
-	 *  ProAct.ThrottlingStream is part of the streams module of ProAct.js.
+	 *  `ProAct.ThrottlingStream` is part of the `proact-streams` module of ProAct.js.
 	 * </p>
 	 *
 	 * @class ProAct.ThrottlingStream
+	 * @constructor
 	 * @extends ProAct.DelayedStream
 	 * @param {String} queueName
 	 *      The name of the queue all the updates should be pushed to.
 	 *      <p>
 	 *        If this parameter is null/undefined the default queue of
-	 *        {@link ProAct.flow} is used.
+	 *        {{#crossLink "ProAct/flow:property"}}{{/crossLink}} is used.
 	 *      </p>
 	 *      <p>
 	 *        If this parameter is not a string it is used as the
@@ -4549,25 +4562,26 @@
 	  /**
 	   * Reference to the constructor of this object.
 	   *
-	   * @memberof ProAct.ThrottlingStream
-	   * @instance
-	   * @constant
-	   * @type {Object}
-	   * @default ProAct.ThrottlingStream
+	   * @property constructor
+	   * @type ProAct.ThrottlingStream
+	   * @final
+	   * @for ProAct.ThrottlingStream
 	   */
 	  constructor: ProAct.ThrottlingStream,
 	
 	  /**
 	   * <p>
 	   *  Triggers a new event/value to the stream. It is stored in the buffer of the stream and not emitted.
-	   *  But the buffer of ProAct.ThrottlingStream can store only one value/event, so when the delay passes only
+	   *  But the buffer of `ProAct.ThrottlingStream` can store only one value/event, so when the delay passes only
 	   *  the last value/event triggered into the stream by this method is emitted.
 	   * </p>
 	   * <p>
-	   *  ProAct.ThrottlingStream.t is alias of this method.
+	   *  `ProAct.ThrottlingStream.t` is alias of this method.
 	   * </p>
 	   *
-	   * @memberof ProAct.ThrottlingStream
+	   * TODO - should be moved to StreamUtil.
+	   *
+	   * @for ProAct.ThrottlingStream
 	   * @instance
 	   * @method trigger
 	   * @param {Object} event
@@ -4588,15 +4602,15 @@
 	P.U.ex(P.Stream.prototype, {
 	
 	  /**
-	   * Creates a new {@link ProAct.ThrottlingStream} instance having as source <i>this</i>.
+	   * Creates a new {{#crossLink "ProAct.ThrottlingStream"}}{{/crossLink}} instance having as source <i>this</i>.
 	   *
-	   * @memberof ProAct.Stream
+	   * @for ProAct.Stream
 	   * @instance
 	   * @method throttle
 	   * @param {Number} delay
 	   *      The time delay to be used for flushing the buffer of the new stream.
 	   * @return {ProAct.ThrottlingStream}
-	   *      A {@link ProAct.ThrottlingStream} instance.
+	   *      A {{#crossLink "ProAct.ThrottlingStream"}}{{/crossLink}} instance.
 	   */
 	  throttle: function (delay) {
 	    return new P.TDS(this, delay);
@@ -4604,6 +4618,10 @@
 	});
 	
 	P.TDS.prototype.t = P.TDS.prototype.trigger;
+	
+	/**
+	 * @module proact-streams
+	 */
 	
 	/**
 	 * <p>
@@ -4707,6 +4725,48 @@
 	
 	P.DDS.prototype.t = P.DDS.prototype.trigger;
 	
+	/**
+	 * @module proact-streams
+	 */
+	
+	/**
+	 * <p>
+	 *  Constructs a `ProAct.SubscribableStream`. This is a `Stream` that has a custom `subscribe` function, used to subscribe to a source.
+	 * </p>
+	 *
+	 * This can be used to stream sources like browser events. The stream is lazy, when there are no listeners to it,
+	 * it is not subscribed to the source, on the first listener it is subscribed, when every listener is unsubscibed, it is unsubscribed.
+	 *
+	 * <p>
+	 *  `ProAct.SubscribableStream` is part of the `proact-streams` module of ProAct.js.
+	 * </p>
+	 *
+	 * @class ProAct.SubscribableStream
+	 * @constructor
+	 * @extends ProAct.SubscribableStream
+	 * @param {Function} subscribe
+	 *      A function used to subscribe to a source, when the first listener to this stream is attached.
+	 * @param {String} queueName
+	 *      The name of the queue all the updates should be pushed to.
+	 *      <p>
+	 *        If this parameter is null/undefined the default queue of
+	 *        {{#crossLink "ProAct/flow:property"}}{{/crossLink}} is used.
+	 *      </p>
+	 *      <p>
+	 *        If this parameter is not a string it is used as the
+	 *        <i>source</i>.
+	 *      </p>
+	 * @param {ProAct.Actor} source
+	 *      A default source of the stream, can be null.
+	 *      <p>
+	 *        If this is the only one passed argument and it is a number - it becomes the size of the buffer.
+	 *      </p>
+	 * @param {Array} transforms
+	 *      A list of transformation to be used on all incoming chages.
+	 *      <p>
+	 *        If the arguments passed are two and this is a number - it becomes the size of the buffer.
+	 *      </p>
+	 */
 	function SubscribableStream (subscribe, queueName, source, transforms) {
 	  P.S.call(this, queueName, source, transforms);
 	
@@ -4717,8 +4777,54 @@
 	ProAct.SubscribableStream = P.SUS = SubscribableStream;
 	
 	ProAct.SubscribableStream.prototype = P.U.ex(Object.create(P.S.prototype), {
+	
+	  /**
+	   * Reference to the constructor of this object.
+	   *
+	   * @property constructor
+	   * @type ProAct.SubscribableStream
+	   * @final
+	   * @for ProAct.SubscribableStream
+	   */
 	  constructor: ProAct.SubscribableStream,
 	
+	  /**
+	   * Attaches a new listener to this `ProAct.SubscribableStream`.
+	   *
+	   * The listener may be function or object that defines a <i>call</i> method.
+	   * On the first attached listener the `subscribe` function passed to the constructor will be called.
+	   * That way the stream will be subscribed to custom data source.
+	   *
+	   * ```
+	   *   stream.on(function (v) {
+	   *    console.log(v);
+	   *   });
+	   *
+	   *   stream.on('error', function (v) {
+	   *    console.error(v);
+	   *   });
+	   *
+	   *   stream.on({
+	   *    call: function (v) {
+	   *      console.log(v);
+	   *    }
+	   *   });
+	   * ```
+	   *
+	   * @for ProAct.SubscribableStream
+	   * @instance
+	   * @method on
+	   * @param {Array|String} actions
+	   *      The action/actions to listen for. If this parameter is skipped or null/undefined,
+	   *      the actions from {{#crossLink "ProAct.Actor/defaultActions:method"}}{{/crossLink}} are used.
+	   *      <p>
+	   *        The actions can be skipped and on their place as first parameter to be passed the <i>listener</i>.
+	   *      </p>
+	   * @param {Object} listener
+	   *      The listener to attach. It must be instance of Function or object with a <i>call</i> method.
+	   * @return {ProAct.SubscribableStream}
+	   *      <b>this</b>
+	   */
 	  on: function (actions, listener) {
 	    if (this.subscribtions === 0) {
 	      this.unsubscribe = this.subscribe(this);
@@ -4728,6 +4834,61 @@
 	    return P.S.prototype.on.call(this, actions, listener);
 	  },
 	
+	  /**
+	   * Removes a <i>listener</i> from the passed <i>action</i>.
+	   *
+	   * If this method is called without parameters, all the listeners for all the actions are removed.
+	   * The listeners are reset using {{#crossLink "ProAct.Actor/defaultActions:method"}}{{/crossLink}}.
+	   *
+	   * If the last listener is removed using this method, `this stream` authomatically unsubscribes
+	   * from the source, using the function, returned by the `subscribe` function passed to the constructor.
+	   *
+	   * Examples are:
+	   *
+	   * Removing a listener:
+	   * ```
+	   *  var listener = function (v) {
+	   *    console.log(v);
+	   *  };
+	   *  stream.on(listener);
+	   *  stream.off(listener);
+	   * ```
+	   *
+	   * Or for removing all the listeners attached to an stream:
+	   * ```
+	   *  stream.off();
+	   * ```
+	   *
+	   * Or for removing all the listeners of a given type attached to an stream:
+	   * ```
+	   *  stream.off('error');
+	   * ```
+	   *
+	   * Or for removing a listener from different type of actions:
+	   * ```
+	   *  var listener = function (v) {
+	   *    console.log(v);
+	   *  };
+	   *  stream.on(listener);
+	   *  stream.onErr(listener);
+	   *
+	   *  stream.off(['error', 'change'], listener);
+	   * ```
+	   *
+	   * @for ProAct.SubscribableStream
+	   * @instance
+	   * @method off
+	   * @param {Array|String} actions
+	   *      The action/actions to stop listening for. If this parameter is skipped or null/undefined,
+	   *      the actions from {{#crossLink "ProAct.Actor/defaultActions:method"}}{{/crossLink}} are used.
+	   *      <p>
+	   *        The actions can be skipped and on their place as first parameter to be passed the <i>listener</i>.
+	   *      </p>
+	   * @param {Object} listener
+	   *      The listener to detach. If it is skipped, null or undefined all the listeners are removed from this actor.
+	   * @return {ProAct.SubscribableStream}
+	   *      <b>this</b>
+	   */
 	  off: function (actions, listener) {
 	    this.subscribtions--;
 	
@@ -7596,24 +7757,33 @@
 	});
 	
 	/**
+	 * The `proact-arrays` module provides reactive arrays.
+	 * All the modification operations over arrays, like `push` for example could be listened to.
+	 *
+	 *
+	 * @module proact-arrays
+	 * @main proact-arrays
+	 */
+	
+	/**
 	 * Creates a wrapper around a plain JavaScript array that is capable of tracking changes on the array and notifying listeners.
 	 * <p>
-	 *  It has a {@link ProAct.ArrayCore} which it uses to observe the array for changes or to update the array on changes.
+	 *  It has a {{#crossLink "ProAct.ArrayCore"}}{{/crossLink}} which it uses to observe the array for changes or to update the array on changes.
 	 * </p>
 	 * <p>
-	 *  ProAct.Array is array-like object, it has all the methods defined in the JavaScript Array class, length property and indices.
+	 *  `ProAct.Array` is array-like object, it has all the methods defined in the JavaScript Array class, length property and indices.
 	 * </p>
 	 * <p>
-	 *  ProAct.Array is part of the arrays module of ProAct.js.
+	 *  `ProAct.Array` is part of the `proact-arrays` module of ProAct.js.
 	 * </p>
 	 *
 	 * @class ProAct.Array
+	 * @constructor
 	 * @extends Array
 	 * @param [...]
 	 *      I can take an array as a parameter and it becomes reactive wrapper around it.
 	 *      It can take a list of arguments which become the wrapped array.
 	 *      If nothing is passed it becomes wrapper arround an empty array.
-	 * @see {@link ProAct.ArrayCore}
 	 */
 	ProAct.Array = P.A = pArray = function () {
 	  var self = this,
@@ -7643,7 +7813,9 @@
 	  /**
 	   * Defines a set of the possible operations over an array.
 	   *
-	   * @namespace ProAct.Array.Operations
+	   * @class Operations
+	   * @namespace ProAct.Array
+	   * @static
 	   */
 	  Operations: {
 	
@@ -7653,9 +7825,10 @@
 	     *  array[3] = 12;
 	     * </pre>
 	     *
-	     * @memberof ProAct.Array.Operations
-	     * @static
-	     * @constant
+	     * @property set
+	     * @type Number
+	     * @final
+	     * @for ProAct.Array.Operations
 	     */
 	    set: 0,
 	
@@ -7666,9 +7839,10 @@
 	     *  array.unshift(12);
 	     * </pre>
 	     *
-	     * @memberof ProAct.Array.Operations
-	     * @static
-	     * @constant
+	     * @property add
+	     * @type Number
+	     * @final
+	     * @for ProAct.Array.Operations
 	     */
 	    add: 1,
 	
@@ -7679,9 +7853,10 @@
 	     *  array.shift();
 	     * </pre>
 	     *
-	     * @memberof ProAct.Array.Operations
-	     * @static
-	     * @constant
+	     * @property remove
+	     * @type Number
+	     * @final
+	     * @for ProAct.Array.Operations
 	     */
 	    remove: 2,
 	
@@ -7691,9 +7866,10 @@
 	     *  array.length = 5;
 	     * </pre>
 	     *
-	     * @memberof ProAct.Array.Operations
-	     * @static
-	     * @constant
+	     * @property setLength
+	     * @type Number
+	     * @final
+	     * @for ProAct.Array.Operations
 	     */
 	    setLength: 3,
 	
@@ -7703,9 +7879,10 @@
 	     *  array.reverse();
 	     * </pre>
 	     *
-	     * @memberof ProAct.Array.Operations
-	     * @static
-	     * @constant
+	     * @property reverse
+	     * @type Number
+	     * @final
+	     * @for ProAct.Array.Operations
 	     */
 	    reverse: 4,
 	
@@ -7715,9 +7892,10 @@
 	     *  array.sort();
 	     * </pre>
 	     *
-	     * @memberof ProAct.Array.Operations
-	     * @static
-	     * @constant
+	     * @property sort
+	     * @type Number
+	     * @final
+	     * @for ProAct.Array.Operations
 	     */
 	    sort: 5,
 	
@@ -7727,9 +7905,10 @@
 	     *  array.splice(2, 3, 4, 15, 6);
 	     * </pre>
 	     *
-	     * @memberof ProAct.Array.Operations
-	     * @static
-	     * @constant
+	     * @property splice
+	     * @type Number
+	     * @final
+	     * @for ProAct.Array.Operations
 	     */
 	    splice: 6,
 	  },
@@ -7737,12 +7916,13 @@
 	  /**
 	   * A helper method for filtering an array and notifying the right listeners of the filtered result.
 	   * <p>
-	   *  This is used if there is an ProAct.Array created by filtering another ProAct.Array. If the original is
-	   *  changed, the filtered array should be changed in some cases. So refilter does this - changes the dependent filtered array, using
-	   *  {@link ProAct.ArrayCore#updateByDiff}.
+	   *  This is used if there is an `ProAct.Array` created by filtering another `ProAct.Array`.
+	   *  If the original is changed, the filtered array should be changed in some cases.
+	   *  So refilter does this - changes the dependent filtered array, using
+	   *  {{#crossLink "ProAct.ArrayCore/updateByDiff:method"}}{{/crossLink}}.
 	   * </p>
 	   *
-	   * @memberof ProAct.Array
+	   * @for ProAct.Array
 	   * @static
 	   * @param {ProAct.Array} original
 	   *      The original array to filter by.
@@ -7750,7 +7930,6 @@
 	   *      The array to be filtered - changed by a filter function, applied on the original.
 	   * @param {Array} filterArgs
 	   *      Arguments of the filtering - filtering function and data.
-	   * @see {@link ProAct.ArrayCore#updateByDiff}
 	   */
 	  reFilter: function (original, filtered, filterArgs) {
 	    var oarr = filtered._array;
@@ -7766,32 +7945,30 @@
 	  /**
 	   * Reference to the constructor of this object.
 	   *
-	   * @memberof ProAct.Array
-	   * @instance
-	   * @constant
-	   * @default ProAct.Array
+	   * @property constructor
+	   * @type ProAct.Array
+	   * @final
+	   * @for ProAct.Array
 	   */
 	  constructor: ProAct.Array,
 	
 	  /**
 	   * The <b>concat()</b> method returns a new array comprised of this array joined with other array(s) and/or value(s).
 	   * <p>
-	   *  The result ProAct.Array is dependent on <i>this</i>, so if <i>this</i> changes, the concatenation resut will be updated.
+	   *  The result `ProAct.Array` is dependent on <i>this</i>, so if <i>this</i> changes, the concatenation resut will be updated.
 	   * </p>
 	   * <p>
-	   *  If the argument passed is another ProAct.Array the result array is dependent on it too.
+	   *  If the argument passed is another `ProAct.Array` the result array is dependent on it too.
 	   * </p>
 	   *
-	   * @memberof ProAct.Array
+	   * @for ProAct.Array
 	   * @instance
 	   * @method concat
 	   * @param [...]
 	   *      Arrays and/or values to concatenate to the resulting array.
 	   * @return {ProAct.Array}
-	   *      A new ProAct.Array consisting of the elements in the <i>this</i> object on which it is called, followed in order by,
+	   *      A new `ProAct.Array` consisting of the elements in the <i>this</i> object on which it is called, followed in order by,
 	   *      for each argument, the elements of that argument (if the argument is an array) or the argument itself (if the argument is not an array).
-	   * @see {@link ProAct.Array.Listeners.leftConcat}
-	   * @see {@link ProAct.Array.Listeners.rightConcat}
 	   */
 	  concat: function () {
 	    var res, rightProArray;
@@ -7813,12 +7990,12 @@
 	  },
 	
 	  /**
-	   * The <b>every()</b> method tests whether all elements in the ProAct.Array pass the test implemented by the provided function.
+	   * The <b>every()</b> method tests whether all elements in the `ProAct.Array` pass the test implemented by the provided function.
 	   * <p>
-	   *  This method adds the {@link ProAct.currentCaller} as a listener to both 'index' type and 'length' type of changes.
+	   *  This method adds the {{#crossLink "ProAct/currentCaller:property"}}{{/crossLink}} as a listener to both 'index' type and 'length' type of changes.
 	   * </p>
 	   *
-	   * @memberof ProAct.Array
+	   * @for ProAct.Array
 	   * @instance
 	   * @method every
 	   * @param {Function} callback
@@ -7827,7 +8004,6 @@
 	   *      Value to use as this when executing <i>callback</i>.
 	   * @return {Boolean}
 	   *      True if all the elements in the <i>this</i> ProAct.Array pass the test implemented by the <i>callback</i>, false otherwise.
-	   * @see {@link ProAct.ArrayCore#addCaller}
 	   */
 	  every: function (fun, thisArg) {
 	    this.core.addCaller();
@@ -7839,9 +8015,9 @@
 	  },
 	
 	  /**
-	   * Does the same as the {@link ProAct.Array#every} method, but the result is a {@link ProAct.Property} depending on changes on the array.
+	   * Does the same as the {{#crossLink "ProAct.Array/every:method"}}{{/crossLink}} method, but the result is a {{#crossLink "ProAct.Property"}}{{/crossLink}} depending on changes on the array.
 	   *
-	   * @memberof ProAct.Array
+	   * @for ProAct.Array
 	   * @instance
 	   * @method pevery
 	   * @param {Function} fun
@@ -7849,10 +8025,7 @@
 	   * @param {Object} thisArg
 	   *      Value to use as this when executing <i>callback</i>.
 	   * @return {ProAct.Property}
-	   *      {@link ProAct.Property} with value of true if all the elements in <i>this</i> ProAct.Array pass the test implemented by the <i>fun</i>, false otherwise.
-	   * @see {@link ProAct.ArrayCore#addCaller}
-	   * @see {@link ProAct.Property}
-	   * @see {@link ProAct.Array.Listeners.every}
+	   *      {{#crossLink "ProAct.Property"}}{{/crossLink}} with value of true if all the elements in <i>this</i> `ProAct.Array` pass the test implemented by the <i>fun</i>, false otherwise.
 	   */
 	  pevery: function (fun, thisArg) {
 	    var val = P.P.lazyValue(every.apply(this._array, arguments));
@@ -7865,10 +8038,10 @@
 	  /**
 	   * The <b>some()</b> method tests whether some element in the array passes the test implemented by the provided function.
 	   * <p>
-	   *  This method adds the {@link ProAct.currentCaller} as a listener to both 'index' type and 'length' type of changes.
+	   *  This method adds the {{#crossLink "ProAct/currentCaller:property"}}{{/crossLink}} as a listener to both 'index' type and 'length' type of changes.
 	   * </p>
 	   *
-	   * @memberof ProAct.Array
+	   * @for ProAct.Array
 	   * @instance
 	   * @method some
 	   * @param {Function} callback
@@ -7876,8 +8049,7 @@
 	   * @param {Object} thisArg
 	   *      Value to use as this when executing <i>callback</i>.
 	   * @return {Boolean}
-	   *      True if one or more of the elements in <i>this</i> ProAct.Array pass the test implemented by the <i>callback</i>, false otherwise.
-	   * @see {@link ProAct.ArrayCore#addCaller}
+	   *      True if one or more of the elements in <i>this</i> `ProAct.Array` pass the test implemented by the <i>callback</i>, false otherwise.
 	   */
 	  some: function () {
 	    this.core.addCaller();
@@ -7886,9 +8058,9 @@
 	  },
 	
 	  /**
-	   * Does the same as the {@link ProAct.Array#some} method, but the result is a {@link ProAct.Property} depending on changes on the array.
+	   * Does the same as the {{#crossLink "ProAct.Array/some:method"}}{{/crossLink}} method, but the result is a {{#crossLink "ProAct.Property"}}{{/crossLink}} depending on changes on the array.
 	   *
-	   * @memberof ProAct.Array
+	   * @for ProAct.Array
 	   * @instance
 	   * @method psome
 	   * @param {Function} fun
@@ -7896,10 +8068,7 @@
 	   * @param {Object} thisArg
 	   *      Value to use as this when executing <i>callback</i>.
 	   * @return {ProAct.Property}
-	   *      {@link ProAct.Property} with value of true if one or more of the elements in <i>this</i> ProAct.Array pass the test implemented by the <i>fun</i>, false otherwise.
-	   * @see {@link ProAct.ArrayCore#addCaller}
-	   * @see {@link ProAct.Property}
-	   * @see {@link ProAct.Array.Listeners.some}
+	   *      {{#crossLink "ProAct.Property"}}{{/crossLink}} with value of true if one or more of the elements in <i>this</i> `ProAct.Array` pass the test implemented by the <i>fun</i>, false otherwise.
 	   */
 	  psome: function (fun, thisArg) {
 	    var val = P.P.lazyValue(some.apply(this._array, arguments));
@@ -7912,17 +8081,16 @@
 	  /**
 	   * The <b>forEach()</b> method executes a provided function once per array element.
 	   * <p>
-	   *  This method adds the {@link ProAct.currentCaller} as a listener to both 'index' type and 'length' type of changes.
+	   *  This method adds the {{#crossLink "ProAct/currentCaller:property"}}{{/crossLink}} as a listener to both 'index' type and 'length' type of changes.
 	   * </p>
 	   *
-	   * @memberof ProAct.Array
+	   * @for ProAct.Array
 	   * @instance
 	   * @method forEach
 	   * @param {Function} fun
 	   *      Function to execute for each element.
 	   * @param {Object} thisArg
 	   *      Value to use as <i>this</i> when executing <i>callback</i>.
-	   * @see {@link ProAct.ArrayCore#addCaller}
 	   */
 	  forEach: function (fun /*, thisArg */) {
 	    this.core.addCaller();
@@ -7931,12 +8099,12 @@
 	  },
 	
 	  /**
-	   * The <b>filter()</b> method creates a new ProAct.Array with all elements that pass the test implemented by the provided function.
+	   * The <b>filter()</b> method creates a new `ProAct.Array` with all elements that pass the test implemented by the provided function.
 	   * <p>
-	   *  The result ProAct.Array is dependent on <i>this</i>, so if <i>this</i> changes, the filtered resut will be updated.
+	   *  The result `ProAct.Array` is dependent on <i>this</i>, so if <i>this</i> changes, the filtered resut will be updated.
 	   * </p>
 	   *
-	   * @memberof ProAct.Array
+	   * @for ProAct.Array
 	   * @instance
 	   * @method filter
 	   * @param {Function} fun
@@ -7944,9 +8112,7 @@
 	   * @param {Object} thisArg
 	   *      Value to use as this when executing <i>fun</i>.
 	   * @return {ProAct.Array}
-	   *      A new ProAct.Array consisting of the elements in <i>this</i> ProAct.Array that pass the test implemented by <i>fun</i>.
-	   * @see {@link ProAct.Array.Listeners.filter}
-	   * @see {@link ProAct.Array.reFilter}
+	   *      A new `ProAct.Array` consisting of the elements in <i>this</i> `ProAct.Array` that pass the test implemented by <i>fun</i>.
 	   */
 	  filter: function (fun, thisArg, isComplex) {
 	    if (this.core.isComplex || isComplex) {
@@ -7963,16 +8129,16 @@
 	  },
 	
 	  /**
-	   * The <b>map()</b> method creates a new ProAct with the results of calling a provided function on every element in <i>this</i> ProAct.Array.
+	   * The <b>map()</b> method creates a new `ProAct.Array` with the results of calling a provided function on every element in <i>this</i> `ProAct.Array`.
 	   * <p>
-	   *  The result ProAct.Array is dependent on <i>this</i>, so if <i>this</i> changes, the mapped resut will be updated.
+	   *  The result `ProAct.Array` is dependent on <i>this</i>, so if <i>this</i> changes, the mapped resut will be updated.
 	   * </p>
 	   *
-	   * @memberof ProAct.Array
+	   * @for ProAct.Array
 	   * @instance
 	   * @method map
 	   * @param {Function} fun
-	   *      Function that produces an element of the new ProAct.Array, taking three arguments:
+	   *      Function that produces an element of the new `ProAct.Array`, taking three arguments:
 	   *      <ol>
 	   *        <li><b>currentValue</b> : The current element being processed in the array.</li>
 	   *        <li><b>index</b> : The index of the current element being processed in the array.</li>
@@ -7981,8 +8147,7 @@
 	   * @param {Object} thisArg
 	   *      Value to use as this when executing <i>fun</i>.
 	   * @return {ProAct.Array}
-	   *      A new ProAct.Array consisting of the elements in <i>this</i> ProAct.Array transformed by <i>fun</i>.
-	   * @see {@link ProAct.Array.Listeners.map}
+	   *      A new `ProAct.Array` consisting of the elements in <i>this</i> `ProAct.Array` transformed by <i>fun</i>.
 	   */
 	  map: function (fun, thisArg) {
 	    var mapped = new P.A(map.apply(this._array, arguments));
@@ -7992,27 +8157,26 @@
 	  },
 	
 	  /**
-	   * The <b>reduce()</b> method applies a function against an accumulator and each value of the ProAct.Array (from left-to-right) has to reduce it to a single value.
+	   * The <b>reduce()</b> method applies a function against an accumulator and each value of the `ProAct.Array` (from left-to-right) has to reduce it to a single value.
 	   * <p>
-	   *  This method adds the {@link ProAct.currentCaller} as a listener to both 'index' type and 'length' type of changes.
+	   *  This method adds the {{#crossLink "ProAct/currentCaller:property"}}{{/crossLink}} as a listener to both 'index' type and 'length' type of changes.
 	   * </p>
 	   *
-	   * @memberof ProAct.Array
+	   * @for ProAct.Array
 	   * @instance
 	   * @method reduce
 	   * @param {Function} fun
 	   *      Function to execute on each value in the array, taking four arguments:
 	   *      <ol>
 	   *        <li><b>previousValue</b> : The value previously returned in the last invocation of the <i>fun</i>, or <i>initialValue</i>, if supplied.</li>
-	   *        <li><b>currentValue</b> : The current element being processed in the ProAct.Array.</li>
-	   *        <li><b>index</b> : The index of the current element being processed in the ProAct.Array.</li>
+	   *        <li><b>currentValue</b> : The current element being processed in the `ProAct.Array`.</li>
+	   *        <li><b>index</b> : The index of the current element being processed in the `ProAct.Array`.</li>
 	   *        <li><b>array</b> : The array reduce was called upon.</li>
 	   *      </ol>
 	   * @param {Object} initialValue
 	   *      Object to use as the first argument to the first call of the <i>fun</i> .
 	   * @return {Object}
 	   *      The value of the last <i>fun</i> invocation.
-	   * @see {@link ProAct.ArrayCore#addCaller}
 	   */
 	  reduce: function (fun /*, initialValue */) {
 	    this.core.addCaller();
@@ -8021,26 +8185,23 @@
 	  },
 	
 	  /**
-	   * Does the same as the {@link ProAct.Array#reduce} method, but the result is a {@link ProAct.Property} depending on changes on <i>this</i> ProAct.Array.
+	   * Does the same as the {{#crossLink "ProAct.Array/reduce:method"}}{{/crossLink}} method, but the result is a {{#crossLink "ProAct.Property"}}{{/crossLink}} depending on changes on <i>this</i> `ProAct.Array`.
 	   *
-	   * @memberof ProAct.Array
+	   * @for ProAct.Array
 	   * @instance
 	   * @method preduce
 	   * @param {Function} fun
 	   *      Function to execute on each value in the array, taking four arguments:
 	   *      <ol>
 	   *        <li><b>previousValue</b> : The value previously returned in the last invocation of the <i>fun</i>, or <i>initialValue</i>, if supplied.</li>
-	   *        <li><b>currentValue</b> : The current element being processed in the ProAct.Array.</li>
-	   *        <li><b>index</b> : The index of the current element being processed in the ProAct.Array.</li>
+	   *        <li><b>currentValue</b> : The current element being processed in the `ProAct.Array`.</li>
+	   *        <li><b>index</b> : The index of the current element being processed in the `ProAct.Array`.</li>
 	   *        <li><b>array</b> : The array reduce was called upon.</li>
 	   *      </ol>
 	   * @param {Object} initialValue
 	   *      Object to use as the first argument to the first call of the <i>fun</i> .
 	   * @return {ProAct.Property}
-	   *      {@link ProAct.Property} with value of the last <i>fun</i> invocation.
-	   * @see {@link ProAct.ArrayCore#addCaller}
-	   * @see {@link ProAct.Property}
-	   * @see {@link ProAct.Array.Listeners.reduce}
+	   *      {{#crossLink "ProAct.Property"}}{{/crossLink}} with value of the last <i>fun</i> invocation.
 	   */
 	  preduce: function (fun /*, initialValue */) {
 	    var val = P.P.lazyValue(reduce.apply(this._array, arguments));
@@ -8050,27 +8211,26 @@
 	  },
 	
 	  /**
-	   * The <b>reduceRight()</b> method applies a function against an accumulator and each value of the ProAct.Array (from right-to-left) as to reduce it to a single value.
+	   * The <b>reduceRight()</b> method applies a function against an accumulator and each value of the `ProAct.Array` (from right-to-left) as to reduce it to a single value.
 	   * <p>
-	   *  This method adds the {@link ProAct.currentCaller} as a listener to both 'index' type and 'length' type of changes.
+	   *  This method adds the {{#crossLink "ProAct/currentCaller:property"}}{{/crossLink}} as a listener to both 'index' type and 'length' type of changes.
 	   * </p>
 	   *
-	   * @memberof ProAct.Array
+	   * @for ProAct.Array
 	   * @instance
 	   * @method reduceRight
 	   * @param {Function} fun
 	   *      Function to execute on each value in the array, taking four arguments:
 	   *      <ol>
 	   *        <li><b>previousValue</b> : The value previously returned in the last invocation of the <i>fun</i>, or <i>initialValue</i>, if supplied.</li>
-	   *        <li><b>currentValue</b> : The current element being processed in the ProAct.Array.</li>
-	   *        <li><b>index</b> : The index of the current element being processed in the ProAct.Array.</li>
+	   *        <li><b>currentValue</b> : The current element being processed in the `ProAct.Array`.</li>
+	   *        <li><b>index</b> : The index of the current element being processed in the `ProAct.Array`.</li>
 	   *        <li><b>array</b> : The array reduce was called upon.</li>
 	   *      </ol>
 	   * @param {Object} initialValue
 	   *      Object to use as the first argument to the first call of the <i>fun</i> .
 	   * @return {Object}
 	   *      The value of the last <i>fun</i> invocation.
-	   * @see {@link ProAct.ArrayCore#addCaller}
 	   */
 	  reduceRight: function (fun /*, initialValue */) {
 	    this.core.addCaller();
@@ -8079,26 +8239,23 @@
 	  },
 	
 	  /**
-	   * Does the same as the {@link ProAct.Array#reduceRight} method, but the result is a {@link ProAct.Property} depending on changes on <i>this</i> ProAct.Array.
+	   * Does the same as the {{#crossLink "ProAct.Array/reduceRight:method"}}{{/crossLink}} method, but the result is a {{#crossLink "ProAct.Property"}}{{/crossLink}} depending on changes on <i>this</i> `ProAct.Array`.
 	   *
-	   * @memberof ProAct.Array
+	   * @for ProAct.Array
 	   * @instance
 	   * @method preduceRight
 	   * @param {Function} fun
 	   *      Function to execute on each value in the array, taking four arguments:
 	   *      <ol>
 	   *        <li><b>previousValue</b> : The value previously returned in the last invocation of the <i>fun</i>, or <i>initialValue</i>, if supplied.</li>
-	   *        <li><b>currentValue</b> : The current element being processed in the ProAct.Array.</li>
-	   *        <li><b>index</b> : The index of the current element being processed in the ProAct.Array.</li>
+	   *        <li><b>currentValue</b> : The current element being processed in the `ProAct.Array`.</li>
+	   *        <li><b>index</b> : The index of the current element being processed in the `ProAct.Array`.</li>
 	   *        <li><b>array</b> : The array reduce was called upon.</li>
 	   *      </ol>
 	   * @param {Object} initialValue
 	   *      Object to use as the first argument to the first call of the <i>fun</i> .
 	   * @return {ProAct.Property}
-	   *      {@link ProAct.Property} with value of the last <i>fun</i> invocation.
-	   * @see {@link ProAct.ArrayCore#addCaller}
-	   * @see {@link ProAct.Property}
-	   * @see {@link ProAct.Array.Listeners.reduceRight}
+	   *      {{#crossLink "ProAct.Property"}}{{/crossLink}} with value of the last <i>fun</i> invocation.
 	   */
 	  preduceRight: function (fun /*, initialValue */) {
 	    var val = P.P.lazyValue(reduceRight.apply(this._array, arguments));
@@ -8110,10 +8267,10 @@
 	  /**
 	   * The <b>indexOf()</b> method returns the first index at which a given element can be found in the ProAct.Array, or -1 if it is not present.
 	   * <p>
-	   *  This method adds the {@link ProAct.currentCaller} as a listener to both 'index' type and 'length' type of changes.
+	   *  This method adds the {{#crossLink "ProAct/currentCaller:property"}}{{/crossLink}} as a listener to both 'index' type and 'length' type of changes.
 	   * </p>
 	   *
-	   * @memberof ProAct.Array
+	   * @for ProAct.Array
 	   * @instance
 	   * @method indexOf
 	   * @param {Object} searchElement
@@ -8122,18 +8279,17 @@
 	   *      Default: 0 (Entire array is searched)
 	   *      <p>
 	   *        The index to start the search at.
-	   *        If the index is greater than or equal to the ProAct.Array's length, -1 is returned,
+	   *        If the index is greater than or equal to the `ProAct.Array`'s length, -1 is returned,
 	   *        which means the array will not be searched.
 	   *        If the provided index value is a negative number,
-	   *        it is taken as the offset from the end of the ProAct.Array.
+	   *        it is taken as the offset from the end of the `ProAct.Array`.
 	   *      </p>
 	   *      <p>
-	   *        Note: if the provided index is negative, the ProAct.Array is still searched from front to back.
-	   *        If the calculated index is less than 0, then the whole ProAct.Array will be searched.
+	   *        Note: if the provided index is negative, the `ProAct.Array` is still searched from front to back.
+	   *        If the calculated index is less than 0, then the whole `ProAct.Array` will be searched.
 	   *      </p>
 	   * @return {Number}
-	   *      The index of the searched element or '-1' if it is not found in <i>this</i> ProAct.Array.
-	   * @see {@link ProAct.ArrayCore#addCaller}
+	   *      The index of the searched element or '-1' if it is not found in <i>this</i> `ProAct.Array`.
 	   */
 	  indexOf: function () {
 	    this.core.addCaller();
@@ -8142,31 +8298,28 @@
 	  },
 	
 	  /**
-	   * Does the same as the {@link ProAct.Array#indexOf} method, but the result is a {@link ProAct.Property} depending on changes on <i>this</i> ProAct.Array.
+	   * Does the same as the {{#crossLink "ProAct.Array/indexOf:method"}}{{/crossLink}} method, but the result is a {{#crossLink "ProAct.Property"}}{{/crossLink}} depending on changes on <i>this</i> `ProAct.Array`.
 	   *
-	   * @memberof ProAct.Array
+	   * @for ProAct.Array
 	   * @instance
 	   * @method pindexOf
 	   * @param {Object} searchElement
-	   *      Element to locate in the ProAct.Array.
+	   *      Element to locate in the `ProAct.Array`.
 	   * @param {Number} fromIndex
 	   *      Default: 0 (Entire array is searched)
 	   *      <p>
 	   *        The index to start the search at.
-	   *        If the index is greater than or equal to the ProAct.Array's length, -1 is returned,
+	   *        If the index is greater than or equal to the `ProAct.Array`'s length, -1 is returned,
 	   *        which means the array will not be searched.
 	   *        If the provided index value is a negative number,
-	   *        it is taken as the offset from the end of the ProAct.Array.
+	   *        it is taken as the offset from the end of the `ProAct.Array`.
 	   *      </p>
 	   *      <p>
-	   *        Note: if the provided index is negative, the ProAct.Array is still searched from front to back.
+	   *        Note: if the provided index is negative, the `ProAct.Array` is still searched from front to back.
 	   *        If the calculated index is less than 0, then the whole ProAct.Array will be searched.
 	   *      </p>
 	   * @return {ProAct.Property}
-	   *      A {@link ProAct.Property} instance with value, the index of the searched element or '-1' if it is not found in <i>this</i> ProAct.Array.
-	   * @see {@link ProAct.ArrayCore#addCaller}
-	   * @see {@link ProAct.Property}
-	   * @see {@link ProAct.Array.Listeners.indexOf}
+	   *      A {{#crossLink "ProAct.Property"}}{{/crossLink}} instance with value, the index of the searched element or '-1' if it is not found in <i>this</i> `ProAct.Array`.
 	   */
 	  pindexOf: function () {
 	    var val = P.P.lazyValue(indexOf.apply(this._array, arguments));
@@ -8176,13 +8329,13 @@
 	  },
 	
 	  /**
-	   * The <b>lastIndexOf()</b> method returns the last index at which a given element can be found in the ProAct.Array, or -1 if it is not present.
+	   * The <b>lastIndexOf()</b> method returns the last index at which a given element can be found in the `ProAct.Array`, or -1 if it is not present.
 	   * The ProAct.Array is searched backwards, starting at <i>fromIndex</i>.
 	   * <p>
-	   *  This method adds the {@link ProAct.currentCaller} as a listener to both 'index' type and 'length' type of changes.
+	   *  This method adds the {{#crossLink "ProAct/currentCaller:property"}}{{/crossLink}} as a listener to both 'index' type and 'length' type of changes.
 	   * </p>
 	   *
-	   * @memberof ProAct.Array
+	   * @for ProAct.Array
 	   * @instance
 	   * @method lastIndexOf
 	   * @param {Object} searchElement
@@ -8191,17 +8344,16 @@
 	   *      <p>
 	   *        The index at which to start searching backwards.
 	   *        Defaults to the ProAct.Array's length, i.e. the whole array will be searched.
-	   *        If the index is greater than or equal to the length of the ProAct.Array, the whole ProAct.Array will be searched.
-	   *        If negative, it is taken as the offset from the end of the ProAct.Array.
+	   *        If the index is greater than or equal to the length of the `ProAct.Array`, the whole `ProAct.Array` will be searched.
+	   *        If negative, it is taken as the offset from the end of the `ProAct.Array`.
 	   *      </p>
 	   *      <p>
 	   *        Note that even when the index is negative,
 	   *        the ProAct.Array is still searched from back to front.
-	   *        If the calculated index is less than 0, -1 is returned, i.e. the ProAct.Array will not be searched.
+	   *        If the calculated index is less than 0, -1 is returned, i.e. the `ProAct.Array` will not be searched.
 	   *      </p>
 	   * @return {Number}
-	   *      The index of the searched backwards element or '-1' if it is not found in <i>this</i> ProAct.Array.
-	   * @see {@link ProAct.ArrayCore#addCaller}
+	   *      The index of the searched backwards element or '-1' if it is not found in <i>this</i> `ProAct.Array`.
 	   */
 	  lastIndexOf: function () {
 	    this.core.addCaller();
@@ -8210,30 +8362,27 @@
 	  },
 	
 	  /**
-	   * Does the same as the {@link ProAct.Array#lastIndexOf} method, but the result is a {@link ProAct.Property} depending on changes on <i>this</i> ProAct.Array.
+	   * Does the same as the {{#crossLink "ProAct.Array/lastIndexOf:method"}}{{/crossLink}} method, but the result is a {{#crossLink "ProAct.Property"}}{{/crossLink}} depending on changes on <i>this</i> `ProAct.Array`.
 	   *
-	   * @memberof ProAct.Array
+	   * @for ProAct.Array
 	   * @instance
 	   * @method plastindexOf
 	   * @param {Object} searchElement
-	   *      Element to locate in the ProAct.Array.
+	   *      Element to locate in the `ProAct.Array`.
 	   * @param {Number} fromIndex
 	   *      <p>
 	   *        The index at which to start searching backwards.
-	   *        Defaults to the ProAct.Array's length, i.e. the whole array will be searched.
-	   *        If the index is greater than or equal to the length of the ProAct.Array, the whole ProAct.Array will be searched.
-	   *        If negative, it is taken as the offset from the end of the ProAct.Array.
+	   *        Defaults to the `ProAct.Array`'s length, i.e. the whole array will be searched.
+	   *        If the index is greater than or equal to the length of the `ProAct.Array`, the whole ProAct.Array will be searched.
+	   *        If negative, it is taken as the offset from the end of the` ProAct.Array`.
 	   *      </p>
 	   *      <p>
 	   *        Note that even when the index is negative,
 	   *        the ProAct.Array is still searched from back to front.
-	   *        If the calculated index is less than 0, -1 is returned, i.e. the ProAct.Array will not be searched.
+	   *        If the calculated index is less than 0, -1 is returned, i.e. the `ProAct.Array` will not be searched.
 	   *      </p>
 	   * @return {ProAct.Property}
-	   *      A {@link ProAct.Property} instance with value, the index of the backwards searched element or '-1' if it is not found in <i>this</i> ProAct.Array.
-	   * @see {@link ProAct.ArrayCore#addCaller}
-	   * @see {@link ProAct.Property}
-	   * @see {@link ProAct.Array.Listeners.lastIndexOf}
+	   *      A {{#crossLink "ProAct.Property"}}{{/crossLink}} instance with value, the index of the backwards searched element or '-1' if it is not found in <i>this</i> `ProAct.Array`.
 	   */
 	  plastindexOf: function () {
 	    var val = P.P.lazyValue(lastIndexOf.apply(this._array, arguments));
@@ -8243,23 +8392,22 @@
 	  },
 	
 	  /**
-	   * The <b>join()</b> method joins all elements of an ProAct.Array into a string.
+	   * The <b>join()</b> method joins all elements of an `ProAct.Array` into a string.
 	   * <p>
-	   *  This method adds the {@link ProAct.currentCaller} as a listener to both 'index' type and 'length' type of changes.
+	   *  This method adds the {{#crossLink "ProAct/currentCaller:property"}}{{/crossLink}} as a listener to both 'index' type and 'length' type of changes.
 	   * </p>
 	   *
-	   * @memberof ProAct.Array
+	   * @for ProAct.Array
 	   * @instance
 	   * @method join
 	   * @param {String} separator
-	   *      Specifies a string to separate each element of the ProAct.
+	   *      Specifies a string to separate each element of the `ProAct`.
 	   *      The separator is converted to a string if necessary.
 	   *      <p>
 	   *       If omitted, the ProAct.Array elements are separated with a comma.
 	   *      </p>
 	   * @return {String}
-	   *      A string representation of all the elements in <i>this</i> ProAct.Array, separated by the provided <i>separator</i>.
-	   * @see {@link ProAct.ArrayCore#addCaller}
+	   *      A string representation of all the elements in <i>this</i> `ProAct.Array`, separated by the provided <i>separator</i>.
 	   */
 	  join: function () {
 	    this.core.addCaller();
@@ -8268,22 +8416,19 @@
 	  },
 	
 	  /**
-	   * Does the same as the {@link ProAct.Array#join} method, but the result is a {@link ProAct.Property} depending on changes on <i>this</i> ProAct.Array.
+	   * Does the same as the {{#crossLink "ProAct.Array/join:method"}}{{/crossLink}} method, but the result is a {{#crossLink "ProAct.Property"}}{{/crossLink}} depending on changes on <i>this</i> `ProAct.Array`.
 	   *
-	   * @memberof ProAct.Array
+	   * @for ProAct.Array
 	   * @instance
 	   * @method pjoin
 	   * @param {String} separator
-	   *      Specifies a string to separate each element of the ProAct.
+	   *      Specifies a string to separate each element of the `ProAct`.
 	   *      The separator is converted to a string if necessary.
 	   *      <p>
 	   *       If omitted, the ProAct.Array elements are separated with a comma.
 	   *      </p>
 	   * @return {ProAct.Property}
-	   *      A {@link ProAct.Property} instance with value : string representation of all the elements in <i>this</i> ProAct.Array, separated by the provided <i>separator</i>.
-	   * @see {@link ProAct.ArrayCore#addCaller}
-	   * @see {@link ProAct.ArrayCore#preduce}
-	   * @see {@link ProAct.Property}
+	   *      A {{#crossLink "ProAct.Property"}}{{/crossLink}} instance with value : string representation of all the elements in <i>this</i> `ProAct.Array`, separated by the provided <i>separator</i>.
 	   */
 	  pjoin: function (separator) {
 	    var reduced = this.preduce(function (i, el) {
@@ -8301,15 +8446,14 @@
 	   * The <b>toLocaleString()</b> method returns a string representing the elements of the ProAct.Array.
 	   * The elements are converted to Strings using their toLocaleString methods and these Strings are separated by a locale-specific String (such as a comma ",").
 	   * <p>
-	   *  This method adds the {@link ProAct.currentCaller} as a listener to both 'index' type and 'length' type of changes.
+	   *  This method adds the {{#crossLink "ProAct/currentCaller:property"}}{{/crossLink}} as a listener to both 'index' type and 'length' type of changes.
 	   * </p>
 	   *
-	   * @memberof ProAct.Array
+	   * @for ProAct.Array
 	   * @instance
 	   * @method toLocaleString
 	   * @return {String}
 	   *      Locale-specific string representing the elements of <i>this</i> ProAct.Array.
-	   * @see {@link ProAct.ArrayCore#addCaller}
 	   */
 	  toLocaleString: function () {
 	    this.core.addCaller();
@@ -8318,18 +8462,17 @@
 	  },
 	
 	  /**
-	   * The <b>toString()</b> method returns a string representing the specified ProAct.Array and its elements.
+	   * The <b>toString()</b> method returns a string representing the specified `ProAct.Array` and its elements.
 	   * The elements are converted to Strings using their toLocaleString methods and these Strings are separated by a locale-specific String (such as a comma ",").
 	   * <p>
-	   *  This method adds the {@link ProAct.currentCaller} as a listener to both 'index' type and 'length' type of changes.
+	   *  This method adds the {{#crossLink "ProAct/currentCaller:property"}}{{/crossLink}} as a listener to both 'index' type and 'length' type of changes.
 	   * </p>
 	   *
-	   * @memberof ProAct.Array
+	   * @for ProAct.Array
 	   * @instance
 	   * @method toString
 	   * @return {String}
-	   *      A string representing the elements of <i>this</i> ProAct.Array.
-	   * @see {@link ProAct.ArrayCore#addCaller}
+	   *      A string representing the elements of <i>this</i> `ProAct.Array`.
 	   */
 	  toString: function () {
 	    this.core.addCaller();
@@ -8338,26 +8481,25 @@
 	  },
 	
 	  /**
-	   * Returns the result of {@link ProAct.Array#toArray}.
+	   * Returns the result of {{#crossLink "ProAct.Array/toArray:method"}}{{/crossLink}}.
 	   *
-	   * @memberof ProAct.Array
+	   * @for ProAct.Array
 	   * @instance
 	   * @method valueOf
 	   * @return {Array}
 	   *        This ProAct.Array converted to plain JavaScript array.
-	   * @see {@link ProAct.Array#toArray}
 	   */
 	  valueOf: function () {
 	    return this.toArray();
 	  },
 	
 	  /**
-	   * The <b>slice()</b> method returns a shallow copy of a portion of <i>this</i> ProAct.Array into a new ProAct.Array object.
+	   * The <b>slice()</b> method returns a shallow copy of a portion of <i>this</i> `ProAct.Array` into a new `ProAct.Array` object.
 	   * <p>
-	   *  The result ProAct.Array is dependent on <i>this</i>, so if <i>this</i> changes, the slice resut will be updated.
+	   *  The result `ProAct.Array` is dependent on <i>this</i>, so if <i>this</i> changes, the slice resut will be updated.
 	   * </p>
 	   *
-	   * @memberof ProAct.Array
+	   * @for ProAct.Array
 	   * @instance
 	   * @method slice
 	   * @param {Number} begin
@@ -8370,8 +8512,7 @@
 	   *      As a negative index, end indicates an offset from the end of the sequence. slice(2,-1) extracts the third element through the second-to-last element in the sequence.
 	   *      If end is omitted, slice extracts to the end of the sequence.
 	   * @return {ProAct.Array}
-	   *      A portion of <i>this</i> ProAct.Array, dependent on it.
-	   * @see {@link ProAct.Array.Listeners#slice}
+	   *      A portion of <i>this</i> `ProAct.Array`, dependent on it.
 	   */
 	  slice: function () {
 	    var sliced = new P.A(slice.apply(this._array, arguments));
@@ -8381,15 +8522,14 @@
 	  },
 	
 	  /**
-	   * The <b>reverse()</b> method reverses an ProAct.Array in place. The first array element becomes the last and the last becomes the first.
+	   * The <b>reverse()</b> method reverses an `ProAct.Array` in place. The first array element becomes the last and the last becomes the first.
 	   * <p>
-	   *  This method notifies the 'index' listeners attached to <i>this</i>' {@link ProAct.ArrayCore}.
+	   *  This method notifies the 'index' listeners attached to <i>this</i>' {{#crossLink "ProAct.ArrayCore"}}{{/crossLink}}.
 	   * </p>
 	   *
-	   * @memberof ProAct.Array
+	   * @for ProAct.Array
 	   * @instance
 	   * @method reverse
-	   * @see {@link ProAct.ArrayCore#update}
 	   */
 	  reverse: function () {
 	    if (this._array.length === 0) {
@@ -8402,18 +8542,17 @@
 	  },
 	
 	  /**
-	   * The <b>sort()</b> method sorts the elements of <i>this</i> ProAct.Array in place and returns the <i>this</i>. The sort is not necessarily stable.
+	   * The <b>sort()</b> method sorts the elements of <i>this</i> `ProAct.Array` in place and returns the <i>this</i>. The sort is not necessarily stable.
 	   * The default sort order is according to string Unicode code points.
 	   * <p>
-	   *  This method notifies the 'index' listeners attached to <i>this</i>' {@link ProAct.ArrayCore}.
+	   *  This method notifies the 'index' listeners attached to <i>this</i>' {{#crossLink "ProAct.ArrayCore"}}{{/crossLink}}.
 	   * </p>
 	   *
-	   * @memberof ProAct.Array
+	   * @for ProAct.Array
 	   * @instance
 	   * @method sort
 	   * @return {ProAct.Array}
 	   *      <i>this</i>
-	   * @see {@link ProAct.ArrayCore#update}
 	   */
 	  sort: function () {
 	    if (this._array.length === 0) {
@@ -8427,34 +8566,33 @@
 	  },
 	
 	  /**
-	   * The <b>splice()</b> method changes the content of <i>this</i> ProAct.Array, adding new elements while removing old elements.
+	   * The <b>splice()</b> method changes the content of <i>this</i> `ProAct.Array`, adding new elements while removing old elements.
 	   * <p>
-	   *  This method may notify the 'index' listeners or the 'length' listeners, or even the both types of listeners, attached to <i>this</i>' {@link ProAct.ArrayCore}, depending
+	   *  This method may notify the 'index' listeners or the 'length' listeners, or even the both types of listeners, attached to <i>this</i>' {{#crossLink "ProAct.ArrayCore"}}{{/crossLink}}, depending
 	   *  on what the splicing does - removing, adding or changing elements (removing and adding).
 	   * </p>
 	   *
-	   * @memberof ProAct.Array
+	   * @for ProAct.Array
 	   * @instance
 	   * @method splice
 	   * @param {Number} index
-	   *      Index at which to start changing the ProAct.Array.
-	   *      If greater than the length of the ProAct.Array, actual starting index will be set to the length of the <i>this</i>.
+	   *      Index at which to start changing the `ProAct.Array`.
+	   *      If greater than the length of the `ProAct.Array`, actual starting index will be set to the length of the <i>this</i>.
 	   *      If negative, will begin that many elements from the end.
 	   * @param {Number} howMany
-	   *      An integer indicating the number of old ProAct.Array elements to remove.
+	   *      An integer indicating the number of old `ProAct.Array` elements to remove.
 	   *      If howMany is 0, no elements are removed. In this case, you should specify at least one new element.
 	   *      If howMany is greater than the number of elements left in the ProAct.Array starting at index,
 	   *      then all of the elements through the end of the ProAct.Array will be deleted.
 	   * @param [...]
 	   *      <b>element1, ..., elementN</b>:
 	   *      <p>
-	   *        The elements to add to the ProAct.Array. If you don't specify any elements, splice simply removes elements from the ProAct.Array.
+	   *        The elements to add to the `ProAct.Array`. If you don't specify any elements, splice simply removes elements from the `ProAct.Array`.
 	   *      </p>
 	   * @return {ProAct.Array}
-	   *      An ProAct.Array containing the removed elements.
-	   *      If only one element is removed, an ProAct.Array of one element is returned.
-	   *      If no elements are removed, an empty ProAct.Array is returned.
-	   * @see {@link ProAct.ArrayCore#updateSplice}
+	   *      An `ProAct.Array` containing the removed elements.
+	   *      If only one element is removed, an `ProAct.Array` of one element is returned.
+	   *      If no elements are removed, an empty `ProAct.Array` is returned.
 	   */
 	  splice: function (index, howMany) {
 	    var oldLn = this._array.length,
@@ -8482,20 +8620,19 @@
 	  },
 	
 	  /**
-	   * The <b>pop()</b> method removes the last element from an ProAct.Array and returns that element.
+	   * The <b>pop()</b> method removes the last element from an `ProAct.Array` and returns that element.
 	   * <p>
-	   *  This method notifies the 'length' listeners, attached to <i>this</i>' {@link ProAct.ArrayCore}.
+	   *  This method notifies the 'length' listeners, attached to <i>this</i>' {{#crossLink "ProAct.ArrayCore"}}{{/crossLink}}.
 	   * </p>
 	   * <p>
 	   *  This method removes the special index accessor of the deleted element's index - the last index.
 	   * </p>
 	   *
-	   * @memberof ProAct.Array
+	   * @for ProAct.Array
 	   * @instance
 	   * @method pop
 	   * @return {Object}
-	   *      The removed element. If <i>this</i> ProAct.Array is empty the result is undefined.
-	   * @see {@link ProAct.ArrayCore#update}
+	   *      The removed element. If <i>this</i> `ProAct.Array` is empty the result is undefined.
 	   */
 	  pop: function () {
 	    if (this._array.length === 0) {
@@ -8511,24 +8648,22 @@
 	  },
 	
 	  /**
-	   * The <b>push()</b> method adds one or more elements to the end of an ProAct.Array and returns the new length of the ProAct.Array.
+	   * The <b>push()</b> method adds one or more elements to the end of an `ProAct.Array` and returns the new length of the `ProAct.Array`.
 	   * <p>
-	   *  This method notifies the 'length' listeners, attached to <i>this</i>' {@link ProAct.ArrayCore}.
+	   *  This method notifies the 'length' listeners, attached to <i>this</i>' {{#crossLink "ProAct.ArrayCore"}}{{/crossLink}}.
 	   * </p>
 	   * <p>
 	   *  This method defines new index accessors for the elements on the new indexes. So these indexes can be set and read, and
-	   *  will attatch listeners to the {@link ProAct.ArrayCore} or update them.
+	   *  will attatch listeners to the {{#crossLink "ProAct.ArrayCore"}}{{/crossLink}} or update them.
 	   * </p>
 	   *
-	   * @memberof ProAct.Array
+	   * @for ProAct.Array
 	   * @instance
 	   * @method push
 	   * @param [...]
 	   *      <b>element1, ..., elementN</b> : The elements to add to the end of the array.
 	   * @return {Object}
 	   *      The new length property of the <i>this</i>.
-	   * @see {@link ProAct.ArrayCore#update}
-	   * @see {@link ProAct.ArrayCore#defineIndexProp}
 	   */
 	  push: function () {
 	    var vals = arguments, i, ln = arguments.length, index;
@@ -8545,20 +8680,19 @@
 	  },
 	
 	  /**
-	   * The <b>shift()</b> method removes the first element from an ProAct.Array and returns that element. This method changes the length of the ProAct.Array.
+	   * The <b>shift()</b> method removes the first element from an `ProAct.Array` and returns that element. This method changes the length of the `ProAct.Array`.
 	   * <p>
-	   *  This method notifies the 'length' listeners, attached to <i>this</i>' {@link ProAct.ArrayCore}.
+	   *  This method notifies the 'length' listeners, attached to <i>this</i>' {{#crossLink "ProAct.ArrayCore"}}{{/crossLink}}.
 	   * </p>
 	   * <p>
 	   *  This method removes the special index accessor of the deleted element's index - the zero index.
 	   * </p>
 	   *
-	   * @memberof ProAct.Array
+	   * @for ProAct.Array
 	   * @instance
 	   * @method shift
 	   * @return {Object}
-	   *      The removed element. If <i>this</i> ProAct.Array is empty the result is undefined.
-	   * @see {@link ProAct.ArrayCore#update}
+	   *      The removed element. If <i>this</i> `ProAct.Array` is empty the result is undefined.
 	   */
 	  shift: function () {
 	    if (this._array.length === 0) {
@@ -8574,24 +8708,22 @@
 	  },
 	
 	  /**
-	   * The <b>unshift()</b> method adds one or more elements to the beginning of an ProAct.Array and returns the new length of the ProAct.Array.
+	   * The <b>unshift()</b> method adds one or more elements to the beginning of an `ProAct.Array` and returns the new length of the `ProAct.Array`.
 	   * <p>
-	   *  This method notifies the 'length' listeners, attached to <i>this</i>' {@link ProAct.ArrayCore}.
+	   *  This method notifies the 'length' listeners, attached to <i>this</i>' {{#crossLink "ProAct.ArrayCore"}}{{/crossLink}}.
 	   * </p>
 	   * <p>
 	   *  This method defines new index accessors for the elements on the new indexes. So these indexes can be set and read, and
-	   *  will attatch listeners to the {@link ProAct.ArrayCore} or update them.
+	   *  will attatch listeners to the {{#crossLink "ProAct.ArrayCore"}}{{/crossLink}} or update them.
 	   * </p>
 	   *
-	   * @memberof ProAct.Array
+	   * @for ProAct.Array
 	   * @instance
 	   * @method unshift
 	   * @param [...]
 	   *      <b>element1, ..., elementN</b> : The elements to add to the front of the array.
 	   * @return {Object}
 	   *      The new length property of the <i>this</i>.
-	   * @see {@link ProAct.ArrayCore#update}
-	   * @see {@link ProAct.ArrayCore#defineIndexProp}
 	   */
 	  unshift: function () {
 	    var vals = slice.call(arguments, 0), i, ln = arguments.length,
@@ -8614,7 +8746,7 @@
 	   *  <i>this</i> content will not be modified
 	   * </p>
 	   *
-	   * @memberof ProAct.Array
+	   * @for ProAct.Array
 	   * @instance
 	   * @method toArray
 	   * @return {Array}
@@ -8639,7 +8771,7 @@
 	  /**
 	   * Generates a JSON representation of <i>this</i>.
 	   *
-	   * @memberof ProAct.Array
+	   * @for ProAct.Array
 	   * @instance
 	   * @method toJSON
 	   * @return {String}
@@ -8651,6 +8783,17 @@
 	});
 	
 	P.U.ex(P.Actor.prototype, {
+	
+	  /**
+	   * Creates and returns a {{#crossLink "ProAct.Array"}}{{/crossLink}} instance, which tracks the changes of this.
+	   * Uses the current queue for queueing changes.
+	   *
+	   * @for ProAct.Actor
+	   * @instance
+	   * @method toProArray
+	   * @return {ProAct.Array}
+	   *      A `ProAct.Array` instance tracking the changes of `this`.
+	   */
 	  toProArray: function () {
 	    var array = new P.A();
 	
@@ -8661,9 +8804,15 @@
 	});
 	
 	/**
-	 * Defines a set of special listeners used to trak {@link ProAct.Array} changes and updating dependent {@link ProAct.Array}s in an optimal way.
+	 * @module proact-arrays
+	 */
+	
+	/**
+	 * Defines a set of special listeners used to trak {{#crossLink "ProAct.Array"}}{{/crossLink}} changes and updating dependent {{#crossLink "ProAct.Array"}}{{/crossLink}}s in an optimal way.
 	 *
-	 * @namespace ProAct.Array.Listeners
+	 * @class Listeners
+	 * @namespace ProAct.Array
+	 * @static
 	 */
 	ProAct.Array.Listeners = P.A.L = pArrayLs = {
 	
@@ -8685,10 +8834,10 @@
 	  },
 	
 	  /**
-	   * Generates a listener that can be attached to an {@link ProAct.Array} on which
+	   * Generates a listener that can be attached to an {{#crossLink "ProAct.Array"}}{{/crossLink}} on which
 	   * the method {@link ProAct.Array#concat} is invoked.
 	   * <p>
-	   *  The result of the {@link ProAct.Array#concat} method is another {@link ProAct.Array}, dependent on the <i>original</i> one.
+	   *  The result of the {@link ProAct.Array#concat} method is another {{#crossLink "ProAct.Array"}}{{/crossLink}}, dependent on the <i>original</i> one.
 	   * </p>
 	   * <p>
 	   *  For example if the original was:
@@ -8705,7 +8854,7 @@
 	   *  </pre>
 	   * </p>
 	   * <p>
-	   *  The generated listener by this method does this - updates the <i>transformed</i> {@link ProAct.Array}, when the <i>original</i> changes
+	   *  The generated listener by this method does this - updates the <i>transformed</i> {{#crossLink "ProAct.Array"}}{{/crossLink}}, when the <i>original</i> changes
 	   *  and it does it in an optimal way.
 	   * </p>
 	   *
@@ -8713,13 +8862,13 @@
 	   * @static
 	   * @constant
 	   * @param {ProAct.Array} transformed
-	   *      The array created as a result of invoking {@link ProAct.Array#concat} on the <i>original</i> {@link ProAct.Array}.
+	   *      The array created as a result of invoking {@link ProAct.Array#concat} on the <i>original</i> {{#crossLink "ProAct.Array"}}{{/crossLink}}.
 	   * @param {ProAct.Array} original
-	   *      The {@link ProAct.Array} on which {@link ProAct.Array#concat} was invoked.
+	   *      The {{#crossLink "ProAct.Array"}}{{/crossLink}} on which {@link ProAct.Array#concat} was invoked.
 	   * @param {Array} args
-	   *      The arguments passed to {@link ProAct.Array#concat}, when it was invoked on the <i>original</i> {@link ProAct.Array}
+	   *      The arguments passed to {@link ProAct.Array#concat}, when it was invoked on the <i>original</i> {{#crossLink "ProAct.Array"}}{{/crossLink}}
 	   * @return {Function}
-	   *      A listener for events from the <i>original</i> {@link ProAct.Array}, updating the <i>transformed</i> {@link ProAct.Array} on
+	   *      A listener for events from the <i>original</i> {{#crossLink "ProAct.Array"}}{{/crossLink}}, updating the <i>transformed</i> {{#crossLink "ProAct.Array"}}{{/crossLink}} on
 	   *      every new event, if it is necessary.
 	   */
 	  leftConcat: function (transformed, original, args) {
@@ -8772,10 +8921,10 @@
 	  },
 	
 	  /**
-	   * Generates a listener that can be attached to an {@link ProAct.Array} on which
-	   * the method {@link ProAct.Array#concat} is invoked with argument, another {@link ProAct.Array}.
+	   * Generates a listener that can be attached to an {{#crossLink "ProAct.Array"}}{{/crossLink}} on which
+	   * the method {@link ProAct.Array#concat} is invoked with argument, another {{#crossLink "ProAct.Array"}}{{/crossLink}}.
 	   * <p>
-	   *  The result of the {@link ProAct.Array#concat} method is another {@link ProAct.Array},
+	   *  The result of the {@link ProAct.Array#concat} method is another {{#crossLink "ProAct.Array"}}{{/crossLink}},
 	   *  dependent on both the <i>original</i> and the passed as an argument one.
 	   * </p>
 	   * <p>
@@ -8794,7 +8943,7 @@
 	   *  </pre>
 	   * </p>
 	   * <p>
-	   *  The generated listener by this method does this - updates the <i>transformed</i> {@link ProAct.Array}, when the <i>original</i> changes
+	   *  The generated listener by this method does this - updates the <i>transformed</i> {{#crossLink "ProAct.Array"}}{{/crossLink}}, when the <i>original</i> changes
 	   *  and it does it in an optimal way.
 	   * </p>
 	   *
@@ -8802,13 +8951,13 @@
 	   * @static
 	   * @constant
 	   * @param {ProAct.Array} transformed
-	   *      The array created as a result of invoking {@link ProAct.Array#concat} on the <i>original</i> {@link ProAct.Array}.
+	   *      The array created as a result of invoking {@link ProAct.Array#concat} on the <i>original</i> {{#crossLink "ProAct.Array"}}{{/crossLink}}.
 	   * @param {ProAct.Array} original
-	   *      The {@link ProAct.Array} on which {@link ProAct.Array#concat} was invoked.
+	   *      The {{#crossLink "ProAct.Array"}}{{/crossLink}} on which {@link ProAct.Array#concat} was invoked.
 	   * @param {ProAct.Array} right
-	   *      The {@link ProAct.Array} passed as an argument to {@link ProAct.Array#concat}.
+	   *      The {{#crossLink "ProAct.Array"}}{{/crossLink}} passed as an argument to {@link ProAct.Array#concat}.
 	   * @return {Function}
-	   *      A listener for events from the <i>right</i> {@link ProAct.Array}, updating the <i>transformed</i> {@link ProAct.Array} on
+	   *      A listener for events from the <i>right</i> {{#crossLink "ProAct.Array"}}{{/crossLink}}, updating the <i>transformed</i> {{#crossLink "ProAct.Array"}}{{/crossLink}} on
 	   *      every new event, if it is necessary.
 	   */
 	  rightConcat: function (transformed, original, right) {
@@ -8848,7 +8997,7 @@
 	  },
 	
 	  /**
-	   * Generates a listener that can be attached to an {@link ProAct.Array} on which
+	   * Generates a listener that can be attached to an {{#crossLink "ProAct.Array"}}{{/crossLink}} on which
 	   * the method {@link ProAct.Array#pevery} is invoked.
 	   * <p>
 	   *  The result of the {@link ProAct.Array#pevery} method is a {@link ProAct.Property}, dependent on the <i>original</i> array.
@@ -8878,13 +9027,13 @@
 	   * @static
 	   * @constant
 	   * @param {ProAct.Property} val
-	   *      The result of invoking {@link ProAct.Array#pevery} on the <i>original</i> {@link ProAct.Array}.
+	   *      The result of invoking {@link ProAct.Array#pevery} on the <i>original</i> {{#crossLink "ProAct.Array"}}{{/crossLink}}.
 	   * @param {ProAct.Array} original
-	   *      The {@link ProAct.Array} on which {@link ProAct.Array#pevery} was invoked.
+	   *      The {{#crossLink "ProAct.Array"}}{{/crossLink}} on which {@link ProAct.Array#pevery} was invoked.
 	   * @param {Array} args
-	   *      The arguments passed to {@link ProAct.Array#pevery}, when it was invoked on the <i>original</i> {@link ProAct.Array}
+	   *      The arguments passed to {@link ProAct.Array#pevery}, when it was invoked on the <i>original</i> {{#crossLink "ProAct.Array"}}{{/crossLink}}
 	   * @return {Function}
-	   *      A listener for events from the <i>original</i> {@link ProAct.Array}, updating the <i>val</i> {@link ProAct.Property} on
+	   *      A listener for events from the <i>original</i> {{#crossLink "ProAct.Array"}}{{/crossLink}}, updating the <i>val</i> {@link ProAct.Property} on
 	   *      every new event, if it is necessary.
 	   */
 	  every: function (val, original, args) {
@@ -8926,7 +9075,7 @@
 	  },
 	
 	  /**
-	   * Generates a listener that can be attached to an {@link ProAct.Array} on which
+	   * Generates a listener that can be attached to an {{#crossLink "ProAct.Array"}}{{/crossLink}} on which
 	   * the method {@link ProAct.Array#psome} is invoked.
 	   * <p>
 	   *  The result of the {@link ProAct.Array#psome} method is a {@link ProAct.Property}, dependent on the <i>original</i> array.
@@ -8956,13 +9105,13 @@
 	   * @static
 	   * @constant
 	   * @param {ProAct.Property} val
-	   *      The result of invoking {@link ProAct.Array#psome} on the <i>original</i> {@link ProAct.Array}.
+	   *      The result of invoking {@link ProAct.Array#psome} on the <i>original</i> {{#crossLink "ProAct.Array"}}{{/crossLink}}.
 	   * @param {ProAct.Array} original
-	   *      The {@link ProAct.Array} on which {@link ProAct.Array#psome} was invoked.
+	   *      The {{#crossLink "ProAct.Array"}}{{/crossLink}} on which {@link ProAct.Array#psome} was invoked.
 	   * @param {Array} args
-	   *      The arguments passed to {@link ProAct.Array#psome}, when it was invoked on the <i>original</i> {@link ProAct.Array}
+	   *      The arguments passed to {@link ProAct.Array#psome}, when it was invoked on the <i>original</i> {{#crossLink "ProAct.Array"}}{{/crossLink}}
 	   * @return {Function}
-	   *      A listener for events from the <i>original</i> {@link ProAct.Array}, updating the <i>val</i> {@link ProAct.Property} on
+	   *      A listener for events from the <i>original</i> {{#crossLink "ProAct.Array"}}{{/crossLink}}, updating the <i>val</i> {@link ProAct.Property} on
 	   *      every new event, if it is necessary.
 	   */
 	  some: function (val, original, args) {
@@ -9004,10 +9153,10 @@
 	  },
 	
 	  /**
-	   * Generates a listener that can be attached to an {@link ProAct.Array} on which
+	   * Generates a listener that can be attached to an {{#crossLink "ProAct.Array"}}{{/crossLink}} on which
 	   * the method {@link ProAct.Array#filter} is invoked.
 	   * <p>
-	   *  The result of the {@link ProAct.Array#filter} method is another {@link ProAct.Array}, dependent on the <i>original</i> one.
+	   *  The result of the {@link ProAct.Array#filter} method is another {{#crossLink "ProAct.Array"}}{{/crossLink}}, dependent on the <i>original</i> one.
 	   * </p>
 	   * <p>
 	   *  For example if the original was:
@@ -9026,7 +9175,7 @@
 	   *  </pre>
 	   * </p>
 	   * <p>
-	   *  The generated listener by this method does this - updates the <i>filtered</i> {@link ProAct.Array}, when the <i>original</i> changes
+	   *  The generated listener by this method does this - updates the <i>filtered</i> {{#crossLink "ProAct.Array"}}{{/crossLink}}, when the <i>original</i> changes
 	   *  and it does it in an optimal way.
 	   * </p>
 	   *
@@ -9034,13 +9183,13 @@
 	   * @static
 	   * @constant
 	   * @param {ProAct.Array} filtered
-	   *      The array created as a result of invoking {@link ProAct.Array#filter} on the <i>original</i> {@link ProAct.Array}.
+	   *      The array created as a result of invoking {@link ProAct.Array#filter} on the <i>original</i> {{#crossLink "ProAct.Array"}}{{/crossLink}}.
 	   * @param {ProAct.Array} original
-	   *      The {@link ProAct.Array} on which {@link ProAct.Array#filter} was invoked.
+	   *      The {{#crossLink "ProAct.Array"}}{{/crossLink}} on which {@link ProAct.Array#filter} was invoked.
 	   * @param {Array} args
-	   *      The arguments passed to {@link ProAct.Array#filter}, when it was invoked on the <i>original</i> {@link ProAct.Array}
+	   *      The arguments passed to {@link ProAct.Array#filter}, when it was invoked on the <i>original</i> {{#crossLink "ProAct.Array"}}{{/crossLink}}
 	   * @return {Function}
-	   *      A listener for events from the <i>original</i> {@link ProAct.Array}, updating the <i>filtered</i> {@link ProAct.Array} on
+	   *      A listener for events from the <i>original</i> {{#crossLink "ProAct.Array"}}{{/crossLink}}, updating the <i>filtered</i> {{#crossLink "ProAct.Array"}}{{/crossLink}} on
 	   *      every new event, if it is necessary.
 	   */
 	  filter: function (filtered, original, args) {
@@ -9117,10 +9266,10 @@
 	  },
 	
 	  /**
-	   * Generates a listener that can be attached to an {@link ProAct.Array} on which
+	   * Generates a listener that can be attached to an {{#crossLink "ProAct.Array"}}{{/crossLink}} on which
 	   * the method {@link ProAct.Array#map} is invoked.
 	   * <p>
-	   *  The result of the {@link ProAct.Array#map} method is another {@link ProAct.Array}, dependent on the <i>original</i> one.
+	   *  The result of the {@link ProAct.Array#map} method is another {{#crossLink "ProAct.Array"}}{{/crossLink}}, dependent on the <i>original</i> one.
 	   * </p>
 	   * <p>
 	   *  For example if the original was:
@@ -9139,7 +9288,7 @@
 	   *  </pre>
 	   * </p>
 	   * <p>
-	   *  The generated listener by this method does this - updates the <i>mapped</i> {@link ProAct.Array}, when the <i>original</i> changes
+	   *  The generated listener by this method does this - updates the <i>mapped</i> {{#crossLink "ProAct.Array"}}{{/crossLink}}, when the <i>original</i> changes
 	   *  and it does it in an optimal way.
 	   * </p>
 	   *
@@ -9147,13 +9296,13 @@
 	   * @static
 	   * @constant
 	   * @param {ProAct.Array} mapped
-	   *      The array created as a result of invoking {@link ProAct.Array#map} on the <i>original</i> {@link ProAct.Array}.
+	   *      The array created as a result of invoking {@link ProAct.Array#map} on the <i>original</i> {{#crossLink "ProAct.Array"}}{{/crossLink}}.
 	   * @param {ProAct.Array} original
-	   *      The {@link ProAct.Array} on which {@link ProAct.Array#map} was invoked.
+	   *      The {{#crossLink "ProAct.Array"}}{{/crossLink}} on which {@link ProAct.Array#map} was invoked.
 	   * @param {Array} args
-	   *      The arguments passed to {@link ProAct.Array#map}, when it was invoked on the <i>original</i> {@link ProAct.Array}
+	   *      The arguments passed to {@link ProAct.Array#map}, when it was invoked on the <i>original</i> {{#crossLink "ProAct.Array"}}{{/crossLink}}
 	   * @return {Function}
-	   *      A listener for events from the <i>original</i> {@link ProAct.Array}, updating the <i>mapped</i> {@link ProAct.Array} on
+	   *      A listener for events from the <i>original</i> {{#crossLink "ProAct.Array"}}{{/crossLink}}, updating the <i>mapped</i> {{#crossLink "ProAct.Array"}}{{/crossLink}} on
 	   *      every new event, if it is necessary.
 	   */
 	  map: function (mapped, original, args) {
@@ -9217,7 +9366,7 @@
 	  },
 	
 	  /**
-	   * Generates a listener that can be attached to an {@link ProAct.Array} on which
+	   * Generates a listener that can be attached to an {{#crossLink "ProAct.Array"}}{{/crossLink}} on which
 	   * the method {@link ProAct.Array#preduce} is invoked.
 	   * <p>
 	   *  The result of the {@link ProAct.Array#preduce} method is a {@link ProAct.Property}, dependent on the <i>original</i> array.
@@ -9247,13 +9396,13 @@
 	   * @static
 	   * @constant
 	   * @param {ProAct.Property} val
-	   *      The result of invoking {@link ProAct.Array#preduce} on the <i>original</i> {@link ProAct.Array}.
+	   *      The result of invoking {@link ProAct.Array#preduce} on the <i>original</i> {{#crossLink "ProAct.Array"}}{{/crossLink}}.
 	   * @param {ProAct.Array} original
-	   *      The {@link ProAct.Array} on which {@link ProAct.Array#preduce} was invoked.
+	   *      The {{#crossLink "ProAct.Array"}}{{/crossLink}} on which {@link ProAct.Array#preduce} was invoked.
 	   * @param {Array} args
-	   *      The arguments passed to {@link ProAct.Array#preduce}, when it was invoked on the <i>original</i> {@link ProAct.Array}
+	   *      The arguments passed to {@link ProAct.Array#preduce}, when it was invoked on the <i>original</i> {{#crossLink "ProAct.Array"}}{{/crossLink}}
 	   * @return {Function}
-	   *      A listener for events from the <i>original</i> {@link ProAct.Array}, updating the <i>val</i> {@link ProAct.Property} on
+	   *      A listener for events from the <i>original</i> {{#crossLink "ProAct.Array"}}{{/crossLink}}, updating the <i>val</i> {@link ProAct.Property} on
 	   *      every new event, if it is necessary.
 	   */
 	  reduce: function (val, original, args) {
@@ -9275,7 +9424,7 @@
 	  },
 	
 	  /**
-	   * Generates a listener that can be attached to an {@link ProAct.Array} on which
+	   * Generates a listener that can be attached to an {{#crossLink "ProAct.Array"}}{{/crossLink}} on which
 	   * the method {@link ProAct.Array#preduceRight} is invoked.
 	   * <p>
 	   *  The result of the {@link ProAct.Array#preduceRight} method is a {@link ProAct.Property}, dependent on the <i>original</i> array.
@@ -9305,13 +9454,13 @@
 	   * @static
 	   * @constant
 	   * @param {ProAct.Property} val
-	   *      The result of invoking {@link ProAct.Array#preduceRight} on the <i>original</i> {@link ProAct.Array}.
+	   *      The result of invoking {@link ProAct.Array#preduceRight} on the <i>original</i> {{#crossLink "ProAct.Array"}}{{/crossLink}}.
 	   * @param {ProAct.Array} original
-	   *      The {@link ProAct.Array} on which {@link ProAct.Array#preduceRight} was invoked.
+	   *      The {{#crossLink "ProAct.Array"}}{{/crossLink}} on which {@link ProAct.Array#preduceRight} was invoked.
 	   * @param {Array} args
-	   *      The arguments passed to {@link ProAct.Array#preduceRight}, when it was invoked on the <i>original</i> {@link ProAct.Array}
+	   *      The arguments passed to {@link ProAct.Array#preduceRight}, when it was invoked on the <i>original</i> {{#crossLink "ProAct.Array"}}{{/crossLink}}
 	   * @return {Function}
-	   *      A listener for events from the <i>original</i> {@link ProAct.Array}, updating the <i>val</i> {@link ProAct.Property} on
+	   *      A listener for events from the <i>original</i> {{#crossLink "ProAct.Array"}}{{/crossLink}}, updating the <i>val</i> {@link ProAct.Property} on
 	   *      every new event, if it is necessary.
 	   */
 	  reduceRight: function (val, original, args) {
@@ -9332,7 +9481,7 @@
 	  },
 	
 	  /**
-	   * Generates a listener that can be attached to an {@link ProAct.Array} on which
+	   * Generates a listener that can be attached to an {{#crossLink "ProAct.Array"}}{{/crossLink}} on which
 	   * the method {@link ProAct.Array#pindexOf} is invoked.
 	   * <p>
 	   *  The result of the {@link ProAct.Array#pindexOf} method is a {@link ProAct.Property}, dependent on the <i>original</i> array.
@@ -9360,13 +9509,13 @@
 	   * @static
 	   * @constant
 	   * @param {ProAct.Property} val
-	   *      The result of invoking {@link ProAct.Array#pindexOf} on the <i>original</i> {@link ProAct.Array}.
+	   *      The result of invoking {@link ProAct.Array#pindexOf} on the <i>original</i> {{#crossLink "ProAct.Array"}}{{/crossLink}}.
 	   * @param {ProAct.Array} original
-	   *      The {@link ProAct.Array} on which {@link ProAct.Array#pindexOf} was invoked.
+	   *      The {{#crossLink "ProAct.Array"}}{{/crossLink}} on which {@link ProAct.Array#pindexOf} was invoked.
 	   * @param {Array} args
-	   *      The arguments passed to {@link ProAct.Array#pindexOf}, when it was invoked on the <i>original</i> {@link ProAct.Array}
+	   *      The arguments passed to {@link ProAct.Array#pindexOf}, when it was invoked on the <i>original</i> {{#crossLink "ProAct.Array"}}{{/crossLink}}
 	   * @return {Function}
-	   *      A listener for events from the <i>original</i> {@link ProAct.Array}, updating the <i>val</i> {@link ProAct.Property} on
+	   *      A listener for events from the <i>original</i> {{#crossLink "ProAct.Array"}}{{/crossLink}}, updating the <i>val</i> {@link ProAct.Property} on
 	   *      every new event, if it is necessary.
 	   */
 	  indexOf: function (val, original, args) {
@@ -9439,7 +9588,7 @@
 	  },
 	
 	  /**
-	   * Generates a listener that can be attached to an {@link ProAct.Array} on which
+	   * Generates a listener that can be attached to an {{#crossLink "ProAct.Array"}}{{/crossLink}} on which
 	   * the method {@link ProAct.Array#plastIndexOf} is invoked.
 	   * <p>
 	   *  The result of the {@link ProAct.Array#plastIndexOf} method is a {@link ProAct.Property}, dependent on the <i>original</i> array.
@@ -9467,13 +9616,13 @@
 	   * @static
 	   * @constant
 	   * @param {ProAct.Property} val
-	   *      The result of invoking {@link ProAct.Array#plastIndexOf} on the <i>original</i> {@link ProAct.Array}.
+	   *      The result of invoking {@link ProAct.Array#plastIndexOf} on the <i>original</i> {{#crossLink "ProAct.Array"}}{{/crossLink}}.
 	   * @param {ProAct.Array} original
-	   *      The {@link ProAct.Array} on which {@link ProAct.Array#plastIndexOf} was invoked.
+	   *      The {{#crossLink "ProAct.Array"}}{{/crossLink}} on which {@link ProAct.Array#plastIndexOf} was invoked.
 	   * @param {Array} args
-	   *      The arguments passed to {@link ProAct.Array#plastIndexOf}, when it was invoked on the <i>original</i> {@link ProAct.Array}
+	   *      The arguments passed to {@link ProAct.Array#plastIndexOf}, when it was invoked on the <i>original</i> {{#crossLink "ProAct.Array"}}{{/crossLink}}
 	   * @return {Function}
-	   *      A listener for events from the <i>original</i> {@link ProAct.Array}, updating the <i>val</i> {@link ProAct.Property} on
+	   *      A listener for events from the <i>original</i> {{#crossLink "ProAct.Array"}}{{/crossLink}}, updating the <i>val</i> {@link ProAct.Property} on
 	   *      every new event, if it is necessary.
 	   */
 	  lastIndexOf: function (val, original, args) {
@@ -9519,10 +9668,10 @@
 	  },
 	
 	  /**
-	   * Generates a listener that can be attached to an {@link ProAct.Array} on which
+	   * Generates a listener that can be attached to an {{#crossLink "ProAct.Array"}}{{/crossLink}} on which
 	   * the method {@link ProAct.Array#slice} is invoked.
 	   * <p>
-	   *  The result of the {@link ProAct.Array#slice} method is another {@link ProAct.Array}, dependent on the <i>original</i> one.
+	   *  The result of the {@link ProAct.Array#slice} method is another {{#crossLink "ProAct.Array"}}{{/crossLink}}, dependent on the <i>original</i> one.
 	   * </p>
 	   * <p>
 	   *  For example if the original was:
@@ -9539,7 +9688,7 @@
 	   *  </pre>
 	   * </p>
 	   * <p>
-	   *  The generated listener by this method does this - updates the <i>sliced</i> {@link ProAct.Array}, when the <i>original</i> changes
+	   *  The generated listener by this method does this - updates the <i>sliced</i> {{#crossLink "ProAct.Array"}}{{/crossLink}}, when the <i>original</i> changes
 	   *  and it does it in an optimal way.
 	   * </p>
 	   *
@@ -9547,13 +9696,13 @@
 	   * @static
 	   * @constant
 	   * @param {ProAct.Array} sliced
-	   *      The array created as a result of invoking {@link ProAct.Array#slice} on the <i>original</i> {@link ProAct.Array}.
+	   *      The array created as a result of invoking {@link ProAct.Array#slice} on the <i>original</i> {{#crossLink "ProAct.Array"}}{{/crossLink}}.
 	   * @param {ProAct.Array} original
-	   *      The {@link ProAct.Array} on which {@link ProAct.Array#slice} was invoked.
+	   *      The {{#crossLink "ProAct.Array"}}{{/crossLink}} on which {@link ProAct.Array#slice} was invoked.
 	   * @param {Array} args
-	   *      The arguments passed to {@link ProAct.Array#slice}, when it was invoked on the <i>original</i> {@link ProAct.Array}
+	   *      The arguments passed to {@link ProAct.Array#slice}, when it was invoked on the <i>original</i> {{#crossLink "ProAct.Array"}}{{/crossLink}}
 	   * @return {Function}
-	   *      A listener for events from the <i>original</i> {@link ProAct.Array}, updating the <i>sliced</i> {@link ProAct.Array} on
+	   *      A listener for events from the <i>original</i> {{#crossLink "ProAct.Array"}}{{/crossLink}}, updating the <i>sliced</i> {{#crossLink "ProAct.Array"}}{{/crossLink}} on
 	   *      every new event, if it is necessary.
 	   */
 	  slice: function (sliced, original, args) {
