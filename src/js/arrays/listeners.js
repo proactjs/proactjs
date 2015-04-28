@@ -1,20 +1,25 @@
 /**
- * Defines a set of special listeners used to trak {@link ProAct.Array} changes and updating dependent {@link ProAct.Array}s in an optimal way.
+ * @module proact-arrays
+ */
+
+/**
+ * Defines a set of special listeners used to trak {{#crossLink "ProAct.Array"}}{{/crossLink}} changes and updating dependent {{#crossLink "ProAct.Array"}}{{/crossLink}}s in an optimal way.
  *
- * @namespace ProAct.Array.Listeners
+ * @class Listeners
+ * @namespace ProAct.Array
+ * @static
  */
 ProAct.Array.Listeners = P.A.L = pArrayLs = {
 
   /**
    * Checks the validity of an event.
    *
-   * @memberof ProAct.Array.Listeners
+   * @for ProAct.Array.Listeners
    * @static
-   * @constant
    * @param {ProAct.Event} event
    *      The event to check.
    * @throws {Error}
-   *      If the event is not {@link ProAct.Event.Types.array}
+   *      If the event is not {{#crossLink "ProAct.Event.Types/array:property"}}{{/crossLink}}
    */
   check: function(event) {
     if (event.type !== P.E.Types.array) {
@@ -23,17 +28,17 @@ ProAct.Array.Listeners = P.A.L = pArrayLs = {
   },
 
   /**
-   * Generates a listener that can be attached to an {@link ProAct.Array} on which
-   * the method {@link ProAct.Array#concat} is invoked.
+   * Generates a listener that can be attached to an {{#crossLink "ProAct.Array"}}{{/crossLink}} on which
+   * the method {{#crossLink "ProAct.Array/concat:method"}}{{/crossLink}} is invoked.
    * <p>
-   *  The result of the {@link ProAct.Array#concat} method is another {@link ProAct.Array}, dependent on the <i>original</i> one.
+   *  The result of the {{#crossLink "ProAct.Array/concat:method"}}{{/crossLink}} method is another {{#crossLink "ProAct.Array"}}{{/crossLink}}, dependent on the <i>original</i> one.
    * </p>
    * <p>
    *  For example if the original was:
    *  <pre>
    *    var a = new ProAct.Array([1, 3, 5]);
    *  </pre>
-   *  and we invoked {@link ProAct.Array#concat} on it like this:
+   *  and we invoked {{#crossLink "ProAct.Array/concat:method"}}{{/crossLink}} on it like this:
    *  <pre>
    *    var b = a.concat(7, 9); // b is [1, 3, 5, 7, 9]
    *  </pre>
@@ -43,21 +48,20 @@ ProAct.Array.Listeners = P.A.L = pArrayLs = {
    *  </pre>
    * </p>
    * <p>
-   *  The generated listener by this method does this - updates the <i>transformed</i> {@link ProAct.Array}, when the <i>original</i> changes
+   *  The generated listener by this method does this - updates the <i>transformed</i> {{#crossLink "ProAct.Array"}}{{/crossLink}}, when the <i>original</i> changes
    *  and it does it in an optimal way.
    * </p>
    *
-   * @memberof ProAct.Array.Listeners
+   * @for ProAct.Array.Listeners
    * @static
-   * @constant
    * @param {ProAct.Array} transformed
-   *      The array created as a result of invoking {@link ProAct.Array#concat} on the <i>original</i> {@link ProAct.Array}.
+   *      The array created as a result of invoking {{#crossLink "ProAct.Array/concat:method"}}{{/crossLink}} on the <i>original</i> {{#crossLink "ProAct.Array"}}{{/crossLink}}.
    * @param {ProAct.Array} original
-   *      The {@link ProAct.Array} on which {@link ProAct.Array#concat} was invoked.
+   *      The {{#crossLink "ProAct.Array"}}{{/crossLink}} on which {{#crossLink "ProAct.Array/concat:method"}}{{/crossLink}} was invoked.
    * @param {Array} args
-   *      The arguments passed to {@link ProAct.Array#concat}, when it was invoked on the <i>original</i> {@link ProAct.Array}
+   *      The arguments passed to {{#crossLink "ProAct.Array/concat:method"}}{{/crossLink}}, when it was invoked on the <i>original</i> {{#crossLink "ProAct.Array"}}{{/crossLink}}
    * @return {Function}
-   *      A listener for events from the <i>original</i> {@link ProAct.Array}, updating the <i>transformed</i> {@link ProAct.Array} on
+   *      A listener for events from the <i>original</i> {{#crossLink "ProAct.Array"}}{{/crossLink}}, updating the <i>transformed</i> {{#crossLink "ProAct.Array"}}{{/crossLink}} on
    *      every new event, if it is necessary.
    */
   leftConcat: function (transformed, original, args) {
@@ -110,10 +114,10 @@ ProAct.Array.Listeners = P.A.L = pArrayLs = {
   },
 
   /**
-   * Generates a listener that can be attached to an {@link ProAct.Array} on which
-   * the method {@link ProAct.Array#concat} is invoked with argument, another {@link ProAct.Array}.
+   * Generates a listener that can be attached to an {{#crossLink "ProAct.Array"}}{{/crossLink}} on which
+   * the method {{#crossLink "ProAct.Array/concat:method"}}{{/crossLink}} is invoked with argument, another {{#crossLink "ProAct.Array"}}{{/crossLink}}.
    * <p>
-   *  The result of the {@link ProAct.Array#concat} method is another {@link ProAct.Array},
+   *  The result of the {{#crossLink "ProAct.Array/concat:method"}}{{/crossLink}} method is another {{#crossLink "ProAct.Array"}}{{/crossLink}},
    *  dependent on both the <i>original</i> and the passed as an argument one.
    * </p>
    * <p>
@@ -121,7 +125,7 @@ ProAct.Array.Listeners = P.A.L = pArrayLs = {
    *  <pre>
    *    var a = new ProAct.Array([1, 3, 5]);
    *  </pre>
-   *  and we invoked {@link ProAct.Array#concat} on it like this:
+   *  and we invoked {{#crossLink "ProAct.Array/concat:method"}}{{/crossLink}} on it like this:
    *  <pre>
    *    var x = new ProAct.Array(7, 9);
    *    var b = a.concat(x); // b is [1, 3, 5, 7, 9]
@@ -132,21 +136,20 @@ ProAct.Array.Listeners = P.A.L = pArrayLs = {
    *  </pre>
    * </p>
    * <p>
-   *  The generated listener by this method does this - updates the <i>transformed</i> {@link ProAct.Array}, when the <i>original</i> changes
+   *  The generated listener by this method does this - updates the <i>transformed</i> {{#crossLink "ProAct.Array"}}{{/crossLink}}, when the <i>original</i> changes
    *  and it does it in an optimal way.
    * </p>
    *
-   * @memberof ProAct.Array.Listeners
+   * @for ProAct.Array.Listeners
    * @static
-   * @constant
    * @param {ProAct.Array} transformed
-   *      The array created as a result of invoking {@link ProAct.Array#concat} on the <i>original</i> {@link ProAct.Array}.
+   *      The array created as a result of invoking {{#crossLink "ProAct.Array/concat:method"}}{{/crossLink}} on the <i>original</i> {{#crossLink "ProAct.Array"}}{{/crossLink}}.
    * @param {ProAct.Array} original
-   *      The {@link ProAct.Array} on which {@link ProAct.Array#concat} was invoked.
+   *      The {{#crossLink "ProAct.Array"}}{{/crossLink}} on which {{#crossLink "ProAct.Array/concat:method"}}{{/crossLink}} was invoked.
    * @param {ProAct.Array} right
-   *      The {@link ProAct.Array} passed as an argument to {@link ProAct.Array#concat}.
+   *      The {{#crossLink "ProAct.Array"}}{{/crossLink}} passed as an argument to {{#crossLink "ProAct.Array/concat:method"}}{{/crossLink}}.
    * @return {Function}
-   *      A listener for events from the <i>right</i> {@link ProAct.Array}, updating the <i>transformed</i> {@link ProAct.Array} on
+   *      A listener for events from the <i>right</i> {{#crossLink "ProAct.Array"}}{{/crossLink}}, updating the <i>transformed</i> {{#crossLink "ProAct.Array"}}{{/crossLink}} on
    *      every new event, if it is necessary.
    */
   rightConcat: function (transformed, original, right) {
@@ -186,7 +189,7 @@ ProAct.Array.Listeners = P.A.L = pArrayLs = {
   },
 
   /**
-   * Generates a listener that can be attached to an {@link ProAct.Array} on which
+   * Generates a listener that can be attached to an {{#crossLink "ProAct.Array"}}{{/crossLink}} on which
    * the method {@link ProAct.Array#pevery} is invoked.
    * <p>
    *  The result of the {@link ProAct.Array#pevery} method is a {@link ProAct.Property}, dependent on the <i>original</i> array.
@@ -216,13 +219,13 @@ ProAct.Array.Listeners = P.A.L = pArrayLs = {
    * @static
    * @constant
    * @param {ProAct.Property} val
-   *      The result of invoking {@link ProAct.Array#pevery} on the <i>original</i> {@link ProAct.Array}.
+   *      The result of invoking {@link ProAct.Array#pevery} on the <i>original</i> {{#crossLink "ProAct.Array"}}{{/crossLink}}.
    * @param {ProAct.Array} original
-   *      The {@link ProAct.Array} on which {@link ProAct.Array#pevery} was invoked.
+   *      The {{#crossLink "ProAct.Array"}}{{/crossLink}} on which {@link ProAct.Array#pevery} was invoked.
    * @param {Array} args
-   *      The arguments passed to {@link ProAct.Array#pevery}, when it was invoked on the <i>original</i> {@link ProAct.Array}
+   *      The arguments passed to {@link ProAct.Array#pevery}, when it was invoked on the <i>original</i> {{#crossLink "ProAct.Array"}}{{/crossLink}}
    * @return {Function}
-   *      A listener for events from the <i>original</i> {@link ProAct.Array}, updating the <i>val</i> {@link ProAct.Property} on
+   *      A listener for events from the <i>original</i> {{#crossLink "ProAct.Array"}}{{/crossLink}}, updating the <i>val</i> {@link ProAct.Property} on
    *      every new event, if it is necessary.
    */
   every: function (val, original, args) {
@@ -264,7 +267,7 @@ ProAct.Array.Listeners = P.A.L = pArrayLs = {
   },
 
   /**
-   * Generates a listener that can be attached to an {@link ProAct.Array} on which
+   * Generates a listener that can be attached to an {{#crossLink "ProAct.Array"}}{{/crossLink}} on which
    * the method {@link ProAct.Array#psome} is invoked.
    * <p>
    *  The result of the {@link ProAct.Array#psome} method is a {@link ProAct.Property}, dependent on the <i>original</i> array.
@@ -294,13 +297,13 @@ ProAct.Array.Listeners = P.A.L = pArrayLs = {
    * @static
    * @constant
    * @param {ProAct.Property} val
-   *      The result of invoking {@link ProAct.Array#psome} on the <i>original</i> {@link ProAct.Array}.
+   *      The result of invoking {@link ProAct.Array#psome} on the <i>original</i> {{#crossLink "ProAct.Array"}}{{/crossLink}}.
    * @param {ProAct.Array} original
-   *      The {@link ProAct.Array} on which {@link ProAct.Array#psome} was invoked.
+   *      The {{#crossLink "ProAct.Array"}}{{/crossLink}} on which {@link ProAct.Array#psome} was invoked.
    * @param {Array} args
-   *      The arguments passed to {@link ProAct.Array#psome}, when it was invoked on the <i>original</i> {@link ProAct.Array}
+   *      The arguments passed to {@link ProAct.Array#psome}, when it was invoked on the <i>original</i> {{#crossLink "ProAct.Array"}}{{/crossLink}}
    * @return {Function}
-   *      A listener for events from the <i>original</i> {@link ProAct.Array}, updating the <i>val</i> {@link ProAct.Property} on
+   *      A listener for events from the <i>original</i> {{#crossLink "ProAct.Array"}}{{/crossLink}}, updating the <i>val</i> {@link ProAct.Property} on
    *      every new event, if it is necessary.
    */
   some: function (val, original, args) {
@@ -342,10 +345,10 @@ ProAct.Array.Listeners = P.A.L = pArrayLs = {
   },
 
   /**
-   * Generates a listener that can be attached to an {@link ProAct.Array} on which
+   * Generates a listener that can be attached to an {{#crossLink "ProAct.Array"}}{{/crossLink}} on which
    * the method {@link ProAct.Array#filter} is invoked.
    * <p>
-   *  The result of the {@link ProAct.Array#filter} method is another {@link ProAct.Array}, dependent on the <i>original</i> one.
+   *  The result of the {@link ProAct.Array#filter} method is another {{#crossLink "ProAct.Array"}}{{/crossLink}}, dependent on the <i>original</i> one.
    * </p>
    * <p>
    *  For example if the original was:
@@ -364,7 +367,7 @@ ProAct.Array.Listeners = P.A.L = pArrayLs = {
    *  </pre>
    * </p>
    * <p>
-   *  The generated listener by this method does this - updates the <i>filtered</i> {@link ProAct.Array}, when the <i>original</i> changes
+   *  The generated listener by this method does this - updates the <i>filtered</i> {{#crossLink "ProAct.Array"}}{{/crossLink}}, when the <i>original</i> changes
    *  and it does it in an optimal way.
    * </p>
    *
@@ -372,13 +375,13 @@ ProAct.Array.Listeners = P.A.L = pArrayLs = {
    * @static
    * @constant
    * @param {ProAct.Array} filtered
-   *      The array created as a result of invoking {@link ProAct.Array#filter} on the <i>original</i> {@link ProAct.Array}.
+   *      The array created as a result of invoking {@link ProAct.Array#filter} on the <i>original</i> {{#crossLink "ProAct.Array"}}{{/crossLink}}.
    * @param {ProAct.Array} original
-   *      The {@link ProAct.Array} on which {@link ProAct.Array#filter} was invoked.
+   *      The {{#crossLink "ProAct.Array"}}{{/crossLink}} on which {@link ProAct.Array#filter} was invoked.
    * @param {Array} args
-   *      The arguments passed to {@link ProAct.Array#filter}, when it was invoked on the <i>original</i> {@link ProAct.Array}
+   *      The arguments passed to {@link ProAct.Array#filter}, when it was invoked on the <i>original</i> {{#crossLink "ProAct.Array"}}{{/crossLink}}
    * @return {Function}
-   *      A listener for events from the <i>original</i> {@link ProAct.Array}, updating the <i>filtered</i> {@link ProAct.Array} on
+   *      A listener for events from the <i>original</i> {{#crossLink "ProAct.Array"}}{{/crossLink}}, updating the <i>filtered</i> {{#crossLink "ProAct.Array"}}{{/crossLink}} on
    *      every new event, if it is necessary.
    */
   filter: function (filtered, original, args) {
@@ -455,10 +458,10 @@ ProAct.Array.Listeners = P.A.L = pArrayLs = {
   },
 
   /**
-   * Generates a listener that can be attached to an {@link ProAct.Array} on which
+   * Generates a listener that can be attached to an {{#crossLink "ProAct.Array"}}{{/crossLink}} on which
    * the method {@link ProAct.Array#map} is invoked.
    * <p>
-   *  The result of the {@link ProAct.Array#map} method is another {@link ProAct.Array}, dependent on the <i>original</i> one.
+   *  The result of the {@link ProAct.Array#map} method is another {{#crossLink "ProAct.Array"}}{{/crossLink}}, dependent on the <i>original</i> one.
    * </p>
    * <p>
    *  For example if the original was:
@@ -477,7 +480,7 @@ ProAct.Array.Listeners = P.A.L = pArrayLs = {
    *  </pre>
    * </p>
    * <p>
-   *  The generated listener by this method does this - updates the <i>mapped</i> {@link ProAct.Array}, when the <i>original</i> changes
+   *  The generated listener by this method does this - updates the <i>mapped</i> {{#crossLink "ProAct.Array"}}{{/crossLink}}, when the <i>original</i> changes
    *  and it does it in an optimal way.
    * </p>
    *
@@ -485,13 +488,13 @@ ProAct.Array.Listeners = P.A.L = pArrayLs = {
    * @static
    * @constant
    * @param {ProAct.Array} mapped
-   *      The array created as a result of invoking {@link ProAct.Array#map} on the <i>original</i> {@link ProAct.Array}.
+   *      The array created as a result of invoking {@link ProAct.Array#map} on the <i>original</i> {{#crossLink "ProAct.Array"}}{{/crossLink}}.
    * @param {ProAct.Array} original
-   *      The {@link ProAct.Array} on which {@link ProAct.Array#map} was invoked.
+   *      The {{#crossLink "ProAct.Array"}}{{/crossLink}} on which {@link ProAct.Array#map} was invoked.
    * @param {Array} args
-   *      The arguments passed to {@link ProAct.Array#map}, when it was invoked on the <i>original</i> {@link ProAct.Array}
+   *      The arguments passed to {@link ProAct.Array#map}, when it was invoked on the <i>original</i> {{#crossLink "ProAct.Array"}}{{/crossLink}}
    * @return {Function}
-   *      A listener for events from the <i>original</i> {@link ProAct.Array}, updating the <i>mapped</i> {@link ProAct.Array} on
+   *      A listener for events from the <i>original</i> {{#crossLink "ProAct.Array"}}{{/crossLink}}, updating the <i>mapped</i> {{#crossLink "ProAct.Array"}}{{/crossLink}} on
    *      every new event, if it is necessary.
    */
   map: function (mapped, original, args) {
@@ -555,7 +558,7 @@ ProAct.Array.Listeners = P.A.L = pArrayLs = {
   },
 
   /**
-   * Generates a listener that can be attached to an {@link ProAct.Array} on which
+   * Generates a listener that can be attached to an {{#crossLink "ProAct.Array"}}{{/crossLink}} on which
    * the method {@link ProAct.Array#preduce} is invoked.
    * <p>
    *  The result of the {@link ProAct.Array#preduce} method is a {@link ProAct.Property}, dependent on the <i>original</i> array.
@@ -585,13 +588,13 @@ ProAct.Array.Listeners = P.A.L = pArrayLs = {
    * @static
    * @constant
    * @param {ProAct.Property} val
-   *      The result of invoking {@link ProAct.Array#preduce} on the <i>original</i> {@link ProAct.Array}.
+   *      The result of invoking {@link ProAct.Array#preduce} on the <i>original</i> {{#crossLink "ProAct.Array"}}{{/crossLink}}.
    * @param {ProAct.Array} original
-   *      The {@link ProAct.Array} on which {@link ProAct.Array#preduce} was invoked.
+   *      The {{#crossLink "ProAct.Array"}}{{/crossLink}} on which {@link ProAct.Array#preduce} was invoked.
    * @param {Array} args
-   *      The arguments passed to {@link ProAct.Array#preduce}, when it was invoked on the <i>original</i> {@link ProAct.Array}
+   *      The arguments passed to {@link ProAct.Array#preduce}, when it was invoked on the <i>original</i> {{#crossLink "ProAct.Array"}}{{/crossLink}}
    * @return {Function}
-   *      A listener for events from the <i>original</i> {@link ProAct.Array}, updating the <i>val</i> {@link ProAct.Property} on
+   *      A listener for events from the <i>original</i> {{#crossLink "ProAct.Array"}}{{/crossLink}}, updating the <i>val</i> {@link ProAct.Property} on
    *      every new event, if it is necessary.
    */
   reduce: function (val, original, args) {
@@ -613,7 +616,7 @@ ProAct.Array.Listeners = P.A.L = pArrayLs = {
   },
 
   /**
-   * Generates a listener that can be attached to an {@link ProAct.Array} on which
+   * Generates a listener that can be attached to an {{#crossLink "ProAct.Array"}}{{/crossLink}} on which
    * the method {@link ProAct.Array#preduceRight} is invoked.
    * <p>
    *  The result of the {@link ProAct.Array#preduceRight} method is a {@link ProAct.Property}, dependent on the <i>original</i> array.
@@ -643,13 +646,13 @@ ProAct.Array.Listeners = P.A.L = pArrayLs = {
    * @static
    * @constant
    * @param {ProAct.Property} val
-   *      The result of invoking {@link ProAct.Array#preduceRight} on the <i>original</i> {@link ProAct.Array}.
+   *      The result of invoking {@link ProAct.Array#preduceRight} on the <i>original</i> {{#crossLink "ProAct.Array"}}{{/crossLink}}.
    * @param {ProAct.Array} original
-   *      The {@link ProAct.Array} on which {@link ProAct.Array#preduceRight} was invoked.
+   *      The {{#crossLink "ProAct.Array"}}{{/crossLink}} on which {@link ProAct.Array#preduceRight} was invoked.
    * @param {Array} args
-   *      The arguments passed to {@link ProAct.Array#preduceRight}, when it was invoked on the <i>original</i> {@link ProAct.Array}
+   *      The arguments passed to {@link ProAct.Array#preduceRight}, when it was invoked on the <i>original</i> {{#crossLink "ProAct.Array"}}{{/crossLink}}
    * @return {Function}
-   *      A listener for events from the <i>original</i> {@link ProAct.Array}, updating the <i>val</i> {@link ProAct.Property} on
+   *      A listener for events from the <i>original</i> {{#crossLink "ProAct.Array"}}{{/crossLink}}, updating the <i>val</i> {@link ProAct.Property} on
    *      every new event, if it is necessary.
    */
   reduceRight: function (val, original, args) {
@@ -670,7 +673,7 @@ ProAct.Array.Listeners = P.A.L = pArrayLs = {
   },
 
   /**
-   * Generates a listener that can be attached to an {@link ProAct.Array} on which
+   * Generates a listener that can be attached to an {{#crossLink "ProAct.Array"}}{{/crossLink}} on which
    * the method {@link ProAct.Array#pindexOf} is invoked.
    * <p>
    *  The result of the {@link ProAct.Array#pindexOf} method is a {@link ProAct.Property}, dependent on the <i>original</i> array.
@@ -698,13 +701,13 @@ ProAct.Array.Listeners = P.A.L = pArrayLs = {
    * @static
    * @constant
    * @param {ProAct.Property} val
-   *      The result of invoking {@link ProAct.Array#pindexOf} on the <i>original</i> {@link ProAct.Array}.
+   *      The result of invoking {@link ProAct.Array#pindexOf} on the <i>original</i> {{#crossLink "ProAct.Array"}}{{/crossLink}}.
    * @param {ProAct.Array} original
-   *      The {@link ProAct.Array} on which {@link ProAct.Array#pindexOf} was invoked.
+   *      The {{#crossLink "ProAct.Array"}}{{/crossLink}} on which {@link ProAct.Array#pindexOf} was invoked.
    * @param {Array} args
-   *      The arguments passed to {@link ProAct.Array#pindexOf}, when it was invoked on the <i>original</i> {@link ProAct.Array}
+   *      The arguments passed to {@link ProAct.Array#pindexOf}, when it was invoked on the <i>original</i> {{#crossLink "ProAct.Array"}}{{/crossLink}}
    * @return {Function}
-   *      A listener for events from the <i>original</i> {@link ProAct.Array}, updating the <i>val</i> {@link ProAct.Property} on
+   *      A listener for events from the <i>original</i> {{#crossLink "ProAct.Array"}}{{/crossLink}}, updating the <i>val</i> {@link ProAct.Property} on
    *      every new event, if it is necessary.
    */
   indexOf: function (val, original, args) {
@@ -777,7 +780,7 @@ ProAct.Array.Listeners = P.A.L = pArrayLs = {
   },
 
   /**
-   * Generates a listener that can be attached to an {@link ProAct.Array} on which
+   * Generates a listener that can be attached to an {{#crossLink "ProAct.Array"}}{{/crossLink}} on which
    * the method {@link ProAct.Array#plastIndexOf} is invoked.
    * <p>
    *  The result of the {@link ProAct.Array#plastIndexOf} method is a {@link ProAct.Property}, dependent on the <i>original</i> array.
@@ -805,13 +808,13 @@ ProAct.Array.Listeners = P.A.L = pArrayLs = {
    * @static
    * @constant
    * @param {ProAct.Property} val
-   *      The result of invoking {@link ProAct.Array#plastIndexOf} on the <i>original</i> {@link ProAct.Array}.
+   *      The result of invoking {@link ProAct.Array#plastIndexOf} on the <i>original</i> {{#crossLink "ProAct.Array"}}{{/crossLink}}.
    * @param {ProAct.Array} original
-   *      The {@link ProAct.Array} on which {@link ProAct.Array#plastIndexOf} was invoked.
+   *      The {{#crossLink "ProAct.Array"}}{{/crossLink}} on which {@link ProAct.Array#plastIndexOf} was invoked.
    * @param {Array} args
-   *      The arguments passed to {@link ProAct.Array#plastIndexOf}, when it was invoked on the <i>original</i> {@link ProAct.Array}
+   *      The arguments passed to {@link ProAct.Array#plastIndexOf}, when it was invoked on the <i>original</i> {{#crossLink "ProAct.Array"}}{{/crossLink}}
    * @return {Function}
-   *      A listener for events from the <i>original</i> {@link ProAct.Array}, updating the <i>val</i> {@link ProAct.Property} on
+   *      A listener for events from the <i>original</i> {{#crossLink "ProAct.Array"}}{{/crossLink}}, updating the <i>val</i> {@link ProAct.Property} on
    *      every new event, if it is necessary.
    */
   lastIndexOf: function (val, original, args) {
@@ -857,10 +860,10 @@ ProAct.Array.Listeners = P.A.L = pArrayLs = {
   },
 
   /**
-   * Generates a listener that can be attached to an {@link ProAct.Array} on which
+   * Generates a listener that can be attached to an {{#crossLink "ProAct.Array"}}{{/crossLink}} on which
    * the method {@link ProAct.Array#slice} is invoked.
    * <p>
-   *  The result of the {@link ProAct.Array#slice} method is another {@link ProAct.Array}, dependent on the <i>original</i> one.
+   *  The result of the {@link ProAct.Array#slice} method is another {{#crossLink "ProAct.Array"}}{{/crossLink}}, dependent on the <i>original</i> one.
    * </p>
    * <p>
    *  For example if the original was:
@@ -877,7 +880,7 @@ ProAct.Array.Listeners = P.A.L = pArrayLs = {
    *  </pre>
    * </p>
    * <p>
-   *  The generated listener by this method does this - updates the <i>sliced</i> {@link ProAct.Array}, when the <i>original</i> changes
+   *  The generated listener by this method does this - updates the <i>sliced</i> {{#crossLink "ProAct.Array"}}{{/crossLink}}, when the <i>original</i> changes
    *  and it does it in an optimal way.
    * </p>
    *
@@ -885,13 +888,13 @@ ProAct.Array.Listeners = P.A.L = pArrayLs = {
    * @static
    * @constant
    * @param {ProAct.Array} sliced
-   *      The array created as a result of invoking {@link ProAct.Array#slice} on the <i>original</i> {@link ProAct.Array}.
+   *      The array created as a result of invoking {@link ProAct.Array#slice} on the <i>original</i> {{#crossLink "ProAct.Array"}}{{/crossLink}}.
    * @param {ProAct.Array} original
-   *      The {@link ProAct.Array} on which {@link ProAct.Array#slice} was invoked.
+   *      The {{#crossLink "ProAct.Array"}}{{/crossLink}} on which {@link ProAct.Array#slice} was invoked.
    * @param {Array} args
-   *      The arguments passed to {@link ProAct.Array#slice}, when it was invoked on the <i>original</i> {@link ProAct.Array}
+   *      The arguments passed to {@link ProAct.Array#slice}, when it was invoked on the <i>original</i> {{#crossLink "ProAct.Array"}}{{/crossLink}}
    * @return {Function}
-   *      A listener for events from the <i>original</i> {@link ProAct.Array}, updating the <i>sliced</i> {@link ProAct.Array} on
+   *      A listener for events from the <i>original</i> {{#crossLink "ProAct.Array"}}{{/crossLink}}, updating the <i>sliced</i> {{#crossLink "ProAct.Array"}}{{/crossLink}} on
    *      every new event, if it is necessary.
    */
   slice: function (sliced, original, args) {

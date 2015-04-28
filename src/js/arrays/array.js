@@ -704,18 +704,17 @@ ProAct.Array.prototype = pArrayProto = P.U.ex(Object.create(arrayProto), {
   },
 
   /**
-   * The <b>toString()</b> method returns a string representing the specified ProAct.Array and its elements.
+   * The <b>toString()</b> method returns a string representing the specified `ProAct.Array` and its elements.
    * The elements are converted to Strings using their toLocaleString methods and these Strings are separated by a locale-specific String (such as a comma ",").
    * <p>
    *  This method adds the {{#crossLink "ProAct/currentCaller:property"}}{{/crossLink}} as a listener to both 'index' type and 'length' type of changes.
    * </p>
    *
-   * @memberof ProAct.Array
+   * @for ProAct.Array
    * @instance
    * @method toString
    * @return {String}
-   *      A string representing the elements of <i>this</i> ProAct.Array.
-   * @see {@link ProAct.ArrayCore#addCaller}
+   *      A string representing the elements of <i>this</i> `ProAct.Array`.
    */
   toString: function () {
     this.core.addCaller();
@@ -724,26 +723,25 @@ ProAct.Array.prototype = pArrayProto = P.U.ex(Object.create(arrayProto), {
   },
 
   /**
-   * Returns the result of {@link ProAct.Array#toArray}.
+   * Returns the result of {{#crossLink "ProAct.Array/toArray:method"}}{{/crossLink}}.
    *
-   * @memberof ProAct.Array
+   * @for ProAct.Array
    * @instance
    * @method valueOf
    * @return {Array}
    *        This ProAct.Array converted to plain JavaScript array.
-   * @see {@link ProAct.Array#toArray}
    */
   valueOf: function () {
     return this.toArray();
   },
 
   /**
-   * The <b>slice()</b> method returns a shallow copy of a portion of <i>this</i> ProAct.Array into a new ProAct.Array object.
+   * The <b>slice()</b> method returns a shallow copy of a portion of <i>this</i> `ProAct.Array` into a new `ProAct.Array` object.
    * <p>
-   *  The result ProAct.Array is dependent on <i>this</i>, so if <i>this</i> changes, the slice resut will be updated.
+   *  The result `ProAct.Array` is dependent on <i>this</i>, so if <i>this</i> changes, the slice resut will be updated.
    * </p>
    *
-   * @memberof ProAct.Array
+   * @for ProAct.Array
    * @instance
    * @method slice
    * @param {Number} begin
@@ -756,8 +754,7 @@ ProAct.Array.prototype = pArrayProto = P.U.ex(Object.create(arrayProto), {
    *      As a negative index, end indicates an offset from the end of the sequence. slice(2,-1) extracts the third element through the second-to-last element in the sequence.
    *      If end is omitted, slice extracts to the end of the sequence.
    * @return {ProAct.Array}
-   *      A portion of <i>this</i> ProAct.Array, dependent on it.
-   * @see {@link ProAct.Array.Listeners#slice}
+   *      A portion of <i>this</i> `ProAct.Array`, dependent on it.
    */
   slice: function () {
     var sliced = new P.A(slice.apply(this._array, arguments));
@@ -767,15 +764,14 @@ ProAct.Array.prototype = pArrayProto = P.U.ex(Object.create(arrayProto), {
   },
 
   /**
-   * The <b>reverse()</b> method reverses an ProAct.Array in place. The first array element becomes the last and the last becomes the first.
+   * The <b>reverse()</b> method reverses an `ProAct.Array` in place. The first array element becomes the last and the last becomes the first.
    * <p>
    *  This method notifies the 'index' listeners attached to <i>this</i>' {{#crossLink "ProAct.ArrayCore"}}{{/crossLink}}.
    * </p>
    *
-   * @memberof ProAct.Array
+   * @for ProAct.Array
    * @instance
    * @method reverse
-   * @see {@link ProAct.ArrayCore#update}
    */
   reverse: function () {
     if (this._array.length === 0) {
@@ -788,18 +784,17 @@ ProAct.Array.prototype = pArrayProto = P.U.ex(Object.create(arrayProto), {
   },
 
   /**
-   * The <b>sort()</b> method sorts the elements of <i>this</i> ProAct.Array in place and returns the <i>this</i>. The sort is not necessarily stable.
+   * The <b>sort()</b> method sorts the elements of <i>this</i> `ProAct.Array` in place and returns the <i>this</i>. The sort is not necessarily stable.
    * The default sort order is according to string Unicode code points.
    * <p>
    *  This method notifies the 'index' listeners attached to <i>this</i>' {{#crossLink "ProAct.ArrayCore"}}{{/crossLink}}.
    * </p>
    *
-   * @memberof ProAct.Array
+   * @for ProAct.Array
    * @instance
    * @method sort
    * @return {ProAct.Array}
    *      <i>this</i>
-   * @see {@link ProAct.ArrayCore#update}
    */
   sort: function () {
     if (this._array.length === 0) {
@@ -813,34 +808,33 @@ ProAct.Array.prototype = pArrayProto = P.U.ex(Object.create(arrayProto), {
   },
 
   /**
-   * The <b>splice()</b> method changes the content of <i>this</i> ProAct.Array, adding new elements while removing old elements.
+   * The <b>splice()</b> method changes the content of <i>this</i> `ProAct.Array`, adding new elements while removing old elements.
    * <p>
    *  This method may notify the 'index' listeners or the 'length' listeners, or even the both types of listeners, attached to <i>this</i>' {{#crossLink "ProAct.ArrayCore"}}{{/crossLink}}, depending
    *  on what the splicing does - removing, adding or changing elements (removing and adding).
    * </p>
    *
-   * @memberof ProAct.Array
+   * @for ProAct.Array
    * @instance
    * @method splice
    * @param {Number} index
-   *      Index at which to start changing the ProAct.Array.
-   *      If greater than the length of the ProAct.Array, actual starting index will be set to the length of the <i>this</i>.
+   *      Index at which to start changing the `ProAct.Array`.
+   *      If greater than the length of the `ProAct.Array`, actual starting index will be set to the length of the <i>this</i>.
    *      If negative, will begin that many elements from the end.
    * @param {Number} howMany
-   *      An integer indicating the number of old ProAct.Array elements to remove.
+   *      An integer indicating the number of old `ProAct.Array` elements to remove.
    *      If howMany is 0, no elements are removed. In this case, you should specify at least one new element.
    *      If howMany is greater than the number of elements left in the ProAct.Array starting at index,
    *      then all of the elements through the end of the ProAct.Array will be deleted.
    * @param [...]
    *      <b>element1, ..., elementN</b>:
    *      <p>
-   *        The elements to add to the ProAct.Array. If you don't specify any elements, splice simply removes elements from the ProAct.Array.
+   *        The elements to add to the `ProAct.Array`. If you don't specify any elements, splice simply removes elements from the `ProAct.Array`.
    *      </p>
    * @return {ProAct.Array}
-   *      An ProAct.Array containing the removed elements.
-   *      If only one element is removed, an ProAct.Array of one element is returned.
-   *      If no elements are removed, an empty ProAct.Array is returned.
-   * @see {@link ProAct.ArrayCore#updateSplice}
+   *      An `ProAct.Array` containing the removed elements.
+   *      If only one element is removed, an `ProAct.Array` of one element is returned.
+   *      If no elements are removed, an empty `ProAct.Array` is returned.
    */
   splice: function (index, howMany) {
     var oldLn = this._array.length,
@@ -868,7 +862,7 @@ ProAct.Array.prototype = pArrayProto = P.U.ex(Object.create(arrayProto), {
   },
 
   /**
-   * The <b>pop()</b> method removes the last element from an ProAct.Array and returns that element.
+   * The <b>pop()</b> method removes the last element from an `ProAct.Array` and returns that element.
    * <p>
    *  This method notifies the 'length' listeners, attached to <i>this</i>' {{#crossLink "ProAct.ArrayCore"}}{{/crossLink}}.
    * </p>
@@ -876,12 +870,11 @@ ProAct.Array.prototype = pArrayProto = P.U.ex(Object.create(arrayProto), {
    *  This method removes the special index accessor of the deleted element's index - the last index.
    * </p>
    *
-   * @memberof ProAct.Array
+   * @for ProAct.Array
    * @instance
    * @method pop
    * @return {Object}
-   *      The removed element. If <i>this</i> ProAct.Array is empty the result is undefined.
-   * @see {@link ProAct.ArrayCore#update}
+   *      The removed element. If <i>this</i> `ProAct.Array` is empty the result is undefined.
    */
   pop: function () {
     if (this._array.length === 0) {
@@ -897,7 +890,7 @@ ProAct.Array.prototype = pArrayProto = P.U.ex(Object.create(arrayProto), {
   },
 
   /**
-   * The <b>push()</b> method adds one or more elements to the end of an ProAct.Array and returns the new length of the ProAct.Array.
+   * The <b>push()</b> method adds one or more elements to the end of an `ProAct.Array` and returns the new length of the `ProAct.Array`.
    * <p>
    *  This method notifies the 'length' listeners, attached to <i>this</i>' {{#crossLink "ProAct.ArrayCore"}}{{/crossLink}}.
    * </p>
@@ -906,15 +899,13 @@ ProAct.Array.prototype = pArrayProto = P.U.ex(Object.create(arrayProto), {
    *  will attatch listeners to the {{#crossLink "ProAct.ArrayCore"}}{{/crossLink}} or update them.
    * </p>
    *
-   * @memberof ProAct.Array
+   * @for ProAct.Array
    * @instance
    * @method push
    * @param [...]
    *      <b>element1, ..., elementN</b> : The elements to add to the end of the array.
    * @return {Object}
    *      The new length property of the <i>this</i>.
-   * @see {@link ProAct.ArrayCore#update}
-   * @see {@link ProAct.ArrayCore#defineIndexProp}
    */
   push: function () {
     var vals = arguments, i, ln = arguments.length, index;
@@ -931,7 +922,7 @@ ProAct.Array.prototype = pArrayProto = P.U.ex(Object.create(arrayProto), {
   },
 
   /**
-   * The <b>shift()</b> method removes the first element from an ProAct.Array and returns that element. This method changes the length of the ProAct.Array.
+   * The <b>shift()</b> method removes the first element from an `ProAct.Array` and returns that element. This method changes the length of the `ProAct.Array`.
    * <p>
    *  This method notifies the 'length' listeners, attached to <i>this</i>' {{#crossLink "ProAct.ArrayCore"}}{{/crossLink}}.
    * </p>
@@ -939,12 +930,11 @@ ProAct.Array.prototype = pArrayProto = P.U.ex(Object.create(arrayProto), {
    *  This method removes the special index accessor of the deleted element's index - the zero index.
    * </p>
    *
-   * @memberof ProAct.Array
+   * @for ProAct.Array
    * @instance
    * @method shift
    * @return {Object}
-   *      The removed element. If <i>this</i> ProAct.Array is empty the result is undefined.
-   * @see {@link ProAct.ArrayCore#update}
+   *      The removed element. If <i>this</i> `ProAct.Array` is empty the result is undefined.
    */
   shift: function () {
     if (this._array.length === 0) {
@@ -960,7 +950,7 @@ ProAct.Array.prototype = pArrayProto = P.U.ex(Object.create(arrayProto), {
   },
 
   /**
-   * The <b>unshift()</b> method adds one or more elements to the beginning of an ProAct.Array and returns the new length of the ProAct.Array.
+   * The <b>unshift()</b> method adds one or more elements to the beginning of an `ProAct.Array` and returns the new length of the `ProAct.Array`.
    * <p>
    *  This method notifies the 'length' listeners, attached to <i>this</i>' {{#crossLink "ProAct.ArrayCore"}}{{/crossLink}}.
    * </p>
@@ -969,15 +959,13 @@ ProAct.Array.prototype = pArrayProto = P.U.ex(Object.create(arrayProto), {
    *  will attatch listeners to the {{#crossLink "ProAct.ArrayCore"}}{{/crossLink}} or update them.
    * </p>
    *
-   * @memberof ProAct.Array
+   * @for ProAct.Array
    * @instance
    * @method unshift
    * @param [...]
    *      <b>element1, ..., elementN</b> : The elements to add to the front of the array.
    * @return {Object}
    *      The new length property of the <i>this</i>.
-   * @see {@link ProAct.ArrayCore#update}
-   * @see {@link ProAct.ArrayCore#defineIndexProp}
    */
   unshift: function () {
     var vals = slice.call(arguments, 0), i, ln = arguments.length,
@@ -1000,7 +988,7 @@ ProAct.Array.prototype = pArrayProto = P.U.ex(Object.create(arrayProto), {
    *  <i>this</i> content will not be modified
    * </p>
    *
-   * @memberof ProAct.Array
+   * @for ProAct.Array
    * @instance
    * @method toArray
    * @return {Array}
@@ -1025,7 +1013,7 @@ ProAct.Array.prototype = pArrayProto = P.U.ex(Object.create(arrayProto), {
   /**
    * Generates a JSON representation of <i>this</i>.
    *
-   * @memberof ProAct.Array
+   * @for ProAct.Array
    * @instance
    * @method toJSON
    * @return {String}
@@ -1037,6 +1025,17 @@ ProAct.Array.prototype = pArrayProto = P.U.ex(Object.create(arrayProto), {
 });
 
 P.U.ex(P.Actor.prototype, {
+
+  /**
+   * Creates and returns a {{#crossLink "ProAct.Array"}}{{/crossLink}} instance, which tracks the changes of this.
+   * Uses the current queue for queueing changes.
+   *
+   * @for ProAct.Actor
+   * @instance
+   * @method toProArray
+   * @return {ProAct.Array}
+   *      A `ProAct.Array` instance tracking the changes of `this`.
+   */
   toProArray: function () {
     var array = new P.A();
 

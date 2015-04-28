@@ -16,7 +16,7 @@
  *
  * @class ProAct.SubscribableStream
  * @constructor
- * @extends ProAct.SubscribableStream
+ * @extends ProAct.Stream
  * @param {Function} subscribe
  *      A function used to subscribe to a source, when the first listener to this stream is attached.
  * @param {String} queueName
