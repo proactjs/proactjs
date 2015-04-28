@@ -643,7 +643,7 @@ ProAct.Array.prototype = pArrayProto = P.U.ex(Object.create(arrayProto), {
    * @instance
    * @method join
    * @param {String} separator
-   *      Specifies a string to separate each element of the ProAct.
+   *      Specifies a string to separate each element of the `ProAct`.
    *      The separator is converted to a string if necessary.
    *      <p>
    *       If omitted, the ProAct.Array elements are separated with a comma.
@@ -658,19 +658,19 @@ ProAct.Array.prototype = pArrayProto = P.U.ex(Object.create(arrayProto), {
   },
 
   /**
-   * Does the same as the {@link ProAct.Array#join} method, but the result is a {{#crossLink "ProAct.Property"}}{{/crossLink}} depending on changes on <i>this</i> ProAct.Array.
+   * Does the same as the {{#crossLink "ProAct.Array/join:method"}}{{/crossLink}} method, but the result is a {{#crossLink "ProAct.Property"}}{{/crossLink}} depending on changes on <i>this</i> `ProAct.Array`.
    *
-   * @memberof ProAct.Array
+   * @for ProAct.Array
    * @instance
    * @method pjoin
    * @param {String} separator
-   *      Specifies a string to separate each element of the ProAct.
+   *      Specifies a string to separate each element of the `ProAct`.
    *      The separator is converted to a string if necessary.
    *      <p>
    *       If omitted, the ProAct.Array elements are separated with a comma.
    *      </p>
    * @return {ProAct.Property}
-   *      A {{#crossLink "ProAct.Property"}}{{/crossLink}} instance with value : string representation of all the elements in <i>this</i> ProAct.Array, separated by the provided <i>separator</i>.
+   *      A {{#crossLink "ProAct.Property"}}{{/crossLink}} instance with value : string representation of all the elements in <i>this</i> `ProAct.Array`, separated by the provided <i>separator</i>.
    */
   pjoin: function (separator) {
     var reduced = this.preduce(function (i, el) {
@@ -691,12 +691,11 @@ ProAct.Array.prototype = pArrayProto = P.U.ex(Object.create(arrayProto), {
    *  This method adds the {{#crossLink "ProAct/currentCaller:property"}}{{/crossLink}} as a listener to both 'index' type and 'length' type of changes.
    * </p>
    *
-   * @memberof ProAct.Array
+   * @for ProAct.Array
    * @instance
    * @method toLocaleString
    * @return {String}
    *      Locale-specific string representing the elements of <i>this</i> ProAct.Array.
-   * @see {@link ProAct.ArrayCore#addCaller}
    */
   toLocaleString: function () {
     this.core.addCaller();
