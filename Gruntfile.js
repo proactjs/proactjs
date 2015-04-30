@@ -204,7 +204,7 @@ module.exports = function(grunt) {
           'properties/proxy_property',
           'properties/property_provider',
           'properties/object_core',
-          'cores/array_core',
+          'arrays/array_core',
           'arrays/array',
           'arrays/listeners',
           'objects/prob',
