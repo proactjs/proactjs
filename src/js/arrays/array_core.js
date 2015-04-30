@@ -1,21 +1,30 @@
 /**
+ * The `proact-arrays` module provides reactive arrays.
+ * All the modification operations over arrays, like `push` for example could be listened to.
+ *
+ *
+ * @module proact-arrays
+ * @main proact-arrays
+ */
+
+/**
  * <p>
- *  Constructs a ProAct.ArrayCore. ProAct.ArrayCore is a {@link ProAct.Core} that manages all the updates/listeners for an ProAct.Array.
+ *  Constructs a `ProAct.ArrayCore`. `ProAct.ArrayCore` is a {{#crossLink "ProAct.Core"}}{{/crossLink}} that manages all the updates/listeners for an `ProAct.Array`.
  * </p>
  * <p>
  *  It is responsible for updating length or index listeners and adding the right ones on read.
  * </p>
  * <p>
- *  ProAct.ArrayCore is part of the arrays module of ProAct.js.
+ *  `ProAct.ArrayCore` is part of the `proact-arrays` module of ProAct.js.
  * </p>
  *
  * @class ProAct.ArrayCore
+ * @constructor
  * @extends ProAct.Core
  * @param {Object} array
- *      The shell {@link ProAct.Array} arround this core.
+ *      The shell {{#crossLink "ProAct.Array"}}{{/crossLink}} arround this core.
  * @param {Object} meta
  *      Optional meta data to be used to define the observer-observable behavior of the <i>array</i>.
- * @see {@link ProAct.Array}
  */
 ProAct.ArrayCore = P.AC = function (array, meta) {
   P.C.call(this, array, meta); // Super!

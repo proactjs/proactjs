@@ -1,10 +1,5 @@
 /**
- * The `proact-arrays` module provides reactive arrays.
- * All the modification operations over arrays, like `push` for example could be listened to.
- *
- *
  * @module proact-arrays
- * @main proact-arrays
  */
 
 /**

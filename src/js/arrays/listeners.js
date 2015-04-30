@@ -853,16 +853,16 @@ ProAct.Array.Listeners = P.A.L = pArrayLs = {
 
   /**
    * Generates a listener that can be attached to an {{#crossLink "ProAct.Array"}}{{/crossLink}} on which
-   * the method {@link ProAct.Array#slice} is invoked.
+   * the method {{#crossLink "ProAct.Array/slice:method"}}{{/crossLink}} is invoked.
    * <p>
-   *  The result of the {@link ProAct.Array#slice} method is another {{#crossLink "ProAct.Array"}}{{/crossLink}}, dependent on the <i>original</i> one.
+   *  The result of the {{#crossLink "ProAct.Array/slice:method"}}{{/crossLink}} method is another {{#crossLink "ProAct.Array"}}{{/crossLink}}, dependent on the <i>original</i> one.
    * </p>
    * <p>
    *  For example if the original was:
    *  <pre>
    *    var a = new ProAct.Array([1, 3, 5]);
    *  </pre>
-   *  and we invoked {@link ProAct.Array#slice} on it like this:
+   *  and we invoked {{#crossLink "ProAct.Array/slice:method"}}{{/crossLink}} on it like this:
    *  <pre>
    *    var b = a.slice(1); // b is [3, 5]
    *  </pre>
@@ -876,15 +876,14 @@ ProAct.Array.Listeners = P.A.L = pArrayLs = {
    *  and it does it in an optimal way.
    * </p>
    *
-   * @memberof ProAct.Array.Listeners
+   * @for ProAct.Array.Listeners
    * @static
-   * @constant
    * @param {ProAct.Array} sliced
-   *      The array created as a result of invoking {@link ProAct.Array#slice} on the <i>original</i> {{#crossLink "ProAct.Array"}}{{/crossLink}}.
+   *      The array created as a result of invoking {{#crossLink "ProAct.Array/slice:method"}}{{/crossLink}} on the <i>original</i> {{#crossLink "ProAct.Array"}}{{/crossLink}}.
    * @param {ProAct.Array} original
-   *      The {{#crossLink "ProAct.Array"}}{{/crossLink}} on which {@link ProAct.Array#slice} was invoked.
+   *      The {{#crossLink "ProAct.Array"}}{{/crossLink}} on which {{#crossLink "ProAct.Array/slice:method"}}{{/crossLink}} was invoked.
    * @param {Array} args
-   *      The arguments passed to {@link ProAct.Array#slice}, when it was invoked on the <i>original</i> {{#crossLink "ProAct.Array"}}{{/crossLink}}
+   *      The arguments passed to {{#crossLink "ProAct.Array/slice:method"}}{{/crossLink}}, when it was invoked on the <i>original</i> {{#crossLink "ProAct.Array"}}{{/crossLink}}
    * @return {Function}
    *      A listener for events from the <i>original</i> {{#crossLink "ProAct.Array"}}{{/crossLink}}, updating the <i>sliced</i> {{#crossLink "ProAct.Array"}}{{/crossLink}} on
    *      every new event, if it is necessary.
