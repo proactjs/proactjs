@@ -38,29 +38,28 @@ ProAct.ArrayCore.prototype = P.U.ex(Object.create(P.C.prototype), {
   /**
    * Reference to the constructor of this object.
    *
-   * @memberof ProAct.ArrayCore
-   * @instance
-   * @constant
-   * @default ProAct.ArrayCore
+   * @property constructor
+   * @type ProAct.ArrayCore
+   * @final
+   * @for ProAct.ArrayCore
    */
   constructor: ProAct.ArrayCore,
 
   /**
    * Generates function wrapper around a normal function which sets
-   * the {@link ProAct.ArrayCore#indexListener} of the index calling the function.
+   * the {{#crossLink "ProAct.ArrayCore/indexListener:method"}}{{/crossLink}} of the index calling the function.
    * <p>
    *  This is used if the array is complex - contains other ProAct.js objects, and there should be special
    *  updates for their elements/properties.
    * </p>
    *
-   * @memberof ProAct.ArrayCore
+   * @for ProAct.ArrayCore
    * @instance
    * @method actionFunction
    * @param {Function} fun
    *      The source function.
    * @return {Function}
    *      The action function wrapper.
-   * @see {@link ProAct.ArrayCore#indexListener}
    */
   actionFunction: function (fun) {
     var core = this;
