@@ -87,8 +87,9 @@ ProAct.ArrayCore.prototype = P.U.ex(Object.create(P.C.prototype), {
    *  So this way we can listen for stuff like array.[].foo - the foo property change for every element in the array.
    * </p>
    *
-   * @memberof ProAct.ArrayCore
+   * @for ProAct.ArrayCore
    * @instance
+   * @protected
    * @method indexListener
    * @param {Number} i
    *      The index.
@@ -117,7 +118,7 @@ ProAct.ArrayCore.prototype = P.U.ex(Object.create(P.C.prototype), {
   },
 
   /**
-   * Creates the <i>listener</i> of this ProAct.ArrayCore.
+   * Creates the <i>listener</i> of this `ProAct.ArrayCore`.
    * <p>
    *  The right array typed events can change this' shell (array).
    * </p>
@@ -130,8 +131,9 @@ ProAct.ArrayCore.prototype = P.U.ex(Object.create(P.C.prototype), {
    *  to the shell.
    * </p>
    *
-   * @memberof ProAct.Actor
+   * @for ProAct.Actor
    * @instance
+   * @protected
    * @method makeListener
    * @return {Object}
    *      The <i>listener of this ArrayCore</i>.
@@ -218,7 +220,8 @@ ProAct.ArrayCore.prototype = P.U.ex(Object.create(P.C.prototype), {
    *  </pre>
    * </p>
    *
-   * @memberof ProAct.ArrayCore
+   * @for ProAct.ArrayCore
+   * @protected
    * @instance
    * @method defaultListeners
    * @return {Object}
