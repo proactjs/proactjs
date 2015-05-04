@@ -1,4 +1,12 @@
 /**
+ * The `proact-dsl` module provides DSL for creating and managing different ProAct objects.
+ *
+ *
+ * @module proact-dsl
+ * @main proact-dsl
+ */
+
+/**
  * <p>
  *  Constructs a ProAct.Registry. It is used to store/create objects that can be referenced or configured using the {@link ProAct.DSL}.
  * </p>
