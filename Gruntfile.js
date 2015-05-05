@@ -145,8 +145,8 @@ module.exports = function(grunt) {
         'src/js/arrays/array.js',
         'src/js/arrays/listeners.js',
         'src/js/properties/property.js',
-        'src/js/registry/registry.js',
-        'src/js/registry/provider.js'
+        'src/js/dsl/registry.js',
+        'src/js/dsl/provider.js'
       ]
     },
 
@@ -208,9 +208,9 @@ module.exports = function(grunt) {
           'arrays/array',
           'arrays/listeners',
           'objects/prob',
-          'registry/registry',
-          'registry/dsl',
-          'registry/provider',
+          'dsl/registry',
+          'dsl/dsl',
+          'dsl/provider',
         ],
         args = this.args, customFiles = [], index, i = -1;
 
