@@ -31,9 +31,9 @@ module.exports = function(karma) {
       'src/js/arrays/array.js',
       'src/js/arrays/listeners.js',
       'src/js/objects/prob.js',
-      'src/js/registry/registry.js',
-      'src/js/registry/dsl.js',
-      'src/js/registry/provider.js',
+      'src/js/dsl/registry.js',
+      'src/js/dsl/dsl.js',
+      'src/js/dsl/provider.js',
       'spec/spec_helper.js',
       'spec/unit/**/*.spec.js',
       'spec/integration/**/*.spec.js'
