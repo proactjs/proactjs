@@ -28,28 +28,27 @@ ProAct.Registry.prototype = rProto = {
   /**
    * Reference to the constructor of this object.
    *
-   * @memberof ProAct.Registry
-   * @instance
-   * @constant
-   * @default ProAct.Registry
+   * @property constructor
+   * @type ProAct.Registry
+   * @final
+   * @for ProAct.Registry
    */
   constructor: ProAct.Registry,
 
   /**
-   * Registers a {@link ProAct.Registry.Provider} for the passed <i>namespace</i> in the registry.
+   * Registers a {{#crossLink "ProAct.Registry.Provider"}}{{/crossLink}} for the passed <i>namespace</i> in the registry.
    *
-   * @memberof ProAct.Registry
+   * @for ProAct.Registry
    * @instance
    * @method register
    * @param {String} namespace
    *      The namespace to register the <i>provider</i> in.
    * @param {ProAct.Registry.Provider} provider
-   *      The {@link ProAct.Registry.Provider} to register.
+   *      The {{#crossLink "ProAct.Registry.Provider"}}{{/crossLink}} to register.
    * @return {ProAct.Registers}
    *      <i>this</i>
    * @throws {Error}
-   *      If a {@link ProAct.Registry.Provider} is already registered for the passed <i>namespace</i>.
-   * @see {@link ProAct.Registry.Provider}
+   *      If a {{#crossLink "ProAct.Registry.Provider"}}{{/crossLink}} is already registered for the passed <i>namespace</i>.
    */
   register: function (namespace, provider) {
     if (this.providers[namespace]) {
@@ -63,10 +62,10 @@ ProAct.Registry.prototype = rProto = {
   },
 
   /**
-   * Retrieves the right {@link ProAct.Registry.Provider} using the <i>name</i> of stored
+   * Retrieves the right {{#crossLink "ProAct.Registry.Provider"}}{{/crossLink}} using the <i>name</i> of stored
    * in <i>this</i> ProAct.Registry object, or the <i>name</i> of an object to be stored
    *
-   * @memberof ProAct.Registry
+   * @for ProAct.Registry
    * @instance
    * @method getProviderByName
    * @param {String} name
@@ -75,10 +74,10 @@ ProAct.Registry.prototype = rProto = {
    *        It must be in the format '{namespace}:{key}'.
    *      </p>
    *      <p>
-   *        Here the namespace is the namespace the {@link ProAct.Registry.Provider} manages.
+   *        Here the namespace is the namespace the {{#crossLink "ProAct.Registry.Provider"}}{{/crossLink}} manages.
    *      </p>
    * @return {Array}
-   *      The first element in the result is the {@link ProAct.Registry.Provider} or undefined if not found.
+   *      The first element in the result is the {{#crossLink "ProAct.Registry.Provider"}}{{/crossLink}} or undefined if not found.
    *      <p>
    *        The second one is the <b>key</b> at which an object is stored or will be stored in the provider.
    *      </p>
@@ -86,7 +85,6 @@ ProAct.Registry.prototype = rProto = {
    *        The third element is an array with options for storing/creating an object passed to the provider using
    *        the <i>name</i> string.
    *      </p>
-   * @see {@link ProAct.Registry.Provider}
    */
   getProviderByName: function (name) {
     var parts = name.split(':');
@@ -100,7 +98,7 @@ ProAct.Registry.prototype = rProto = {
    *  Example usage:
    * </p>
    * <p>
-   *  A {@link ProAct.Stream} is passed to the registry for setup with DSL data.
+   *  A {{#crossLink "ProAct.Stream"}}{{/crossLink}} is passed to the registry for setup with DSL data.
    * </p>
    * <p>
    *  The data passed through the <i>options</i> parameter is
@@ -117,8 +115,8 @@ ProAct.Registry.prototype = rProto = {
    *  </pre>
    * </p>
    * <p>
-   *  This means that a {@link ProAct.Stream} stored in <i>this</i> registry by the key 'foo' should be set
-   *  as a source to the passed as the <i>object</i> parameter simple {@link ProAct.Stream}.
+   *  This means that a {{#crossLink "ProAct.Stream"}}{{/crossLink}} stored in <i>this</i> registry by the key 'foo' should be set
+   *  as a source to the passed as the <i>object</i> parameter simple {{#crossLink "ProAct.Stream"}}{{/crossLink}}.
    * </p>
    * <p>
    *  It also means that for every value comming in the <i>object</i> parameter's stream there should be mapping of negativity and
@@ -128,7 +126,7 @@ ProAct.Registry.prototype = rProto = {
    *  So if we trigger in the 'foo' stream the value of <b>4</b> in our stream we will get <b>-4</b>, and if we trigger 5, we won't get anything.
    * </p>
    *
-   * @memberof ProAct.Registry
+   * @for ProAct.Registry
    * @instance
    * @method setup
    * @param {Object} object
@@ -136,11 +134,9 @@ ProAct.Registry.prototype = rProto = {
    * @param {String|Object} options
    *      A {{#crossLink "ProAct.DSL"}}{{/crossLink}} data object or string used to setup the object.
    * @param {Array} args
-   *      Arguments to be used by the {@link ProAct.DSL#run} method while configuring the passed <i>object</i>.
+   *      Arguments to be used by the {{#crossLink "ProAct.DSL/run:method"}}{{/crossLink}} method while configuring the passed <i>object</i>.
    * @return {Object}
    *      Ready to strore object.
-   * @see {{#crossLink "ProAct.DSL"}}{{/crossLink}}
-   * @see {@link ProAct.DSL#run}
    */
   setup: function (object, options, args) {
     return dsl.run.apply(null, [object, options, this].concat(args));
@@ -170,9 +166,9 @@ ProAct.Registry.prototype = rProto = {
    * @param {String|Object} options
    *      A {{#crossLink "ProAct.DSL"}}{{/crossLink}} data object or string used to setup the object to be created.
    * @param [...]
-   *      <b>Arguments</b> to be used by the {@link ProAct.DSL#run} method while configuring the newly created <i>object</i>.
+   *      <b>Arguments</b> to be used by the {{#crossLink "ProAct.DSL/run:method"}}{{/crossLink}} method while configuring the newly created <i>object</i>.
    * @return {Object}
-   *      The newly created, stored and configured object, or null if there was no {@link ProAct.Registry.Provider} register for its type.
+   *      The newly created, stored and configured object, or null if there was no {{#crossLink "ProAct.Registry.Provider"}}{{/crossLink}} register for its type.
    * @see {{#crossLink "ProAct.DSL"}}{{/crossLink}}
    * @see {@link ProAct.Registry#getProviderByName}
    * @see {@link ProAct.Registry#setup}
@@ -196,7 +192,7 @@ ProAct.Registry.prototype = rProto = {
    *  {@link ProAct.Registry#getProviderByName} is used to locate the right provider to store the object to.
    * </p>
    *
-   * @memberof ProAct.Registry
+   * @for ProAct.Registry
    * @instance
    * @method store
    * @param {String} name
@@ -209,11 +205,9 @@ ProAct.Registry.prototype = rProto = {
    * @param {String|Object} options
    *      A {{#crossLink "ProAct.DSL"}}{{/crossLink}} data object or string used to setup the object to be stored (optional).
    * @param [...]
-   *      <b>Arguments</b> to be used by the {@link ProAct.DSL#run} method while configuring the <i>object</i>.
+   *      <b>Arguments</b> to be used by the {{#crossLink "ProAct.DSL/run:method"}}{{/crossLink}} method while configuring the <i>object</i>.
    * @return {Object}
-   *      The stored and configured object, or null if there was no {@link ProAct.Registry.Provider} register for its type.
-   * @see {{#crossLink "ProAct.DSL"}}{{/crossLink}}
-   * @see {@link ProAct.Registry#getProviderByName}
+   *      The stored and configured object, or null if there was no {{#crossLink "ProAct.Registry.Provider"}}{{/crossLink}} register for its type.
    */
   store: function (name, object, options) {
     var args = slice.call(arguments, 2),
@@ -240,8 +234,7 @@ ProAct.Registry.prototype = rProto = {
    *        It must be in the format '{namespace}:{key}'
    *      </p>
    * @return {Object}
-   *      The stored object, or null if there was no {@link ProAct.Registry.Provider} register for its type or no object registered for the passed <i>name</i>.
-   * @see {@link ProAct.Registry#getProviderByName}
+   *      The stored object, or null if there was no {{#crossLink "ProAct.Registry.Provider"}}{{/crossLink}} register for its type or no object registered for the passed <i>name</i>.
    */
   get: function (name) {
     var p = this.getProviderByName(name);
