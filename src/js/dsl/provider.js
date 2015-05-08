@@ -1,3 +1,7 @@
+/**
+ * @module proact-dsl
+ */
+
 function Provider () {
   this.stored = {};
 }

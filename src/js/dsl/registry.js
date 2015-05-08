@@ -146,16 +146,16 @@ ProAct.Registry.prototype = rProto = {
    * Creates a new object and stores it in <i>this</i> registry, using the right provider for the creation
    * and configuring it using the DSL passed through the <i>options</i> parameter.
    * <p>
-   *  {@link ProAct.Registry#getProviderByName} is used to locate the right provider to create the object with.
+   *  {{#crossLink "ProAct.Registry/getProviderByName:method"}}{{/crossLink}} is used to locate the right provider to create the object with.
    * </p>
    * <p>
-   *  {@link ProAct.Registry#setup} is used to setup the newly created object using the {{#crossLink "ProAct.DSL"}}{{/crossLink}}
+   *  {{#crossLink "ProAct.Registry/setup:method"}}{{/crossLink}} is used to setup the newly created object using the {{#crossLink "ProAct.DSL"}}{{/crossLink}}
    * </p>
    * <p>
-   *  The idea of this method is to create and configure {@link ProAct.Actor} objects.
+   *  The idea of this method is to create and configure {{#crossLink "ProAct.Actor"}}{{/crossLink}} objects.
    * </p>
    *
-   * @memberof ProAct.Registry
+   * @for ProAct.Registry
    * @instance
    * @method make
    * @param {String} name
@@ -169,10 +169,6 @@ ProAct.Registry.prototype = rProto = {
    *      <b>Arguments</b> to be used by the {{#crossLink "ProAct.DSL/run:method"}}{{/crossLink}} method while configuring the newly created <i>object</i>.
    * @return {Object}
    *      The newly created, stored and configured object, or null if there was no {{#crossLink "ProAct.Registry.Provider"}}{{/crossLink}} register for its type.
-   * @see {{#crossLink "ProAct.DSL"}}{{/crossLink}}
-   * @see {@link ProAct.Registry#getProviderByName}
-   * @see {@link ProAct.Registry#setup}
-   * @see {@link ProAct.Actor}
    */
   make: function (name, options) {
     var args = slice.call(arguments, 2),
@@ -189,7 +185,7 @@ ProAct.Registry.prototype = rProto = {
   /**
    * Stores an object  in <i>this</i> registry, using the right provider to configure it using the DSL passed through the <i>options</i> parameter.
    * <p>
-   *  {@link ProAct.Registry#getProviderByName} is used to locate the right provider to store the object to.
+   *  {{#crossLink "ProAct.Registry/getProviderByName:method"}}{{/crossLink}} is used to locate the right provider to store the object to.
    * </p>
    *
    * @for ProAct.Registry
@@ -222,10 +218,10 @@ ProAct.Registry.prototype = rProto = {
   /**
    * Retrieves an object, stored <i>this</i> registry.
    * <p>
-   *  {@link ProAct.Registry#getProviderByName} is used to locate the right provider to retrieve the object from.
+   *  {{#crossLink "ProAct.Registry/getProviderByName:method"}}{{/crossLink}} is used to locate the right provider to retrieve the object from.
    * </p>
    *
-   * @memberof ProAct.Registry
+   * @for ProAct.Registry
    * @instance
    * @method get
    * @param {String} name
@@ -246,23 +242,22 @@ ProAct.Registry.prototype = rProto = {
   },
 
   /**
-   * Helper method for transforming an array of keys of stored items in <i>this</i> ProAct.Registry to an array of the actual items.
+   * Helper method for transforming an array of keys of stored items in <i>this</i> `ProAct.Registry` to an array of the actual items.
    * <p>
    *  Mainly used by the {{#crossLink "ProAct.DSL"}}{{/crossLink}} logic.
    * </p>
    *
-   * @memberof ProAct.Registry
+   * @for ProAct.Registry
+   * @protected
    * @instance
    * @method toObjectArray
    * @param {Array} array
-   *      Array of string keys to objects stored in <i>this</i> registry to be retrieved using {@link ProAct.Registry#toObject}.
+   *      Array of string keys to objects stored in <i>this</i> registry to be retrieved using {{#crossLink "ProAct.Registry/toObject:method"}}{{/crossLink}}.
    *      <p>
    *        If object is not stored on some key, the key itself is returned in the same possition in the result array.
    *      </p>
    * @return {Array}
    *      Of the retrieved objects, in the same order as the keys.
-   * @see {@link ProAct.Registry#toObject}
-   * @see {{#crossLink "ProAct.DSL"}}{{/crossLink}}
    */
   toObjectArray: function (array) {
     var self = this;
@@ -275,13 +270,14 @@ ProAct.Registry.prototype = rProto = {
   },
 
   /**
-   * Helper method for transforming a key of stored item in <i>this</i> ProAct.Registry to the actual item or returning the key, if
-   * the item is not found in the ProAct.Registry.
+   * Helper method for transforming a key of stored item in <i>this</i> `ProAct.Registry` to the actual item or returning the key, if
+   * the item is not found in the `ProAct.Registry`.
    * <p>
    *  Mainly used by the {{#crossLink "ProAct.DSL"}}{{/crossLink}} logic.
    * </p>
    *
-   * @memberof ProAct.Registry
+   * @for ProAct.Registry
+   * @protected
    * @instance
    * @method toObject
    * @param {String|Object} data
@@ -291,8 +287,6 @@ ProAct.Registry.prototype = rProto = {
    *      </p>
    * @return {Object}
    *      Stored object, if found using the passed <i>data</i> or the <i>data</i> itself.
-   * @see {{#crossLink "ProAct.DSL"}}{{/crossLink}}
-   * @see {@link ProAct.Registry#get}
    */
   toObject: function (data) {
     if (P.U.isString(data)) {
