@@ -43,13 +43,12 @@ P.U.ex(ProAct.Registry, {
   Provider: Provider,
 
   /**
-   * Constructs a ProAct.Registry.StreamProvider. The {{#crossLink "ProAct.Registry"}}{{/crossLink}} uses registered stream providers as storage for {@link ProAct.Stream}s.
+   * Constructs a `ProAct.Registry.StreamProvider`. The {{#crossLink "ProAct.Registry"}}{{/crossLink}} uses registered stream providers as storage for {{#crossLink "ProAct.Stream"}}{{/crossLink}}s.
    *
-   * @class ProAct.Registry.StreamProvider
+   * @namespace ProAct.Registry
+   * @class StreamProvider
    * @extends ProAct.Registry.Provider
-   * @memberof ProAct.Registry
    * @static
-   * @see {{#crossLink "ProAct.Registry"}}{{/crossLink}}
    */
   StreamProvider: StreamProvider,
 
@@ -283,7 +282,7 @@ ProAct.Registry.StreamProvider.prototype = P.U.ex(Object.create(P.R.Provider.pro
   types: {
 
     /**
-     * Constructs a simple {@link ProAct.Stream}
+     * Constructs a simple {{#crossLink "ProAct.Stream"}}{{/crossLink}}
      * <p>
      *  <pre>
      *    return new ProAct.Stream();
@@ -294,8 +293,7 @@ ProAct.Registry.StreamProvider.prototype = P.U.ex(Object.create(P.R.Provider.pro
      * @instance
      * @method basic
      * @return {ProAct.Stream}
-     *      An isntance of {@link ProAct.Stream}.
-     * @see {@link ProAct.Stream}
+     *      An isntance of {{#crossLink "ProAct.Stream"}}{{/crossLink}}.
      */
     basic: function (args) { return P.stream(undefined, undefined, undefined, args[0]); },
 
