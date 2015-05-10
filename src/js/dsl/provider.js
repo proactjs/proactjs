@@ -27,34 +27,34 @@ function streamConstructArgs (args) {
 P.U.ex(ProAct.Registry, {
 
   /**
-   * Constructs a ProAct.Registry.Provider. The {@link ProAct.Registry} uses registered providers as storage for different objects.
+   * Constructs a `ProAct.Registry.Provider`.
+   * The {{#crossLink "ProAct.Registry"}}{{/crossLink}} uses registered providers as storage for different objects.
    * <p>
-   *  Every provider has one or more namespaces in the {@link ProAct.Registry} it is registered to.
+   *  Every provider has one or more namespaces in the {{#crossLink "ProAct.Registry"}}{{/crossLink}} it is registered to.
    * </p>
    * <p>
    *  Every provider knows how to store its type of obects, how to make them, or delete them.
    * </p>
    *
-   * @class ProAct.Registry.Provider
-   * @memberof ProAct.Registry
+   * @namespace ProAct.Registry
+   * @class Provider
    * @static
-   * @see {@link ProAct.Registry}
    */
   Provider: Provider,
 
   /**
-   * Constructs a ProAct.Registry.StreamProvider. The {@link ProAct.Registry} uses registered stream providers as storage for {@link ProAct.Stream}s.
+   * Constructs a ProAct.Registry.StreamProvider. The {{#crossLink "ProAct.Registry"}}{{/crossLink}} uses registered stream providers as storage for {@link ProAct.Stream}s.
    *
    * @class ProAct.Registry.StreamProvider
    * @extends ProAct.Registry.Provider
    * @memberof ProAct.Registry
    * @static
-   * @see {@link ProAct.Registry}
+   * @see {{#crossLink "ProAct.Registry"}}{{/crossLink}}
    */
   StreamProvider: StreamProvider,
 
   /**
-   * Constructs a ProAct.Registry.FunctionProvider. The {@link ProAct.Registry} uses registered function providers as storage for Functions.
+   * Constructs a ProAct.Registry.FunctionProvider. The {{#crossLink "ProAct.Registry"}}{{/crossLink}} uses registered function providers as storage for Functions.
    * <p>
    *  The function provider doesn't have implementation for creation of new functions, only for storing, readin and removing them.
    * </p>
@@ -63,19 +63,19 @@ P.U.ex(ProAct.Registry, {
    * @extends ProAct.Registry.Provider
    * @memberof ProAct.Registry
    * @static
-   * @see {@link ProAct.Registry}
+   * @see {{#crossLink "ProAct.Registry"}}{{/crossLink}}
    */
   FunctionProvider: FunctionProvider,
 
   /**
    * Constructs a ProAct.Registry.ProObjectProvider.
-   * The {@link ProAct.Registry} uses registered function providers as storage for objects with reactive {@link ProAct.Property} instances.
+   * The {{#crossLink "ProAct.Registry"}}{{/crossLink}} uses registered function providers as storage for objects with reactive {@link ProAct.Property} instances.
    *
    * @class ProAct.Registry.ProObjectProvider
    * @extends ProAct.Registry.Provider
    * @memberof ProAct.Registry
    * @static
-   * @see {@link ProAct.Registry}
+   * @see {{#crossLink "ProAct.Registry"}}{{/crossLink}}
    * @see {@link ProAct.Property}
    */
   ProObjectProvider: ProObjectProvider
@@ -164,7 +164,7 @@ ProAct.Registry.Provider.prototype = {
   },
 
   /**
-   * A callback called by the {@link ProAct.Registry} when <i>this</i> ProAct.Registry.Provider is registered.
+   * A callback called by the {{#crossLink "ProAct.Registry"}}{{/crossLink}} when <i>this</i> ProAct.Registry.Provider is registered.
    *
    * @memberof ProAct.Registry.Provider
    * @instance
@@ -258,9 +258,9 @@ ProAct.Registry.StreamProvider.prototype = P.U.ex(Object.create(P.R.Provider.pro
   constructor: ProAct.Registry.StreamProvider,
 
   /**
-   * A callback called by the {@link ProAct.Registry} when <i>this</i> ProAct.Registry.StreamProvider is registered.
+   * A callback called by the {{#crossLink "ProAct.Registry"}}{{/crossLink}} when <i>this</i> ProAct.Registry.StreamProvider is registered.
    * <p>
-   *  It adds the methods <i>s</i> and <i>stream</i> to the {@link ProAct.Registry}, which are aliases of <i>this</i>' {@link ProAct.Registry.StreamProvider#get} method.
+   *  It adds the methods <i>s</i> and <i>stream</i> to the {{#crossLink "ProAct.Registry"}}{{/crossLink}}, which are aliases of <i>this</i>' {@link ProAct.Registry.StreamProvider#get} method.
    * </p>
    *
    * @memberof ProAct.Registry.StreamProvider
@@ -500,12 +500,12 @@ ProAct.Registry.ProObjectProvider.prototype = P.U.ex(Object.create(P.R.Provider.
   constructor: ProAct.Registry.ProObjectProvider,
 
   /**
-   * A callback called by the {@link ProAct.Registry} when <i>this</i> ProAct.Registry.ProObjectProvider is registered.
+   * A callback called by the {{#crossLink "ProAct.Registry"}}{{/crossLink}} when <i>this</i> ProAct.Registry.ProObjectProvider is registered.
    * <p>
-   *  It adds the methods <i>po</i> and <i>proObject</i> to the {@link ProAct.Registry}, which are aliases of <i>this</i>' {@link ProAct.Registry.ProObjectProvider#get} method.
+   *  It adds the methods <i>po</i> and <i>proObject</i> to the {{#crossLink "ProAct.Registry"}}{{/crossLink}}, which are aliases of <i>this</i>' {@link ProAct.Registry.ProObjectProvider#get} method.
    * </p>
    * <p>
-   *  It adds the method <i>prob</i> to the {@link ProAct.Registry}, which is alias of <i>this</i>' {@link ProAct.Registry.ProObjectProvider#make} method.
+   *  It adds the method <i>prob</i> to the {{#crossLink "ProAct.Registry"}}{{/crossLink}}, which is alias of <i>this</i>' {@link ProAct.Registry.ProObjectProvider#make} method.
    * </p>
    *
    * @memberof ProAct.Registry.StreamProvider
@@ -565,7 +565,7 @@ functionProvider = new P.R.FunctionProvider();
 proObjectProvider = new P.R.ProObjectProvider();
 
 /**
- * The {@link ProAct.Registry} instance used by ProAct's by default.
+ * The {{#crossLink "ProAct.Registry"}}{{/crossLink}} instance used by ProAct's by default.
  * <p>
  *  It has a {@link ProAct.Registry.StreamProvider} registered on the <i>s</i> namespace.
  * </p>
