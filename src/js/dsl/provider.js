@@ -38,6 +38,7 @@ P.U.ex(ProAct.Registry, {
    *
    * @namespace ProAct.Registry
    * @class Provider
+   * @constructor
    * @static
    */
   Provider: Provider,
@@ -47,35 +48,36 @@ P.U.ex(ProAct.Registry, {
    *
    * @namespace ProAct.Registry
    * @class StreamProvider
+   * @constructor
    * @extends ProAct.Registry.Provider
    * @static
    */
   StreamProvider: StreamProvider,
 
   /**
-   * Constructs a ProAct.Registry.FunctionProvider. The {{#crossLink "ProAct.Registry"}}{{/crossLink}} uses registered function providers as storage for Functions.
+   * Constructs a `ProAct.Registry.FunctionProvider`.
+   * The {{#crossLink "ProAct.Registry"}}{{/crossLink}} uses registered function providers as storage for Functions.
    * <p>
    *  The function provider doesn't have implementation for creation of new functions, only for storing, readin and removing them.
    * </p>
    *
-   * @class ProAct.Registry.FunctionProvider
+   * @namespace ProAct.Registry
+   * @class FunctionProvider
+   * @constructor
    * @extends ProAct.Registry.Provider
-   * @memberof ProAct.Registry
    * @static
-   * @see {{#crossLink "ProAct.Registry"}}{{/crossLink}}
    */
   FunctionProvider: FunctionProvider,
 
   /**
-   * Constructs a ProAct.Registry.ProObjectProvider.
-   * The {{#crossLink "ProAct.Registry"}}{{/crossLink}} uses registered function providers as storage for objects with reactive {@link ProAct.Property} instances.
+   * Constructs a `ProAct.Registry.ProObjectProvider`.
+   * The {{#crossLink "ProAct.Registry"}}{{/crossLink}} uses registered function providers as storage for objects with reactive {{#crossLink "ProAct.Property"}}{{/crossLink}} instances.
    *
-   * @class ProAct.Registry.ProObjectProvider
+   * @namespace ProAct.Registry
+   * @class ProObjectProvider
+   * @constructor
    * @extends ProAct.Registry.Provider
-   * @memberof ProAct.Registry
    * @static
-   * @see {{#crossLink "ProAct.Registry"}}{{/crossLink}}
-   * @see {@link ProAct.Property}
    */
   ProObjectProvider: ProObjectProvider
 });
