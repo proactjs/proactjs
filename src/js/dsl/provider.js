@@ -87,10 +87,10 @@ ProAct.Registry.Provider.prototype = {
   /**
    * Reference to the constructor of this object.
    *
-   * @memberof ProAct.Registry.Provider
-   * @instance
-   * @constant
-   * @default ProAct.Registry.Provider
+   * @property constructor
+   * @type ProAct.Registry.Provider
+   * @final
+   * @for ProAct.Registry.Provider
    */
   constructor: ProAct.Registry.Provider,
 
