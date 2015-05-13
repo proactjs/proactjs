@@ -95,12 +95,12 @@ ProAct.Registry.Provider.prototype = {
   constructor: ProAct.Registry.Provider,
 
   /**
-   * Creates and stores an instance of the object this ProAct.Registry.Provider manages.
+   * Creates and stores an instance of the object this `ProAct.Registry.Provider` manages.
    * <p>
-   *  For the creation is used the {@link ProAct.Registry.Provider#provide} method.
+   *  For the creation is used the {{#crossLink "ProAct.Registry.Provider/provide:method"}}{{/crossLink}} method.
    * </p>
    *
-   * @memberof ProAct.Registry.Provider
+   * @for ProAct.Registry.Provider
    * @instance
    * @method make
    * @param {String} key
@@ -111,7 +111,6 @@ ProAct.Registry.Provider.prototype = {
    *      Parameters passed to the constructor when the new instance is created.
    * @return {Object}
    *      The newly created and stored object.
-   * @see {@link ProAct.Registry.Provider#provide}
    */
   make: function (key, options) {
     var provided, args = slice.call(arguments, 1);
@@ -120,9 +119,9 @@ ProAct.Registry.Provider.prototype = {
   },
 
   /**
-   * Stores an instance of an object this ProAct.Registry.Provider manages.
+   * Stores an instance of an object this `ProAct.Registry.Provider` manages.
    *
-   * @memberof ProAct.Registry.Provider
+   * @for ProAct.Registry.Provider
    * @instance
    * @method store
    * @param {String} key
