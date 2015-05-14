@@ -136,7 +136,7 @@ ProAct.Registry.Provider.prototype = {
   /**
    * Reads a stored instance.
    *
-   * @memberof ProAct.Registry.Provider
+   * @for ProAct.Registry.Provider
    * @instance
    * @method get
    * @param {String} key
@@ -149,7 +149,7 @@ ProAct.Registry.Provider.prototype = {
   /**
    * Deletes a stored instance.
    *
-   * @memberof ProAct.Registry.Provider
+   * @for ProAct.Registry.Provider
    * @instance
    * @method delete
    * @param {String} key
@@ -164,9 +164,9 @@ ProAct.Registry.Provider.prototype = {
   },
 
   /**
-   * A callback called by the {{#crossLink "ProAct.Registry"}}{{/crossLink}} when <i>this</i> ProAct.Registry.Provider is registered.
+   * A callback called by the {{#crossLink "ProAct.Registry"}}{{/crossLink}} when <i>this</i> `ProAct.Registry.Provider` is registered.
    *
-   * @memberof ProAct.Registry.Provider
+   * @for ProAct.Registry.Provider
    * @instance
    * @abstract
    * @method registered
@@ -181,16 +181,19 @@ ProAct.Registry.Provider.prototype = {
    *  Should always have a 'basic' field for the default construction operation.
    * </p>
    *
-   * @namespace ProAct.Registry.Provider.types
-   * @memberof ProAct.Registry.Provider
-   * @static
+   *
+   * @for ProAct.Registry.Provider
+   * @namespace ProAct.Registry.Provider
+   * @class types
+   * @type Object
+   * @property types
    */
   types: {
 
     /**
      * Defines default construction logic for the managed object.
      * <p>
-     *  For example if we have a 'FooProvider', this method will be something like:
+     *  For example if we have a `FooProvider`, this method will be something like:
      *  <pre>
      *    return new Foo();
      *  </pre>
@@ -199,7 +202,7 @@ ProAct.Registry.Provider.prototype = {
      *  It is abstract and must be overridden by the extenders, or an Error will be thrown.
      * </p>
      *
-     * @memberof ProAct.Registry.Provider.types
+     * @for ProAct.Registry.Provider.types
      * @instance
      * @abstract
      * @method basic
@@ -210,13 +213,14 @@ ProAct.Registry.Provider.prototype = {
   },
 
   /**
-   * Provides a new instance of the managed by <i>this</i> ProAct.Registry.Provider object.
+   * Provides a new instance of the managed by <i>this</i> `ProAct.Registry.Provider` object.
    *
-   * @memberof ProAct.Registry.Provider
+   * @for ProAct.Registry.Provider
    * @instance
    * @method provide
    * @param {Array} options
-   *      An array containing the key of the object to create and store. It may contain data to pass to the constructor of the object.
+   *      An array containing the key of the object to create and store.
+   *      It may contain data to pass to the constructor of the object.
    * @param [...]
    *      Arguments that should be passed to the constructor.
    * @return {Object}
@@ -250,23 +254,26 @@ ProAct.Registry.StreamProvider.prototype = P.U.ex(Object.create(P.R.Provider.pro
   /**
    * Reference to the constructor of this object.
    *
-   * @memberof ProAct.Registry.StreamProvider
-   * @instance
-   * @constant
-   * @default ProAct.Registry.StreamProvider
+   * @property constructor
+   * @type ProAct.Registry.StreamProvider
+   * @final
+   * @for ProAct.Registry.StreamProvider
    */
   constructor: ProAct.Registry.StreamProvider,
 
   /**
-   * A callback called by the {{#crossLink "ProAct.Registry"}}{{/crossLink}} when <i>this</i> ProAct.Registry.StreamProvider is registered.
+   * A callback called by the {{#crossLink "ProAct.Registry"}}{{/crossLink}}
+   * when <i>this</i> `ProAct.Registry.StreamProvider` is registered.
    * <p>
-   *  It adds the methods <i>s</i> and <i>stream</i> to the {{#crossLink "ProAct.Registry"}}{{/crossLink}}, which are aliases of <i>this</i>' {@link ProAct.Registry.StreamProvider#get} method.
+   *  It adds the methods <i>s</i> and <i>stream</i> to the
+   *  {{#crossLink "ProAct.Registry"}}{{/crossLink}}, which are aliases
+   *  of <i>this</i>' {{#crossLink "ProAct.Registry.StreamProvider/get:method"}}{{/crossLink}} method.
    * </p>
    *
-   * @memberof ProAct.Registry.StreamProvider
+   * @for ProAct.Registry.StreamProvider
    * @instance
    * @method registered
-   * @param {ProAct.Registry} registery
+   * @param {ProAct.Registry} registry
    *      The registry in which <i>this</i> is being registered.
    */
   registered: function (registry) {
@@ -276,9 +283,11 @@ ProAct.Registry.StreamProvider.prototype = P.U.ex(Object.create(P.R.Provider.pro
   /**
    * An object containing all the available sub-types constructions of the managed by <i>this</i> class.
    *
-   * @namespace ProAct.Registry.StreamProvider.types
-   * @memberof ProAct.Registry.StreamProvider
-   * @static
+   * @for ProAct.Registry.StreamProvider
+   * @namespace ProAct.Registry.StreamProvider
+   * @class types
+   * @type Object
+   * @property types
    */
   types: {
 
@@ -290,7 +299,7 @@ ProAct.Registry.StreamProvider.prototype = P.U.ex(Object.create(P.R.Provider.pro
      *  </pre>
      * </p>
      *
-     * @memberof ProAct.Registry.StreamProvider.types
+     * @for ProAct.Registry.StreamProvider.types
      * @instance
      * @method basic
      * @return {ProAct.Stream}
@@ -299,21 +308,20 @@ ProAct.Registry.StreamProvider.prototype = P.U.ex(Object.create(P.R.Provider.pro
     basic: function (args) { return P.stream(undefined, undefined, undefined, args[0]); },
 
     /**
-     * Constructs a {@link ProAct.DelayedStream}
+     * Constructs a {{#crossLink "ProAct.DelayedStream"}}{{/crossLink}}
      * <p>
      *  <pre>
      *    return new ProAct.DelayedStream(delay);
      *  </pre>
      * </p>
      *
-     * @memberof ProAct.Registry.StreamProvider.types
+     * @for ProAct.Registry.StreamProvider.types
      * @instance
      * @method delayed
      * @param {Array} args
      *      An array of arguments - the first element of which is the <i>delay</i> of the stream to construct.
      * @return {ProAct.DelayedStream}
-     *      An isntance of {@link ProAct.DelayedStream}.
-     * @see {@link ProAct.DelayedStream}
+     *      An isntance of {{#crossLink "ProAct.DelayedStream"}}{{/crossLink}}.
      */
     delayed: function (args) {
       var args = streamConstructArgs(args);
