@@ -168,6 +168,7 @@ ProAct.Registry.Provider.prototype = {
    *
    * @for ProAct.Registry.Provider
    * @instance
+   * @protected
    * @abstract
    * @method registered
    * @param {ProAct.Registry} registery
@@ -203,6 +204,7 @@ ProAct.Registry.Provider.prototype = {
      * </p>
      *
      * @for ProAct.Registry.Provider.types
+     * @protected
      * @instance
      * @abstract
      * @method basic
@@ -271,6 +273,7 @@ ProAct.Registry.StreamProvider.prototype = P.U.ex(Object.create(P.R.Provider.pro
    * </p>
    *
    * @for ProAct.Registry.StreamProvider
+   * @protected
    * @instance
    * @method registered
    * @param {ProAct.Registry} registry
@@ -300,6 +303,7 @@ ProAct.Registry.StreamProvider.prototype = P.U.ex(Object.create(P.R.Provider.pro
      * </p>
      *
      * @for ProAct.Registry.StreamProvider.types
+     * @protected
      * @instance
      * @method basic
      * @return {ProAct.Stream}
@@ -316,6 +320,7 @@ ProAct.Registry.StreamProvider.prototype = P.U.ex(Object.create(P.R.Provider.pro
      * </p>
      *
      * @for ProAct.Registry.StreamProvider.types
+     * @protected
      * @instance
      * @method delayed
      * @param {Array} args
@@ -329,21 +334,21 @@ ProAct.Registry.StreamProvider.prototype = P.U.ex(Object.create(P.R.Provider.pro
     },
 
     /**
-     * Constructs a {@link ProAct.SizeBufferedStream}
+     * Constructs a {{#crossLink "ProAct.SizeBufferedStream"}}{{/crossLink}}
      * <p>
      *  <pre>
      *    return new ProAct.SizeBufferedStream(size);
      *  </pre>
      * </p>
      *
-     * @memberof ProAct.Registry.StreamProvider.types
+     * @for ProAct.Registry.StreamProvider.types
+     * @protected
      * @instance
      * @method size
      * @param {Array} args
      *      An array of arguments - the first element of which is the <i>size</i> of the stream to construct.
      * @return {ProAct.SizeBufferedStream}
-     *      An isntance of {@link ProAct.SizeBufferedStream}.
-     * @see {@link ProAct.SizeBufferedStream}
+     *      An isntance of {{#crossLink "ProAct.SizeBufferedStream"}}{{/crossLink}}.
      */
     size: function (args) {
       var args = streamConstructArgs(args);
@@ -351,21 +356,21 @@ ProAct.Registry.StreamProvider.prototype = P.U.ex(Object.create(P.R.Provider.pro
     },
 
     /**
-     * Constructs a {@link ProAct.DebouncingStream}
+     * Constructs a {{#crossLink "ProAct.DebouncingStream"}}{{/crossLink}}
      * <p>
      *  <pre>
      *    return new ProAct.DebouncingStream(delay);
      *  </pre>
      * </p>
      *
-     * @memberof ProAct.Registry.StreamProvider.types
+     * @for ProAct.Registry.StreamProvider.types
+     * @protected
      * @instance
      * @method debouncing
      * @param {Array} args
      *      An array of arguments - the first element of which is the <i>delay</i> of the stream to construct.
      * @return {ProAct.DebouncingStream}
-     *      An isntance of {@link ProAct.DebouncingStream}.
-     * @see {@link ProAct.DebouncingStream}
+     *      An isntance of {{#crossLink "ProAct.DebouncingStream"}}{{/crossLink}}.
      */
     debouncing: function (args) {
       var args = streamConstructArgs(args);
@@ -373,21 +378,21 @@ ProAct.Registry.StreamProvider.prototype = P.U.ex(Object.create(P.R.Provider.pro
     },
 
     /**
-     * Constructs a {@link ProAct.ThrottlingStream}
+     * Constructs a {{#crossLink "ProAct.ThrottlingStream"}}{{/crossLink}}
      * <p>
      *  <pre>
      *    return new ProAct.ThrottlingStream(delay);
      *  </pre>
      * </p>
      *
-     * @memberof ProAct.Registry.StreamProvider.types
+     * @for ProAct.Registry.StreamProvider.types
+     * @protected
      * @instance
      * @method throttling
      * @param {Array} args
      *      An array of arguments - the first element of which is the <i>delay</i> of the stream to construct.
      * @return {ProAct.ThrottlingStream}
-     *      An isntance of {@link ProAct.ThrottlingStream}.
-     * @see {@link ProAct.ThrottlingStream}
+     *      An isntance of {{#crossLink "ProAct.ThrottlingStream"}}{{/crossLink}}.
      */
     throttling: function (args) {
       var args = streamConstructArgs(args);
@@ -407,7 +412,6 @@ var higher = {
 
     return functions;
   },
-
   accumulator: function (functions, initial, computation) {
     return function () {
       var i, ln = functions.length, result = initial;
@@ -430,10 +434,10 @@ ProAct.Registry.FunctionProvider.prototype = P.U.ex(Object.create(P.R.Provider.p
   /**
    * Reference to the constructor of this object.
    *
-   * @memberof ProAct.Registry.FunctionProvider
-   * @instance
-   * @constant
-   * @default ProAct.Registry.FunctionProvider
+   * @property constructor
+   * @type ProAct.Registry.FunctionProvider
+   * @final
+   * @for ProAct.Registry.FunctionProvider
    */
   constructor: ProAct.Registry.FunctionProvider,
 
@@ -454,7 +458,7 @@ ProAct.Registry.FunctionProvider.prototype = P.U.ex(Object.create(P.R.Provider.p
    *  </pre>
    * </p>
    *
-   * @memberof ProAct.Registry.FunctionProvider
+   * @for ProAct.Registry.FunctionProvider
    * @instance
    * @method get
    * @param {String} key
@@ -499,24 +503,29 @@ ProAct.Registry.ProObjectProvider.prototype = P.U.ex(Object.create(P.R.Provider.
   /**
    * Reference to the constructor of this object.
    *
-   * @memberof ProAct.Registry.ProObjectProvider
-   * @instance
-   * @constant
-   * @default ProAct.Registry.ProObjectProvider
+   * @property constructor
+   * @type ProAct.Registry.ProObjectProvider
+   * @final
+   * @for ProAct.Registry.ProObjectProvider
    */
   constructor: ProAct.Registry.ProObjectProvider,
 
   /**
-   * A callback called by the {{#crossLink "ProAct.Registry"}}{{/crossLink}} when <i>this</i> ProAct.Registry.ProObjectProvider is registered.
+   * A callback called by the {{#crossLink "ProAct.Registry"}}{{/crossLink}}
+   * when <i>this</i> `ProAct.Registry.ProObjectProvider` is registered.
    * <p>
-   *  It adds the methods <i>po</i> and <i>proObject</i> to the {{#crossLink "ProAct.Registry"}}{{/crossLink}}, which are aliases of <i>this</i>' {@link ProAct.Registry.ProObjectProvider#get} method.
+   *  It adds the methods <i>po</i> and <i>proObject</i> to the {{#crossLink "ProAct.Registry"}}{{/crossLink}},
+   *  which are aliases of <i>this</i>' {{#crossLink "ProAct.Registry.ProObjectProvider/get:method"}}{{/crossLink}} method.
    * </p>
    * <p>
-   *  It adds the method <i>prob</i> to the {{#crossLink "ProAct.Registry"}}{{/crossLink}}, which is alias of <i>this</i>' {@link ProAct.Registry.ProObjectProvider#make} method.
+   *  It adds the method <i>prob</i> to the {{#crossLink "ProAct.Registry"}}{{/crossLink}},
+   *  which is alias of <i>this</i>' {{#crossLink "ProAct.Registry.ProObjectProvider/make:method"}}{{/crossLink}} method.
    * </p>
    *
-   * @memberof ProAct.Registry.StreamProvider
+   * @for ProAct.Registry.StreamProvider
+   * @protected
    * @instance
+   * @protected
    * @method registered
    * @param {ProAct.Registry} registery
    *      The registry in which <i>this</i> is being registered.
