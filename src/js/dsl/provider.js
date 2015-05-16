@@ -540,9 +540,11 @@ ProAct.Registry.ProObjectProvider.prototype = P.U.ex(Object.create(P.R.Provider.
   /**
    * An object containing all the available sub-types constructions of the managed by <i>this</i> class.
    *
-   * @namespace ProAct.Registry.ProObjectProvider.types
-   * @memberof ProAct.Registry.ProObjectProvider
-   * @static
+   * @for ProAct.Registry.ProObjectProvider
+   * @namespace ProAct.Registry.ProObjectProvider
+   * @class types
+   * @type Object
+   * @property types
    */
   types: {
     stat: function (options, value, meta) {
@@ -550,16 +552,17 @@ ProAct.Registry.ProObjectProvider.prototype = P.U.ex(Object.create(P.R.Provider.
     },
 
     /**
-     * Constructs a ProAct.js reactive object from original one, using {@link ProAct.prob}
+     * Constructs a ProAct.js reactive object from original one, using {{#crossLink "ProAct/prob:method"}}{{/crossLink}}
      * <p>
      *  <pre>
      *    return new ProAct.prob(value, meta);
      *  </pre>
      * </p>
      *
-     * @memberof ProAct.Registry.ProObjectProvider.types
+     * @for ProAct.Registry.ProObjectProvider.types
      * @instance
      * @method basic
+     * @protected
      * @param {Array} options
      *      Array containing options for the creation process.
      * @param {Object} value
@@ -568,7 +571,6 @@ ProAct.Registry.ProObjectProvider.prototype = P.U.ex(Object.create(P.R.Provider.
      *      Meta-data used to help in the reactive object creation.
      * @return {Object}
      *      A ractive object.
-     * @see {@link ProAct.prob}
      */
     basic: function (options, value, meta) {
       return P.prob(value, meta);
