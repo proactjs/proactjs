@@ -1,4 +1,8 @@
 /**
+ * @module proact-dsl
+ */
+
+/**
  * Contains {@link ProAct.DSl} operation logic definitions.
  * <p>
  *  Every operation has

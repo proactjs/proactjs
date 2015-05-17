@@ -585,20 +585,21 @@ proObjectProvider = new P.R.ProObjectProvider();
 /**
  * The {{#crossLink "ProAct.Registry"}}{{/crossLink}} instance used by ProAct's by default.
  * <p>
- *  It has a {@link ProAct.Registry.StreamProvider} registered on the <i>s</i> namespace.
+ *  It has a {{#crossLink "ProAct.Registry.StreamProvider"}}{{/crossLink}} registered on the <i>s</i> namespace.
  * </p>
  * <p>
- *  It has a {@link ProAct.Registry.ProObjectProvider} registered on the <i>po</i> and <i>obj</i> namespaces.
+ *  It has a {{#crossLink "ProAct.Registry.ProObjectProvider"}}{{/crossLink}} registered on the <i>po</i> and <i>obj</i> namespaces.
  * </p>
  * <p>
- *  It has a {@link ProAct.Registry.FunctionProvider} registered on the <i>f</i> and <i>l</i> namespaces.
+ *  It has a {{#crossLink "ProAct.Registry.FunctionProvider"}}{{/crossLink}} registered on the <i>f</i> and <i>l</i> namespaces.
  * </p>
  * <p>
  *  Override this instance or register your own providers in it to extend the ProAct.js DSL.
  * </p>
  *
+ * @property registry
  * @type ProAct.Registry
- * @memberof ProAct
+ * @for ProAct
  * @static
  */
 ProAct.registry = new P.R()
