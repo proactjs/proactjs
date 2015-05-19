@@ -3,7 +3,7 @@
  */
 
 /**
- * Contains {@link ProAct.DSl} operation logic definitions.
+ * Contains {{#crossLink "ProAct.DSL"}}{{/crossLink}} operation logic definitions.
  * <p>
  *  Every operation has
  *  <ol>
@@ -17,7 +17,9 @@
  *  </ol>
  * </p>
  *
- * @namespace ProAct.OpStore
+ * @namespace ProAct
+ * @class OpStore
+ * @static
  */
 ProAct.OpStore = {
 
