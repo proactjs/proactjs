@@ -26,9 +26,9 @@ ProAct.OpStore = {
   /**
    * Default operation definitions, that can be used by most of the operations to be defined.
    *
-   * @memberof ProAct.OpStore
+   * @namespace ProAct.OpStore
+   * @class all
    * @static
-   * @constant
    */
   all: {
 
@@ -38,7 +38,7 @@ ProAct.OpStore = {
      *  It is used for defining all the simple operations, like <i>map</i> or <i>filter</i>.
      * </p>
      *
-     * @memberof ProAct.OpStore.all
+     * @for ProAct.OpStore.all
      * @static
      * @param {String} name
      *      The name of the operation to define.
@@ -64,7 +64,6 @@ ProAct.OpStore = {
      *          </p>
      *        </li>
      *      </ol>
-     * @see {@link ProAct.DSl.predefined}
      */
     simpleOp: function(name, sym) {
       return {
@@ -164,7 +163,7 @@ opStoreAll = P.OpStore.all;
 /**
  * Contains implementation of the ProAct.js DSL.
  * <p>
- *  The idea of the DSL is to define {@link ProAct.Actor}s and their dependencies on each other in a declarative and simple way.
+ *  The idea of the DSL is to define {{#crossLink "ProAct.Actor"}}{{/crossLink}}s and their dependencies on each other in a declarative and simple way.
  * </p>
  * <p>
  *  The {@link ProAct.Registry} is used to store these actors.
@@ -211,7 +210,7 @@ ProAct.DSL = {
   ops: {
 
     /**
-     * DSL operation for defining sources of {@link ProAct.Actor}s.
+     * DSL operation for defining sources of {{#crossLink "ProAct.Actor"}}{{/crossLink}}s.
      * <p>
      *  For example
      *  <pre>
@@ -224,7 +223,7 @@ ProAct.DSL = {
      *  <pre>
      *    '<<($1)'
      *  </pre>
-     *  means that the source of the targed of the DSL should be an {@link ProAct.Actor} passed to the {@link ProAct.Dsl.run}
+     *  means that the source of the targed of the DSL should be an {{#crossLink "ProAct.Actor"}}{{/crossLink}} passed to the {@link ProAct.Dsl.run}
      *  method as the first argument after the targed object, the DSL data and the registry.
      * </p>
      *
@@ -233,13 +232,13 @@ ProAct.DSL = {
      * @constant
      * @see {@link ProAct.OpStore}
      * @see {@link ProAct.Registry}
-     * @see {@link ProAct.Actor}
+     * @see {{#crossLink "ProAct.Actor"}}{{/crossLink}}
      * @see {@link ProAct.DSL.run}
      */
     into: opStoreAll.simpleOp('into', '<<'),
 
     /**
-     * DSL operation for setting the targed of the DSL as sources of another {@link ProAct.Actor}s.
+     * DSL operation for setting the targed of the DSL as sources of another {{#crossLink "ProAct.Actor"}}{{/crossLink}}s.
      * <p>
      *  For example
      *  <pre>
@@ -252,7 +251,7 @@ ProAct.DSL = {
      *  <pre>
      *    '>>($1)'
      *  </pre>
-     *  means that the targed of the DSL should become a source for an {@link ProAct.Actor} passed to the {@link ProAct.Dsl.run}
+     *  means that the targed of the DSL should become a source for an {{#crossLink "ProAct.Actor"}}{{/crossLink}} passed to the {@link ProAct.Dsl.run}
      *  method as the first argument after the targed object, the DSL data and the registry.
      * </p>
      *
@@ -261,20 +260,20 @@ ProAct.DSL = {
      * @constant
      * @see {@link ProAct.OpStore}
      * @see {@link ProAct.Registry}
-     * @see {@link ProAct.Actor}
+     * @see {{#crossLink "ProAct.Actor"}}{{/crossLink}}
      * @see {@link ProAct.DSL.run}
      */
     out: opStoreAll.simpleOp('out', '>>'),
 
     /**
-     * DSL operation for attaching listener to the target {@link ProAct.Actor} of the DSL.
+     * DSL operation for attaching listener to the target {{#crossLink "ProAct.Actor"}}{{/crossLink}} of the DSL.
      * <p>
      *  For example
      *  <pre>
      *    '@(f:bla)'
      *  </pre>
      *  means that listener function, stored in the {@link ProAct.Registry} as 'bla'
-     *  should be attached as a listener to the targed {@link ProAct.Actor} of the DSL.
+     *  should be attached as a listener to the targed {{#crossLink "ProAct.Actor"}}{{/crossLink}} of the DSL.
      * </p>
      *
      * @memberof ProAct.DSL.ops
@@ -282,20 +281,20 @@ ProAct.DSL = {
      * @constant
      * @see {@link ProAct.OpStore}
      * @see {@link ProAct.Registry}
-     * @see {@link ProAct.Actor}
+     * @see {{#crossLink "ProAct.Actor"}}{{/crossLink}}
      * @see {@link ProAct.DSL.run}
      */
     on: opStoreAll.simpleOp('on', '@'),
 
     /**
-     * DSL operation for adding mapping to the target {@link ProAct.Actor} of the DSL.
+     * DSL operation for adding mapping to the target {{#crossLink "ProAct.Actor"}}{{/crossLink}} of the DSL.
      * <p>
      *  For example
      *  <pre>
      *    'map(f:bla)'
      *  </pre>
      *  means that mapping function, stored in the {@link ProAct.Registry} as 'bla'
-     *  should be mapped to the targed {@link ProAct.Actor} of the DSL.
+     *  should be mapped to the targed {{#crossLink "ProAct.Actor"}}{{/crossLink}} of the DSL.
      * </p>
      * <p>
      *  or
@@ -304,7 +303,7 @@ ProAct.DSL = {
      *  </pre>
      *  means that mapping function passed to the {@link ProAct.Dsl.run}
      *  method as the second argument after the targed object, the DSL data and the registry
-     *  should be mapped to the targed {@link ProAct.Actor} of the DSL.
+     *  should be mapped to the targed {{#crossLink "ProAct.Actor"}}{{/crossLink}} of the DSL.
      * </p>
      *
      * @memberof ProAct.DSL.ops
@@ -312,20 +311,20 @@ ProAct.DSL = {
      * @constant
      * @see {@link ProAct.OpStore}
      * @see {@link ProAct.Registry}
-     * @see {@link ProAct.Actor}
+     * @see {{#crossLink "ProAct.Actor"}}{{/crossLink}}
      * @see {@link ProAct.DSL.run}
      */
     mapping: opStoreAll.simpleOp('mapping', 'map'),
 
     /**
-     * DSL operation for adding filters to the target {@link ProAct.Actor} of the DSL.
+     * DSL operation for adding filters to the target {{#crossLink "ProAct.Actor"}}{{/crossLink}} of the DSL.
      * <p>
      *  For example
      *  <pre>
      *    'filter(f:bla)'
      *  </pre>
      *  means that filtering function, stored in the {@link ProAct.Registry} as 'bla'
-     *  should be add as filter to the targed {@link ProAct.Actor} of the DSL.
+     *  should be add as filter to the targed {{#crossLink "ProAct.Actor"}}{{/crossLink}} of the DSL.
      * </p>
      * <p>
      *  or
@@ -334,7 +333,7 @@ ProAct.DSL = {
      *  </pre>
      *  means that filtering function passed to the {@link ProAct.Dsl.run}
      *  method as the first argument after the targed object, the DSL data and the registry
-     *  should be added as filter to the targed {@link ProAct.Actor} of the DSL.
+     *  should be added as filter to the targed {{#crossLink "ProAct.Actor"}}{{/crossLink}} of the DSL.
      * </p>
      *
      * @memberof ProAct.DSL.ops
@@ -342,20 +341,20 @@ ProAct.DSL = {
      * @constant
      * @see {@link ProAct.OpStore}
      * @see {@link ProAct.Registry}
-     * @see {@link ProAct.Actor}
+     * @see {{#crossLink "ProAct.Actor"}}{{/crossLink}}
      * @see {@link ProAct.DSL.run}
      */
     filtering: opStoreAll.simpleOp('filtering', 'filter'),
 
     /**
-     * DSL operation for adding accumulation to the target {@link ProAct.Actor} of the DSL.
+     * DSL operation for adding accumulation to the target {{#crossLink "ProAct.Actor"}}{{/crossLink}} of the DSL.
      * <p>
      *  For example
      *  <pre>
      *    'acc($1, f:bla)'
      *  </pre>
      *  means that accumulating function, stored in the {@link ProAct.Registry} as 'bla'
-     *  should be added as accumulation to the targed {@link ProAct.Actor} of the DSL,
+     *  should be added as accumulation to the targed {{#crossLink "ProAct.Actor"}}{{/crossLink}} of the DSL,
      *  and the first argument passed to {@link ProAct.DSL.run} after the targed object, the DSL data and the registry should
      *  be used as initial value for the accumulation.
      * </p>
@@ -365,7 +364,7 @@ ProAct.DSL = {
      * @constant
      * @see {@link ProAct.OpStore}
      * @see {@link ProAct.Registry}
-     * @see {@link ProAct.Actor}
+     * @see {{#crossLink "ProAct.Actor"}}{{/crossLink}}
      * @see {@link ProAct.DSL.run}
      */
     accumulation: opStoreAll.simpleOp('accumulation', 'acc')
@@ -860,7 +859,7 @@ ProAct.DSL = {
    * Extracts DSL actions and options from an array of strings.
    * <p>
    *  Example <i>optionArray</i> is ['map($1)', 'filter(+)', @($2)'] and it will become options object of functions and arguments to
-   *  be applied on a target {@link ProAct.Actor} passed to the {@link ProAct.DSL.run} method.
+   *  be applied on a target {{#crossLink "ProAct.Actor"}}{{/crossLink}} passed to the {@link ProAct.DSL.run} method.
    * </p>
    *
    * @memberof ProAct.DSL
@@ -905,7 +904,7 @@ ProAct.DSL = {
   },
 
   /**
-   * Configures an {@link ProAct.Actor} using the DSL passed with the <i>options</i> argument.
+   * Configures an {{#crossLink "ProAct.Actor"}}{{/crossLink}} using the DSL passed with the <i>options</i> argument.
    * <p>
    *  Uses the passed {@link ProAct.Registry} to read stored values from.
    * </p>
@@ -918,7 +917,7 @@ ProAct.DSL = {
    * @param {ProAct.Actor|String|Object} options
    *      The DSL formatted options to be used for the configuration.
    *      <p>
-   *        If the value of this parameter is instance of {@link ProAct.Actor} it is set as a source to the <i>target actor</i>.
+   *        If the value of this parameter is instance of {{#crossLink "ProAct.Actor"}}{{/crossLink}} it is set as a source to the <i>target actor</i>.
    *      </p>
    *      <p>
    *        If the value ot this parameter is String - {@link ProAct.DSL.optionsFromString} is used to be turned to an options object.
@@ -950,8 +949,6 @@ ProAct.DSL = {
    *      </p>
    * @return {ProAct.Actor}
    *      The configured actor.
-   * @see {@link ProAct.DSL.optionsFromString}
-   * @see {@link ProAct.Actor}
    */
   run: function (actor, options, registry) {
     var isS = P.U.isString,
