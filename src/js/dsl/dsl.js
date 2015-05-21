@@ -161,23 +161,25 @@ ProAct.OpStore = {
 opStoreAll = P.OpStore.all;
 
 /**
- * Contains implementation of the ProAct.js DSL.
+ * Contains implementation of the `ProAct.js DSL`.
  * <p>
  *  The idea of the DSL is to define {{#crossLink "ProAct.Actor"}}{{/crossLink}}s and their dependencies on each other in a declarative and simple way.
  * </p>
  * <p>
- *  The {@link ProAct.Registry} is used to store these actors.
+ *  The {{#crossLink "ProAct.Registry"}}{{/crossLink}} is used to store these actors.
  * </p>
  * <p>
  *  For example if we want to have a stream configured to write in a property, it is very easy done using the DSL:
  *  <pre>
  *    ProAct.registry.prob('val', 0, '<<(s:data)');
  *  </pre>
- *  This tells the {@link ProAct.Registry} to create a {@link ProAct.Property} with the value of zero, and to point the previously,
+ *  This tells the {{#crossLink "ProAct.Registry"}}{{/crossLink}} to create a {{#crossLink "ProAct.Property"}}{{/crossLink}} with the value of zero, and to point the previously,
  *  stored 'data' stream to it.
  * </p>
  *
- * @namespace ProAct.DSL
+ * @namespace ProAct
+ * @class DSL
+ * @static
  */
 ProAct.DSL = {
 
@@ -216,7 +218,7 @@ ProAct.DSL = {
      *  <pre>
      *    '<<(s:bla)'
      *  </pre>
-     *  means that the source of the targed of the DSL should be a stream stored in the {@link ProAct.Registry} by the key 'bla'.
+     *  means that the source of the targed of the DSL should be a stream stored in the {{#crossLink "ProAct.Registry"}}{{/crossLink}} by the key 'bla'.
      * </p>
      * <p>
      *  or
@@ -231,7 +233,7 @@ ProAct.DSL = {
      * @static
      * @constant
      * @see {@link ProAct.OpStore}
-     * @see {@link ProAct.Registry}
+     * @see {{#crossLink "ProAct.Registry"}}{{/crossLink}}
      * @see {{#crossLink "ProAct.Actor"}}{{/crossLink}}
      * @see {@link ProAct.DSL.run}
      */
@@ -244,7 +246,7 @@ ProAct.DSL = {
      *  <pre>
      *    '>>(s:bla)'
      *  </pre>
-     *  means that the targed of the DSL should become a source for a stream stored in the {@link ProAct.Registry} by the key 'bla'.
+     *  means that the targed of the DSL should become a source for a stream stored in the {{#crossLink "ProAct.Registry"}}{{/crossLink}} by the key 'bla'.
      * </p>
      * <p>
      *  or
@@ -259,7 +261,7 @@ ProAct.DSL = {
      * @static
      * @constant
      * @see {@link ProAct.OpStore}
-     * @see {@link ProAct.Registry}
+     * @see {{#crossLink "ProAct.Registry"}}{{/crossLink}}
      * @see {{#crossLink "ProAct.Actor"}}{{/crossLink}}
      * @see {@link ProAct.DSL.run}
      */
@@ -272,7 +274,7 @@ ProAct.DSL = {
      *  <pre>
      *    '@(f:bla)'
      *  </pre>
-     *  means that listener function, stored in the {@link ProAct.Registry} as 'bla'
+     *  means that listener function, stored in the {{#crossLink "ProAct.Registry"}}{{/crossLink}} as 'bla'
      *  should be attached as a listener to the targed {{#crossLink "ProAct.Actor"}}{{/crossLink}} of the DSL.
      * </p>
      *
@@ -280,7 +282,7 @@ ProAct.DSL = {
      * @static
      * @constant
      * @see {@link ProAct.OpStore}
-     * @see {@link ProAct.Registry}
+     * @see {{#crossLink "ProAct.Registry"}}{{/crossLink}}
      * @see {{#crossLink "ProAct.Actor"}}{{/crossLink}}
      * @see {@link ProAct.DSL.run}
      */
@@ -293,7 +295,7 @@ ProAct.DSL = {
      *  <pre>
      *    'map(f:bla)'
      *  </pre>
-     *  means that mapping function, stored in the {@link ProAct.Registry} as 'bla'
+     *  means that mapping function, stored in the {{#crossLink "ProAct.Registry"}}{{/crossLink}} as 'bla'
      *  should be mapped to the targed {{#crossLink "ProAct.Actor"}}{{/crossLink}} of the DSL.
      * </p>
      * <p>
@@ -310,7 +312,7 @@ ProAct.DSL = {
      * @static
      * @constant
      * @see {@link ProAct.OpStore}
-     * @see {@link ProAct.Registry}
+     * @see {{#crossLink "ProAct.Registry"}}{{/crossLink}}
      * @see {{#crossLink "ProAct.Actor"}}{{/crossLink}}
      * @see {@link ProAct.DSL.run}
      */
@@ -323,7 +325,7 @@ ProAct.DSL = {
      *  <pre>
      *    'filter(f:bla)'
      *  </pre>
-     *  means that filtering function, stored in the {@link ProAct.Registry} as 'bla'
+     *  means that filtering function, stored in the {{#crossLink "ProAct.Registry"}}{{/crossLink}} as 'bla'
      *  should be add as filter to the targed {{#crossLink "ProAct.Actor"}}{{/crossLink}} of the DSL.
      * </p>
      * <p>
@@ -340,7 +342,7 @@ ProAct.DSL = {
      * @static
      * @constant
      * @see {@link ProAct.OpStore}
-     * @see {@link ProAct.Registry}
+     * @see {{#crossLink "ProAct.Registry"}}{{/crossLink}}
      * @see {{#crossLink "ProAct.Actor"}}{{/crossLink}}
      * @see {@link ProAct.DSL.run}
      */
@@ -353,7 +355,7 @@ ProAct.DSL = {
      *  <pre>
      *    'acc($1, f:bla)'
      *  </pre>
-     *  means that accumulating function, stored in the {@link ProAct.Registry} as 'bla'
+     *  means that accumulating function, stored in the {{#crossLink "ProAct.Registry"}}{{/crossLink}} as 'bla'
      *  should be added as accumulation to the targed {{#crossLink "ProAct.Actor"}}{{/crossLink}} of the DSL,
      *  and the first argument passed to {@link ProAct.DSL.run} after the targed object, the DSL data and the registry should
      *  be used as initial value for the accumulation.
@@ -363,7 +365,7 @@ ProAct.DSL = {
      * @static
      * @constant
      * @see {@link ProAct.OpStore}
-     * @see {@link ProAct.Registry}
+     * @see {{#crossLink "ProAct.Registry"}}{{/crossLink}}
      * @see {{#crossLink "ProAct.Actor"}}{{/crossLink}}
      * @see {@link ProAct.DSL.run}
      */
@@ -906,7 +908,7 @@ ProAct.DSL = {
   /**
    * Configures an {{#crossLink "ProAct.Actor"}}{{/crossLink}} using the DSL passed with the <i>options</i> argument.
    * <p>
-   *  Uses the passed {@link ProAct.Registry} to read stored values from.
+   *  Uses the passed {{#crossLink "ProAct.Registry"}}{{/crossLink}} to read stored values from.
    * </p>
    *
    * @memberof ProAct.DSL
