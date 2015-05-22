@@ -96,14 +96,13 @@ module.exports = function(grunt) {
             'src/js/core',
             'src/js/properties',
             'src/js/streams',
-            'src/js/arrays'
+            'src/js/arrays',
+            'src/js/dsl'
           ],
           exclude: [
-            'cores',
             'events',
             'flow',
             'objects',
-            'registry'
           ].join(','),
           outdir: 'doc',
           themedir: '../yuidoc-bootstrap-theme',
