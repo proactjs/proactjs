@@ -182,12 +182,9 @@ ProAct.Registry.Provider.prototype = {
    *  Should always have a 'basic' field for the default construction operation.
    * </p>
    *
-   *
-   * @for ProAct.Registry.Provider
    * @namespace ProAct.Registry.Provider
    * @class types
-   * @type Object
-   * @property types
+   * @static
    */
   types: {
 

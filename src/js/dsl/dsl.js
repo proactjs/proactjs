@@ -186,9 +186,10 @@ ProAct.DSL = {
   /**
    * A separator which can be used to separate multiple DSL expressions in one string.
    *
-   * @memberof ProAct.DSL
-   * @static
-   * @constant
+   * @for ProAct.DSL
+   * @type String
+   * @property separator
+   * @final
    */
   separator: '|',
 
@@ -204,10 +205,9 @@ ProAct.DSL = {
    *  </pre>
    * </p>
    *
-   * @namespace ProAct.DSL.ops
-   * @memberof ProAct.DSL
+   * @namespace ProAct.DSL
+   * @class ops
    * @static
-   * @see {@link ProAct.OpStore}
    */
   ops: {
 
@@ -229,13 +229,10 @@ ProAct.DSL = {
      *  method as the first argument after the targed object, the DSL data and the registry.
      * </p>
      *
-     * @memberof ProAct.DSL.ops
-     * @static
-     * @constant
-     * @see {@link ProAct.OpStore}
-     * @see {{#crossLink "ProAct.Registry"}}{{/crossLink}}
-     * @see {{#crossLink "ProAct.Actor"}}{{/crossLink}}
-     * @see {@link ProAct.DSL.run}
+     * @for ProAct.DSL.ops
+     * @final
+     * @property into
+     * @type Object
      */
     into: opStoreAll.simpleOp('into', '<<'),
 
@@ -263,7 +260,7 @@ ProAct.DSL = {
      * @see {@link ProAct.OpStore}
      * @see {{#crossLink "ProAct.Registry"}}{{/crossLink}}
      * @see {{#crossLink "ProAct.Actor"}}{{/crossLink}}
-     * @see {@link ProAct.DSL.run}
+     * @see {{#crossLink "ProAct.DSL/run:method"}}{{/crossLink}}
      */
     out: opStoreAll.simpleOp('out', '>>'),
 
@@ -284,7 +281,7 @@ ProAct.DSL = {
      * @see {@link ProAct.OpStore}
      * @see {{#crossLink "ProAct.Registry"}}{{/crossLink}}
      * @see {{#crossLink "ProAct.Actor"}}{{/crossLink}}
-     * @see {@link ProAct.DSL.run}
+     * @see {{#crossLink "ProAct.DSL/run:method"}}{{/crossLink}}
      */
     on: opStoreAll.simpleOp('on', '@'),
 
@@ -314,7 +311,7 @@ ProAct.DSL = {
      * @see {@link ProAct.OpStore}
      * @see {{#crossLink "ProAct.Registry"}}{{/crossLink}}
      * @see {{#crossLink "ProAct.Actor"}}{{/crossLink}}
-     * @see {@link ProAct.DSL.run}
+     * @see {{#crossLink "ProAct.DSL/run:method"}}{{/crossLink}}
      */
     mapping: opStoreAll.simpleOp('mapping', 'map'),
 
@@ -344,7 +341,7 @@ ProAct.DSL = {
      * @see {@link ProAct.OpStore}
      * @see {{#crossLink "ProAct.Registry"}}{{/crossLink}}
      * @see {{#crossLink "ProAct.Actor"}}{{/crossLink}}
-     * @see {@link ProAct.DSL.run}
+     * @see {{#crossLink "ProAct.DSL/run:method"}}{{/crossLink}}
      */
     filtering: opStoreAll.simpleOp('filtering', 'filter'),
 
@@ -357,7 +354,7 @@ ProAct.DSL = {
      *  </pre>
      *  means that accumulating function, stored in the {{#crossLink "ProAct.Registry"}}{{/crossLink}} as 'bla'
      *  should be added as accumulation to the targed {{#crossLink "ProAct.Actor"}}{{/crossLink}} of the DSL,
-     *  and the first argument passed to {@link ProAct.DSL.run} after the targed object, the DSL data and the registry should
+     *  and the first argument passed to {{#crossLink "ProAct.DSL/run:method"}}{{/crossLink}} after the targed object, the DSL data and the registry should
      *  be used as initial value for the accumulation.
      * </p>
      *
@@ -367,7 +364,7 @@ ProAct.DSL = {
      * @see {@link ProAct.OpStore}
      * @see {{#crossLink "ProAct.Registry"}}{{/crossLink}}
      * @see {{#crossLink "ProAct.Actor"}}{{/crossLink}}
-     * @see {@link ProAct.DSL.run}
+     * @see {{#crossLink "ProAct.DSL/run:method"}}{{/crossLink}}
      */
     accumulation: opStoreAll.simpleOp('accumulation', 'acc')
   },
@@ -849,7 +846,7 @@ ProAct.DSL = {
    *          }
    *        </pre>
    *      </p>
-   * @see {@link ProAct.DSL.run}
+   * @see {{#crossLink "ProAct.DSL/run:method"}}{{/crossLink}}
    * @see {@link ProAct.DSL.optionsFromArray}
    * @see {@link ProAct.DSL.separator}
    */
@@ -861,7 +858,7 @@ ProAct.DSL = {
    * Extracts DSL actions and options from an array of strings.
    * <p>
    *  Example <i>optionArray</i> is ['map($1)', 'filter(+)', @($2)'] and it will become options object of functions and arguments to
-   *  be applied on a target {{#crossLink "ProAct.Actor"}}{{/crossLink}} passed to the {@link ProAct.DSL.run} method.
+   *  be applied on a target {{#crossLink "ProAct.Actor"}}{{/crossLink}} passed to the {{#crossLink "ProAct.DSL/run:method"}}{{/crossLink}} method.
    * </p>
    *
    * @memberof ProAct.DSL
@@ -887,7 +884,6 @@ ProAct.DSL = {
    *          }
    *        </pre>
    *      </p>
-   * @see {@link ProAct.DSL.run}
    */
   optionsFromArray: function (optionArray) {
     var result = {}, i, ln = optionArray.length,
