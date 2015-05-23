@@ -384,10 +384,10 @@ ProAct.DSL = {
        *  </pre>
        * </p>
        *
-       * @memberof ProAct.DSL.predefined.mapping
-       * @static
-       * @method
-       * @see {@link ProAct.DSL.ops.map}
+       * @for ProAct.DSL.predefined.mapping
+       * @final
+       * @property -
+       * @type Function
        */
       '-': function (el) { return -el; },
 
