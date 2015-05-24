@@ -386,8 +386,12 @@ ProAct.DSL = {
        *
        * @for ProAct.DSL.predefined.mapping
        * @final
-       * @property -
-       * @type Function
+       * @static
+       * @method -
+       * @param {Number} n
+       *      The number which will have its sign inverted.
+       * @return {Number}
+       *      The same number as `n`, but with opposite sign.
        */
       '-': function (el) { return -el; },
 
@@ -565,10 +569,9 @@ ProAct.DSL = {
     /**
      * A set of predefined filtering operations to be used by the DSL.
      *
-     * @namespace ProAct.DSL.predefined.filtering
-     * @memberof ProAct.DSL.predefined
+     * @class filtering
+     * @namespace ProAct.DSL.predefined
      * @static
-     * @see {@link ProAct.DSL.ops.filtering}
      */
     filtering: {
 
@@ -728,10 +731,9 @@ ProAct.DSL = {
     /**
      * A set of predefined accumulation operations to be used by the DSL.
      *
-     * @namespace ProAct.DSL.predefined.accumulation
-     * @memberof ProAct.DSL.predefined
+     * @class accumulation
+     * @namespace ProAct.DSL.predefined
      * @static
-     * @see {@link ProAct.DSL.ops.accumulation}
      */
     accumulation: {
 
