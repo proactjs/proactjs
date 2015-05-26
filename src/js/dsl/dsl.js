@@ -407,10 +407,13 @@ ProAct.DSL = {
        *  </pre>
        * </p>
        *
-       * @memberof ProAct.DSL.predefined.mapping
+       * @for ProAct.DSL.predefined.mapping
        * @static
        * @method
-       * @see {@link ProAct.DSL.ops.map}
+       * @param {Number} n
+       *      The number to power.
+       * @return {Number}
+       *      The square of `n`.
        */
       'pow': function (el) { return el * el; },
 
