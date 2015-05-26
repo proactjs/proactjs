@@ -429,10 +429,13 @@ ProAct.DSL = {
        *  </pre>
        * </p>
        *
-       * @memberof ProAct.DSL.predefined.mapping
+       * @for ProAct.DSL.predefined.mapping
        * @static
        * @method
-       * @see {@link ProAct.DSL.ops.map}
+       * @param {Number} n
+       *      The number to compute the square root for.
+       * @return {Number}
+       *      The square root of `n`.
        */
       'sqrt': function (el) { return Math.sqrt(el); },
 
