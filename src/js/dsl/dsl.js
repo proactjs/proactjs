@@ -409,7 +409,7 @@ ProAct.DSL = {
        *
        * @for ProAct.DSL.predefined.mapping
        * @static
-       * @method
+       * @method pow
        * @param {Number} n
        *      The number to power.
        * @return {Number}
@@ -431,7 +431,7 @@ ProAct.DSL = {
        *
        * @for ProAct.DSL.predefined.mapping
        * @static
-       * @method
+       * @method sqrt
        * @param {Number} n
        *      The number to compute the square root for.
        * @return {Number}
@@ -440,7 +440,7 @@ ProAct.DSL = {
       'sqrt': function (el) { return Math.sqrt(el); },
 
       /**
-       * Mapping operation for turning an object to a decimal Number - integer.
+       * Mapping operation for turning an string to a decimal Number - integer.
        * <p>
        *  For example '4' becomes 4.
        * </p>
@@ -451,10 +451,13 @@ ProAct.DSL = {
        *  </pre>
        * </p>
        *
-       * @memberof ProAct.DSL.predefined.mapping
+       * @for ProAct.DSL.predefined.mapping
        * @static
-       * @method
-       * @see {@link ProAct.DSL.ops.map}
+       * @method int
+       * @param {String} str
+       *      The string to convert to integer.
+       * @return {Number}
+       *      The integer representation of `str`.
        */
       'int': function (el) { return parseInt(el, 10); },
 
@@ -468,10 +471,13 @@ ProAct.DSL = {
        *  This will call the 'target.go' method and use its result.
        * </p>
        *
-       * @memberof ProAct.DSL.predefined.mapping
+       * @for ProAct.DSL.predefined.mapping
        * @static
-       * @method
-       * @see {@link ProAct.DSL.ops.map}
+       * @method &.
+       * @param {String} methodName
+       *      The method name to call.
+       * @return {Object}
+       *      The result of the method call.
        */
       '&.': function (arg) {
         return function (el) {
@@ -496,10 +502,11 @@ ProAct.DSL = {
        *  </pre>
        * </p>
        *
-       * @memberof ProAct.DSL.predefined.mapping
+       * @for ProAct.DSL.predefined.mapping
        * @static
-       * @method
-       * @see {@link ProAct.DSL.ops.map}
+       * @method pop
+       * @return {Event}
+       *      Pop event.
        */
       pop: function () {
         return P.E.simple('array', 'pop');
@@ -515,10 +522,11 @@ ProAct.DSL = {
        *  </pre>
        * </p>
        *
-       * @memberof ProAct.DSL.predefined.mapping
+       * @for ProAct.DSL.predefined.mapping
        * @static
-       * @method
-       * @see {@link ProAct.DSL.ops.map}
+       * @method shift
+       * @return {Event}
+       *      Shift event.
        */
       shift: function () {
         return P.E.simple('array', 'shift');
@@ -533,10 +541,13 @@ ProAct.DSL = {
        *  </pre>
        * </p>
        *
-       * @memberof ProAct.DSL.predefined.mapping
+       * @for ProAct.DSL.predefined.mapping
        * @static
-       * @method
-       * @see {@link ProAct.DSL.ops.map}
+       * @method eventToVal
+       * @param {Event} event
+       *      The value event to get the new value from.
+       * @return {Object}
+       *      The value.
        */
       eventToVal: function (event) {
         return event.args[0][event.target];
@@ -551,19 +562,58 @@ ProAct.DSL = {
        *  </pre>
        * </p>
        *
-       * @memberof ProAct.DSL.predefined.mapping
+       * @for ProAct.DSL.predefined.mapping
        * @static
-       * @method
-       * @see {@link ProAct.DSL.ops.map}
+       * @method true
+       * @param {Object} value
+       *      Arbitrary value.
+       * @return {Boolean}
+       *      Just the `true` constant.
        */
       'true': function (event) {
         return true;
       },
 
+      /**
+       * Toggles a boolean value. If the value is `true` it becomes `false` and vice versa.
+       * <p>
+       *  Usage in a DSL expression:
+       *  <pre>
+       *    map(!)
+       *  </pre>
+       * </p>
+       *
+       * @for ProAct.DSL.predefined.mapping
+       * @static
+       * @method !
+       * @param {Boolean} value
+       *      A boolean value.
+       * @return {Boolean}
+       *      The opposite of `value`.
+       */
       '!': function (value) {
         return !value;
       },
 
+      /**
+       * Adds the current time to the object value, called upon
+       * If the value is not an object (for example it is a Number), it is returned as it is.
+       *
+       * <p>
+       *  Usage in a DSL expression:
+       *  <pre>
+       *    map(time)
+       *  </pre>
+       * </p>
+       *
+       * @for ProAct.DSL.predefined.mapping
+       * @static
+       * @method time
+       * @param {Object} value
+       *      The object to modify with time.
+       * @return {Object}
+       *      The modified value.
+       */
       'time': function (value) {
         if (P.U.isObject(value)) {
           value.time = new Date().getTime();
@@ -590,10 +640,13 @@ ProAct.DSL = {
        *  </pre>
        * </p>
        *
-       * @memberof ProAct.DSL.predefined.filtering
+       * @for ProAct.DSL.predefined.filtering
        * @static
-       * @method
-       * @see {@link ProAct.DSL.ops.filter}
+       * @method odd
+       * @param {Number} n
+       *      The number to check if it is odd.
+       * @return {Boolean}
+       *      True, if the number is odd.
        */
       'odd': function (el) { return el % 2 !== 0; },
 
@@ -606,10 +659,13 @@ ProAct.DSL = {
        *  </pre>
        * </p>
        *
-       * @memberof ProAct.DSL.predefined.filtering
+       * @for ProAct.DSL.predefined.filtering
        * @static
-       * @method
-       * @see {@link ProAct.DSL.ops.filter}
+       * @method even
+       * @param {Number} n
+       *      The number to check if it is even.
+       * @return {Boolean}
+       *      True, if the number is even.
        */
       'even': function (el) { return el % 2 === 0; },
 
@@ -622,10 +678,13 @@ ProAct.DSL = {
        *  </pre>
        * </p>
        *
-       * @memberof ProAct.DSL.predefined.filtering
+       * @for ProAct.DSL.predefined.filtering
        * @static
-       * @method
-       * @see {@link ProAct.DSL.ops.filter}
+       * @method +
+       * @param {Number} n
+       *      The number to check if it is positive.
+       * @return {Boolean}
+       *      True, if the number is positive or zero.
        */
       '+': function (el) { return el >= 0; },
 
