@@ -697,10 +697,13 @@ ProAct.DSL = {
        *  </pre>
        * </p>
        *
-       * @memberof ProAct.DSL.predefined.filtering
+       * @for ProAct.DSL.predefined.filtering
        * @static
-       * @method
-       * @see {@link ProAct.DSL.ops.filter}
+       * @method -
+       * @param {Number} n
+       *      The number to check if it is negative.
+       * @return {Boolean}
+       *      True, if the number is negative or zero.
        */
       '-': function (el) { return el <= 0; },
 
@@ -714,10 +717,13 @@ ProAct.DSL = {
        *  This will call the 'target.boolFunc' method and use its result as a filter.
        * </p>
        *
-       * @memberof ProAct.DSL.predefined.filtering
+       * @for ProAct.DSL.predefined.filtering
        * @static
-       * @method
-       * @see {@link ProAct.DSL.ops.filter}
+       * @method &.
+       * @param {String} methodName
+       *      The name of the method to use for filtering.
+       * @return {Boolean}
+       *      The result of the method call.
        */
       '&.': function (arg) {
         return function (el) {
@@ -746,10 +752,13 @@ ProAct.DSL = {
        *  </pre>
        * </p>
        *
-       * @memberof ProAct.DSL.predefined.filtering
+       * @for ProAct.DSL.predefined.filtering
        * @static
-       * @method
-       * @see {@link ProAct.DSL.ops.filter}
+       * @method defined
+       * @param {Event} event
+       *      The value event to check if its value is defined.
+       * @return {Boolean}
+       *      True if the value in the event is not `undefined`.
        */
       defined: function (event) {
         return event.args[0][event.target] !== undefined;
@@ -765,10 +774,13 @@ ProAct.DSL = {
        *  </pre>
        * </p>
        *
-       * @memberof ProAct.DSL.predefined.filtering
+       * @for ProAct.DSL.predefined.filtering
        * @static
-       * @method
-       * @see {@link ProAct.DSL.ops.filter}
+       * @method originalEvent
+       * @param {Event} event
+       *      The value event to check if it has a source or not.
+       * @return {Boolean}
+       *      True if the `event` passed has no source.
        */
       originalEvent: function (event) {
         return event.source === undefined || event.source === null;
