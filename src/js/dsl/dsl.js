@@ -795,10 +795,13 @@ ProAct.DSL = {
        *  </pre>
        * </p>
        *
-       * @memberof ProAct.DSL.predefined.filtering
+       * @for ProAct.DSL.predefined.filtering
        * @static
-       * @method
-       * @see {@link ProAct.DSL.ops.filter}
+       * @method all
+       * @param {Object} val
+       *      Anything.
+       * @return {Boolean}
+       *      True.
        */
       all: function () {
         return true;
@@ -823,10 +826,10 @@ ProAct.DSL = {
        *  </pre>
        * </p>
        *
-       * @memberof ProAct.DSL.predefined.accumulation
+       * @for ProAct.DSL.predefined.accumulation
        * @static
-       * @constant
-       * @see {@link ProAct.DSL.ops.accumulation}
+       * @property +
+       * @type Array
        */
       '+': [0, function (x, y) { return x + y; }],
 
