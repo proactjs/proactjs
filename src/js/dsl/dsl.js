@@ -868,6 +868,32 @@ ProAct.DSL = {
     }
   },
 
+  /**
+   * Defines a new predefined function to be reused in the DSL.
+   *
+   * For example:
+   * ```
+   *   ProAct.DSL.defPredefined('filter', 'enter', function (event) {
+   *    return event.keyCode === 13;
+   *   });
+   *
+   * ```
+   * creates a new `filtering` function, which can be used like this:
+   * ```
+   *   actor2 = actor1.filter('enter');
+   * ```
+   * the `actor2` in this case will recieve only the events with keyCode of `13`.
+   *
+   * @for ProAct.DSL
+   * @static
+   * @method defPredefined
+   * @param {String} type
+   *      One of the three -> `mapping`, `filtering` and `accumulation` types.
+   * @param {String} id
+   *      The identificator of the predefined function to be passed to trasfromation or filtering operations.
+   * @param {Function|Array} operation
+   *      The implementation of the operation.
+   */
   defPredefined: function(type, id, operation) {
     if (type === 'm' || type === 'map') {
       type = 'mapping';
@@ -912,9 +938,6 @@ ProAct.DSL = {
    *          }
    *        </pre>
    *      </p>
-   * @see {{#crossLink "ProAct.DSL/run:method"}}{{/crossLink}}
-   * @see {@link ProAct.DSL.optionsFromArray}
-   * @see {@link ProAct.DSL.separator}
    */
   optionsFromString: function (optionString) {
     return dsl.optionsFromArray.apply(null, [optionString.split(dsl.separator)].concat(slice.call(arguments, 1)));
