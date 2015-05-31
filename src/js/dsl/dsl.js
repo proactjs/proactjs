@@ -842,10 +842,11 @@ ProAct.DSL = {
        *  </pre>
        * </p>
        *
-       * @memberof ProAct.DSL.predefined.accumulation
+       * @for ProAct.DSL.predefined.accumulation
        * @static
        * @constant
-       * @see {@link ProAct.DSL.ops.accumulation}
+       * @property *
+       * @type Array
        */
       '*': [1, function (x, y) { return x * y; }],
 
@@ -858,10 +859,10 @@ ProAct.DSL = {
        *  </pre>
        * </p>
        *
-       * @memberof ProAct.DSL.predefined.accumulation
+       * @for ProAct.DSL.predefined.accumulation
        * @static
-       * @constant
-       * @see {@link ProAct.DSL.ops.accumulation}
+       * @property +str
+       * @type Array
        */
       '+str': ['', function (x, y) { return x + y; }],
     }
