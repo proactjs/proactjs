@@ -45,7 +45,7 @@ function SubscribableStream (subscribe, queueName, source, transforms) {
 
   this.subscribe = subscribe;
   this.unsubscribe = null;
-  this.subscribtions = 0;
+  this.subscriptions = 0;
 }
 ProAct.SubscribableStream = P.SUS = SubscribableStream;
 
@@ -99,10 +99,10 @@ ProAct.SubscribableStream.prototype = P.U.ex(Object.create(P.S.prototype), {
    *      <b>this</b>
    */
   on: function (actions, listener) {
-    if (this.subscribtions === 0) {
+    if (this.subscriptions === 0) {
       this.unsubscribe = this.subscribe(this);
     }
-    this.subscribtions++;
+    this.subscriptions++;
 
     return P.S.prototype.on.call(this, actions, listener);
   },
@@ -163,16 +163,16 @@ ProAct.SubscribableStream.prototype = P.U.ex(Object.create(P.S.prototype), {
    *      <b>this</b>
    */
   off: function (actions, listener) {
-    this.subscribtions--;
+    this.subscriptions--;
 
     if (!actions && !listener) {
-      this.subscribtions = 0;
+      this.subscriptions = 0;
     }
-    if (this.subscribtions < 0) {
-      this.subscribtions = 0;
+    if (this.subscriptions < 0) {
+      this.subscriptions = 0;
     }
 
-    if (this.subscribtions === 0 && this.unsubscribe) {
+    if (this.subscriptions === 0 && this.unsubscribe) {
       this.unsubscribe(this);
     }
 
