@@ -911,13 +911,13 @@ ProAct.DSL = {
   /**
    * Extracts DSL actions and options from a string.
    * <p>
-   *  Splits the passed <i>optionString</i> using {@link ProAct.DSL.separator} as saparator and calls {@link ProAct.DSL.optionsFromArray} on
-   *  the result.
+   *  Splits the passed <i>optionString</i> using {{#crossLink "ProAct.DSL/separator:property"}}{{/crossLink}} as saparator
+   *  and calls {{#crossLink "ProAct.DSL/optionsFromArray:method"}}{{/crossLink}} on the result.
    * </p>
    *
-   * @memberof ProAct.DSL
+   * @for ProAct.DSL
    * @static
-   * @method
+   * @method optionsFromString
    * @param {String} optionString
    *      The string to use to extract options from.
    * @param [...]
@@ -933,7 +933,7 @@ ProAct.DSL = {
    *        <pre>
    *          {
    *            mapping: {first-argument-to-this-function-after-the-optionString-arg},
-   *            filtering: {@link ProAct.DSL.predefined.filtering['+']},
+   *            filtering: ProAct.DSL.predefined.filtering['+'],
    *            on: {second-argument-to-this-function-after-the-optionString-arg}
    *          }
    *        </pre>
@@ -950,9 +950,9 @@ ProAct.DSL = {
    *  be applied on a target {{#crossLink "ProAct.Actor"}}{{/crossLink}} passed to the {{#crossLink "ProAct.DSL/run:method"}}{{/crossLink}} method.
    * </p>
    *
-   * @memberof ProAct.DSL
+   * @for ProAct.DSL
    * @static
-   * @method
+   * @method optionsFromArray
    * @param {Array} optionArray
    *      The array of strings to use to extract options from.
    * @param [...]
@@ -968,7 +968,7 @@ ProAct.DSL = {
    *        <pre>
    *          {
    *            mapping: {first-argument-to-this-function-after-the-optionString-arg},
-   *            filtering: {@link ProAct.DSL.predefined.filtering['+']},
+   *            filtering: ProAct.DSL.predefined.filtering['+'],
    *            on: {second-argument-to-this-function-after-the-optionString-arg}
    *          }
    *        </pre>
