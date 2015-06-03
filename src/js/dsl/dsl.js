@@ -996,7 +996,7 @@ ProAct.DSL = {
    *  Uses the passed {{#crossLink "ProAct.Registry"}}{{/crossLink}} to read stored values from.
    * </p>
    *
-   * @memberof ProAct.DSL
+   * @for ProAct.DSL
    * @static
    * @method
    * @param {ProAct.Actor} actor
@@ -1007,7 +1007,7 @@ ProAct.DSL = {
    *        If the value of this parameter is instance of {{#crossLink "ProAct.Actor"}}{{/crossLink}} it is set as a source to the <i>target actor</i>.
    *      </p>
    *      <p>
-   *        If the value ot this parameter is String - {@link ProAct.DSL.optionsFromString} is used to be turned to an options object.
+   *        If the value ot this parameter is String - {{#crossLink "ProAct.DSL/optionsFromString:method"}}{{/crossLink}} is used to be turned to an options object.
    *      </p>
    *      <p>
    *        If the values of this parameter is object, it is used to configure the <i>targed actor</i>.
