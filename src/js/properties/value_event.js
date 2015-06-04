@@ -1,3 +1,7 @@
+/**
+ * @module proact-properties
+ */
+
 function ValueEvent (source, target) {
   var type = ProAct.Event.Types.value,
       args = slice.call(arguments, 2);
