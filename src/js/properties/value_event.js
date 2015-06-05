@@ -2,6 +2,19 @@
  * @module proact-properties
  */
 
+/**
+ * <p>
+ *  Constructs a `ProAct.ValueEvent`. The value event contains information of a value property update.
+ * </p>
+ *
+ * @class ProAct.ValueEvent
+ * @extends ProAct.Event
+ * @constructor
+ * @param {ProAct.Event} source
+ *      If there is an event that coused this event - it is the source. Can be null - no source.
+ * @param {Object} target
+ *      The thing that triggered this event. In most cases this should be instance of a {{#crossLink "ProAct.Property"}}{{/crossLink}}
+ */
 function ValueEvent (source, target) {
   var type = ProAct.Event.Types.value,
       args = slice.call(arguments, 2);
