@@ -28,7 +28,17 @@ function ValueEvent (source, target) {
 ProAct.ValueEvent = P.VE = ValueEvent;
 
 ValueEvent.prototype = P.U.ex(Object.create(ProAct.Event.prototype), {
+
+  /**
+   * Reference to the constructor of this object.
+   *
+   * @property constructor
+   * @type ProAct.ValueEvent
+   * @final
+   * @for ProAct.ValueEvent
+   */
   constructor: ValueEvent,
+
   fromVal: function () {
     if (this.object && this.object.__pro__ &&
         this.object.__pro__.properties[this.target].type() === P.P.Types.auto) {
