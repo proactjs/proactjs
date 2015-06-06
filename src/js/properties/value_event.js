@@ -39,6 +39,16 @@ ValueEvent.prototype = P.U.ex(Object.create(ProAct.Event.prototype), {
    */
   constructor: ValueEvent,
 
+  /**
+   * A `ValueEvent` represents change of a property from an old value to a new value.
+   * This method returns the old value, that was changed.
+   *
+   * @for ProAct.ValueEvent
+   * @instance
+   * @method fromVal
+   * @return {Object}
+   *      The old value.
+   */
   fromVal: function () {
     if (this.object && this.object.__pro__ &&
         this.object.__pro__.properties[this.target].type() === P.P.Types.auto) {
