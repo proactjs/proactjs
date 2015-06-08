@@ -1,4 +1,12 @@
 /**
+ * The `proact-flow` provides executing functions in the right order in time.
+ * Function execution can be deferred, there are priorities and turns.
+ *
+ * @module proact-flow
+ * @main proact-flow
+ */
+
+/**
  * <p>
  *  Constructs the action flow of the ProAct.js; An action flow is a set of actions
  *  executed in the reactive environment, which order is determined by the dependencies
@@ -46,7 +54,16 @@ ProAct.Flow = P.F = function (queueNames, options) {
 
   this.pauseMode = false;
 
-  P.U.defValProp(this, 'closingQueue', false, false, false, new ProAct.Queue('closing'));
+  try {
+    Object.defineProperty(this, 'closingQueue', {
+      enumerable: false,
+      configurable: false,
+      writable: false,
+      value: new ProAct.Queue('closing')
+    });
+  } catch (e) {
+    this.closingQueue = new ProAct.Queue('closing');
+  }
 };
 
 P.F.prototype = {
