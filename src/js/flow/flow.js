@@ -46,7 +46,16 @@ ProAct.Flow = P.F = function (queueNames, options) {
 
   this.pauseMode = false;
 
-  P.U.defValProp(this, 'closingQueue', false, false, false, new ProAct.Queue('closing'));
+  try {
+    Object.defineProperty(this, 'closingQueue', {
+      enumerable: false,
+      configurable: false,
+      writable: false,
+      value: new ProAct.Queue('closing')
+    });
+  } catch (e) {
+    this.closingQueue = new ProAct.Queue('closing');
+  }
 };
 
 P.F.prototype = {

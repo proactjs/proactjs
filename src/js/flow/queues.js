@@ -125,7 +125,7 @@ P.QQ.prototype = {
    * @see {@link ProAct.Queue#push}
    */
   push: function (queueName, context, action, args) {
-    if (queueName && !P.U.isString(queueName)) {
+    if (queueName && !(typeof(queueName) === 'string')) {
       args = action;
       action = context;
       context = queueName;
@@ -179,7 +179,7 @@ P.QQ.prototype = {
    * @see {@link ProAct.Queue#pushOnce}
    */
   pushOnce: function (queueName, context, action, args) {
-    if (queueName && !P.U.isString(queueName)) {
+    if (queueName && !(typeof(queueName) === 'string')) {
       args = action;
       action = context;
       context = queueName;

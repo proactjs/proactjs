@@ -170,7 +170,7 @@ P.Q.prototype = {
    *      Arguments to be passed to the action when it is executed.
    */
   push: function (context, action, args) {
-    if (context && P.U.isFunction(context)) {
+    if (context && (typeof(context) === 'function')) {
       args = action;
       action = context;
       context = null;
@@ -211,7 +211,7 @@ P.Q.prototype = {
    * @see {@link ProAct.Queue#push}
    */
   pushOnce: function (context, action, args) {
-    if (context && P.U.isFunction(context)) {
+    if (context && (typeof(context) === 'function')) {
       args = action;
       action = context;
       context = null;
