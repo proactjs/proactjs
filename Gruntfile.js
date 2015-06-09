@@ -47,29 +47,7 @@ module.exports = function(grunt) {
     jshint: {
       all: ['src/js/**/*.js'],
       options: {
-        curly: true,
-        multistr: true,
-        quotmark: 'single',
-        camelcase: false,
-        bitwise: false,
-        unused: true,
-        eqeqeq: true,
-        indent: 2,
-        immed: true,
-        latedef: true,
-        newcap: true,
-        noarg: true,
-        sub: true,
-        boss: true,
-        es5: true,
-        eqnull: true,
-        evil: true,
-        scripturl: true,
-        smarttabs: true,
-        maxparams: 5,
-        maxdepth: 3,
-        maxlen: 100,
-        globals: {}
+        jshintrc: '.jshintrc'
       }
     },
 
