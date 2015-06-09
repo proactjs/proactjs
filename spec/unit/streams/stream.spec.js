@@ -424,6 +424,74 @@ describe('ProAct.Stream', function () {
     });
   });
 
+  describe ('ProAct.Actor#skipDuplicates', function () {
+    it ('creates a stream which skips the duplicates in the source with the default comparator', function () {
+      var stream = ProAct.stream(),
+          skipDuplicates = stream.skipDuplicates(),
+          res = [];
+
+      skipDuplicates.on(function (v) {
+        res.push(v);
+      });
+
+      stream.trigger(3);
+      expect(res).toEqual([3]);
+
+      stream.trigger(3);
+      expect(res).toEqual([3]);
+
+      stream.trigger(7);
+      expect(res).toEqual([3, 7]);
+    });
+
+    it ('creates a stream which skips the duplicates in the source with a custom comparator', function () {
+      var stream = ProAct.stream(),
+          skipDuplicates = stream.skipDuplicates(function(a, b) {
+            return a % 2 === b % 2;
+          }),
+          res = [];
+
+      skipDuplicates.on(function (v) {
+        res.push(v);
+      });
+
+      stream.trigger(3);
+      expect(res).toEqual([3]);
+
+      stream.trigger(1);
+      expect(res).toEqual([3]);
+
+      stream.trigger(2);
+      expect(res).toEqual([3, 2]);
+
+      stream.trigger(4);
+      expect(res).toEqual([3, 2]);
+    });
+  });
+
+  describe ('ProAct.Actor#diff', function () {
+    it ('creates a stream with the differences of the source values relative to the seed with a custom differ', function () {
+      var stream = ProAct.stream(),
+          diff = stream.diff(0, function(prev, v) {
+            return v - prev;
+          }),
+          res = [];
+
+      diff.on(function (v) {
+        res.push(v);
+      });
+
+      stream.trigger(3);
+      expect(res).toEqual([3]);
+
+      stream.trigger(7);
+      expect(res).toEqual([3, 4]);
+
+      stream.trigger(6);
+      expect(res).toEqual([3, 4, -1]);
+    });
+  });
+
   describe ('ProAct.Actor#take', function () {
     it ('creates a limited stream with limit the passed limit with the caller as source', function () {
       var stream = ProAct.stream(),
@@ -448,6 +516,36 @@ describe('ProAct.Stream', function () {
 
       stream.trigger(8);
       expect(res).toEqual([3, 5, 8]);
+      expect(closed).toBe(true);
+    });
+  });
+
+  describe ('ProAct.Actor#takeWhile', function () {
+    it ('creates a limited stream which uses a function as a limiting condition', function () {
+      var stream = ProAct.stream(),
+          takeWhile = stream.takeWhile(function(v) {
+            return v < 3;
+          }),
+          res = [], closed = false;
+
+      takeWhile.on(function(v) {
+        res.push(v);
+      });
+
+      takeWhile.onClose(function () {
+        closed = true;
+      });
+
+      stream.trigger(1);
+      expect(res).toEqual([1]);
+      expect(closed).toBe(false);
+
+      stream.trigger(2);
+      expect(res).toEqual([1, 2]);
+      expect(closed).toBe(false);
+
+      stream.trigger(3);
+      expect(res).toEqual([1, 2]);
       expect(closed).toBe(true);
     });
   });

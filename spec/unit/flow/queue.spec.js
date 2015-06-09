@@ -103,6 +103,24 @@ describe('ProAct.Queue', function () {
       expect(queue.length()).toBe(0);
     });
 
+    it('executes the before/after hooks', function () {
+      var beforeCalled = false,
+          afterCalled = false;
+
+      queue.options.before = function() {
+        beforeCalled = true;
+      };
+      queue.options.after = function() {
+        afterCalled = true;
+      };
+
+      queue.push(obj, obj.f1);
+      queue.go();
+
+      expect(beforeCalled).toBe(true);
+      expect(afterCalled).toBe(true);
+    });
+
     it('executes the functions the queue', function () {
       queue.push(obj, obj.f1);
       expect(queue.length()).toBe(1);
