@@ -1,6 +1,10 @@
 /**
+ * @module proact-flow
+ */
+
+/**
  * <p>
- *  Creates a queue of {@link ProAct.Queue}s. The order of these sub-queues is used
+ *  Creates a queue of {{#crossLink "ProAct.Queue"}}{{/crossLink}}s. The order of these sub-queues is used
  *  to determine the order in which they will be dequed.
  * </p>
  * <p>
@@ -12,17 +16,18 @@
  *  from the lower level one.
  * </p>
  * <p>
- *  The {@link ProAct.Queues#go} method deques all the actions from all the queues and executes them in the right
+ *  The {{#crossLink "ProAct.Queues/go:method"}}{{/crossLink}} method deques all the actions from all the queues and executes them in the right
  *  order, using their priorities and queue order.
  * </p>
  * <p>
- *  A ProAct.Queues can be used to setup very complex the action flow.
+ *  A `ProAct.Queues` can be used to setup very complex the action flow.
  *  ProAct.js uses it with only one queue - 'proq' to create an action flow if something changes.
  * </p>
  *
  * TODO We need to pass before, after and error callbacks here too. ~meddle@2014-07-10
  *
  * @class ProAct.Queues
+ * @constructor
  * @param {Array} queueNames
  *      Array with the names of the sub-queues. The size of this array determines
  *      the number of the sub-queues.
@@ -30,10 +35,8 @@
  *    Various options for the ProAct.Queues.
  *    <p>Available options:</p>
  *    <ul>
- *      <li>queue - An options object containing options to be passed to all the sub-queues. For more information see {@link ProAct.Queue}.</li>
+ *      <li>queue - An options object containing options to be passed to all the sub-queues. For more information see {{#crossLink "ProAct.Queue"}}{{/crossLink}}.</li>
  *    </ul>
- * @see {@link ProAct.Queue}
- * @see {@link ProAct.Flow}
  */
 ProAct.Queues = P.QQ = function (queueNames, options) {
   if (!queueNames) {
@@ -56,11 +59,10 @@ P.QQ.prototype = {
   /**
    * Reference to the constructor of this object.
    *
-   * @memberof ProAct.Queues
-   * @instance
-   * @constant
-   * @type {Object}
-   * @default ProAct.Queues
+   * @property constructor
+   * @type ProAct.Queues
+   * @final
+   * @for ProAct.Queues
    */
   constructor: ProAct.Queues,
 
