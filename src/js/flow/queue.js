@@ -1,4 +1,8 @@
 /**
+ * @module proact-flow
+ */
+
+/**
  * <p>
  *   Creates a queue of actions or action queue.
  * </p>
@@ -12,7 +16,7 @@
  *  The actions with the numerically lowest priority are with highes prority when executed.
  * </p>
  * <p>
- *  The {@link ProAct.Queue#go} method deques all the actions from the queue and executes them in the right
+ *  The {{#crossLink "ProAct.Queue/go:method"}}{{/crossLink}} method deques all the actions from the queue and executes them in the right
  *  order, using their priorities.
  * </p>
  * <p>
@@ -23,18 +27,18 @@
  * TODO Default name should be extracted to a constant. ~meddle@2014-07-10
  *
  * @class ProAct.Queue
+ * @constructor
  * @param {String} name
  *    The name of the queue, every ProAct.Queue must have a name.
- *    The default value of the name is 'proq'. {@link ProAct.Queues} uses the names to manage its queues.
+ *    The default value of the name is 'proq'. {{#crossLink "ProAct.Queues"}}{{/crossLink}} uses the names to manage its queues.
  * @param {Object} options
  *    Various options for the queue.
  *    <p>Available options:</p>
  *    <ul>
- *      <li>before - A callback called before each call of {@link ProAct.Queue#go}.</li>
- *      <li>after - A callback called after each call of {@link ProAct.Queue#go}.</li>
+ *      <li>before - A callback called before each call of {{#crossLink "ProAct.Queue/go:method"}}{{/crossLink}}.</li>
+ *      <li>after - A callback called after each call of {{#crossLink "ProAct.Queue/go:method"}}{{/crossLink}}.</li>
  *      <li>err - A callback called every time an error is thrown.</li>
  *    </ul>
- * @see {@link ProAct.Queues}
  */
 ProAct.Queue = P.Q = function (name, options) {
   this.name = name || 'proq';
@@ -46,8 +50,8 @@ ProAct.Queue = P.Q = function (name, options) {
 /**
  * Executes the passed <i>action</i>.
  *
- * @function runAction
- * @memberof ProAct.Queue
+ * @for ProAct.Queue
+ * @method runAction
  * @static
  * @param {ProAct.Queue} queue
  *      The queue managing the action to execute.
@@ -208,7 +212,6 @@ P.Q.prototype = {
    *      </p>
    * @param {Array} args
    *      Arguments to be passed to the action when it is executed.
-   * @see {@link ProAct.Queue#push}
    */
   pushOnce: function (context, action, args) {
     if (context && (typeof(context) === 'function')) {

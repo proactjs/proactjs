@@ -67,9 +67,9 @@ P.QQ.prototype = {
   constructor: ProAct.Queues,
 
   /**
-   * Checks if this ProAct.Queues is empty.
+   * Checks if this `ProAct.Queues` is empty.
    *
-   * @memberof ProAct.Queues
+   * @for ProAct.Queues
    * @instance
    * @method isEmpty
    * @return {Boolean}
@@ -97,10 +97,10 @@ P.QQ.prototype = {
    * Pushes an action to a sub-queue.
    * This method can enque the same action multiple times and always with priority of '1'.
    * <p>
-   *  ProAct.Queues#defer, ProAct.Queues#enque and ProAct.Queues#add are aliases of this method.
+   *  `defer`, `enque` and `add` are aliases of this method.
    * </p>
    *
-   * @memberof ProAct.Queues
+   * @for ProAct.Queues
    * @instance
    * @method push
    * @param {String} queueName
@@ -124,7 +124,6 @@ P.QQ.prototype = {
    *      </p>
    * @param {Array} args
    *      Arguments to be passed to the action when it is executed.
-   * @see {@link ProAct.Queue#push}
    */
   push: function (queueName, context, action, args) {
     if (queueName && !(typeof(queueName) === 'string')) {
@@ -151,10 +150,10 @@ P.QQ.prototype = {
    *  This means that this action will be executed after all the other actions, pushed only once.
    * </p>
    * <p>
-   *  ProAct.Queues#deferOnce, ProAct.Queues#enqueOnce and ProAct.Queues#addOnce are aliases of this method.
+   *  `deferOnce`, `enqueOnce` and `addOnce` are aliases of this method.
    * </p>
    *
-   * @memberof ProAct.Queues
+   * @for ProAct.Queues
    * @instance
    * @method pushOnce
    * @param {String} queueName
@@ -178,7 +177,6 @@ P.QQ.prototype = {
    *      </p>
    * @param {Array} args
    *      Arguments to be passed to the action when it is executed.
-   * @see {@link ProAct.Queue#pushOnce}
    */
   pushOnce: function (queueName, context, action, args) {
     if (queueName && !(typeof(queueName) === 'string')) {
@@ -208,16 +206,14 @@ P.QQ.prototype = {
    *  to the second queue again and then continues through all the queues.
    * </p>
    * <p>
-   *  ProAct.Queues#run and ProAct.Queues#flush are aliases of this method.
+   *  `run` and `flush` are aliases of this method.
    * </p>
    *
-   * @memberof ProAct.Queues
+   * @for ProAct.Queues
    * @instance
    * @method go
    * @param {String} queueName
    *      The name of the queue to begin from. Can be null and defaults to the first sub-queue.
-   * @see {@link ProAct.Queues#push}
-   * @see {@link ProAct.Queues#pushOnce}
    */
   go: function (queueName) {
     var currentQueueIndex = 0,
