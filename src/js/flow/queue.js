@@ -113,11 +113,10 @@ P.Q.prototype = {
   /**
    * Reference to the constructor of this object.
    *
-   * @memberof ProAct.Queue
-   * @instance
-   * @constant
-   * @type {Object}
-   * @default ProAct.Queue
+   * @property constructor
+   * @type ProAct.Queue
+   * @final
+   * @for ProAct.Queue
    */
   constructor: ProAct.Queue,
 
