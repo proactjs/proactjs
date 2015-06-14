@@ -71,6 +71,7 @@ module.exports = function(grunt) {
         options: {
           linkNatives: true,
           paths: [
+            'src/js/flow',
             'src/js/core',
             'src/js/properties',
             'src/js/streams',
@@ -78,8 +79,6 @@ module.exports = function(grunt) {
             'src/js/dsl'
           ],
           exclude: [
-            'events',
-            'flow',
             'objects',
           ].join(','),
           outdir: 'doc',
@@ -111,6 +110,7 @@ module.exports = function(grunt) {
         'src/js/core/actor.js',
         'src/js/core/event.js',
         'src/js/core/core.js',
+        'src/js/core/functions.js',
         'src/js/streams/stream.js',
         'src/js/streams/buffered_stream.js',
         'src/js/streams/size_buffered_stream.js',
@@ -166,6 +166,7 @@ module.exports = function(grunt) {
           'core/actor',
           'core/event',
           'core/core',
+          'core/functions',
           'streams/stream',
           'streams/buffered_stream',
           'streams/size_buffered_stream',
