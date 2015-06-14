@@ -12,6 +12,7 @@ module.exports = function(karma) {
       'src/js/core/actor.js',
       'src/js/core/event.js',
       'src/js/core/core.js',
+      'src/js/core/functions.js',
       'src/js/streams/stream.js',
       'src/js/streams/buffered_stream.js',
       'src/js/streams/size_buffered_stream.js',
