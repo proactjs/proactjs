@@ -122,6 +122,7 @@ module.exports = function(grunt) {
         'src/js/arrays/listeners.js',
         'src/js/properties/value_event.js',
         'src/js/properties/property.js',
+        'src/js/properties/functions.js',
         'src/js/dsl/registry.js',
         'src/js/dsl/provider.js'
       ]
@@ -182,6 +183,7 @@ module.exports = function(grunt) {
           'properties/proxy_property',
           'properties/property_provider',
           'properties/object_core',
+          'properties/functions',
           'arrays/array_core',
           'arrays/array',
           'arrays/listeners',
