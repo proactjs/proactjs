@@ -1,4 +1,3 @@
-
 /**
  * Creates a {@link ProAct.Stream} instance.
  *
@@ -302,3 +301,4 @@ function fromEventDispatcher (target, eventType) {
 }
 
 ProAct.fromEventDispatcher = fromEventDispatcher;
+
