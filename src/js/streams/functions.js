@@ -1,11 +1,11 @@
 /**
- * Creates a {@link ProAct.Stream} instance.
+ * Creates a {{#crossLink "ProAct.Stream"}}{{/crossLink}} instance.
  *
+ * @for ProAct
  * @method stream
- * @memberof ProAct
  * @static
  * @return {ProAct.Stream}
- *      A {@link ProAct.Stream} instance.
+ *      A {{#crossLink "ProAct.Stream"}}{{/crossLink}} instance.
  */
 function stream (subscribe, transformations, source, queueName) {
   var stream;
@@ -28,13 +28,13 @@ function stream (subscribe, transformations, source, queueName) {
 ProAct.stream = stream;
 
 /**
- * Creates a closed {@link ProAct.Stream}.
+ * Creates a closed {{#crossLink "ProAct.Stream"}}{{/crossLink}}.
  *
  * @method closed
  * @memberof ProAct
  * @static
  * @return {ProAct.Stream}
- *      A closed {@link ProAct.Stream} instance.
+ *      A closed {{#crossLink "ProAct.Stream"}}{{/crossLink}} instance.
  */
 function closed () {
   return P.stream().close();
@@ -42,7 +42,7 @@ function closed () {
 ProAct.closed = P.never = closed;
 
 /**
- * Creates a {@link ProAct.Stream}, which emits the passed "value" once and then closes.
+ * Creates a {{#crossLink "ProAct.Stream"}}{{/crossLink}}, which emits the passed "value" once and then closes.
  * <p>Example:</p>
  * <pre>
     var stream = ProAct.timeout(1000, 7);
@@ -62,7 +62,7 @@ ProAct.closed = P.never = closed;
  * @param {Object} value
  *      The value to emit.
  * @return {ProAct.Stream}
- *      A {@link ProAct.Stream} instance.
+ *      A {{#crossLink "ProAct.Stream"}}{{/crossLink}} instance.
  */
 function timeout (timeout, value) {
   var stream = P.stream();
@@ -77,7 +77,7 @@ function timeout (timeout, value) {
 ProAct.timeout = ProAct.later = timeout;
 
 /**
- * Creates a {@link ProAct.Stream}, which emits the passed "value" over and over again at given time interval.
+ * Creates a {{#crossLink "ProAct.Stream"}}{{/crossLink}}, which emits the passed "value" over and over again at given time interval.
  * <p>Example:</p>
  * <pre>
     var stream = ProAct.interval(1000, 7);
@@ -97,7 +97,7 @@ ProAct.timeout = ProAct.later = timeout;
  * @param {Object} value
  *      The value to emit.
  * @return {ProAct.Stream}
- *      A {@link ProAct.Stream} instance.
+ *      A {{#crossLink "ProAct.Stream"}}{{/crossLink}} instance.
  */
 function interval (interval, value) {
   var stream = P.stream();
@@ -111,7 +111,7 @@ function interval (interval, value) {
 ProAct.interval = interval;
 
 /**
- * Creates a {@link ProAct.Stream}, which emits values of the passed <i>vals</i> array on the passed <i>interval</i> milliseconds.
+ * Creates a {{#crossLink "ProAct.Stream"}}{{/crossLink}}, which emits values of the passed <i>vals</i> array on the passed <i>interval</i> milliseconds.
  * <p>
  *  When every value is emitted through the stream it is closed.
  * <p>
@@ -134,7 +134,7 @@ ProAct.interval = interval;
  * @param {Array} vals
  *      The array containing the values to be emitted on the passed <i>interval</i>.
  * @return {ProAct.Stream}
- *      A {@link ProAct.Stream} instance.
+ *      A {{#crossLink "ProAct.Stream"}}{{/crossLink}} instance.
  */
 function seq (interval, vals) {
   var stream = P.stream(),
@@ -159,7 +159,7 @@ function seq (interval, vals) {
 ProAct.seq = seq;
 
 /**
- * Creates a {@link ProAct.Stream}, which emits values of the passed <i>vals</i> array on the passed interval.
+ * Creates a {{#crossLink "ProAct.Stream"}}{{/crossLink}}, which emits values of the passed <i>vals</i> array on the passed interval.
  * <p>
  *  When every value is emitted through the stream they are emitted again and again and so on...
  * <p>
@@ -182,7 +182,7 @@ ProAct.seq = seq;
  * @param {Array} vals
  *      The array containing the values to be emitted on the passed <i>interval</i>.
  * @return {ProAct.Stream}
- *      A {@link ProAct.Stream} instance.
+ *      A {{#crossLink "ProAct.Stream"}}{{/crossLink}} instance.
  */
 function repeat (interval, vals) {
   var stream = P.stream(), i = 0;
@@ -203,7 +203,7 @@ function repeat (interval, vals) {
 ProAct.repeat = repeat;
 
 /**
- * The {@link ProAct.fromInvoke} creates a {@link ProAct.Stream}, which emits the result of the passed
+ * The {@link ProAct.fromInvoke} creates a {{#crossLink "ProAct.Stream"}}{{/crossLink}}, which emits the result of the passed
  * <i>func</i> argument on every <i>interval</i> milliseconds.
  * <p>
  *  If <i>func</i> returns {@link ProAct.closed} the stream is closed.
@@ -230,7 +230,7 @@ ProAct.repeat = repeat;
  * @param {Function} func
  *      The function to invoke in order to get the value to trigger into the stream.
  * @return {ProAct.Stream}
- *      A {@link ProAct.Stream} instance.
+ *      A {{#crossLink "ProAct.Stream"}}{{/crossLink}} instance.
  */
 function fromInvoke (interval, func) {
   var stream = P.stream(), id;
