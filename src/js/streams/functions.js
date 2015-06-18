@@ -30,8 +30,8 @@ ProAct.stream = stream;
 /**
  * Creates a closed {{#crossLink "ProAct.Stream"}}{{/crossLink}}.
  *
+ * @for ProAct
  * @method closed
- * @memberof ProAct
  * @static
  * @return {ProAct.Stream}
  *      A closed {{#crossLink "ProAct.Stream"}}{{/crossLink}} instance.
@@ -54,8 +54,8 @@ ProAct.closed = P.never = closed;
 
  * </pre>
  *
+ * @for ProAct
  * @method timeout
- * @memberof ProAct
  * @static
  * @param {Number} timeout
  *      The time to wait (in milliseconds) before emitting the <i>value</i> and close.
@@ -89,8 +89,8 @@ ProAct.timeout = ProAct.later = timeout;
 
  * </pre>
  *
+ * @for ProAct
  * @method interval
- * @memberof ProAct
  * @static
  * @param {Number} interval
  *      The time in milliseconds on which the <i>value</i> will be emitted.
