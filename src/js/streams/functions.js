@@ -126,8 +126,8 @@ ProAct.interval = interval;
 
  * </pre>
  *
+ * @for ProAct
  * @method seq
- * @memberof ProAct
  * @static
  * @param {Number} interval
  *      The time in milliseconds on which a value of the passed <i>vals</i> array will be emitted.
@@ -174,8 +174,8 @@ ProAct.seq = seq;
 
  * </pre>
  *
+ * @for ProAct
  * @method interval
- * @memberof ProAct
  * @static
  * @param {Number} interval
  *      The time in milliseconds on which a value of the passed <i>vals</i> array will be emitted.
