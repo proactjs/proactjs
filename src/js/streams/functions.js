@@ -203,10 +203,10 @@ function repeat (interval, vals) {
 ProAct.repeat = repeat;
 
 /**
- * The {@link ProAct.fromInvoke} creates a {{#crossLink "ProAct.Stream"}}{{/crossLink}}, which emits the result of the passed
+ * The {{#crossLink "ProAct/fromInvoke:method"}}{{/crossLink}} creates a {{#crossLink "ProAct.Stream"}}{{/crossLink}}, which emits the result of the passed
  * <i>func</i> argument on every <i>interval</i> milliseconds.
  * <p>
- *  If <i>func</i> returns {@link ProAct.closed} the stream is closed.
+ *  If <i>func</i> returns {{#crossLink "ProAct/closed:method"}}{{/crossLink}} the stream is closed.
  * </p>
  * <p>Example:</p>
  * <pre>
@@ -221,8 +221,8 @@ ProAct.repeat = repeat;
 
  * </pre>
  *
+ * @for ProAct
  * @method fromInvoke
- * @memberof ProAct
  * @static
  * @param {Number} interval
  *      The interval on which <i>func</i> will be called and its returned value will
@@ -251,6 +251,29 @@ function fromInvoke (interval, func) {
 }
 ProAct.fromInvoke = fromInvoke;
 
+/**
+ * Creates a {{#crossLink "ProAct.Stream"}}{{/crossLink}}, which emits the result of an action that uses a callback
+ * to notify that it is finished.
+ *
+ * This can be used to create streams from http requests for example.
+ *
+ * Example:
+ * ```
+    var stream = ProAct.fromCallback(action);
+    stream.on(function (v) {
+      console.log(v);
+    });
+
+ * ```
+ *
+ * @for ProAct
+ * @method fromCallback
+ * @static
+ * @param {Function} func
+ *      The
+ * @return {ProAct.Stream}
+ *      A {{#crossLink "ProAct.Stream"}}{{/crossLink}} instance.
+ */
 function fromCallback (callbackCaller) {
   var stream = P.stream();
 
