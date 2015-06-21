@@ -259,18 +259,18 @@ ProAct.fromInvoke = fromInvoke;
  *
  * Example:
  * ```
-    var stream = ProAct.fromCallback(action);
-    stream.on(function (v) {
-      console.log(v);
-    });
-
+ *  var stream = ProAct.fromCallback(action);
+ *  stream.on(function (v) {
+ *    console.log(v);
+ *  });
+ *
  * ```
  *
  * @for ProAct
  * @method fromCallback
  * @static
- * @param {Function} func
- *      The
+ * @param {Function} callbackCaller
+ *      The action that receives a callback.
  * @return {ProAct.Stream}
  *      A {{#crossLink "ProAct.Stream"}}{{/crossLink}} instance.
  */
