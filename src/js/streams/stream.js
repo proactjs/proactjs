@@ -7,7 +7,7 @@
  */
 
 // PRIVATE
-StreamUtil = {
+var StreamUtil = {
   go: function (event, useTransformations) {
     if (this.listeners.change.length === 0) {
       return this;

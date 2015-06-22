@@ -294,6 +294,29 @@ attachers = {
 };
 attacherKeys = Object.keys(attachers);
 
+/**
+ * Creates a {{#crossLink "ProAct.Stream"}}{{/crossLink}} with source an evet emitter or dispatcher,
+ * it can be used with jQuery for example for example.
+ *
+ * Example:
+ * ```
+ *  var stream = ProAct.fromEventDispatcher($('.some-input'), 'keydown');
+ *  stream.on(function (e) {
+ *    console.log(e.which);
+ *  });
+ *
+ * ```
+ *
+ * @for ProAct
+ * @method fromEventDispatcher
+ * @static
+ * @param {Object} target
+ *      The event dispatcher, can be a jQuery button, or a DOM element, or somethnig like that.
+ * @param {String} eventType
+ *      The type of the event - for example 'click'.
+ * @return {ProAct.Stream}
+ *      A {{#crossLink "ProAct.Stream"}}{{/crossLink}} instance.
+ */
 function fromEventDispatcher (target, eventType) {
   var i, ln = attacherKeys.length,
       on, off,
