@@ -1039,3 +1039,22 @@ P.U.ex(P.Actor.prototype, {
     return array;
   }
 });
+
+function ArrayProbProvider () {
+};
+
+ArrayProbProvider.prototype = P.U.ex(Object.create(P.ProbProvider.prototype), {
+  constructor: ArrayProbProvider,
+  filter: function (data, meta) {
+    return P.U.isArray(data);
+  },
+  provide: function (data, meta) {
+    var array = new P.A(data);
+    if (meta && meta.p && meta.p.queueName && P.U.isString(meta.p.queueName)) {
+      array.core.queueName = meta.p.queueName;
+    }
+    return array;
+  }
+});
+
+P.ProbProvider.register(new ArrayProbProvider());
