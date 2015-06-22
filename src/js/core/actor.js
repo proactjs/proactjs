@@ -1005,31 +1005,6 @@ P.Actor.prototype = {
   accumulate: P.N,
 
   /**
-   * TODO - Move to the proact-properties module!
-   *
-   * Generates a new {{#crossLink "ProAct.Property"}}{{/crossLink}} containing the state of an accumulations.
-   *
-   * <p>
-   *  The value will be updated with every update coming to this actor.
-   * </p>
-   *
-   *
-   * @for ProAct.Actor
-   * @instance
-   * @method reduce
-   * @param {Object} initVal
-   *      Initial value for the accumulation. For example '0' for sum.
-   * @param {Object} accumulationFunction
-   *      The function to accumulate.
-   * @return {ProAct.Property}
-   *      A {{#crossLink "ProAct.Property"}}{{/crossLink}} instance observing <i>this</i> with the accumulation applied.
-   */
-  reduce: function (initVal, accumulationFunction) {
-    return P.P.value(initVal).into(this.accumulate(initVal, accumulationFunction));
-  },
-
-
-  /**
    * Defers a ProAct.Actor listener.
    * <p>
    *  By default this means that the listener is put into active {{#crossLink "ProAct.Flow"}}{{/crossLink}} using it's

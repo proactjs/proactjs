@@ -14,8 +14,7 @@
  *
  * So ProAct.js can turn every vanilla JavaScript value to a set of reactive properties, and this generates a dependency graph between them.
  * The data flow in this oriented graph is determined by its edges. So if we should receive data from the outside of this dependency system we'll need
- * a powerful but easy to use tool to turn every user or server generated action into a data event, common to the graph. Enter the ProAct.Stream - the functional
- * part of ProAct.js
+ * a powerful but easy to use tool to turn every user or server generated action into a data event, common to the graph.
  *
  * ProAct.js can be used to define bindings, to separate views from models (mv*), for performance optimizations... It is a tool.
  * A powerful tool for creating other, high level tools, or applications.
@@ -61,7 +60,7 @@ var ProAct = Pro = P = {},
     opStoreAll,
     streamProvider, functionProvider,
     attachers, attacherKeys,
-    ActorUtil, StreamUtil;
+    ActorUtil;
 
 
 /**
@@ -141,7 +140,7 @@ ProAct.States = {
   /**
    * A closed ProAct object.
    *
-   * Streams that can emmit events anymore are closed streams.
+   * For example Streams that can emmit events anymore are closed streams.
    *
    * Properties which value can not be updated are closed (constants).
    *
@@ -276,19 +275,6 @@ ProAct.Utils = Pro.U = {
    */
   isArrayObject: function (value) {
     return P.U.isArray(value) || P.U.isProArray(value);
-  },
-
-  /**
-   * Checks if the passed value is a valid ProAct.js object or not.
-   * ProAct.js object have a special `__pro__` object that is hidden in them, which should be instance of {{#crossLink "ProAct.Core"}}{{/crossLink}}.
-   * TODO Move to the proact-properties module.
-   *
-   * @method isProObject
-   * @param {Object} value The value to check.
-   * @return {Boolean} True if the value is object containing {{#crossLink "ProAct.Property"}}{{/crossLink}} instances and has a `core`.
-   */
-  isProObject: function (value) {
-    return value && ProAct.U.isObject(value) && value.__pro__ !== undefined && ProAct.U.isObject(value.__pro__.properties);
   },
 
   /**
@@ -571,26 +557,3 @@ ProAct.Configuration = {
  * @for ProAct
  */
 ProAct.N = function () {};
-
-
-/**
- * <p>
- *  Represents the current caller of a method, the initiator of the current action.
- * </p>
- * <p>
- *  This property does the magic when for example an {{#crossLink "ProAct.AutoProperty"}}{{/crossLink}} is called
- *  for the first time and the dependencies to the other properties are created.
- *  The current caller expects to be used in a single threaded environment.
- * </p>
- * <p>
- *  Do not remove or modify this property manually.
- * </p>
- * TODO move to proact-properties module.
- *
- * @property currentCaller
- * @type Object
- * @default null
- * @static
- * @for ProAct
- */
-ProAct.currentCaller = null;
