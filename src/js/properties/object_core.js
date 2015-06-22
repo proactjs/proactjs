@@ -234,3 +234,23 @@ ProAct.ObjectCore.prototype = P.U.ex(Object.create(P.C.prototype), {
     this.makeProp(property);
   }
 });
+
+function ObjectProbProvider () {
+};
+
+ObjectProbProvider.prototype = P.U.ex(Object.create(P.ProbProvider.prototype), {
+  constructor: ObjectProbProvider,
+  filter: function (data, meta) {
+    return P.U.isObject(data) && !P.U.isArray(data);
+  },
+  provide: function (data, meta) {
+    var core = new P.OC(data, meta);
+    P.U.defValProp(data, '__pro__', false, false, false, core);
+
+    core.prob();
+
+    return data;
+  }
+});
+
+P.ProbProvider.register(new ObjectProbProvider());

@@ -756,6 +756,29 @@ ProAct.Property.prototype = P.U.ex(Object.create(P.Actor.prototype), {
 P.U.ex(P.Actor.prototype, {
 
   /**
+   * Generates a new {{#crossLink "ProAct.Property"}}{{/crossLink}} containing the state of an accumulations.
+   *
+   * <p>
+   *  The value will be updated with every update coming to this actor.
+   * </p>
+   *
+   *
+   * @for ProAct.Actor
+   * @instance
+   * @method reduce
+   * @param {Object} initVal
+   *      Initial value for the accumulation. For example '0' for sum.
+   * @param {Object} accumulationFunction
+   *      The function to accumulate.
+   * @return {ProAct.Property}
+   *      A {{#crossLink "ProAct.Property"}}{{/crossLink}} instance observing <i>this</i> with the accumulation applied.
+   */
+  reduce: function (initVal, accumulationFunction) {
+    return P.P.value(initVal).into(this.accumulate(initVal, accumulationFunction));
+  },
+
+
+  /**
    * Creates a {{{#crossLink "ProAct.Property"}}{{/crossLink}} instance,
    * dependent on this.
    * Comes from the `proact-properties` module.
@@ -768,3 +791,18 @@ P.U.ex(P.Actor.prototype, {
     return P.P.value(this.val, {}, this.queueName).into(this);
   }
 });
+
+function PropertyProbProvider () {
+};
+
+PropertyProbProvider.prototype = P.U.ex(Object.create(P.ProbProvider.prototype), {
+  constructor: PropertyProbProvider,
+  filter: function (data, meta) {
+    return data === null || (!P.U.isObject(data) && !P.U.isArray(data));
+  },
+  provide: function (data, meta) {
+    return P.P.lazyValue(data, meta);
+  }
+});
+
+P.ProbProvider.register(new PropertyProbProvider());
