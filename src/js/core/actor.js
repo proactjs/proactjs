@@ -28,7 +28,7 @@
  *      The name of the queue all the updates should be pushed to.
  *      <p>
  *        If this parameter is null/undefined the default queue of
- *        {@link ProAct.flow} is used.
+ *        {{#crossLink "ProAct/flow:property"}}{{/crossLink}} is used.
  *      </p>
  *      <p>
  *        If this parameter is not a string it is used as the
@@ -797,35 +797,30 @@ P.Actor.prototype = {
    * Adds a new <i>transformation</i> to the list of transformations
    * of <i>this actor</i>.
    *
-   * <p>
-   *  A transformation is a function or an object that has a <i>call</i> method defined.
-   *  This function or call method should have one argument and to return a transformed version of it.
-   *  If the returned value is {@link ProAct.Actor.BadValue}, the next transformations are skipped and the updating
-   *  value/event becomes - bad value.
-   * </p>
+   * A transformation is a function or an object that has a <i>call</i> method defined.
+   * This function or call method should have one argument and to return a transformed version of it.
+   * If the returned value is {@link ProAct.Actor.BadValue}, the next transformations are skipped and the updating
+   * value/event becomes - bad value.
    *
-   * <p>
-   *  Every value/event that updates <i>this actor</i> will be transformed using the new transformation.
-   * </p>
+   * Every value/event that updates <i>this actor</i> will be transformed using the new transformation.
    *
-   * This method uses {{#crossLink "ProAct.Actor/transform:method"}}{{/crossLink}}, but can read transformation
-   * funtion/object stored in the registry (if the proact-dsl module is present) by it's string name.
+   * The idea of this method is that it just calls {{#crossLink "ProAct.Actor/transform:method"}}{{/crossLink}},
+   * but it can be overidden from another module.
+   *
+   * TODO Maybe transformStored is a bad name 
    *
    * @for ProAct.Actor
    * @instance
    * @method transformStored
    * @protected
-   * @param {Object|String} transformation The transformation to add. Can be string - to be retrieved by name.
-   * @param {String} type The type of the transformation, for example `mapping`.
+   * @param {Object} transformation
+   *      The transformation to add. Can be string - to be retrieved by name.
+   * @param {String} type
+   *      The type of the transformation, for example `mapping`.
    * @return {ProAct.Actor}
    *      <b>this</b>
    */
   transformStored: function (transformation, type) {
-    if (P.registry && P.U.isString(transformation)) {
-      P.DSL.run(this, type + '(' + transformation + ')', P.registry);
-      return this;
-    }
-
     return this.transform(transformation);
   },
 
