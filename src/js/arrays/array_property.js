@@ -1,5 +1,5 @@
 /**
- * @module proact-properties
+ * @module proact-arrays
  */
 
 /**
