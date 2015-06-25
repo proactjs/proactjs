@@ -337,3 +337,19 @@ P.U.ex(P.Actor.prototype, {
   }
 
 });
+
+P.U.ex(P.ObjectCore.prototype, {
+
+  applyMeta: function (meta, property) {
+    if (meta && P.registry) {
+      if (!P.U.isArray(meta)) {
+        meta = [meta];
+      }
+
+      if (!(meta[0] instanceof ProAct.Property)) {
+        P.registry.setup.apply(P.registry, [property].concat(meta));
+      }
+    }
+  }
+
+});

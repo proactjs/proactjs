@@ -182,17 +182,12 @@ ProAct.ObjectCore.prototype = P.U.ex(Object.create(P.C.prototype), {
       this.properties[property].listeners.change = this.properties[property].listeners.change.concat(listeners);
     }
 
-    if (meta && P.registry) {
-      if (!P.U.isArray(meta)) {
-        meta = [meta];
-      }
-
-      if (!(meta[0] instanceof ProAct.Property)) {
-        P.registry.setup.apply(P.registry, [result].concat(meta));
-      }
-    }
+    this.applyMeta(meta, result);
 
     return result;
+  },
+
+  applyMeta: function (meta, property) {
   },
 
   /**
