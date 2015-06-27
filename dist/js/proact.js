@@ -21,8 +21,7 @@
 	 *
 	 * So ProAct.js can turn every vanilla JavaScript value to a set of reactive properties, and this generates a dependency graph between them.
 	 * The data flow in this oriented graph is determined by its edges. So if we should receive data from the outside of this dependency system we'll need
-	 * a powerful but easy to use tool to turn every user or server generated action into a data event, common to the graph. Enter the ProAct.Stream - the functional
-	 * part of ProAct.js
+	 * a powerful but easy to use tool to turn every user or server generated action into a data event, common to the graph.
 	 *
 	 * ProAct.js can be used to define bindings, to separate views from models (mv*), for performance optimizations... It is a tool.
 	 * A powerful tool for creating other, high level tools, or applications.
@@ -68,7 +67,7 @@
 	    opStoreAll,
 	    streamProvider, functionProvider,
 	    attachers, attacherKeys,
-	    ActorUtil, StreamUtil;
+	    ActorUtil;
 	
 	
 	/**
@@ -148,7 +147,7 @@
 	  /**
 	   * A closed ProAct object.
 	   *
-	   * Streams that can emmit events anymore are closed streams.
+	   * For example Streams that can emmit events anymore are closed streams.
 	   *
 	   * Properties which value can not be updated are closed (constants).
 	   *
@@ -283,19 +282,6 @@
 	   */
 	  isArrayObject: function (value) {
 	    return P.U.isArray(value) || P.U.isProArray(value);
-	  },
-	
-	  /**
-	   * Checks if the passed value is a valid ProAct.js object or not.
-	   * ProAct.js object have a special `__pro__` object that is hidden in them, which should be instance of {{#crossLink "ProAct.Core"}}{{/crossLink}}.
-	   * TODO Move to the proact-properties module.
-	   *
-	   * @method isProObject
-	   * @param {Object} value The value to check.
-	   * @return {Boolean} True if the value is object containing {{#crossLink "ProAct.Property"}}{{/crossLink}} instances and has a `core`.
-	   */
-	  isProObject: function (value) {
-	    return value && ProAct.U.isObject(value) && value.__pro__ !== undefined && ProAct.U.isObject(value.__pro__.properties);
 	  },
 	
 	  /**
@@ -579,28 +565,9 @@
 	 */
 	ProAct.N = function () {};
 	
-	
 	/**
-	 * <p>
-	 *  Represents the current caller of a method, the initiator of the current action.
-	 * </p>
-	 * <p>
-	 *  This property does the magic when for example an {{#crossLink "ProAct.AutoProperty"}}{{/crossLink}} is called
-	 *  for the first time and the dependencies to the other properties are created.
-	 *  The current caller expects to be used in a single threaded environment.
-	 * </p>
-	 * <p>
-	 *  Do not remove or modify this property manually.
-	 * </p>
-	 * TODO move to proact-properties module.
-	 *
-	 * @property currentCaller
-	 * @type Object
-	 * @default null
-	 * @static
-	 * @for ProAct
+	 * @module proact-flow
 	 */
-	ProAct.currentCaller = null;
 	
 	/**
 	 * <p>
@@ -616,7 +583,7 @@
 	 *  The actions with the numerically lowest priority are with highes prority when executed.
 	 * </p>
 	 * <p>
-	 *  The {@link ProAct.Queue#go} method deques all the actions from the queue and executes them in the right
+	 *  The {{#crossLink "ProAct.Queue/go:method"}}{{/crossLink}} method deques all the actions from the queue and executes them in the right
 	 *  order, using their priorities.
 	 * </p>
 	 * <p>
@@ -627,18 +594,18 @@
 	 * TODO Default name should be extracted to a constant. ~meddle@2014-07-10
 	 *
 	 * @class ProAct.Queue
+	 * @constructor
 	 * @param {String} name
 	 *    The name of the queue, every ProAct.Queue must have a name.
-	 *    The default value of the name is 'proq'. {@link ProAct.Queues} uses the names to manage its queues.
+	 *    The default value of the name is 'proq'. {{#crossLink "ProAct.Queues"}}{{/crossLink}} uses the names to manage its queues.
 	 * @param {Object} options
 	 *    Various options for the queue.
 	 *    <p>Available options:</p>
 	 *    <ul>
-	 *      <li>before - A callback called before each call of {@link ProAct.Queue#go}.</li>
-	 *      <li>after - A callback called after each call of {@link ProAct.Queue#go}.</li>
+	 *      <li>before - A callback called before each call of {{#crossLink "ProAct.Queue/go:method"}}{{/crossLink}}.</li>
+	 *      <li>after - A callback called after each call of {{#crossLink "ProAct.Queue/go:method"}}{{/crossLink}}.</li>
 	 *      <li>err - A callback called every time an error is thrown.</li>
 	 *    </ul>
-	 * @see {@link ProAct.Queues}
 	 */
 	ProAct.Queue = P.Q = function (name, options) {
 	  this.name = name || 'proq';
@@ -650,8 +617,8 @@
 	/**
 	 * Executes the passed <i>action</i>.
 	 *
-	 * @function runAction
-	 * @memberof ProAct.Queue
+	 * @for ProAct.Queue
+	 * @method runAction
 	 * @static
 	 * @param {ProAct.Queue} queue
 	 *      The queue managing the action to execute.
@@ -713,18 +680,17 @@
 	  /**
 	   * Reference to the constructor of this object.
 	   *
-	   * @memberof ProAct.Queue
-	   * @instance
-	   * @constant
-	   * @type {Object}
-	   * @default ProAct.Queue
+	   * @property constructor
+	   * @type ProAct.Queue
+	   * @final
+	   * @for ProAct.Queue
 	   */
 	  constructor: ProAct.Queue,
 	
 	  /**
-	   * Retrieves the lenght of this ProAct.Queue.
+	   * Retrieves the lenght of this `ProAct.Queue`.
 	   *
-	   * @memberof ProAct.Queue
+	   * @for ProAct.Queue
 	   * @instance
 	   * @method length
 	   * @return {Number}
@@ -735,9 +701,9 @@
 	  },
 	
 	  /**
-	   * Checks if this ProAct.Queue is empty.
+	   * Checks if this `ProAct.Queue` is empty.
 	   *
-	   * @memberof ProAct.Queue
+	   * @for ProAct.Queue
 	   * @instance
 	   * @method isEmpty
 	   * @return {Boolean}
@@ -751,10 +717,10 @@
 	   * Pushes an action to this queue.
 	   * This method can enque the same action multiple times and always with priority of '1'.
 	   * <p>
-	   *  ProAct.Queue#defer, ProAct.Queue#enque and ProAct.Queue#add are aliases of this method.
+	   *  `defer`, `enque` and `add` are aliases of this method.
 	   * </p>
 	   *
-	   * @memberof ProAct.Queue
+	   * @for ProAct.Queue
 	   * @instance
 	   * @method push
 	   * @param {Object} context
@@ -774,7 +740,7 @@
 	   *      Arguments to be passed to the action when it is executed.
 	   */
 	  push: function (context, action, args) {
-	    if (context && P.U.isFunction(context)) {
+	    if (context && (typeof(context) === 'function')) {
 	      args = action;
 	      action = context;
 	      context = null;
@@ -791,10 +757,10 @@
 	   *  This means that this action will be executed after all the other actions, pushed only once.
 	   * </p>
 	   * <p>
-	   *  ProAct.Queue#deferOnce, ProAct.Queue#enqueOnce and ProAct.Queue#addOnce are aliases of this method.
+	   *  `deferOnce`, `enqueOnce` and `addOnce` are aliases of this method.
 	   * </p>
 	   *
-	   * @memberof ProAct.Queue
+	   * @for ProAct.Queue
 	   * @instance
 	   * @method pushOnce
 	   * @param {Object} context
@@ -812,10 +778,9 @@
 	   *      </p>
 	   * @param {Array} args
 	   *      Arguments to be passed to the action when it is executed.
-	   * @see {@link ProAct.Queue#push}
 	   */
 	  pushOnce: function (context, action, args) {
-	    if (context && P.U.isFunction(context)) {
+	    if (context && (typeof(context) === 'function')) {
 	      args = action;
 	      action = context;
 	      context = null;
@@ -849,16 +814,14 @@
 	   *  this method is recursively called executing the new actions.
 	   * </p>
 	   * <p>
-	   *  ProAct.Queue#run is alias of this method.
+	   *  `run` is alias of this method.
 	   * </p>
 	   *
-	   * @memberof ProAct.Queue
+	   * @for ProAct.Queue
 	   * @instance
 	   * @method go
 	   * @param {Boolean} once
 	   *      True if 'go' should not be called for actions generated by the executed ones.
-	   * @see {@link ProAct.Queue#push}
-	   * @see {@link ProAct.Queue#pushOnce}
 	   */
 	  go: function (once) {
 	    var queue = this._queue,
@@ -916,8 +879,12 @@
 	P.Q.prototype.run = P.Q.prototype.go;
 	
 	/**
+	 * @module proact-flow
+	 */
+	
+	/**
 	 * <p>
-	 *  Creates a queue of {@link ProAct.Queue}s. The order of these sub-queues is used
+	 *  Creates a queue of {{#crossLink "ProAct.Queue"}}{{/crossLink}}s. The order of these sub-queues is used
 	 *  to determine the order in which they will be dequed.
 	 * </p>
 	 * <p>
@@ -929,17 +896,18 @@
 	 *  from the lower level one.
 	 * </p>
 	 * <p>
-	 *  The {@link ProAct.Queues#go} method deques all the actions from all the queues and executes them in the right
+	 *  The {{#crossLink "ProAct.Queues/go:method"}}{{/crossLink}} method deques all the actions from all the queues and executes them in the right
 	 *  order, using their priorities and queue order.
 	 * </p>
 	 * <p>
-	 *  A ProAct.Queues can be used to setup very complex the action flow.
+	 *  A `ProAct.Queues` can be used to setup very complex the action flow.
 	 *  ProAct.js uses it with only one queue - 'proq' to create an action flow if something changes.
 	 * </p>
 	 *
 	 * TODO We need to pass before, after and error callbacks here too. ~meddle@2014-07-10
 	 *
 	 * @class ProAct.Queues
+	 * @constructor
 	 * @param {Array} queueNames
 	 *      Array with the names of the sub-queues. The size of this array determines
 	 *      the number of the sub-queues.
@@ -947,10 +915,8 @@
 	 *    Various options for the ProAct.Queues.
 	 *    <p>Available options:</p>
 	 *    <ul>
-	 *      <li>queue - An options object containing options to be passed to all the sub-queues. For more information see {@link ProAct.Queue}.</li>
+	 *      <li>queue - An options object containing options to be passed to all the sub-queues. For more information see {{#crossLink "ProAct.Queue"}}{{/crossLink}}.</li>
 	 *    </ul>
-	 * @see {@link ProAct.Queue}
-	 * @see {@link ProAct.Flow}
 	 */
 	ProAct.Queues = P.QQ = function (queueNames, options) {
 	  if (!queueNames) {
@@ -973,18 +939,17 @@
 	  /**
 	   * Reference to the constructor of this object.
 	   *
-	   * @memberof ProAct.Queues
-	   * @instance
-	   * @constant
-	   * @type {Object}
-	   * @default ProAct.Queues
+	   * @property constructor
+	   * @type ProAct.Queues
+	   * @final
+	   * @for ProAct.Queues
 	   */
 	  constructor: ProAct.Queues,
 	
 	  /**
-	   * Checks if this ProAct.Queues is empty.
+	   * Checks if this `ProAct.Queues` is empty.
 	   *
-	   * @memberof ProAct.Queues
+	   * @for ProAct.Queues
 	   * @instance
 	   * @method isEmpty
 	   * @return {Boolean}
@@ -1012,10 +977,10 @@
 	   * Pushes an action to a sub-queue.
 	   * This method can enque the same action multiple times and always with priority of '1'.
 	   * <p>
-	   *  ProAct.Queues#defer, ProAct.Queues#enque and ProAct.Queues#add are aliases of this method.
+	   *  `defer`, `enque` and `add` are aliases of this method.
 	   * </p>
 	   *
-	   * @memberof ProAct.Queues
+	   * @for ProAct.Queues
 	   * @instance
 	   * @method push
 	   * @param {String} queueName
@@ -1039,10 +1004,9 @@
 	   *      </p>
 	   * @param {Array} args
 	   *      Arguments to be passed to the action when it is executed.
-	   * @see {@link ProAct.Queue#push}
 	   */
 	  push: function (queueName, context, action, args) {
-	    if (queueName && !P.U.isString(queueName)) {
+	    if (queueName && !(typeof(queueName) === 'string')) {
 	      args = action;
 	      action = context;
 	      context = queueName;
@@ -1066,10 +1030,10 @@
 	   *  This means that this action will be executed after all the other actions, pushed only once.
 	   * </p>
 	   * <p>
-	   *  ProAct.Queues#deferOnce, ProAct.Queues#enqueOnce and ProAct.Queues#addOnce are aliases of this method.
+	   *  `deferOnce`, `enqueOnce` and `addOnce` are aliases of this method.
 	   * </p>
 	   *
-	   * @memberof ProAct.Queues
+	   * @for ProAct.Queues
 	   * @instance
 	   * @method pushOnce
 	   * @param {String} queueName
@@ -1093,10 +1057,9 @@
 	   *      </p>
 	   * @param {Array} args
 	   *      Arguments to be passed to the action when it is executed.
-	   * @see {@link ProAct.Queue#pushOnce}
 	   */
 	  pushOnce: function (queueName, context, action, args) {
-	    if (queueName && !P.U.isString(queueName)) {
+	    if (queueName && !(typeof(queueName) === 'string')) {
 	      args = action;
 	      action = context;
 	      context = queueName;
@@ -1123,16 +1086,14 @@
 	   *  to the second queue again and then continues through all the queues.
 	   * </p>
 	   * <p>
-	   *  ProAct.Queues#run and ProAct.Queues#flush are aliases of this method.
+	   *  `run` and `flush` are aliases of this method.
 	   * </p>
 	   *
-	   * @memberof ProAct.Queues
+	   * @for ProAct.Queues
 	   * @instance
 	   * @method go
 	   * @param {String} queueName
 	   *      The name of the queue to begin from. Can be null and defaults to the first sub-queue.
-	   * @see {@link ProAct.Queues#push}
-	   * @see {@link ProAct.Queues#pushOnce}
 	   */
 	  go: function (queueName) {
 	    var currentQueueIndex = 0,
@@ -1188,14 +1149,22 @@
 	P.QQ.prototype.flush = P.QQ.prototype.run = P.QQ.prototype.go;
 	
 	/**
+	 * The `proact-flow` provides executing functions in the right order in time.
+	 * Function execution can be deferred, there are priorities and turns.
+	 *
+	 * @module proact-flow
+	 * @main proact-flow
+	 */
+	
+	/**
 	 * <p>
 	 *  Constructs the action flow of the ProAct.js; An action flow is a set of actions
 	 *  executed in the reactive environment, which order is determined by the dependencies
 	 *  between the reactive properties. The action flow puts on motion the data flow in the reactive
 	 *  ecosystem. Every change on a property triggers an action flow, which triggers the data flow.
 	 * </p>
-	 *  ProAct.Flow is inspired by the [Ember's Backburner.js]{@link https://github.com/ebryn/backburner.js}.
-	 *  The defferences are the priority queues and some other optimizations like the the 'once' argument of the {@link ProAct.Queue#go} method.
+	 *  ProAct.Flow is inspired by the Ember's Backburner.js (https://github.com/ebryn/backburner.js).
+	 *  The defferences are the priority queues and some other optimizations like the the 'once' argument of the {{#crossLink "ProAct.Queue/go:method"}}{{/crossLink}} method.
 	 *  It doesn't include debouncing and timed defer of actions for now.
 	 * <p>
 	 *  ProAct.Flow is used to solve many of the problems in the reactive programming, for example the diamond problem.
@@ -1204,14 +1173,15 @@
 	 *  It can be used for other purposes too, for example to run rendering in a rendering queue, after all of the property updates.
 	 * </p>
 	 * <p>
-	 *  ProAct.Flow, {@link ProAct.Queues} and {@link ProAct.Queue} together form the ActionFlow module of ProAct.
+	 *  `ProAct.Flow`, {{#crossLink "ProAct.Queues"}}{{/crossLink}} and {{#crossLink "ProAct.Queue"}}{{/crossLink}} together form the `proact-flow` module of ProAct.
 	 * </p>
 	 *
 	 * TODO ProAct.Flow#start and ProAct.Flow#stop are confusing names - should be renamed to something like 'init' and 'exec'.
 	 *
+	 * @constructor
 	 * @class ProAct.Flow
 	 * @param {Array} queueNames
-	 *      Array with the names of the sub-queues of the {@link ProAct.Queues}es of the flow. The size of this array determines
+	 *      Array with the names of the sub-queues of the {{#crossLink "ProAct.Queues"}}{{/crossLink}}es of the flow. The size of this array determines
 	 *      the number of the sub-queues.
 	 * @param {Object} options
 	 *    Various options for the ProAct.Flow.
@@ -1220,10 +1190,8 @@
 	 *      <li>start - A callback that will be called every time when the action flow starts.</li>
 	 *      <li>stop - A callback that will be called every time when the action flow ends.</li>
 	 *      <li>err - A callback that will be called if an error is thrown in the action flow.</li>
-	 *      <li>flowInstance - Options object for the current flow instance. The flow instances are @{link ProAct.Queues}es.</li>
+	 *      <li>flowInstance - Options object for the current flow instance. The flow instances are of the class {{#crossLink "ProAct.Queues"}}{{/crossLink}}.</li>
 	 *    </ul>
-	 * @see {@link ProAct.Queues}
-	 * @see {@link ProAct.Queue}
 	 */
 	ProAct.Flow = P.F = function (queueNames, options) {
 	  this.setQueues(queueNames);
@@ -1235,7 +1203,16 @@
 	
 	  this.pauseMode = false;
 	
-	  P.U.defValProp(this, 'closingQueue', false, false, false, new ProAct.Queue('closing'));
+	  try {
+	    Object.defineProperty(this, 'closingQueue', {
+	      enumerable: false,
+	      configurable: false,
+	      writable: false,
+	      value: new ProAct.Queue('closing')
+	    });
+	  } catch (e) {
+	    this.closingQueue = new ProAct.Queue('closing');
+	  }
 	};
 	
 	P.F.prototype = {
@@ -1243,29 +1220,28 @@
 	  /**
 	   * Reference to the constructor of this object.
 	   *
-	   * @memberof ProAct.Flow
-	   * @instance
-	   * @constant
-	   * @type {Object}
-	   * @default ProAct.Flow
+	   * @property constructor
+	   * @type ProAct.Flow
+	   * @final
+	   * @for ProAct.Flow
 	   */
 	  constructor: ProAct.Flow,
 	
 	  /**
-	   * Puts the ProAct.Flow in running mode, meaning actions can be defered in it.
+	   * Puts the `ProAct.Flow` in running mode, meaning actions can be defered in it.
 	   * <p>
-	   *  It creates a new flow instance - instance of {@link ProAct.Queues} and
+	   *  It creates a new flow instance - instance of {{#crossLink "ProAct.Queues"}}{{/crossLink}} and
 	   *  if there was a running instance, it is set to be the previous inctance.
 	   * </p>
 	   * <p>
-	   *  If a <i>start</i> callback was passed when this ProAct.Flow was being created,
+	   *  If a <i>start</i> callback was passed when this `ProAct.Flow` was being created,
 	   *  it is called with the new flow instance.
 	   * </p>
 	   * <p>
-	   *  ProAct.Flow.begin is alias of this method.
+	   *  `begin` is alias of this method.
 	   * </p>
 	   *
-	   * @memberof ProAct.Flow
+	   * @for ProAct.Flow
 	   * @instance
 	   * @method start
 	   */
@@ -1292,7 +1268,7 @@
 	   *  When a new <i>flowInstance</i> is created the updated list will be used.
 	   * </p>
 	   *
-	   * @memberof ProAct.Flow
+	   * @for ProAct.Flow
 	   * @instance
 	   * @method addQueue
 	   * @param {String} queueName
@@ -1308,11 +1284,11 @@
 	   *  When a new <i>flowInstance</i> is created the new list will be used.
 	   * </p>
 	   *
-	   * @memberof ProAct.Flow
+	   * @for ProAct.Flow
 	   * @instance
 	   * @method setQueues
 	   * @param {Array} queueNames
-	   *      Array with the names of the sub-queues of the {@link ProAct.Queues}es of the flow.
+	   *      Array with the names of the sub-queues of the {{#crossLink "ProAct.Queues"}}{{/crossLink}}es of the flow.
 	   *      The size of this array determines the number of the sub-queues.
 	   */
 	  setQueues: function (queueNames) {
@@ -1324,11 +1300,11 @@
 	
 	  /**
 	   * Starts an action flow consisting of all the actions defered after the
-	   * last call of {@link ProAct.Flow#start} and then stops the ProAct.Flow.
+	   * last call of {{#crossLink "ProAct.Flow/start:method"}}{{/crossLink}} and then stops the `ProAct.Flow`.
 	   *
 	   * <p>
 	   *  If there is a current action flow instance, it is flushed, using the
-	   *  {@link ProAct.Queues#go} method.
+	   *  {{#crossLink "ProAct.Queues/go:method"}}{{/crossLink}} method.
 	   * </p>
 	   * <p>
 	   *  If there was aprevious flow instance, it is set to be the current one.
@@ -1342,10 +1318,10 @@
 	   *  and if you want to execute them and stop it, you call this method.
 	   * </p>
 	   * <p>
-	   *  ProAct.Flow#end is an alias for this method.
+	   *  `end` is an alias for this method.
 	   * </p>
 	   *
-	   * @memberof ProAct.Flow
+	   * @for ProAct.Flow
 	   * @instance
 	   * @method stop
 	   */
@@ -1379,11 +1355,9 @@
 	   * When the flow is paused actions that should be defered to be run in it
 	   * are skipped.
 	   *
-	   * @memberof ProAct.Flow
+	   * @for ProAct.Flow
 	   * @instance
 	   * @method pause
-	   * @see {@link ProAct.Flow#push}
-	   * @see {@link ProAct.Flow#pushOnce}
 	   */
 	  pause: function () {
 	    this.pauseMode = true;
@@ -1393,10 +1367,9 @@
 	   * Resumes the action flow if it is paused.
 	   * The flow becomes active again and actions can be pushed into it.
 	   *
-	   * @memberof ProAct.Flow
+	   * @for ProAct.Flow
 	   * @instance
 	   * @method resume
-	   * @see {@link ProAct.Flow#pause}
 	   */
 	  resume: function () {
 	    this.pauseMode = false;
@@ -1410,20 +1383,16 @@
 	   *  that should be pushed to a flow in the <i>callback</i>.
 	   * </p>
 	   * <p>
-	   *  ProAct.Flow#go and ProAct.Flow#flush are aliases of this method.
+	   *  `go` and `flush` are aliases of this method.
 	   * </p>
 	   *
-	   * @memberof ProAct.Flow
+	   * @for ProAct.Flow
 	   * @instance
 	   * @method run
 	   * @param {Object} context
 	   *      The value of <i>this</i> bound to the <i>callback</i> when it is executed.
 	   * @param {Function} callback
-	   *      The callback that will be invoked in a new running ProAct.Flow.
-	   * @see {@link ProAct.Flow#start}
-	   * @see {@link ProAct.Flow#stop}
-	   * @see {@link ProAct.Flow#push}
-	   * @see {@link ProAct.Flow#pushOnce}
+	   *      The callback that will be invoked in a new running `ProAct.Flow`.
 	   */
 	  run: function (context, callback) {
 	    var options = this.options,
@@ -1456,28 +1425,24 @@
 	  },
 	
 	  /**
-	   * Checks if there is an active {@link ProAct.Queues} instance in this ProAct.Flow.
+	   * Checks if there is an active {{#crossLink "ProAct.Queues"}}{{/crossLink}} instance in this `ProAct.Flow`.
 	   *
 	   * TODO This should be named 'isActive'.
 	   *
-	   * @memberof ProAct.Flow
+	   * @for ProAct.Flow
 	   * @instance
 	   * @method isRunning
-	   * @see {@link ProAct.Flow#start}
-	   * @see {@link ProAct.Flow#stop}
 	   */
 	  isRunning: function () {
 	    return this.flowInstance !== null && this.flowInstance !== undefined;
 	  },
 	
 	  /**
-	   * Checks if this ProAct.Flow is paused.
+	   * Checks if this `ProAct.Flow` is paused.
 	   *
-	   * @memberof ProAct.Flow
+	   * @for ProAct.Flow
 	   * @instance
 	   * @method isPaused
-	   * @see {@link ProAct.Flow#pause}
-	   * @see {@link ProAct.Flow#resume}
 	   */
 	  isPaused: function () {
 	    return this.isRunning() && this.pauseMode;
@@ -1487,7 +1452,7 @@
 	   * Pushes an action to the flow.
 	   * This method can defer in the flow the same action multiple times.
 	   * <p>
-	   *  ProAct.Flow#defer, ProAct.Flow#enque and ProAct.Flow#add are aliases of this method.
+	   *  `defer`, `enque` and `add` are aliases of this method.
 	   * </p>
 	   * <p>
 	   *  If the flow is paused, the action will not be defered.
@@ -1495,7 +1460,7 @@
 	   *
 	   * TODO Errors should be put in constants!
 	   *
-	   * @memberof ProAct.Flow
+	   * @for ProAct.Flow
 	   * @instance
 	   * @method push
 	   * @param {String} queueName
@@ -1519,8 +1484,6 @@
 	   *      </p>
 	   * @param {Array} args
 	   *      Arguments to be passed to the action when it is executed.
-	   * @see {@link ProAct.Queues#push}
-	   * @see {@link ProAct.Flow#isPaused}
 	   * @throws {Error} <i>Not in running flow!</i>, if there is no action flow instance.
 	   */
 	  push: function (queueName, context, action, args) {
@@ -1539,13 +1502,13 @@
 	   *  adding it, its set to be executed later then all the actions that were defered only once, using this method.
 	   * </p>
 	   * <p>
-	   *  ProAct.Flow#deferOnce, ProAct.Flow#enqueOnce and ProAct.Flow#addOnce are aliases of this method.
+	   *  `deferOnce`, `enqueOnce` and `addOnce` are aliases of this method.
 	   * </p>
 	   * <p>
 	   *  If the flow is paused, the action will not be defered.
 	   * </p>
 	   *
-	   * @memberof ProAct.Flow
+	   * @for ProAct.Flow
 	   * @instance
 	   * @method pushOnce
 	   * @param {String} queueName
@@ -1569,8 +1532,6 @@
 	   *      </p>
 	   * @param {Array} args
 	   *      Arguments to be passed to the action when it is executed.
-	   * @see {@link ProAct.Queues#pushOnce}
-	   * @see {@link ProAct.Flow#isPaused}
 	   * @throws {Error} <i>Not in running flow!</i>, if there is no action flow instance.
 	   */
 	  pushOnce: function (queueName, context, action, args) {
@@ -1588,20 +1549,18 @@
 	};
 	
 	/**
-	 * The {@link ProAct.Flow} instance used by ProAct's property updates by default.
+	 * The {{#crossLink "ProAct.Flow"}}{{/crossLink}} instance used by ProAct's property updates by default.
 	 * <p>
 	 *  It defines only one queue - the default one <i>proq</i>.
-	 * </p>
-	 * <p>
-	 *   It has default error callback that outputs errors to the {@link ProAct.flow.errStream}, if defined.
 	 * </p>
 	 * <p>
 	 *  Override this instance if you are creating a framework or toolset over ProAct.js.
 	 * </p>
 	 *
+	 * @property flow
 	 * @type ProAct.Flow
-	 * @memberof ProAct
-	 * @static
+	 * @for ProAct
+	 * @final
 	 */
 	ProAct.flow = new ProAct.Flow(['proq'], {
 	  err: function (e) {
@@ -1831,7 +1790,7 @@
 	 *      The name of the queue all the updates should be pushed to.
 	 *      <p>
 	 *        If this parameter is null/undefined the default queue of
-	 *        {@link ProAct.flow} is used.
+	 *        {{#crossLink "ProAct/flow:property"}}{{/crossLink}} is used.
 	 *      </p>
 	 *      <p>
 	 *        If this parameter is not a string it is used as the
@@ -2600,35 +2559,30 @@
 	   * Adds a new <i>transformation</i> to the list of transformations
 	   * of <i>this actor</i>.
 	   *
-	   * <p>
-	   *  A transformation is a function or an object that has a <i>call</i> method defined.
-	   *  This function or call method should have one argument and to return a transformed version of it.
-	   *  If the returned value is {@link ProAct.Actor.BadValue}, the next transformations are skipped and the updating
-	   *  value/event becomes - bad value.
-	   * </p>
+	   * A transformation is a function or an object that has a <i>call</i> method defined.
+	   * This function or call method should have one argument and to return a transformed version of it.
+	   * If the returned value is {@link ProAct.Actor.BadValue}, the next transformations are skipped and the updating
+	   * value/event becomes - bad value.
 	   *
-	   * <p>
-	   *  Every value/event that updates <i>this actor</i> will be transformed using the new transformation.
-	   * </p>
+	   * Every value/event that updates <i>this actor</i> will be transformed using the new transformation.
 	   *
-	   * This method uses {{#crossLink "ProAct.Actor/transform:method"}}{{/crossLink}}, but can read transformation
-	   * funtion/object stored in the registry (if the proact-dsl module is present) by it's string name.
+	   * The idea of this method is that it just calls {{#crossLink "ProAct.Actor/transform:method"}}{{/crossLink}},
+	   * but it can be overidden from another module.
+	   *
+	   * TODO Maybe transformStored is a bad name 
 	   *
 	   * @for ProAct.Actor
 	   * @instance
 	   * @method transformStored
 	   * @protected
-	   * @param {Object|String} transformation The transformation to add. Can be string - to be retrieved by name.
-	   * @param {String} type The type of the transformation, for example `mapping`.
+	   * @param {Object} transformation
+	   *      The transformation to add. Can be string - to be retrieved by name.
+	   * @param {String} type
+	   *      The type of the transformation, for example `mapping`.
 	   * @return {ProAct.Actor}
 	   *      <b>this</b>
 	   */
 	  transformStored: function (transformation, type) {
-	    if (P.registry && P.U.isString(transformation)) {
-	      P.DSL.run(this, type + '(' + transformation + ')', P.registry);
-	      return this;
-	    }
-	
 	    return this.transform(transformation);
 	  },
 	
@@ -2806,31 +2760,6 @@
 	   *      A new ProAct.Actor instance with the <i>accumulation</i> applied.
 	   */
 	  accumulate: P.N,
-	
-	  /**
-	   * TODO - Move to the proact-properties module!
-	   *
-	   * Generates a new {{#crossLink "ProAct.Property"}}{{/crossLink}} containing the state of an accumulations.
-	   *
-	   * <p>
-	   *  The value will be updated with every update coming to this actor.
-	   * </p>
-	   *
-	   *
-	   * @for ProAct.Actor
-	   * @instance
-	   * @method reduce
-	   * @param {Object} initVal
-	   *      Initial value for the accumulation. For example '0' for sum.
-	   * @param {Object} accumulationFunction
-	   *      The function to accumulate.
-	   * @return {ProAct.Property}
-	   *      A {{#crossLink "ProAct.Property"}}{{/crossLink}} instance observing <i>this</i> with the accumulation applied.
-	   */
-	  reduce: function (initVal, accumulationFunction) {
-	    return P.P.value(initVal).into(this.accumulate(initVal, accumulationFunction));
-	  },
-	
 	
 	  /**
 	   * Defers a ProAct.Actor listener.
@@ -3235,38 +3164,154 @@
 	});
 	
 	
-	function ValueEvent (source, target) {
-	  var type = ProAct.Event.Types.value,
-	      args = slice.call(arguments, 2);
-	  ProAct.Event.apply(this, [source, target, type].concat(args));
+	/**
+	 * @module proact-core
+	 */
 	
-	  this.object = args[0];
-	  this.oldVal = args[1];
-	  this.newVal = args[2];
-	}
+	/**
+	 * A `ProbProvider` provides a way for creating a ProAct implementation,
+	 * using raw data.
+	 *
+	 * For example such a provider can provide a way to create an
+	 * {{#crossLink "ProAct.Actor"}}{{/crossLink}} from a plain JavaScript object.
+	 *
+	 * @class ProAct.ProbProvider
+	 * @constructor
+	 */
+	function ProbProvider () {
+	};
 	
-	ProAct.ValueEvent = P.VE = ValueEvent;
+	ProAct.ProbProvider = ProbProvider;
 	
-	ValueEvent.prototype = P.U.ex(Object.create(ProAct.Event.prototype), {
-	  constructor: ValueEvent,
-	  fromVal: function () {
-	    if (this.object && this.object.__pro__ &&
-	        this.object.__pro__.properties[this.target].type() === P.P.Types.auto) {
-	      return this.object.__pro__.properties[this.target].oldVal;
-	    }
+	ProbProvider.prototype = {
 	
-	    return this.oldVal;
+	  /**
+	   * Reference to the constructor of this object.
+	   *
+	   * @property constructor
+	   * @type ProAct.ProbProvider
+	   * @final
+	   * @for ProAct.ProbProvider
+	   */
+	  constructor: ProbProvider,
+	
+	  /**
+	   * Used to check if this `ProAct.ProbProvider` is compliant with the passed data.
+	   *
+	   * Abstract - must be implemented by an extender.
+	   *
+	   * @for ProAct.ProbProvider
+	   * @abstract
+	   * @instance
+	   * @method filter
+	   * @param {Object} data
+	   *      The data to check.
+	   * @param {Object|String} meta
+	   *      Meta-data used to help in filtering.
+	   * @return {Boolean}
+	   *      If <i>this</i> provider is compliant with the passed data.
+	   */
+	  filter: function (data, meta) {
+	    throw new Error('Implement!');
 	  },
 	
-	  toVal: function () {
-	    if (this.object && this.object.__pro__ &&
-	        this.object.__pro__.properties[this.target].type() === P.P.Types.auto) {
-	      return this.object.__pro__.properties[this.target].val;
-	    }
-	
-	    return this.newVal;
+	  /**
+	   * Creates a reactive object from the passed data
+	   *
+	   * Abstract - must be implemented by an extender.
+	   *
+	   * @for ProAct.ProbProvider
+	   * @abstract
+	   * @instance
+	   * @method provide
+	   * @param {Object} data
+	   *      The data to use as a source for the object.
+	   * @param {Object|String} meta
+	   *      Meta-data used to help when creating.
+	   * @return {Object}
+	   *      A reactive representation of the data.
+	   */
+	  provide: function (data, meta) {
+	    throw new Error('Implement!');
 	  }
-	});
+	};
+	
+	(function (P) {
+	  var providers = [];
+	
+	  P.U.ex(P.ProbProvider, {
+	
+	
+	    /**
+	     * Registers a `ProAct.ProbProvider`.
+	     *
+	     * The provider is appended in the end of the list of `ProAct.ProbProvider`s.
+	     *
+	     * @for ProAct.ProbProvider
+	     * @method register
+	     * @static
+	     * @param {ProAct.ProbProvider} provider
+	     *      The `ProAct.ProbProvider` to register.
+	     */
+	    register: function (provider) {
+	      providers.push(provider);
+	    },
+	
+	    /**
+	     * Provides a reactive representation of passed simple data.
+	     *
+	     * @for ProAct.ProbProvider
+	     * @static
+	     * @param {Object} data
+	     *      The data for which to try and provide a reactive object representation.
+	     * @param {String|Object} meta
+	     *      Meta information to be used for filtering and configuration of the reactive object to be provided.
+	     * @return {Object}
+	     *      A reactive object provided by registered provider, or null if there is no compliant provider.
+	     */
+	    provide: function (data, meta) {
+	      var ln = providers.length,
+	          result = null,
+	          provider = null,
+	          i;
+	
+	      for (i = 0; i < ln; i++) {
+	        provider = providers[i];
+	        if (provider.filter(data, meta)) {
+	          break;
+	        } else {
+	          provider = null;
+	        }
+	      }
+	
+	      if (provider) {
+	        result = provider.provide(data, meta);
+	      }
+	
+	      return result;
+	    }
+	  });
+	}(P));
+	
+	/**
+	 * The `ProAct.prob` method is the entry point for creating reactive values in ProAct.js
+	 *
+	 * TODO More docs
+	 *
+	 * @for ProAct
+	 * @method prob
+	 * @static
+	 * @param {Object} object
+	 *      The object/value to make reactive.
+	 * @param {Object|String} meta
+	 *      Meta-data used to help in the reactive object creation.
+	 * @return {Object}
+	 *      Reactive representation of the passed <i>object</i>.
+	 */
+	function prob (object, meta) {
+	  return ProbProvider.provide(object, meta);
+	}
+	ProAct.prob = prob;
 	
 	
 	/**
@@ -3278,7 +3323,7 @@
 	 */
 	
 	// PRIVATE
-	StreamUtil = {
+	var StreamUtil = {
 	  go: function (event, useTransformations) {
 	    if (this.listeners.change.length === 0) {
 	      return this;
@@ -3753,7 +3798,7 @@
 	   *
 	   *  // source :
 	   *  // --3---5---2--4---3---4---5--|->
-	   *  // skipWhlie:
+	   *  // skipWhile:
 	   *  // ----------2--4---3---4---5--|->
 	   *
 	   * ```
@@ -3832,7 +3877,7 @@
 	   *
 	   *  // source :
 	   *  // --3---5------6---|->
-	   *  // skipWhlie:
+	   *  // diff:
 	   *  // --3---2------1---|->
 	   *
 	   * ```
@@ -3904,7 +3949,7 @@
 	   *
 	   *  // source :
 	   *  // --3---5---2--4---3---4---5--|->
-	   *  // skipWhlie:
+	   *  // takeWhile:
 	   *  // --3---5--|->
 	   *
 	   * ```
@@ -4743,7 +4788,7 @@
 	 *
 	 * @class ProAct.SubscribableStream
 	 * @constructor
-	 * @extends ProAct.SubscribableStream
+	 * @extends ProAct.Stream
 	 * @param {Function} subscribe
 	 *      A function used to subscribe to a source, when the first listener to this stream is attached.
 	 * @param {String} queueName
@@ -4772,7 +4817,7 @@
 	
 	  this.subscribe = subscribe;
 	  this.unsubscribe = null;
-	  this.subscribtions = 0;
+	  this.subscriptions = 0;
 	}
 	ProAct.SubscribableStream = P.SUS = SubscribableStream;
 	
@@ -4826,10 +4871,10 @@
 	   *      <b>this</b>
 	   */
 	  on: function (actions, listener) {
-	    if (this.subscribtions === 0) {
+	    if (this.subscriptions === 0) {
 	      this.unsubscribe = this.subscribe(this);
 	    }
-	    this.subscribtions++;
+	    this.subscriptions++;
 	
 	    return P.S.prototype.on.call(this, actions, listener);
 	  },
@@ -4890,22 +4935,454 @@
 	   *      <b>this</b>
 	   */
 	  off: function (actions, listener) {
-	    this.subscribtions--;
+	    this.subscriptions--;
 	
 	    if (!actions && !listener) {
-	      this.subscribtions = 0;
+	      this.subscriptions = 0;
 	    }
-	    if (this.subscribtions < 0) {
-	      this.subscribtions = 0;
+	    if (this.subscriptions < 0) {
+	      this.subscriptions = 0;
 	    }
 	
-	    if (this.subscribtions === 0 && this.unsubscribe) {
+	    if (this.subscriptions === 0 && this.unsubscribe) {
 	      this.unsubscribe(this);
 	    }
 	
 	    return P.S.prototype.off.call(this, actions, listener);
 	  }
 	});
+	
+	/**
+	 * Creates a {{#crossLink "ProAct.Stream"}}{{/crossLink}} instance.
+	 *
+	 * @for ProAct
+	 * @method stream
+	 * @static
+	 * @return {ProAct.Stream}
+	 *      A {{#crossLink "ProAct.Stream"}}{{/crossLink}} instance.
+	 */
+	function stream (subscribe, transformations, source, queueName) {
+	  var stream;
+	  if (!subscribe) {
+	    stream = new ProAct.Stream(queueName, source, transformations);
+	  } else if (P.U.isFunction(subscribe)) {
+	    stream = new ProAct.SubscribableStream(subscribe, queueName, source, transformations);
+	  } else if (P.U.isString(subscribe) && P.registry) {
+	    stream = P.registry.setup(
+	      new ProAct.Stream(), subscribe, slice.call(arguments, 1)
+	    );
+	  }
+	
+	  stream.trigger = StreamUtil.trigger;
+	  stream.triggerErr = StreamUtil.triggerErr;
+	  stream.triggerClose= StreamUtil.triggerClose;
+	
+	  return stream;
+	}
+	ProAct.stream = stream;
+	
+	/**
+	 * Creates a closed {{#crossLink "ProAct.Stream"}}{{/crossLink}}.
+	 *
+	 * @for ProAct
+	 * @method closed
+	 * @static
+	 * @return {ProAct.Stream}
+	 *      A closed {{#crossLink "ProAct.Stream"}}{{/crossLink}} instance.
+	 */
+	function closed () {
+	  return P.stream().close();
+	}
+	ProAct.closed = P.never = closed;
+	
+	/**
+	 * Creates a {{#crossLink "ProAct.Stream"}}{{/crossLink}}, which emits the passed "value" once and then closes.
+	 * <p>Example:</p>
+	 * <pre>
+	    var stream = ProAct.timeout(1000, 7);
+	    stream.on(function (v) {
+	      console.log(v);
+	    });
+	
+	   // This will print '7' after 1s and will close.
+	
+	 * </pre>
+	 *
+	 * @for ProAct
+	 * @method timeout
+	 * @static
+	 * @param {Number} timeout
+	 *      The time to wait (in milliseconds) before emitting the <i>value</i> and close.
+	 * @param {Object} value
+	 *      The value to emit.
+	 * @return {ProAct.Stream}
+	 *      A {{#crossLink "ProAct.Stream"}}{{/crossLink}} instance.
+	 */
+	function timeout (timeout, value) {
+	  var stream = P.stream();
+	
+	  window.setTimeout(function () {
+	    stream.trigger(value);
+	    stream.close();
+	  }, timeout);
+	
+	  return stream;
+	}
+	ProAct.timeout = ProAct.later = timeout;
+	
+	/**
+	 * Creates a {{#crossLink "ProAct.Stream"}}{{/crossLink}}, which emits the passed "value" over and over again at given time interval.
+	 * <p>Example:</p>
+	 * <pre>
+	    var stream = ProAct.interval(1000, 7);
+	    stream.on(function (v) {
+	      console.log(v);
+	    });
+	
+	   // This will print one number on every 1s and the numbers will be 7,7,7,7,7....
+	
+	 * </pre>
+	 *
+	 * @for ProAct
+	 * @method interval
+	 * @static
+	 * @param {Number} interval
+	 *      The time in milliseconds on which the <i>value</i> will be emitted.
+	 * @param {Object} value
+	 *      The value to emit.
+	 * @return {ProAct.Stream}
+	 *      A {{#crossLink "ProAct.Stream"}}{{/crossLink}} instance.
+	 */
+	function interval (interval, value) {
+	  var stream = P.stream();
+	
+	  window.setInterval(function () {
+	    stream.trigger(value);
+	  }, interval);
+	
+	  return stream;
+	}
+	ProAct.interval = interval;
+	
+	/**
+	 * Creates a {{#crossLink "ProAct.Stream"}}{{/crossLink}}, which emits values of the passed <i>vals</i> array on the passed <i>interval</i> milliseconds.
+	 * <p>
+	 *  When every value is emitted through the stream it is closed.
+	 * <p>
+	 * <p>Example:</p>
+	 * <pre>
+	    var stream = ProAct.seq(1000, [4, 5]);
+	    stream.on(function (v) {
+	      console.log(v);
+	    });
+	
+	   // This will print one number on every 1s and the numbers will be 4 5 and the stream will be closed.
+	
+	 * </pre>
+	 *
+	 * @for ProAct
+	 * @method seq
+	 * @static
+	 * @param {Number} interval
+	 *      The time in milliseconds on which a value of the passed <i>vals</i> array will be emitted.
+	 * @param {Array} vals
+	 *      The array containing the values to be emitted on the passed <i>interval</i>.
+	 * @return {ProAct.Stream}
+	 *      A {{#crossLink "ProAct.Stream"}}{{/crossLink}} instance.
+	 */
+	function seq (interval, vals) {
+	  var stream = P.stream(),
+	      operation;
+	
+	  if (vals.length > 0) {
+	    operation = function () {
+	      var value = vals.shift();
+	      stream.trigger(value);
+	
+	      if (vals.length === 0) {
+	        stream.close();
+	      } else {
+	        window.setTimeout(operation, interval);
+	      }
+	    };
+	    window.setTimeout(operation, interval);
+	  }
+	
+	  return stream;
+	}
+	ProAct.seq = seq;
+	
+	/**
+	 * Creates a {{#crossLink "ProAct.Stream"}}{{/crossLink}}, which emits values of the passed <i>vals</i> array on the passed interval.
+	 * <p>
+	 *  When every value is emitted through the stream they are emitted again and again and so on...
+	 * <p>
+	 * <p>Example:</p>
+	 * <pre>
+	    var stream = ProAct.repeat(1000, [4, 5]);
+	    stream.on(function (v) {
+	      console.log(v);
+	    });
+	
+	   // This will print one number on every 1s and the numbers will be 4 5 4 5 4 5 4 5 4 5 .. and so on
+	
+	 * </pre>
+	 *
+	 * @for ProAct
+	 * @method interval
+	 * @static
+	 * @param {Number} interval
+	 *      The time in milliseconds on which a value of the passed <i>vals</i> array will be emitted.
+	 * @param {Array} vals
+	 *      The array containing the values to be emitted on the passed <i>interval</i>.
+	 * @return {ProAct.Stream}
+	 *      A {{#crossLink "ProAct.Stream"}}{{/crossLink}} instance.
+	 */
+	function repeat (interval, vals) {
+	  var stream = P.stream(), i = 0;
+	
+	  if (vals.length > 0) {
+	    window.setInterval(function () {
+	      if (i === vals.length) {
+	        i = 0;
+	      }
+	
+	      var value = vals[i++];
+	      stream.trigger(value);
+	    }, interval);
+	  }
+	
+	  return stream;
+	}
+	ProAct.repeat = repeat;
+	
+	/**
+	 * The {{#crossLink "ProAct/fromInvoke:method"}}{{/crossLink}} creates a {{#crossLink "ProAct.Stream"}}{{/crossLink}}, which emits the result of the passed
+	 * <i>func</i> argument on every <i>interval</i> milliseconds.
+	 * <p>
+	 *  If <i>func</i> returns {{#crossLink "ProAct/closed:method"}}{{/crossLink}} the stream is closed.
+	 * </p>
+	 * <p>Example:</p>
+	 * <pre>
+	    var stream = ProAct.fromInvoke(1000, function () {
+	      return 5;
+	    });
+	    stream.on(function (v) {
+	      console.log(v);
+	    });
+	
+	    // After 1s we'll see '5' in the log, after 2s we'll see a second '5' in the log and so on...
+	
+	 * </pre>
+	 *
+	 * @for ProAct
+	 * @method fromInvoke
+	 * @static
+	 * @param {Number} interval
+	 *      The interval on which <i>func</i> will be called and its returned value will
+	 *      be triggered into the stream.
+	 * @param {Function} func
+	 *      The function to invoke in order to get the value to trigger into the stream.
+	 * @return {ProAct.Stream}
+	 *      A {{#crossLink "ProAct.Stream"}}{{/crossLink}} instance.
+	 */
+	function fromInvoke (interval, func) {
+	  var stream = P.stream(), id;
+	
+	  id = window.setInterval(function () {
+	    var value = func.call();
+	
+	    if (value !== ProAct.close) {
+	      stream.trigger(value);
+	    } else {
+	      stream.close();
+	      window.clearInterval(id);
+	    }
+	
+	  }, interval);
+	
+	  return stream;
+	}
+	ProAct.fromInvoke = fromInvoke;
+	
+	/**
+	 * Creates a {{#crossLink "ProAct.Stream"}}{{/crossLink}}, which emits the result of an action that uses a callback
+	 * to notify that it is finished.
+	 *
+	 * This can be used to create streams from http requests for example.
+	 *
+	 * Example:
+	 * ```
+	 *  var stream = ProAct.fromCallback(action);
+	 *  stream.on(function (v) {
+	 *    console.log(v);
+	 *  });
+	 *
+	 * ```
+	 *
+	 * @for ProAct
+	 * @method fromCallback
+	 * @static
+	 * @param {Function} callbackCaller
+	 *      The action that receives a callback.
+	 * @return {ProAct.Stream}
+	 *      A {{#crossLink "ProAct.Stream"}}{{/crossLink}} instance.
+	 */
+	function fromCallback (callbackCaller) {
+	  var stream = P.stream();
+	
+	  callbackCaller(function (result) {
+	    stream.trigger(result);
+	    stream.close();
+	  });
+	
+	  return stream;
+	}
+	
+	ProAct.fromCallback = fromCallback;
+	
+	attachers = {
+	  addEventListener: 'removeEventListener',
+	  addListener: 'removeListener',
+	  on: 'off'
+	};
+	attacherKeys = Object.keys(attachers);
+	
+	/**
+	 * Creates a {{#crossLink "ProAct.Stream"}}{{/crossLink}} with source an evet emitter or dispatcher,
+	 * it can be used with jQuery for example for example.
+	 *
+	 * Example:
+	 * ```
+	 *  var stream = ProAct.fromEventDispatcher($('.some-input'), 'keydown');
+	 *  stream.on(function (e) {
+	 *    console.log(e.which);
+	 *  });
+	 *
+	 * ```
+	 *
+	 * @for ProAct
+	 * @method fromEventDispatcher
+	 * @static
+	 * @param {Object} target
+	 *      The event dispatcher, can be a jQuery button, or a DOM element, or somethnig like that.
+	 * @param {String} eventType
+	 *      The type of the event - for example 'click'.
+	 * @return {ProAct.Stream}
+	 *      A {{#crossLink "ProAct.Stream"}}{{/crossLink}} instance.
+	 */
+	function fromEventDispatcher (target, eventType) {
+	  var i, ln = attacherKeys.length,
+	      on, off,
+	      attacher, current;
+	
+	  for (i = 0; i < ln; i++) {
+	    attacher = attacherKeys[i];
+	    current = target[attacher];
+	
+	    if (current && P.U.isFunction(current)) {
+	      on = attacher;
+	      off = attachers[attacher];
+	      break;
+	    }
+	  }
+	
+	  if (on === undefined) {
+	    return null;
+	  }
+	
+	  return new ProAct.SubscribableStream(function (stream) {
+	    target[on](eventType, stream.trigger);
+	
+	    return function (stream) {
+	      target[off](eventType, stream.trigger);
+	    };
+	  });
+	}
+	
+	ProAct.fromEventDispatcher = fromEventDispatcher;
+	
+	
+	/**
+	 * @module proact-properties
+	 */
+	
+	/**
+	 * <p>
+	 *  Constructs a `ProAct.ValueEvent`. The value event contains information of a value property update.
+	 * </p>
+	 *
+	 * @class ProAct.ValueEvent
+	 * @extends ProAct.Event
+	 * @constructor
+	 * @param {ProAct.Event} source
+	 *      If there is an event that coused this event - it is the source. Can be null - no source.
+	 * @param {Object} target
+	 *      The thing that triggered this event. In most cases this should be instance of a {{#crossLink "ProAct.Property"}}{{/crossLink}}
+	 */
+	function ValueEvent (source, target) {
+	  var type = ProAct.Event.Types.value,
+	      args = slice.call(arguments, 2);
+	  ProAct.Event.apply(this, [source, target, type].concat(args));
+	
+	  this.object = args[0];
+	  this.oldVal = args[1];
+	  this.newVal = args[2];
+	}
+	
+	ProAct.ValueEvent = P.VE = ValueEvent;
+	
+	ValueEvent.prototype = P.U.ex(Object.create(ProAct.Event.prototype), {
+	
+	  /**
+	   * Reference to the constructor of this object.
+	   *
+	   * @property constructor
+	   * @type ProAct.ValueEvent
+	   * @final
+	   * @for ProAct.ValueEvent
+	   */
+	  constructor: ValueEvent,
+	
+	  /**
+	   * A `ValueEvent` represents change of a property from an old value to a new value.
+	   * This method returns the old value, that was changed.
+	   *
+	   * @for ProAct.ValueEvent
+	   * @instance
+	   * @method fromVal
+	   * @return {Object}
+	   *      The old value.
+	   */
+	  fromVal: function () {
+	    if (this.object && this.object.__pro__ &&
+	        this.object.__pro__.properties[this.target].type() === P.P.Types.auto) {
+	      return this.object.__pro__.properties[this.target].oldVal;
+	    }
+	
+	    return this.oldVal;
+	  },
+	
+	  /**
+	   * A `ValueEvent` represents change of a property from an old value to a new value.
+	   * This method returns the new value.
+	   *
+	   * @for ProAct.ValueEvent
+	   * @instance
+	   * @method toVal
+	   * @return {Object}
+	   *      The new value.
+	   */
+	  toVal: function () {
+	    if (this.object && this.object.__pro__ &&
+	        this.object.__pro__.properties[this.target].type() === P.P.Types.auto) {
+	      return this.object.__pro__.properties[this.target].val;
+	    }
+	
+	    return this.newVal;
+	  }
+	});
+	
 	
 	/**
 	 * The `proact-properties` module provides stateful reactive values attached to normal JavaScript
@@ -5665,6 +6142,29 @@
 	P.U.ex(P.Actor.prototype, {
 	
 	  /**
+	   * Generates a new {{#crossLink "ProAct.Property"}}{{/crossLink}} containing the state of an accumulations.
+	   *
+	   * <p>
+	   *  The value will be updated with every update coming to this actor.
+	   * </p>
+	   *
+	   *
+	   * @for ProAct.Actor
+	   * @instance
+	   * @method reduce
+	   * @param {Object} initVal
+	   *      Initial value for the accumulation. For example '0' for sum.
+	   * @param {Object} accumulationFunction
+	   *      The function to accumulate.
+	   * @return {ProAct.Property}
+	   *      A {{#crossLink "ProAct.Property"}}{{/crossLink}} instance observing <i>this</i> with the accumulation applied.
+	   */
+	  reduce: function (initVal, accumulationFunction) {
+	    return P.P.value(initVal).into(this.accumulate(initVal, accumulationFunction));
+	  },
+	
+	
+	  /**
 	   * Creates a {{{#crossLink "ProAct.Property"}}{{/crossLink}} instance,
 	   * dependent on this.
 	   * Comes from the `proact-properties` module.
@@ -5677,6 +6177,21 @@
 	    return P.P.value(this.val, {}, this.queueName).into(this);
 	  }
 	});
+	
+	function PropertyProbProvider () {
+	};
+	
+	PropertyProbProvider.prototype = P.U.ex(Object.create(P.ProbProvider.prototype), {
+	  constructor: PropertyProbProvider,
+	  filter: function (data, meta) {
+	    return data === null || (!P.U.isObject(data) && !P.U.isArray(data));
+	  },
+	  provide: function (data, meta) {
+	    return P.P.lazyValue(data, meta);
+	  }
+	});
+	
+	P.ProbProvider.register(new PropertyProbProvider());
 	
 	/**
 	 * @module proact-properties
@@ -6067,182 +6582,6 @@
 	   * </p>
 	   *
 	   * @for ProAct.ObjectProperty
-	   * @protected
-	   * @instance
-	   * @method afterInit
-	   */
-	  afterInit: function () {}
-	});
-	
-	/**
-	 * @module proact-properties
-	 */
-	
-	/**
-	 * <p>
-	 *  Constructs a `ProAct.ArrayProperty`.
-	 *  A property is a simple {{#crossLink "ProAct.Actor"}}{{/crossLink}} with state.
-	 * </p>
-	 * <p>
-	 *  The value of `ProAct.ArrayProperty` is an array, turned to reactive ProAct.js array -
-	 *  {{#crossLink "ProAct.Array"}}{{/crossLink}}.
-	 * </p>
-	 * <p>
-	 *  On changing the array value to another array the listeners for indices/length are moved from the old value to the new value.
-	 * </p>
-	 * <p>
-	 *  If set to null or undefined, the property is re-defined, using
-	 *  {{#crossLink "ProAct.Property/reProb:method"}}{{/crossLink}}.
-	 * </p>
-	 * <p>
-	 *  `ProAct.ArrayProperty` is lazy - its object is made reactive on the first read of the property.
-	 *  Its state is set to {{#crossLink "ProAct.States/ready:property"}}{{/crossLink}} on the first read too.
-	 * </p>
-	 * <p>
-	 *  `ProAct.ArrayProperty` is part of the proact-arrays module of ProAct.js.
-	 * </p>
-	 *
-	 * @class ProAct.ArrayProperty
-	 * @extends ProAct.Property
-	 * @constructor
-	 * @param {String} queueName
-	 *      The name of the queue all the updates should be pushed to.
-	 *      <p>
-	 *        If this parameter is null/undefined the default queue of
-	 *        {{#crossLink "ProAct/flow:property"}}{{/crossLink}} is used.
-	 *      </p>
-	 *      <p>
-	 *        If this parameter is not a string it is used as the
-	 *        <i>proObject</i>.
-	 *      </p>
-	 * @param {Object} proObject
-	 *      A plain JavaScript object, holding a field, this property will represent.
-	 * @param {String} property
-	 *      The name of the field of the object, this property should represent.
-	 */
-	function ArrayProperty (queueName, proObject, property) {
-	  if (queueName && !P.U.isString(queueName)) {
-	    property = proObject;
-	    proObject = queueName;
-	    queueName = null;
-	  }
-	
-	  var self = this, getter;
-	
-	  getter = function () {
-	    self.addCaller();
-	    if (!P.U.isProArray(self.val)) {
-	      self.val = new P.A(self.val);
-	    }
-	
-	    var get = P.P.defaultGetter(self),
-	        set = function (newVal) {
-	          if (self.val == newVal || self.val.valueOf() == newVal) {
-	            return;
-	          }
-	
-	          self.oldVal = self.val;
-	          self.val = newVal;
-	
-	          if (self.val === null || self.val === undefined) {
-	            P.P.reProb(self).update();
-	            return self;
-	          }
-	
-	          if (!P.U.isProArray(self.val)) {
-	            self.val = new P.A(self.val);
-	            if (queueName) {
-	              self.val.core.queueName = queueName;
-	            }
-	          }
-	
-	          if (self.oldVal) {
-	            var i, listener,
-	                toRemove = [], toRemoveLength,
-	                oldIndListeners = self.oldVal.__pro__.listeners.index,
-	                oldIndListenersLn = oldIndListeners.length,
-	                newIndListeners = self.val.__pro__.listeners.index,
-	                oldLenListeners = self.oldVal.__pro__.listeners.length,
-	                oldLenListenersLn = oldLenListeners.length,
-	                newLenListeners = self.val.__pro__.listeners.length;
-	
-	            for (i = 0; i < oldIndListenersLn; i++) {
-	              listener = oldIndListeners[i];
-	              if (listener.property && listener.property.proObject === self.proObject) {
-	                newIndListeners.push(listener);
-	                toRemove.push(i);
-	              }
-	            }
-	            toRemoveLength = toRemove.length;
-	            for (i = 0; i < toRemoveLength; i++) {
-	              oldIndListeners.splice[toRemove[i], 1];
-	            }
-	            toRemove = [];
-	
-	            for (i = 0; i < oldLenListenersLn; i++) {
-	              listener = oldLenListeners[i];
-	              if (listener.property && listener.property.proObject === self.proObject) {
-	                newLenListeners.push(listener);
-	                toRemove.push(i);
-	              }
-	            }
-	            toRemoveLength = toRemove.length;
-	            for (i = 0; i < toRemoveLength; i++) {
-	              oldLenListeners.splice[toRemove[i], 1];
-	            }
-	            toRemove = [];
-	          }
-	
-	          ActorUtil.update.call(self);
-	        };
-	
-	    P.P.defineProp(self.proObject, self.property, get, set);
-	
-	    self.state = P.States.ready;
-	    return self.val;
-	  };
-	
-	  P.P.call(this, queueName, proObject, property, getter, function () {});
-	}
-	ProAct.ArrayProperty = P.AP = ArrayProperty;
-	
-	ProAct.ArrayProperty.prototype = P.U.ex(Object.create(P.P.prototype), {
-	
-	  /**
-	   * Reference to the constructor of this object.
-	   *
-	   * @property constructor
-	   * @type ProAct.ArrayProperty
-	   * @final
-	   * @for ProAct.ArrayProperty
-	   */
-	  constructor: ProAct.ArrayProperty,
-	
-	  /**
-	   * Retrieves the {{#crossLink "ProAct.Property.Types"}}{{/crossLink}} value of <i>this</i> property.
-	   * <p>
-	   *  For instances of the `ProAct.ArrayProperty` class, it is
-	   *  {{#crossLink "ProAct.Property.Types/array:property"}}{{/crossLink}}.
-	   * </p>
-	   *
-	   * @for ProAct.ArrayProperty
-	   * @instance
-	   * @method type
-	   * @return {Number}
-	   *      The right type of the property.
-	   */
-	  type: function () {
-	    return P.P.Types.array;
-	  },
-	
-	  /**
-	   * Called automatically after initialization of this property.
-	   * <p>
-	   *  For `ProAct.ArrayProperty` it does nothing -
-	   *  the real initialization is lazy and is performed on the first read of <i>this</i>.
-	   * </p>
-	   *
-	   * @for ProAct.ArrayProperty
 	   * @protected
 	   * @instance
 	   * @method afterInit
@@ -7205,17 +7544,12 @@
 	      this.properties[property].listeners.change = this.properties[property].listeners.change.concat(listeners);
 	    }
 	
-	    if (meta && P.registry) {
-	      if (!P.U.isArray(meta)) {
-	        meta = [meta];
-	      }
-	
-	      if (!(meta[0] instanceof ProAct.Property)) {
-	        P.registry.setup.apply(P.registry, [result].concat(meta));
-	      }
-	    }
+	    this.applyMeta(meta, result);
 	
 	    return result;
+	  },
+	
+	  applyMeta: function (meta, property) {
 	  },
 	
 	  /**
@@ -7258,24 +7592,317 @@
 	  }
 	});
 	
+	function ObjectProbProvider () {
+	};
+	
+	ObjectProbProvider.prototype = P.U.ex(Object.create(P.ProbProvider.prototype), {
+	  constructor: ObjectProbProvider,
+	  filter: function (data, meta) {
+	    return P.U.isObject(data) && !P.U.isArray(data);
+	  },
+	  provide: function (data, meta) {
+	    var core = new P.OC(data, meta);
+	    P.U.defValProp(data, '__pro__', false, false, false, core);
+	
+	    core.prob();
+	
+	    return data;
+	  }
+	});
+	
+	P.ProbProvider.register(new ObjectProbProvider());
+	
+	/**
+	 * @module proact-properties
+	 */
+	
+	/**
+	 * The `ProAct.proxy` creates proxies or decorators to ProAct.js objects.
+	 * <p>
+	 *  The decorators extend the <i>target</i> and can add new properties which depend on the extended ones.
+	 * </p>
+	 *
+	 * @for ProAct
+	 * @method proxy
+	 * @static
+	 * @param {Object} object
+	 *      The object/value to make decorator to the <i>target</i>.
+	 * @param {Object} target
+	 *      The object to decorate.
+	 * @param {Object|String} meta
+	 *      Meta-data used to help in the reactive object creation for the proxy.
+	 * @param {Object|String} targetMeta
+	 *      Meta-data used to help in the reactive object creation for the target, if it is not reactive.
+	 * @return {Object}
+	 *      Reactive representation of the passed <i>object</i>, decorating the passed <i>target</i>.
+	 */
+	function proxy (object, target, meta, targetMeta) {
+	  if (!object || !target) {
+	    return null;
+	  }
+	
+	  if (!P.U.isProObject(target)) {
+	    target = ProAct.prob(target, targetMeta);
+	  }
+	
+	  if (!meta || !P.U.isObject(meta)) {
+	    meta = {};
+	  }
+	
+	  var properties = target.__pro__.properties,
+	      property;
+	
+	  for (property in properties) {
+	    if (!object.hasOwnProperty(property)) {
+	      object[property] = null;
+	      meta[property] = properties[property];
+	    }
+	  }
+	
+	  object = ProAct.prob(object, meta);
+	
+	  return object;
+	}
+	ProAct.proxy = proxy;
+	
+	/**
+	 * Checks if the passed value is a valid ProAct.js object or not.
+	 * ProAct.js object have a special `__pro__` object that is hidden in them, which should be instance of {{#crossLink "ProAct.Core"}}{{/crossLink}}.
+	 *
+	 * @method isProObject
+	 * @param {Object} value The value to check.
+	 * @return {Boolean} True if the value is object containing {{#crossLink "ProAct.Property"}}{{/crossLink}} instances and has a `core`.
+	 */
+	function isProObject (value) {
+	  return value && ProAct.U.isObject(value) && value.__pro__ !== undefined && ProAct.U.isObject(value.__pro__.properties);
+	}
+	
+	ProAct.Utils.isProObject = isProObject;
+	
 	/**
 	 * <p>
-	 *  Constructs a ProAct.ArrayCore. ProAct.ArrayCore is a {@link ProAct.Core} that manages all the updates/listeners for an ProAct.Array.
+	 *  Represents the current caller of a method, the initiator of the current action.
+	 * </p>
+	 * <p>
+	 *  This property does the magic when for example an {{#crossLink "ProAct.AutoProperty"}}{{/crossLink}} is called
+	 *  for the first time and the dependencies to the other properties are created.
+	 *  The current caller expects to be used in a single threaded environment.
+	 * </p>
+	 * <p>
+	 *  Do not remove or modify this property manually.
+	 * </p>
+	 *
+	 * @property currentCaller
+	 * @type Object
+	 * @default null
+	 * @static
+	 * @for ProAct
+	 */
+	ProAct.currentCaller = null;
+	
+	/**
+	 * @module proact-arrays
+	 */
+	
+	/**
+	 * <p>
+	 *  Constructs a `ProAct.ArrayProperty`.
+	 *  A property is a simple {{#crossLink "ProAct.Actor"}}{{/crossLink}} with state.
+	 * </p>
+	 * <p>
+	 *  The value of `ProAct.ArrayProperty` is an array, turned to reactive ProAct.js array -
+	 *  {{#crossLink "ProAct.Array"}}{{/crossLink}}.
+	 * </p>
+	 * <p>
+	 *  On changing the array value to another array the listeners for indices/length are moved from the old value to the new value.
+	 * </p>
+	 * <p>
+	 *  If set to null or undefined, the property is re-defined, using
+	 *  {{#crossLink "ProAct.Property/reProb:method"}}{{/crossLink}}.
+	 * </p>
+	 * <p>
+	 *  `ProAct.ArrayProperty` is lazy - its object is made reactive on the first read of the property.
+	 *  Its state is set to {{#crossLink "ProAct.States/ready:property"}}{{/crossLink}} on the first read too.
+	 * </p>
+	 * <p>
+	 *  `ProAct.ArrayProperty` is part of the proact-arrays module of ProAct.js.
+	 * </p>
+	 *
+	 * @class ProAct.ArrayProperty
+	 * @extends ProAct.Property
+	 * @constructor
+	 * @param {String} queueName
+	 *      The name of the queue all the updates should be pushed to.
+	 *      <p>
+	 *        If this parameter is null/undefined the default queue of
+	 *        {{#crossLink "ProAct/flow:property"}}{{/crossLink}} is used.
+	 *      </p>
+	 *      <p>
+	 *        If this parameter is not a string it is used as the
+	 *        <i>proObject</i>.
+	 *      </p>
+	 * @param {Object} proObject
+	 *      A plain JavaScript object, holding a field, this property will represent.
+	 * @param {String} property
+	 *      The name of the field of the object, this property should represent.
+	 */
+	function ArrayProperty (queueName, proObject, property) {
+	  if (queueName && !P.U.isString(queueName)) {
+	    property = proObject;
+	    proObject = queueName;
+	    queueName = null;
+	  }
+	
+	  var self = this, getter;
+	
+	  getter = function () {
+	    self.addCaller();
+	    if (!P.U.isProArray(self.val)) {
+	      self.val = new P.A(self.val);
+	    }
+	
+	    var get = P.P.defaultGetter(self),
+	        set = function (newVal) {
+	          if (self.val == newVal || self.val.valueOf() == newVal) {
+	            return;
+	          }
+	
+	          self.oldVal = self.val;
+	          self.val = newVal;
+	
+	          if (self.val === null || self.val === undefined) {
+	            P.P.reProb(self).update();
+	            return self;
+	          }
+	
+	          if (!P.U.isProArray(self.val)) {
+	            self.val = new P.A(self.val);
+	            if (queueName) {
+	              self.val.core.queueName = queueName;
+	            }
+	          }
+	
+	          if (self.oldVal) {
+	            var i, listener,
+	                toRemove = [], toRemoveLength,
+	                oldIndListeners = self.oldVal.__pro__.listeners.index,
+	                oldIndListenersLn = oldIndListeners.length,
+	                newIndListeners = self.val.__pro__.listeners.index,
+	                oldLenListeners = self.oldVal.__pro__.listeners.length,
+	                oldLenListenersLn = oldLenListeners.length,
+	                newLenListeners = self.val.__pro__.listeners.length;
+	
+	            for (i = 0; i < oldIndListenersLn; i++) {
+	              listener = oldIndListeners[i];
+	              if (listener.property && listener.property.proObject === self.proObject) {
+	                newIndListeners.push(listener);
+	                toRemove.push(i);
+	              }
+	            }
+	            toRemoveLength = toRemove.length;
+	            for (i = 0; i < toRemoveLength; i++) {
+	              oldIndListeners.splice[toRemove[i], 1];
+	            }
+	            toRemove = [];
+	
+	            for (i = 0; i < oldLenListenersLn; i++) {
+	              listener = oldLenListeners[i];
+	              if (listener.property && listener.property.proObject === self.proObject) {
+	                newLenListeners.push(listener);
+	                toRemove.push(i);
+	              }
+	            }
+	            toRemoveLength = toRemove.length;
+	            for (i = 0; i < toRemoveLength; i++) {
+	              oldLenListeners.splice[toRemove[i], 1];
+	            }
+	            toRemove = [];
+	          }
+	
+	          ActorUtil.update.call(self);
+	        };
+	
+	    P.P.defineProp(self.proObject, self.property, get, set);
+	
+	    self.state = P.States.ready;
+	    return self.val;
+	  };
+	
+	  P.P.call(this, queueName, proObject, property, getter, function () {});
+	}
+	ProAct.ArrayProperty = P.AP = ArrayProperty;
+	
+	ProAct.ArrayProperty.prototype = P.U.ex(Object.create(P.P.prototype), {
+	
+	  /**
+	   * Reference to the constructor of this object.
+	   *
+	   * @property constructor
+	   * @type ProAct.ArrayProperty
+	   * @final
+	   * @for ProAct.ArrayProperty
+	   */
+	  constructor: ProAct.ArrayProperty,
+	
+	  /**
+	   * Retrieves the {{#crossLink "ProAct.Property.Types"}}{{/crossLink}} value of <i>this</i> property.
+	   * <p>
+	   *  For instances of the `ProAct.ArrayProperty` class, it is
+	   *  {{#crossLink "ProAct.Property.Types/array:property"}}{{/crossLink}}.
+	   * </p>
+	   *
+	   * @for ProAct.ArrayProperty
+	   * @instance
+	   * @method type
+	   * @return {Number}
+	   *      The right type of the property.
+	   */
+	  type: function () {
+	    return P.P.Types.array;
+	  },
+	
+	  /**
+	   * Called automatically after initialization of this property.
+	   * <p>
+	   *  For `ProAct.ArrayProperty` it does nothing -
+	   *  the real initialization is lazy and is performed on the first read of <i>this</i>.
+	   * </p>
+	   *
+	   * @for ProAct.ArrayProperty
+	   * @protected
+	   * @instance
+	   * @method afterInit
+	   */
+	  afterInit: function () {}
+	});
+	
+	/**
+	 * The `proact-arrays` module provides reactive arrays.
+	 * All the modification operations over arrays, like `push` for example could be listened to.
+	 *
+	 *
+	 * @module proact-arrays
+	 * @main proact-arrays
+	 */
+	
+	/**
+	 * <p>
+	 *  Constructs a `ProAct.ArrayCore`. `ProAct.ArrayCore` is a {{#crossLink "ProAct.Core"}}{{/crossLink}} that manages all the updates/listeners for an `ProAct.Array`.
 	 * </p>
 	 * <p>
 	 *  It is responsible for updating length or index listeners and adding the right ones on read.
 	 * </p>
 	 * <p>
-	 *  ProAct.ArrayCore is part of the arrays module of ProAct.js.
+	 *  `ProAct.ArrayCore` is part of the `proact-arrays` module of ProAct.js.
 	 * </p>
 	 *
 	 * @class ProAct.ArrayCore
+	 * @constructor
 	 * @extends ProAct.Core
 	 * @param {Object} array
-	 *      The shell {@link ProAct.Array} arround this core.
+	 *      The shell {{#crossLink "ProAct.Array"}}{{/crossLink}} arround this core.
 	 * @param {Object} meta
 	 *      Optional meta data to be used to define the observer-observable behavior of the <i>array</i>.
-	 * @see {@link ProAct.Array}
 	 */
 	ProAct.ArrayCore = P.AC = function (array, meta) {
 	  P.C.call(this, array, meta); // Super!
@@ -7289,29 +7916,28 @@
 	  /**
 	   * Reference to the constructor of this object.
 	   *
-	   * @memberof ProAct.ArrayCore
-	   * @instance
-	   * @constant
-	   * @default ProAct.ArrayCore
+	   * @property constructor
+	   * @type ProAct.ArrayCore
+	   * @final
+	   * @for ProAct.ArrayCore
 	   */
 	  constructor: ProAct.ArrayCore,
 	
 	  /**
 	   * Generates function wrapper around a normal function which sets
-	   * the {@link ProAct.ArrayCore#indexListener} of the index calling the function.
+	   * the {{#crossLink "ProAct.ArrayCore/indexListener:method"}}{{/crossLink}} of the index calling the function.
 	   * <p>
 	   *  This is used if the array is complex - contains other ProAct.js objects, and there should be special
 	   *  updates for their elements/properties.
 	   * </p>
 	   *
-	   * @memberof ProAct.ArrayCore
+	   * @for ProAct.ArrayCore
 	   * @instance
 	   * @method actionFunction
 	   * @param {Function} fun
 	   *      The source function.
 	   * @return {Function}
 	   *      The action function wrapper.
-	   * @see {@link ProAct.ArrayCore#indexListener}
 	   */
 	  actionFunction: function (fun) {
 	    var core = this;
@@ -7339,8 +7965,9 @@
 	   *  So this way we can listen for stuff like array.[].foo - the foo property change for every element in the array.
 	   * </p>
 	   *
-	   * @memberof ProAct.ArrayCore
+	   * @for ProAct.ArrayCore
 	   * @instance
+	   * @protected
 	   * @method indexListener
 	   * @param {Number} i
 	   *      The index.
@@ -7369,7 +7996,7 @@
 	  },
 	
 	  /**
-	   * Creates the <i>listener</i> of this ProAct.ArrayCore.
+	   * Creates the <i>listener</i> of this `ProAct.ArrayCore`.
 	   * <p>
 	   *  The right array typed events can change this' shell (array).
 	   * </p>
@@ -7382,8 +8009,9 @@
 	   *  to the shell.
 	   * </p>
 	   *
-	   * @memberof ProAct.Actor
+	   * @for ProAct.Actor
 	   * @instance
+	   * @protected
 	   * @method makeListener
 	   * @return {Object}
 	   *      The <i>listener of this ArrayCore</i>.
@@ -7461,7 +8089,7 @@
 	   * Generates the initial listeners object.
 	   * It is used for resetting all the listeners too.
 	   * <p>
-	   *  For ProAct.ArrayCore the default listeners object is
+	   *  For `ProAct.ArrayCore` the default listeners object is
 	   *  <pre>
 	   *    {
 	   *      index: [],
@@ -7470,7 +8098,8 @@
 	   *  </pre>
 	   * </p>
 	   *
-	   * @memberof ProAct.ArrayCore
+	   * @for ProAct.ArrayCore
+	   * @protected
 	   * @instance
 	   * @method defaultListeners
 	   * @return {Object}
@@ -7486,16 +8115,17 @@
 	  /**
 	   * A list of actions or action to be used when no action is passed for the methods working with actions.
 	   * <p>
-	   *  For ProAct.ArrayCore these are both 'length' and 'index' actions.
+	   *  For `ProAct.ArrayCore` these are both 'length' and 'index' actions.
 	   * </p>
 	   *
-	   * @memberof ProAct.ArrayCore
+	   * @for ProAct.ArrayCore
+	   * @protected
 	   * @instance
 	   * @method defaultActions
 	   * @default ['length', 'index']
 	   * @return {Array}
 	   *      The actions to be used if no actions are provided to action related methods,
-	   *      like {@link ProAct.Actor#on}, {@link ProAct.Actor#off}, {@link ProAct.Actor#update}, {@link ProAct.Actor#willUpdate}.
+	   *      like {{#crossLink "ProAct.Actor/on:method"}}{{/crossLink}}, {{#crossLink "ProAct.Actor/off:method"}}{{/crossLink}}, {{#crossLink "ProAct.Actor/update:method"}}{{/crossLink}}, {{#crossLink "ProAct.Actor/willUpdate:method"}}{{/crossLink}}.
 	   */
 	  defaultActions: function () {
 	    return ['length', 'index'];
@@ -7504,19 +8134,20 @@
 	  /**
 	   * Creates the <i>event</i> to be send to the listeners on update.
 	   * <p>
-	   *  By default this method returns {@link ProAct.Event.Types.array} event.
+	   *  By default this method returns {{#crossLink "ProAct.Event.Types/array:property"}}{{/crossLink}} event.
 	   * </p>
 	   *
-	   * @memberof ProAct.ArrayCore
+	   * @for ProAct.ArrayCore
 	   * @instance
+	   * @protected
 	   * @method makeEvent
-	   * @default {ProAct.Event} with type {@link ProAct.Event.Types.array}
+	   * @default {ProAct.Event} with type {{#crossLink "ProAct.Event.Types/array:property"}}{{/crossLink}}
 	   * @param {ProAct.Event} source
 	   *      The source event of the event. It can be null
 	   * @param {Array} eventData
 	   *      An array of four elements describing the changes:
 	   *      <ol>
-	   *        <li>{@link ProAct.Array.Operations} member defining the changing operation - for example {@link ProAct.Array.Operations.add}</li>
+	   *        <li>{{#crossLink "ProAct.Array.Operations"}}{{/crossLink}} member defining the changing operation - for example {{#crossLink "ProAct.Array.Operations/add:property"}}{{/crossLink}}</li>
 	   *        <li>The index on which the chage occures.</li>
 	   *        <li>The old values beginning from the index.</li>
 	   *        <li>The new values beginning from the index.</li>
@@ -7539,12 +8170,13 @@
 	  },
 	
 	  /**
-	   * Uses {@link ProAct.currentCaller} to automatically add a new listener to this property if the caller is set.
+	   * Uses {{#crossLink "ProAct/currentCaller:property"}}{{/crossLink}} to automatically add a new listener to this property if the caller is set.
 	   * <p>
 	   *  This method is used by the index getters or the length getter to make every reader of the length/index a listener to it.
 	   * </p>
 	   *
-	   * @memberof ProAct.ArrayCore
+	   * @for ProAct.ArrayCore
+	   * @protected
 	   * @instance
 	   * @method addCaller
 	   * @param {String} type
@@ -7569,12 +8201,12 @@
 	  },
 	
 	  /**
-	   * Special update method for updating listeners after a {@link ProAct.Array#splice} call.
+	   * Special update method for updating listeners after a {{#crossLink "ProAct.Array/splice:method"}}{{/crossLink}} call.
 	   * <p>
 	   *  Depending on the changes the index listeners, the length listeners or both can be notified.
 	   * </p>
 	   *
-	   * @memberof ProAct.ArrayCore
+	   * @for ProAct.ArrayCore
 	   * @instance
 	   * @method updateSplice
 	   * @param {Number} index
@@ -7585,8 +8217,6 @@
 	   *      A list of the newly added items. Can be empty.
 	   * @return {ProAct.ArrayCore}
 	   *      <i>this</i>
-	   * @see {@link ProAct.Actor#update}
-	   * @see {@link ProAct.Array#splice}
 	   */
 	  updateSplice: function (index, spliced, newItems) {
 	    var actions, op = pArrayOps.splice;
@@ -7610,15 +8240,13 @@
 	   *  For every difference between <i>this shell</i>'s array and the passed one, there will be listeners notification.
 	   * </p>
 	   *
-	   * @memberof ProAct.ArrayCore
+	   * @for ProAct.ArrayCore
 	   * @instance
 	   * @method updateByDiff
 	   * @param {Array} array
 	   *      The array to compare to.
 	   * @return {ProAct.ArrayCore}
 	   *      <i>this</i>
-	   * @see {@link ProAct.Actor#update}
-	   * @see {@link ProAct.Utils.diff}
 	   */
 	  updateByDiff: function (array) {
 	    var j, diff = P.U.diff(array, this.shell._array), cdiff;
@@ -7636,25 +8264,23 @@
 	  /**
 	   * Initializes all the index accessors and the length accessor for <i>this's shell array</i>.
 	   * <p>
-	   *  For the length on every read, the {@link ProAct.currentCaller} is added as a 'length' listener.
+	   *  For the length on every read, the {{#crossLink "ProAct/currentCaller:property"}}{{/crossLink}} is added as a 'length' listener.
 	   * </p>
 	   * <p>
-	   *  For every index on every read, the {@link ProAct.currentCaller} is added as an 'index' listener.
-	   *  Listener accessors are defined using {@link ProAct.ArrayCore#defineIndexProp}.
+	   *  For every index on every read, the {{#crossLink "ProAct/currentCaller:property"}}{{/crossLink}} is added as an 'index' listener.
+	   *  Listener accessors are defined using {{#crossLink "ProAct.ArrayCore/defineIndexProp:method"}}{{/crossLink}}.
 	   * </p>
 	   * <p>
-	   *  {@link ProAct.ArrayCore#addCaller} is used to retrieve the current caller and add it as the right listener.
+	   *  {{#crossLink "ProAct.ArrayCore/addCaller:method"}}{{/crossLink}} is used to retrieve the current caller and add it as the right listener.
 	   * </p>
 	   * <p>
 	   *  Setting values for an index or the length updates the right listeners.
 	   * </p>
 	   *
-	   * @memberof ProAct.ArrayCore
+	   * @for ProAct.ArrayCore
+	   * @protected
 	   * @instance
 	   * @method setup
-	   * @see {@link ProAct.ArrayCore#addCaller}
-	   * @see {@link ProAct.ArrayCore#defineIndexProp}
-	   * @see {@link ProAct.currentCaller}
 	   */
 	  setup: function () {
 	    var self = this,
@@ -7696,10 +8322,10 @@
 	  /**
 	   * Defines accessors for index of <i>this' shell array</i>.
 	   * <p>
-	   *  For an index on every read, the {@link ProAct.currentCaller} is added as an 'index' listener.
+	   *  For an index on every read, the {{#crossLink "ProAct/currentCaller:property"}}{{/crossLink}} is added as an 'index' listener.
 	   * </p>
 	   * <p>
-	   *  {@link ProAct.ArrayCore#addCaller} is used to retrieve the current caller and add it as the right listener.
+	   *  {{#crossLink "ProAct.ArrayCore/addCaller:method"}}{{/crossLink}} is used to retrieve the current caller and add it as the right listener.
 	   * </p>
 	   * <p>
 	   *  Setting values for an index updates the 'index' listeners.
@@ -7708,13 +8334,12 @@
 	   *  If on the index is reciding an array or an object, it is turned to reactive object/array.
 	   * </p>
 	   *
-	   * @memberof ProAct.ArrayCore
+	   * @for ProAct.ArrayCore
+	   * @protected
 	   * @instance
 	   * @method defineIndexProp
 	   * @param {Number} i
 	   *      The index to define accessor for.
-	   * @see {@link ProAct.ArrayCore#addCaller}
-	   * @see {@link ProAct.currentCaller}
 	   */
 	  defineIndexProp: function (i) {
 	    var self = this,
@@ -7757,12 +8382,7 @@
 	});
 	
 	/**
-	 * The `proact-arrays` module provides reactive arrays.
-	 * All the modification operations over arrays, like `push` for example could be listened to.
-	 *
-	 *
 	 * @module proact-arrays
-	 * @main proact-arrays
 	 */
 	
 	/**
@@ -8803,6 +9423,25 @@
 	  }
 	});
 	
+	function ArrayProbProvider () {
+	};
+	
+	ArrayProbProvider.prototype = P.U.ex(Object.create(P.ProbProvider.prototype), {
+	  constructor: ArrayProbProvider,
+	  filter: function (data, meta) {
+	    return P.U.isArray(data);
+	  },
+	  provide: function (data, meta) {
+	    var array = new P.A(data);
+	    if (meta && meta.p && meta.p.queueName && P.U.isString(meta.p.queueName)) {
+	      array.core.queueName = meta.p.queueName;
+	    }
+	    return array;
+	  }
+	});
+	
+	P.ProbProvider.register(new ArrayProbProvider());
+	
 	/**
 	 * @module proact-arrays
 	 */
@@ -8819,13 +9458,12 @@
 	  /**
 	   * Checks the validity of an event.
 	   *
-	   * @memberof ProAct.Array.Listeners
+	   * @for ProAct.Array.Listeners
 	   * @static
-	   * @constant
 	   * @param {ProAct.Event} event
 	   *      The event to check.
 	   * @throws {Error}
-	   *      If the event is not {@link ProAct.Event.Types.array}
+	   *      If the event is not {{#crossLink "ProAct.Event.Types/array:property"}}{{/crossLink}}
 	   */
 	  check: function(event) {
 	    if (event.type !== P.E.Types.array) {
@@ -8835,16 +9473,16 @@
 	
 	  /**
 	   * Generates a listener that can be attached to an {{#crossLink "ProAct.Array"}}{{/crossLink}} on which
-	   * the method {@link ProAct.Array#concat} is invoked.
+	   * the method {{#crossLink "ProAct.Array/concat:method"}}{{/crossLink}} is invoked.
 	   * <p>
-	   *  The result of the {@link ProAct.Array#concat} method is another {{#crossLink "ProAct.Array"}}{{/crossLink}}, dependent on the <i>original</i> one.
+	   *  The result of the {{#crossLink "ProAct.Array/concat:method"}}{{/crossLink}} method is another {{#crossLink "ProAct.Array"}}{{/crossLink}}, dependent on the <i>original</i> one.
 	   * </p>
 	   * <p>
 	   *  For example if the original was:
 	   *  <pre>
 	   *    var a = new ProAct.Array([1, 3, 5]);
 	   *  </pre>
-	   *  and we invoked {@link ProAct.Array#concat} on it like this:
+	   *  and we invoked {{#crossLink "ProAct.Array/concat:method"}}{{/crossLink}} on it like this:
 	   *  <pre>
 	   *    var b = a.concat(7, 9); // b is [1, 3, 5, 7, 9]
 	   *  </pre>
@@ -8858,15 +9496,14 @@
 	   *  and it does it in an optimal way.
 	   * </p>
 	   *
-	   * @memberof ProAct.Array.Listeners
+	   * @for ProAct.Array.Listeners
 	   * @static
-	   * @constant
 	   * @param {ProAct.Array} transformed
-	   *      The array created as a result of invoking {@link ProAct.Array#concat} on the <i>original</i> {{#crossLink "ProAct.Array"}}{{/crossLink}}.
+	   *      The array created as a result of invoking {{#crossLink "ProAct.Array/concat:method"}}{{/crossLink}} on the <i>original</i> {{#crossLink "ProAct.Array"}}{{/crossLink}}.
 	   * @param {ProAct.Array} original
-	   *      The {{#crossLink "ProAct.Array"}}{{/crossLink}} on which {@link ProAct.Array#concat} was invoked.
+	   *      The {{#crossLink "ProAct.Array"}}{{/crossLink}} on which {{#crossLink "ProAct.Array/concat:method"}}{{/crossLink}} was invoked.
 	   * @param {Array} args
-	   *      The arguments passed to {@link ProAct.Array#concat}, when it was invoked on the <i>original</i> {{#crossLink "ProAct.Array"}}{{/crossLink}}
+	   *      The arguments passed to {{#crossLink "ProAct.Array/concat:method"}}{{/crossLink}}, when it was invoked on the <i>original</i> {{#crossLink "ProAct.Array"}}{{/crossLink}}
 	   * @return {Function}
 	   *      A listener for events from the <i>original</i> {{#crossLink "ProAct.Array"}}{{/crossLink}}, updating the <i>transformed</i> {{#crossLink "ProAct.Array"}}{{/crossLink}} on
 	   *      every new event, if it is necessary.
@@ -8922,9 +9559,9 @@
 	
 	  /**
 	   * Generates a listener that can be attached to an {{#crossLink "ProAct.Array"}}{{/crossLink}} on which
-	   * the method {@link ProAct.Array#concat} is invoked with argument, another {{#crossLink "ProAct.Array"}}{{/crossLink}}.
+	   * the method {{#crossLink "ProAct.Array/concat:method"}}{{/crossLink}} is invoked with argument, another {{#crossLink "ProAct.Array"}}{{/crossLink}}.
 	   * <p>
-	   *  The result of the {@link ProAct.Array#concat} method is another {{#crossLink "ProAct.Array"}}{{/crossLink}},
+	   *  The result of the {{#crossLink "ProAct.Array/concat:method"}}{{/crossLink}} method is another {{#crossLink "ProAct.Array"}}{{/crossLink}},
 	   *  dependent on both the <i>original</i> and the passed as an argument one.
 	   * </p>
 	   * <p>
@@ -8932,7 +9569,7 @@
 	   *  <pre>
 	   *    var a = new ProAct.Array([1, 3, 5]);
 	   *  </pre>
-	   *  and we invoked {@link ProAct.Array#concat} on it like this:
+	   *  and we invoked {{#crossLink "ProAct.Array/concat:method"}}{{/crossLink}} on it like this:
 	   *  <pre>
 	   *    var x = new ProAct.Array(7, 9);
 	   *    var b = a.concat(x); // b is [1, 3, 5, 7, 9]
@@ -8947,15 +9584,14 @@
 	   *  and it does it in an optimal way.
 	   * </p>
 	   *
-	   * @memberof ProAct.Array.Listeners
+	   * @for ProAct.Array.Listeners
 	   * @static
-	   * @constant
 	   * @param {ProAct.Array} transformed
-	   *      The array created as a result of invoking {@link ProAct.Array#concat} on the <i>original</i> {{#crossLink "ProAct.Array"}}{{/crossLink}}.
+	   *      The array created as a result of invoking {{#crossLink "ProAct.Array/concat:method"}}{{/crossLink}} on the <i>original</i> {{#crossLink "ProAct.Array"}}{{/crossLink}}.
 	   * @param {ProAct.Array} original
-	   *      The {{#crossLink "ProAct.Array"}}{{/crossLink}} on which {@link ProAct.Array#concat} was invoked.
+	   *      The {{#crossLink "ProAct.Array"}}{{/crossLink}} on which {{#crossLink "ProAct.Array/concat:method"}}{{/crossLink}} was invoked.
 	   * @param {ProAct.Array} right
-	   *      The {{#crossLink "ProAct.Array"}}{{/crossLink}} passed as an argument to {@link ProAct.Array#concat}.
+	   *      The {{#crossLink "ProAct.Array"}}{{/crossLink}} passed as an argument to {{#crossLink "ProAct.Array/concat:method"}}{{/crossLink}}.
 	   * @return {Function}
 	   *      A listener for events from the <i>right</i> {{#crossLink "ProAct.Array"}}{{/crossLink}}, updating the <i>transformed</i> {{#crossLink "ProAct.Array"}}{{/crossLink}} on
 	   *      every new event, if it is necessary.
@@ -8998,16 +9634,16 @@
 	
 	  /**
 	   * Generates a listener that can be attached to an {{#crossLink "ProAct.Array"}}{{/crossLink}} on which
-	   * the method {@link ProAct.Array#pevery} is invoked.
+	   * the method {{#crossLink "ProAct.Array/pevery:method"}}{{/crossLink}} is invoked.
 	   * <p>
-	   *  The result of the {@link ProAct.Array#pevery} method is a {@link ProAct.Property}, dependent on the <i>original</i> array.
+	   *  The result of the {{#crossLink "ProAct.Array/pevery:method"}}{{/crossLink}} method is a {{#crossLink "ProAct.Property"}}{{/crossLink}}, dependent on the <i>original</i> array.
 	   * </p>
 	   * <p>
 	   *  For example if the original was:
 	   *  <pre>
 	   *    var a = new ProAct.Array([1, 3, 5]);
 	   *  </pre>
-	   *  and we invoked {@link ProAct.Array#pevery} on it like this:
+	   *  and we invoked {{#crossLink "ProAct.Array/pevery:method"}}{{/crossLink}} on it like this:
 	   *  <pre>
 	   *    var val = a.pevery(function (el) {
 	   *      return el % 2 === 1;
@@ -9019,21 +9655,20 @@
 	   *  </pre>
 	   * </p>
 	   * <p>
-	   *  The generated listener by this method does this - updates the <i>val</i> {@link ProAct.Property}, when the <i>original</i> array changes
+	   *  The generated listener by this method does this - updates the <i>val</i> {{#crossLink "ProAct.Property"}}{{/crossLink}}, when the <i>original</i> array changes
 	   *  and it does it in an optimal way.
 	   * </p>
 	   *
-	   * @memberof ProAct.Array.Listeners
+	   * @for ProAct.Array.Listeners
 	   * @static
-	   * @constant
 	   * @param {ProAct.Property} val
-	   *      The result of invoking {@link ProAct.Array#pevery} on the <i>original</i> {{#crossLink "ProAct.Array"}}{{/crossLink}}.
+	   *      The result of invoking {{#crossLink "ProAct.Array/pevery:method"}}{{/crossLink}} on the <i>original</i> {{#crossLink "ProAct.Array"}}{{/crossLink}}.
 	   * @param {ProAct.Array} original
-	   *      The {{#crossLink "ProAct.Array"}}{{/crossLink}} on which {@link ProAct.Array#pevery} was invoked.
+	   *      The {{#crossLink "ProAct.Array"}}{{/crossLink}} on which {{#crossLink "ProAct.Array/pevery:method"}}{{/crossLink}} was invoked.
 	   * @param {Array} args
-	   *      The arguments passed to {@link ProAct.Array#pevery}, when it was invoked on the <i>original</i> {{#crossLink "ProAct.Array"}}{{/crossLink}}
+	   *      The arguments passed to {{#crossLink "ProAct.Array/pevery:method"}}{{/crossLink}}, when it was invoked on the <i>original</i> {{#crossLink "ProAct.Array"}}{{/crossLink}}
 	   * @return {Function}
-	   *      A listener for events from the <i>original</i> {{#crossLink "ProAct.Array"}}{{/crossLink}}, updating the <i>val</i> {@link ProAct.Property} on
+	   *      A listener for events from the <i>original</i> {{#crossLink "ProAct.Array"}}{{/crossLink}}, updating the <i>val</i> {{#crossLink "ProAct.Property"}}{{/crossLink}} on
 	   *      every new event, if it is necessary.
 	   */
 	  every: function (val, original, args) {
@@ -9076,16 +9711,16 @@
 	
 	  /**
 	   * Generates a listener that can be attached to an {{#crossLink "ProAct.Array"}}{{/crossLink}} on which
-	   * the method {@link ProAct.Array#psome} is invoked.
+	   * the method {{#crossLink "ProAct.Array/psome:method"}}{{/crossLink}} is invoked.
 	   * <p>
-	   *  The result of the {@link ProAct.Array#psome} method is a {@link ProAct.Property}, dependent on the <i>original</i> array.
+	   *  The result of the {{#crossLink "ProAct.Array/psome:method"}}{{/crossLink}} method is a {{#crossLink "ProAct.Property"}}{{/crossLink}}, dependent on the <i>original</i> array.
 	   * </p>
 	   * <p>
 	   *  For example if the original was:
 	   *  <pre>
 	   *    var a = new ProAct.Array([1, 3, 5]);
 	   *  </pre>
-	   *  and we invoked {@link ProAct.Array#psome} on it like this:
+	   *  and we invoked {{#crossLink "ProAct.Array/psome:method"}}{{/crossLink}} on it like this:
 	   *  <pre>
 	   *    var val = a.psome(function (el) {
 	   *      return el % 2 === 0;
@@ -9097,21 +9732,20 @@
 	   *  </pre>
 	   * </p>
 	   * <p>
-	   *  The generated listener by this method does this - updates the <i>val</i> {@link ProAct.Property}, when the <i>original</i> array changes
+	   *  The generated listener by this method does this - updates the <i>val</i> {{#crossLink "ProAct.Property"}}{{/crossLink}}, when the <i>original</i> array changes
 	   *  and it does it in an optimal way.
 	   * </p>
 	   *
-	   * @memberof ProAct.Array.Listeners
+	   * @for ProAct.Array.Listeners
 	   * @static
-	   * @constant
 	   * @param {ProAct.Property} val
-	   *      The result of invoking {@link ProAct.Array#psome} on the <i>original</i> {{#crossLink "ProAct.Array"}}{{/crossLink}}.
+	   *      The result of invoking {{#crossLink "ProAct.Array/psome:method"}}{{/crossLink}} on the <i>original</i> {{#crossLink "ProAct.Array"}}{{/crossLink}}.
 	   * @param {ProAct.Array} original
-	   *      The {{#crossLink "ProAct.Array"}}{{/crossLink}} on which {@link ProAct.Array#psome} was invoked.
+	   *      The {{#crossLink "ProAct.Array"}}{{/crossLink}} on which {{#crossLink "ProAct.Array/psome:method"}}{{/crossLink}} was invoked.
 	   * @param {Array} args
-	   *      The arguments passed to {@link ProAct.Array#psome}, when it was invoked on the <i>original</i> {{#crossLink "ProAct.Array"}}{{/crossLink}}
+	   *      The arguments passed to {{#crossLink "ProAct.Array/psome:method"}}{{/crossLink}}, when it was invoked on the <i>original</i> {{#crossLink "ProAct.Array"}}{{/crossLink}}
 	   * @return {Function}
-	   *      A listener for events from the <i>original</i> {{#crossLink "ProAct.Array"}}{{/crossLink}}, updating the <i>val</i> {@link ProAct.Property} on
+	   *      A listener for events from the <i>original</i> {{#crossLink "ProAct.Array"}}{{/crossLink}}, updating the <i>val</i> {{#crossLink "ProAct.Property"}}{{/crossLink}} on
 	   *      every new event, if it is necessary.
 	   */
 	  some: function (val, original, args) {
@@ -9154,16 +9788,16 @@
 	
 	  /**
 	   * Generates a listener that can be attached to an {{#crossLink "ProAct.Array"}}{{/crossLink}} on which
-	   * the method {@link ProAct.Array#filter} is invoked.
+	   * the method {{#crossLink "ProAct.Array/filter:method"}}{{/crossLink}} is invoked.
 	   * <p>
-	   *  The result of the {@link ProAct.Array#filter} method is another {{#crossLink "ProAct.Array"}}{{/crossLink}}, dependent on the <i>original</i> one.
+	   *  The result of the {{#crossLink "ProAct.Array/filter:method"}}{{/crossLink}} method is another {{#crossLink "ProAct.Array"}}{{/crossLink}}, dependent on the <i>original</i> one.
 	   * </p>
 	   * <p>
 	   *  For example if the original was:
 	   *  <pre>
 	   *    var a = new ProAct.Array([1, 3, 5]);
 	   *  </pre>
-	   *  and we invoked {@link ProAct.Array#filter} on it like this:
+	   *  and we invoked {{#crossLink "ProAct.Array/filter:method"}}{{/crossLink}} on it like this:
 	   *  <pre>
 	   *    var b = a.filter(function (el) {
 	   *      return el % 2 === 0;
@@ -9179,15 +9813,14 @@
 	   *  and it does it in an optimal way.
 	   * </p>
 	   *
-	   * @memberof ProAct.Array.Listeners
+	   * @for ProAct.Array.Listeners
 	   * @static
-	   * @constant
 	   * @param {ProAct.Array} filtered
-	   *      The array created as a result of invoking {@link ProAct.Array#filter} on the <i>original</i> {{#crossLink "ProAct.Array"}}{{/crossLink}}.
+	   *      The array created as a result of invoking {{#crossLink "ProAct.Array/filter:method"}}{{/crossLink}} on the <i>original</i> {{#crossLink "ProAct.Array"}}{{/crossLink}}.
 	   * @param {ProAct.Array} original
-	   *      The {{#crossLink "ProAct.Array"}}{{/crossLink}} on which {@link ProAct.Array#filter} was invoked.
+	   *      The {{#crossLink "ProAct.Array"}}{{/crossLink}} on which {{#crossLink "ProAct.Array/filter:method"}}{{/crossLink}} was invoked.
 	   * @param {Array} args
-	   *      The arguments passed to {@link ProAct.Array#filter}, when it was invoked on the <i>original</i> {{#crossLink "ProAct.Array"}}{{/crossLink}}
+	   *      The arguments passed to {{#crossLink "ProAct.Array/filter:method"}}{{/crossLink}}, when it was invoked on the <i>original</i> {{#crossLink "ProAct.Array"}}{{/crossLink}}
 	   * @return {Function}
 	   *      A listener for events from the <i>original</i> {{#crossLink "ProAct.Array"}}{{/crossLink}}, updating the <i>filtered</i> {{#crossLink "ProAct.Array"}}{{/crossLink}} on
 	   *      every new event, if it is necessary.
@@ -9267,16 +9900,16 @@
 	
 	  /**
 	   * Generates a listener that can be attached to an {{#crossLink "ProAct.Array"}}{{/crossLink}} on which
-	   * the method {@link ProAct.Array#map} is invoked.
+	   * the method {{#crossLink "ProAct.Array/map:method"}}{{/crossLink}} is invoked.
 	   * <p>
-	   *  The result of the {@link ProAct.Array#map} method is another {{#crossLink "ProAct.Array"}}{{/crossLink}}, dependent on the <i>original</i> one.
+	   *  The result of the {{#crossLink "ProAct.Array/map:method"}}{{/crossLink}} method is another {{#crossLink "ProAct.Array"}}{{/crossLink}}, dependent on the <i>original</i> one.
 	   * </p>
 	   * <p>
 	   *  For example if the original was:
 	   *  <pre>
 	   *    var a = new ProAct.Array([1, 3, 5]);
 	   *  </pre>
-	   *  and we invoked {@link ProAct.Array#map} on it like this:
+	   *  and we invoked {{#crossLink "ProAct.Array/map:method"}}{{/crossLink}} on it like this:
 	   *  <pre>
 	   *    var b = a.map(function (el) {
 	   *      return el * el;
@@ -9292,15 +9925,14 @@
 	   *  and it does it in an optimal way.
 	   * </p>
 	   *
-	   * @memberof ProAct.Array.Listeners
+	   * @for ProAct.Array.Listeners
 	   * @static
-	   * @constant
 	   * @param {ProAct.Array} mapped
-	   *      The array created as a result of invoking {@link ProAct.Array#map} on the <i>original</i> {{#crossLink "ProAct.Array"}}{{/crossLink}}.
+	   *      The array created as a result of invoking {{#crossLink "ProAct.Array/map:method"}}{{/crossLink}} on the <i>original</i> {{#crossLink "ProAct.Array"}}{{/crossLink}}.
 	   * @param {ProAct.Array} original
-	   *      The {{#crossLink "ProAct.Array"}}{{/crossLink}} on which {@link ProAct.Array#map} was invoked.
+	   *      The {{#crossLink "ProAct.Array"}}{{/crossLink}} on which {{#crossLink "ProAct.Array/map:method"}}{{/crossLink}} was invoked.
 	   * @param {Array} args
-	   *      The arguments passed to {@link ProAct.Array#map}, when it was invoked on the <i>original</i> {{#crossLink "ProAct.Array"}}{{/crossLink}}
+	   *      The arguments passed to {{#crossLink "ProAct.Array/map:method"}}{{/crossLink}}, when it was invoked on the <i>original</i> {{#crossLink "ProAct.Array"}}{{/crossLink}}
 	   * @return {Function}
 	   *      A listener for events from the <i>original</i> {{#crossLink "ProAct.Array"}}{{/crossLink}}, updating the <i>mapped</i> {{#crossLink "ProAct.Array"}}{{/crossLink}} on
 	   *      every new event, if it is necessary.
@@ -9367,16 +9999,16 @@
 	
 	  /**
 	   * Generates a listener that can be attached to an {{#crossLink "ProAct.Array"}}{{/crossLink}} on which
-	   * the method {@link ProAct.Array#preduce} is invoked.
+	   * the method {{#crossLink "ProAct.Array/preduce:method"}}{{/crossLink}} is invoked.
 	   * <p>
-	   *  The result of the {@link ProAct.Array#preduce} method is a {@link ProAct.Property}, dependent on the <i>original</i> array.
+	   *  The result of the {{#crossLink "ProAct.Array/preduce:method"}}{{/crossLink}} method is a {{#crossLink "ProAct.Property"}}{{/crossLink}}, dependent on the <i>original</i> array.
 	   * </p>
 	   * <p>
 	   *  For example if the original was:
 	   *  <pre>
 	   *    var a = new ProAct.Array([1, 3, 5]);
 	   *  </pre>
-	   *  and we invoked {@link ProAct.Array#preduce} on it like this:
+	   *  and we invoked {{#crossLink "ProAct.Array/preduce:method"}}{{/crossLink}} on it like this:
 	   *  <pre>
 	   *    var val = a.preduce(function (pel, el) {
 	   *      return pel + el;
@@ -9388,21 +10020,20 @@
 	   *  </pre>
 	   * </p>
 	   * <p>
-	   *  The generated listener by this method does this - updates the <i>val</i> {@link ProAct.Property}, when the <i>original</i> array changes
+	   *  The generated listener by this method does this - updates the <i>val</i> {{#crossLink "ProAct.Property"}}{{/crossLink}}, when the <i>original</i> array changes
 	   *  and it does it in an optimal way.
 	   * </p>
 	   *
-	   * @memberof ProAct.Array.Listeners
+	   * @for ProAct.Array.Listeners
 	   * @static
-	   * @constant
 	   * @param {ProAct.Property} val
-	   *      The result of invoking {@link ProAct.Array#preduce} on the <i>original</i> {{#crossLink "ProAct.Array"}}{{/crossLink}}.
+	   *      The result of invoking {{#crossLink "ProAct.Array/preduce:method"}}{{/crossLink}} on the <i>original</i> {{#crossLink "ProAct.Array"}}{{/crossLink}}.
 	   * @param {ProAct.Array} original
-	   *      The {{#crossLink "ProAct.Array"}}{{/crossLink}} on which {@link ProAct.Array#preduce} was invoked.
+	   *      The {{#crossLink "ProAct.Array"}}{{/crossLink}} on which {{#crossLink "ProAct.Array/preduce:method"}}{{/crossLink}} was invoked.
 	   * @param {Array} args
-	   *      The arguments passed to {@link ProAct.Array#preduce}, when it was invoked on the <i>original</i> {{#crossLink "ProAct.Array"}}{{/crossLink}}
+	   *      The arguments passed to {{#crossLink "ProAct.Array/preduce:method"}}{{/crossLink}}, when it was invoked on the <i>original</i> {{#crossLink "ProAct.Array"}}{{/crossLink}}
 	   * @return {Function}
-	   *      A listener for events from the <i>original</i> {{#crossLink "ProAct.Array"}}{{/crossLink}}, updating the <i>val</i> {@link ProAct.Property} on
+	   *      A listener for events from the <i>original</i> {{#crossLink "ProAct.Array"}}{{/crossLink}}, updating the <i>val</i> {{#crossLink "ProAct.Property"}}{{/crossLink}} on
 	   *      every new event, if it is necessary.
 	   */
 	  reduce: function (val, original, args) {
@@ -9425,16 +10056,16 @@
 	
 	  /**
 	   * Generates a listener that can be attached to an {{#crossLink "ProAct.Array"}}{{/crossLink}} on which
-	   * the method {@link ProAct.Array#preduceRight} is invoked.
+	   * the method {{#crossLink "ProAct.Array/preduceRight:method"}}{{/crossLink}} is invoked.
 	   * <p>
-	   *  The result of the {@link ProAct.Array#preduceRight} method is a {@link ProAct.Property}, dependent on the <i>original</i> array.
+	   *  The result of the {{#crossLink "ProAct.Array/preduceRight:method"}}{{/crossLink}} method is a {{#crossLink "ProAct.Property"}}{{/crossLink}}, dependent on the <i>original</i> array.
 	   * </p>
 	   * <p>
 	   *  For example if the original was:
 	   *  <pre>
 	   *    var a = new ProAct.Array([1, 3, 5]);
 	   *  </pre>
-	   *  and we invoked {@link ProAct.Array#preduceRight} on it like this:
+	   *  and we invoked {{#crossLink "ProAct.Array/preduceRight:method"}}{{/crossLink}} on it like this:
 	   *  <pre>
 	   *    var val = a.preduceRight(function (pel, el) {
 	   *      return pel + el;
@@ -9446,21 +10077,20 @@
 	   *  </pre>
 	   * </p>
 	   * <p>
-	   *  The generated listener by this method does this - updates the <i>val</i> {@link ProAct.Property}, when the <i>original</i> array changes
+	   *  The generated listener by this method does this - updates the <i>val</i> {{#crossLink "ProAct.Property"}}{{/crossLink}}, when the <i>original</i> array changes
 	   *  and it does it in an optimal way.
 	   * </p>
 	   *
-	   * @memberof ProAct.Array.Listeners
+	   * @for ProAct.Array.Listeners
 	   * @static
-	   * @constant
 	   * @param {ProAct.Property} val
-	   *      The result of invoking {@link ProAct.Array#preduceRight} on the <i>original</i> {{#crossLink "ProAct.Array"}}{{/crossLink}}.
+	   *      The result of invoking {{#crossLink "ProAct.Array/preduceRight:method"}}{{/crossLink}} on the <i>original</i> {{#crossLink "ProAct.Array"}}{{/crossLink}}.
 	   * @param {ProAct.Array} original
-	   *      The {{#crossLink "ProAct.Array"}}{{/crossLink}} on which {@link ProAct.Array#preduceRight} was invoked.
+	   *      The {{#crossLink "ProAct.Array"}}{{/crossLink}} on which {{#crossLink "ProAct.Array/preduceRight:method"}}{{/crossLink}} was invoked.
 	   * @param {Array} args
-	   *      The arguments passed to {@link ProAct.Array#preduceRight}, when it was invoked on the <i>original</i> {{#crossLink "ProAct.Array"}}{{/crossLink}}
+	   *      The arguments passed to {{#crossLink "ProAct.Array/preduceRight:method"}}{{/crossLink}}, when it was invoked on the <i>original</i> {{#crossLink "ProAct.Array"}}{{/crossLink}}
 	   * @return {Function}
-	   *      A listener for events from the <i>original</i> {{#crossLink "ProAct.Array"}}{{/crossLink}}, updating the <i>val</i> {@link ProAct.Property} on
+	   *      A listener for events from the <i>original</i> {{#crossLink "ProAct.Array"}}{{/crossLink}}, updating the <i>val</i> {{#crossLink "ProAct.Property"}}{{/crossLink}} on
 	   *      every new event, if it is necessary.
 	   */
 	  reduceRight: function (val, original, args) {
@@ -9482,16 +10112,16 @@
 	
 	  /**
 	   * Generates a listener that can be attached to an {{#crossLink "ProAct.Array"}}{{/crossLink}} on which
-	   * the method {@link ProAct.Array#pindexOf} is invoked.
+	   * the method {{#crossLink "ProAct.Array/pindexOf:method"}}{{/crossLink}} is invoked.
 	   * <p>
-	   *  The result of the {@link ProAct.Array#pindexOf} method is a {@link ProAct.Property}, dependent on the <i>original</i> array.
+	   *  The result of the {{#crossLink "ProAct.Array/pindexOf:method"}}{{/crossLink}} method is a {{#crossLink "ProAct.Property"}}{{/crossLink}}, dependent on the <i>original</i> array.
 	   * </p>
 	   * <p>
 	   *  For example if the original was:
 	   *  <pre>
 	   *    var a = new ProAct.Array([1, 3, 5]);
 	   *  </pre>
-	   *  and we invoked {@link ProAct.Array#pindexOf} on it like this:
+	   *  and we invoked {{#crossLink "ProAct.Array/pindexOf:method"}}{{/crossLink}} on it like this:
 	   *  <pre>
 	   *    var val = a.pindexOf(5); // val.v is 2.
 	   *  </pre>
@@ -9501,21 +10131,20 @@
 	   *  </pre>
 	   * </p>
 	   * <p>
-	   *  The generated listener by this method does this - updates the <i>val</i> {@link ProAct.Property}, when the <i>original</i> array changes
+	   *  The generated listener by this method does this - updates the <i>val</i> {{#crossLink "ProAct.Property"}}{{/crossLink}}, when the <i>original</i> array changes
 	   *  and it does it in an optimal way.
 	   * </p>
 	   *
-	   * @memberof ProAct.Array.Listeners
+	   * @for ProAct.Array.Listeners
 	   * @static
-	   * @constant
 	   * @param {ProAct.Property} val
-	   *      The result of invoking {@link ProAct.Array#pindexOf} on the <i>original</i> {{#crossLink "ProAct.Array"}}{{/crossLink}}.
+	   *      The result of invoking {{#crossLink "ProAct.Array/pindexOf:method"}}{{/crossLink}} on the <i>original</i> {{#crossLink "ProAct.Array"}}{{/crossLink}}.
 	   * @param {ProAct.Array} original
-	   *      The {{#crossLink "ProAct.Array"}}{{/crossLink}} on which {@link ProAct.Array#pindexOf} was invoked.
+	   *      The {{#crossLink "ProAct.Array"}}{{/crossLink}} on which {{#crossLink "ProAct.Array/pindexOf:method"}}{{/crossLink}} was invoked.
 	   * @param {Array} args
-	   *      The arguments passed to {@link ProAct.Array#pindexOf}, when it was invoked on the <i>original</i> {{#crossLink "ProAct.Array"}}{{/crossLink}}
+	   *      The arguments passed to {{#crossLink "ProAct.Array/pindexOf:method"}}{{/crossLink}}, when it was invoked on the <i>original</i> {{#crossLink "ProAct.Array"}}{{/crossLink}}
 	   * @return {Function}
-	   *      A listener for events from the <i>original</i> {{#crossLink "ProAct.Array"}}{{/crossLink}}, updating the <i>val</i> {@link ProAct.Property} on
+	   *      A listener for events from the <i>original</i> {{#crossLink "ProAct.Array"}}{{/crossLink}}, updating the <i>val</i> {{#crossLink "ProAct.Property"}}{{/crossLink}} on
 	   *      every new event, if it is necessary.
 	   */
 	  indexOf: function (val, original, args) {
@@ -9589,16 +10218,16 @@
 	
 	  /**
 	   * Generates a listener that can be attached to an {{#crossLink "ProAct.Array"}}{{/crossLink}} on which
-	   * the method {@link ProAct.Array#plastIndexOf} is invoked.
+	   * the method {{#crossLink "ProAct.Array/plastIndexOf:method"}}{{/crossLink}} is invoked.
 	   * <p>
-	   *  The result of the {@link ProAct.Array#plastIndexOf} method is a {@link ProAct.Property}, dependent on the <i>original</i> array.
+	   *  The result of the {{#crossLink "ProAct.Array/plastIndexOf:method"}}{{/crossLink}} method is a {{#crossLink "ProAct.Property"}}{{/crossLink}}, dependent on the <i>original</i> array.
 	   * </p>
 	   * <p>
 	   *  For example if the original was:
 	   *  <pre>
 	   *    var a = new ProAct.Array([5, 4, 5, 3]);
 	   *  </pre>
-	   *  and we invoked {@link ProAct.Array#plastIndexOf} on it like this:
+	   *  and we invoked {{#crossLink "ProAct.Array/plastIndexOf:method"}}{{/crossLink}} on it like this:
 	   *  <pre>
 	   *    var val = a.plastIndexOf(5); // val.v is 2.
 	   *  </pre>
@@ -9608,21 +10237,20 @@
 	   *  </pre>
 	   * </p>
 	   * <p>
-	   *  The generated listener by this method does this - updates the <i>val</i> {@link ProAct.Property}, when the <i>original</i> array changes
+	   *  The generated listener by this method does this - updates the <i>val</i> {{#crossLink "ProAct.Property"}}{{/crossLink}}, when the <i>original</i> array changes
 	   *  and it does it in an optimal way.
 	   * </p>
 	   *
-	   * @memberof ProAct.Array.Listeners
+	   * @for ProAct.Array.Listeners
 	   * @static
-	   * @constant
 	   * @param {ProAct.Property} val
-	   *      The result of invoking {@link ProAct.Array#plastIndexOf} on the <i>original</i> {{#crossLink "ProAct.Array"}}{{/crossLink}}.
+	   *      The result of invoking {{#crossLink "ProAct.Array/plastIndexOf:method"}}{{/crossLink}} on the <i>original</i> {{#crossLink "ProAct.Array"}}{{/crossLink}}.
 	   * @param {ProAct.Array} original
-	   *      The {{#crossLink "ProAct.Array"}}{{/crossLink}} on which {@link ProAct.Array#plastIndexOf} was invoked.
+	   *      The {{#crossLink "ProAct.Array"}}{{/crossLink}} on which {{#crossLink "ProAct.Array/plastIndexOf:method"}}{{/crossLink}} was invoked.
 	   * @param {Array} args
-	   *      The arguments passed to {@link ProAct.Array#plastIndexOf}, when it was invoked on the <i>original</i> {{#crossLink "ProAct.Array"}}{{/crossLink}}
+	   *      The arguments passed to {{#crossLink "ProAct.Array/plastIndexOf:method"}}{{/crossLink}}, when it was invoked on the <i>original</i> {{#crossLink "ProAct.Array"}}{{/crossLink}}
 	   * @return {Function}
-	   *      A listener for events from the <i>original</i> {{#crossLink "ProAct.Array"}}{{/crossLink}}, updating the <i>val</i> {@link ProAct.Property} on
+	   *      A listener for events from the <i>original</i> {{#crossLink "ProAct.Array"}}{{/crossLink}}, updating the <i>val</i> {{#crossLink "ProAct.Property"}}{{/crossLink}} on
 	   *      every new event, if it is necessary.
 	   */
 	  lastIndexOf: function (val, original, args) {
@@ -9669,16 +10297,16 @@
 	
 	  /**
 	   * Generates a listener that can be attached to an {{#crossLink "ProAct.Array"}}{{/crossLink}} on which
-	   * the method {@link ProAct.Array#slice} is invoked.
+	   * the method {{#crossLink "ProAct.Array/slice:method"}}{{/crossLink}} is invoked.
 	   * <p>
-	   *  The result of the {@link ProAct.Array#slice} method is another {{#crossLink "ProAct.Array"}}{{/crossLink}}, dependent on the <i>original</i> one.
+	   *  The result of the {{#crossLink "ProAct.Array/slice:method"}}{{/crossLink}} method is another {{#crossLink "ProAct.Array"}}{{/crossLink}}, dependent on the <i>original</i> one.
 	   * </p>
 	   * <p>
 	   *  For example if the original was:
 	   *  <pre>
 	   *    var a = new ProAct.Array([1, 3, 5]);
 	   *  </pre>
-	   *  and we invoked {@link ProAct.Array#slice} on it like this:
+	   *  and we invoked {{#crossLink "ProAct.Array/slice:method"}}{{/crossLink}} on it like this:
 	   *  <pre>
 	   *    var b = a.slice(1); // b is [3, 5]
 	   *  </pre>
@@ -9692,15 +10320,14 @@
 	   *  and it does it in an optimal way.
 	   * </p>
 	   *
-	   * @memberof ProAct.Array.Listeners
+	   * @for ProAct.Array.Listeners
 	   * @static
-	   * @constant
 	   * @param {ProAct.Array} sliced
-	   *      The array created as a result of invoking {@link ProAct.Array#slice} on the <i>original</i> {{#crossLink "ProAct.Array"}}{{/crossLink}}.
+	   *      The array created as a result of invoking {{#crossLink "ProAct.Array/slice:method"}}{{/crossLink}} on the <i>original</i> {{#crossLink "ProAct.Array"}}{{/crossLink}}.
 	   * @param {ProAct.Array} original
-	   *      The {{#crossLink "ProAct.Array"}}{{/crossLink}} on which {@link ProAct.Array#slice} was invoked.
+	   *      The {{#crossLink "ProAct.Array"}}{{/crossLink}} on which {{#crossLink "ProAct.Array/slice:method"}}{{/crossLink}} was invoked.
 	   * @param {Array} args
-	   *      The arguments passed to {@link ProAct.Array#slice}, when it was invoked on the <i>original</i> {{#crossLink "ProAct.Array"}}{{/crossLink}}
+	   *      The arguments passed to {{#crossLink "ProAct.Array/slice:method"}}{{/crossLink}}, when it was invoked on the <i>original</i> {{#crossLink "ProAct.Array"}}{{/crossLink}}
 	   * @return {Function}
 	   *      A listener for events from the <i>original</i> {{#crossLink "ProAct.Array"}}{{/crossLink}}, updating the <i>sliced</i> {{#crossLink "ProAct.Array"}}{{/crossLink}} on
 	   *      every new event, if it is necessary.
@@ -9729,418 +10356,24 @@
 	};
 	
 	/**
-	 * The {@link ProAct.prob} method is the entry point for creating reactive values in ProAct.js
+	 * The `proact-dsl` module provides DSL for creating and managing different ProAct objects.
+	 *
+	 *
+	 * @module proact-dsl
+	 * @main proact-dsl
+	 */
+	
+	/**
 	 * <p>
-	 *  If the value is Number/String/Boolean/null/undefined or Function a new {@link ProAct.Property} is created woth value, set
-	 *  to the passed <i>object</i> value. The <i>meta</i>-data passed is used in the creation process.
+	 *  Constructs a `ProAct.Registry`.
+	 *  It is used to store/create objects that can be referenced or configured using the {{#crossLink "ProAct.DSL"}}{{/crossLink}}.
 	 * </p>
 	 * <p>
-	 *  If the passed <i>object</i> is an array, the result of this method is a new {@link ProAct.Array} with content,
-	 *  the passed array <i>object</i>
-	 * </p>
-	 * <p>
-	 *  If the <i>object</i> passed is a plain JavaScript object the result of this function is reactive version of the
-	 *  <i>object</i> with {@link ProAct.ObjectCore} holding its {@link ProAct.Property}s.
-	 * </p>
-	 *
-	 * @method prob
-	 * @memberof ProAct
-	 * @static
-	 * @param {Object} object
-	 *      The object/value to make reactive.
-	 * @param {Object|String} meta
-	 *      Meta-data used to help in the reactive object creation.
-	 * @return {Object}
-	 *      Reactive representation of the passed <i>object</i>.
-	 */
-	function prob (object, meta) {
-	  var core, property,
-	      isAr = P.U.isArray,
-	      array;
-	
-	  if (object === null || (!P.U.isObject(object) && !isAr(object))) {
-	    return P.P.lazyValue(object, meta);
-	  }
-	
-	  if (P.U.isArray(object)) {
-	    array = new P.A(object);
-	    if (meta && meta.p && meta.p.queueName && P.U.isString(meta.p.queueName)) {
-	      array.core.queueName = meta.p.queueName;
-	    }
-	    return array;
-	  }
-	
-	  core = new P.OC(object, meta);
-	  P.U.defValProp(object, '__pro__', false, false, false, core);
-	
-	  core.prob();
-	
-	  return object;
-	}
-	ProAct.prob = prob;
-	
-	/**
-	 * The {@link ProAct.proxy} creates proxies or decorators to ProAct.js objects.
-	 * <p>
-	 *  The decorators extend the <i>target</i> and can add new properties which depend on the extended ones.
-	 * </p>
-	 *
-	 * @method proxy
-	 * @memberof ProAct
-	 * @static
-	 * @param {Object} object
-	 *      The object/value to make decorator to the <i>target</i>.
-	 * @param {Object} target
-	 *      The object to decorate.
-	 * @param {Object|String} meta
-	 *      Meta-data used to help in the reactive object creation for the proxy.
-	 * @param {Object|String} targetMeta
-	 *      Meta-data used to help in the reactive object creation for the target, if it is not reactive.
-	 * @return {Object}
-	 *      Reactive representation of the passed <i>object</i>, decorating the passed <i>target</i>.
-	 */
-	function proxy (object, target, meta, targetMeta) {
-	  if (!object || !target) {
-	    return null;
-	  }
-	
-	  if (!P.U.isProObject(target)) {
-	    target = ProAct.prob(target, targetMeta);
-	  }
-	
-	  if (!meta || !P.U.isObject(meta)) {
-	    meta = {};
-	  }
-	
-	  var properties = target.__pro__.properties,
-	      property;
-	
-	  for (property in properties) {
-	    if (!object.hasOwnProperty(property)) {
-	      object[property] = null;
-	      meta[property] = properties[property];
-	    }
-	  }
-	
-	  object = ProAct.prob(object, meta);
-	
-	  return object;
-	}
-	ProAct.proxy = proxy;
-	
-	/**
-	 * Creates a {@link ProAct.Stream} instance.
-	 *
-	 * @method stream
-	 * @memberof ProAct
-	 * @static
-	 * @return {ProAct.Stream}
-	 *      A {@link ProAct.Stream} instance.
-	 */
-	function stream (subscribe, transformations, source, queueName) {
-	  var stream;
-	  if (!subscribe) {
-	    stream = new ProAct.Stream(queueName, source, transformations);
-	  } else if (P.U.isFunction(subscribe)) {
-	    stream = new ProAct.SubscribableStream(subscribe, queueName, source, transformations);
-	  } else if (P.U.isString(subscribe) && P.registry) {
-	    stream = P.registry.setup(
-	      new ProAct.Stream(), subscribe, slice.call(arguments, 1)
-	    );
-	  }
-	
-	  stream.trigger = StreamUtil.trigger;
-	  stream.triggerErr = StreamUtil.triggerErr;
-	  stream.triggerClose= StreamUtil.triggerClose;
-	
-	  return stream;
-	}
-	ProAct.stream = stream;
-	
-	/**
-	 * Creates a closed {@link ProAct.Stream}.
-	 *
-	 * @method closed
-	 * @memberof ProAct
-	 * @static
-	 * @return {ProAct.Stream}
-	 *      A closed {@link ProAct.Stream} instance.
-	 */
-	function closed () {
-	  return P.stream().close();
-	}
-	ProAct.closed = P.never = closed;
-	
-	/**
-	 * Creates a {@link ProAct.Stream}, which emits the passed "value" once and then closes.
-	 * <p>Example:</p>
-	 * <pre>
-	    var stream = ProAct.timeout(1000, 7);
-	    stream.on(function (v) {
-	      console.log(v);
-	    });
-	
-	   // This will print '7' after 1s and will close.
-	
-	 * </pre>
-	 *
-	 * @method timeout
-	 * @memberof ProAct
-	 * @static
-	 * @param {Number} timeout
-	 *      The time to wait (in milliseconds) before emitting the <i>value</i> and close.
-	 * @param {Object} value
-	 *      The value to emit.
-	 * @return {ProAct.Stream}
-	 *      A {@link ProAct.Stream} instance.
-	 */
-	function timeout (timeout, value) {
-	  var stream = P.stream();
-	
-	  window.setTimeout(function () {
-	    stream.trigger(value);
-	    stream.close();
-	  }, timeout);
-	
-	  return stream;
-	}
-	ProAct.timeout = ProAct.later = timeout;
-	
-	/**
-	 * Creates a {@link ProAct.Stream}, which emits the passed "value" over and over again at given time interval.
-	 * <p>Example:</p>
-	 * <pre>
-	    var stream = ProAct.interval(1000, 7);
-	    stream.on(function (v) {
-	      console.log(v);
-	    });
-	
-	   // This will print one number on every 1s and the numbers will be 7,7,7,7,7....
-	
-	 * </pre>
-	 *
-	 * @method interval
-	 * @memberof ProAct
-	 * @static
-	 * @param {Number} interval
-	 *      The time in milliseconds on which the <i>value</i> will be emitted.
-	 * @param {Object} value
-	 *      The value to emit.
-	 * @return {ProAct.Stream}
-	 *      A {@link ProAct.Stream} instance.
-	 */
-	function interval (interval, value) {
-	  var stream = P.stream();
-	
-	  window.setInterval(function () {
-	    stream.trigger(value);
-	  }, interval);
-	
-	  return stream;
-	}
-	ProAct.interval = interval;
-	
-	/**
-	 * Creates a {@link ProAct.Stream}, which emits values of the passed <i>vals</i> array on the passed <i>interval</i> milliseconds.
-	 * <p>
-	 *  When every value is emitted through the stream it is closed.
-	 * <p>
-	 * <p>Example:</p>
-	 * <pre>
-	    var stream = ProAct.seq(1000, [4, 5]);
-	    stream.on(function (v) {
-	      console.log(v);
-	    });
-	
-	   // This will print one number on every 1s and the numbers will be 4 5 and the stream will be closed.
-	
-	 * </pre>
-	 *
-	 * @method seq
-	 * @memberof ProAct
-	 * @static
-	 * @param {Number} interval
-	 *      The time in milliseconds on which a value of the passed <i>vals</i> array will be emitted.
-	 * @param {Array} vals
-	 *      The array containing the values to be emitted on the passed <i>interval</i>.
-	 * @return {ProAct.Stream}
-	 *      A {@link ProAct.Stream} instance.
-	 */
-	function seq (interval, vals) {
-	  var stream = P.stream(),
-	      operation;
-	
-	  if (vals.length > 0) {
-	    operation = function () {
-	      var value = vals.shift();
-	      stream.trigger(value);
-	
-	      if (vals.length === 0) {
-	        stream.close();
-	      } else {
-	        window.setTimeout(operation, interval);
-	      }
-	    };
-	    window.setTimeout(operation, interval);
-	  }
-	
-	  return stream;
-	}
-	ProAct.seq = seq;
-	
-	/**
-	 * Creates a {@link ProAct.Stream}, which emits values of the passed <i>vals</i> array on the passed interval.
-	 * <p>
-	 *  When every value is emitted through the stream they are emitted again and again and so on...
-	 * <p>
-	 * <p>Example:</p>
-	 * <pre>
-	    var stream = ProAct.repeat(1000, [4, 5]);
-	    stream.on(function (v) {
-	      console.log(v);
-	    });
-	
-	   // This will print one number on every 1s and the numbers will be 4 5 4 5 4 5 4 5 4 5 .. and so on
-	
-	 * </pre>
-	 *
-	 * @method interval
-	 * @memberof ProAct
-	 * @static
-	 * @param {Number} interval
-	 *      The time in milliseconds on which a value of the passed <i>vals</i> array will be emitted.
-	 * @param {Array} vals
-	 *      The array containing the values to be emitted on the passed <i>interval</i>.
-	 * @return {ProAct.Stream}
-	 *      A {@link ProAct.Stream} instance.
-	 */
-	function repeat (interval, vals) {
-	  var stream = P.stream(), i = 0;
-	
-	  if (vals.length > 0) {
-	    window.setInterval(function () {
-	      if (i === vals.length) {
-	        i = 0;
-	      }
-	
-	      var value = vals[i++];
-	      stream.trigger(value);
-	    }, interval);
-	  }
-	
-	  return stream;
-	}
-	ProAct.repeat = repeat;
-	
-	/**
-	 * The {@link ProAct.fromInvoke} creates a {@link ProAct.Stream}, which emits the result of the passed
-	 * <i>func</i> argument on every <i>interval</i> milliseconds.
-	 * <p>
-	 *  If <i>func</i> returns {@link ProAct.closed} the stream is closed.
-	 * </p>
-	 * <p>Example:</p>
-	 * <pre>
-	    var stream = ProAct.fromInvoke(1000, function () {
-	      return 5;
-	    });
-	    stream.on(function (v) {
-	      console.log(v);
-	    });
-	
-	    // After 1s we'll see '5' in the log, after 2s we'll see a second '5' in the log and so on...
-	
-	 * </pre>
-	 *
-	 * @method fromInvoke
-	 * @memberof ProAct
-	 * @static
-	 * @param {Number} interval
-	 *      The interval on which <i>func</i> will be called and its returned value will
-	 *      be triggered into the stream.
-	 * @param {Function} func
-	 *      The function to invoke in order to get the value to trigger into the stream.
-	 * @return {ProAct.Stream}
-	 *      A {@link ProAct.Stream} instance.
-	 */
-	function fromInvoke (interval, func) {
-	  var stream = P.stream(), id;
-	
-	  id = window.setInterval(function () {
-	    var value = func.call();
-	
-	    if (value !== ProAct.close) {
-	      stream.trigger(value);
-	    } else {
-	      stream.close();
-	      window.clearInterval(id);
-	    }
-	
-	  }, interval);
-	
-	  return stream;
-	}
-	ProAct.fromInvoke = fromInvoke;
-	
-	function fromCallback (callbackCaller) {
-	  var stream = P.stream();
-	
-	  callbackCaller(function (result) {
-	    stream.trigger(result);
-	    stream.close();
-	  });
-	
-	  return stream;
-	}
-	
-	ProAct.fromCallback = fromCallback;
-	
-	attachers = {
-	  addEventListener: 'removeEventListener',
-	  addListener: 'removeListener',
-	  on: 'off'
-	};
-	attacherKeys = Object.keys(attachers);
-	
-	function fromEventDispatcher (target, eventType) {
-	  var i, ln = attacherKeys.length,
-	      on, off,
-	      attacher, current;
-	
-	  for (i = 0; i < ln; i++) {
-	    attacher = attacherKeys[i];
-	    current = target[attacher];
-	
-	    if (current && P.U.isFunction(current)) {
-	      on = attacher;
-	      off = attachers[attacher];
-	      break;
-	    }
-	  }
-	
-	  if (on === undefined) {
-	    return null;
-	  }
-	
-	  return new ProAct.SubscribableStream(function (stream) {
-	    target[on](eventType, stream.trigger);
-	
-	    return function (stream) {
-	      target[off](eventType, stream.trigger);
-	    };
-	  });
-	}
-	
-	ProAct.fromEventDispatcher = fromEventDispatcher;
-	
-	/**
-	 * <p>
-	 *  Constructs a ProAct.Registry. It is used to store/create objects that can be referenced or configured using the {@link ProAct.DSL}.
-	 * </p>
-	 * <p>
-	 *  ProAct.Registry is part og the DSL module of ProAct.js.
+	 *  `ProAct.Registry` is part of the `proact-dsl` module of ProAct.js.
 	 * </p>
 	 *
 	 * @class ProAct.Registry
+	 * @constructor
 	 */
 	function Registry () {
 	  this.providers = {};
@@ -10152,28 +10385,27 @@
 	  /**
 	   * Reference to the constructor of this object.
 	   *
-	   * @memberof ProAct.Registry
-	   * @instance
-	   * @constant
-	   * @default ProAct.Registry
+	   * @property constructor
+	   * @type ProAct.Registry
+	   * @final
+	   * @for ProAct.Registry
 	   */
 	  constructor: ProAct.Registry,
 	
 	  /**
-	   * Registers a {@link ProAct.Registry.Provider} for the passed <i>namespace</i> in the registry.
+	   * Registers a {{#crossLink "ProAct.Registry.Provider"}}{{/crossLink}} for the passed <i>namespace</i> in the registry.
 	   *
-	   * @memberof ProAct.Registry
+	   * @for ProAct.Registry
 	   * @instance
 	   * @method register
 	   * @param {String} namespace
 	   *      The namespace to register the <i>provider</i> in.
 	   * @param {ProAct.Registry.Provider} provider
-	   *      The {@link ProAct.Registry.Provider} to register.
+	   *      The {{#crossLink "ProAct.Registry.Provider"}}{{/crossLink}} to register.
 	   * @return {ProAct.Registers}
 	   *      <i>this</i>
 	   * @throws {Error}
-	   *      If a {@link ProAct.Registry.Provider} is already registered for the passed <i>namespace</i>.
-	   * @see {@link ProAct.Registry.Provider}
+	   *      If a {{#crossLink "ProAct.Registry.Provider"}}{{/crossLink}} is already registered for the passed <i>namespace</i>.
 	   */
 	  register: function (namespace, provider) {
 	    if (this.providers[namespace]) {
@@ -10187,10 +10419,10 @@
 	  },
 	
 	  /**
-	   * Retrieves the right {@link ProAct.Registry.Provider} using the <i>name</i> of stored
+	   * Retrieves the right {{#crossLink "ProAct.Registry.Provider"}}{{/crossLink}} using the <i>name</i> of stored
 	   * in <i>this</i> ProAct.Registry object, or the <i>name</i> of an object to be stored
 	   *
-	   * @memberof ProAct.Registry
+	   * @for ProAct.Registry
 	   * @instance
 	   * @method getProviderByName
 	   * @param {String} name
@@ -10199,10 +10431,10 @@
 	   *        It must be in the format '{namespace}:{key}'.
 	   *      </p>
 	   *      <p>
-	   *        Here the namespace is the namespace the {@link ProAct.Registry.Provider} manages.
+	   *        Here the namespace is the namespace the {{#crossLink "ProAct.Registry.Provider"}}{{/crossLink}} manages.
 	   *      </p>
 	   * @return {Array}
-	   *      The first element in the result is the {@link ProAct.Registry.Provider} or undefined if not found.
+	   *      The first element in the result is the {{#crossLink "ProAct.Registry.Provider"}}{{/crossLink}} or undefined if not found.
 	   *      <p>
 	   *        The second one is the <b>key</b> at which an object is stored or will be stored in the provider.
 	   *      </p>
@@ -10210,7 +10442,6 @@
 	   *        The third element is an array with options for storing/creating an object passed to the provider using
 	   *        the <i>name</i> string.
 	   *      </p>
-	   * @see {@link ProAct.Registry.Provider}
 	   */
 	  getProviderByName: function (name) {
 	    var parts = name.split(':');
@@ -10219,12 +10450,12 @@
 	  },
 	
 	  /**
-	   * Configures an object to be stored using {@link ProAct.DSL} passed through <i>options</i> and DSL arguments.
+	   * Configures an object to be stored using {{#crossLink "ProAct.DSL"}}{{/crossLink}} passed through <i>options</i> and DSL arguments.
 	   * <p>
 	   *  Example usage:
 	   * </p>
 	   * <p>
-	   *  A {@link ProAct.Stream} is passed to the registry for setup with DSL data.
+	   *  A {{#crossLink "ProAct.Stream"}}{{/crossLink}} is passed to the registry for setup with DSL data.
 	   * </p>
 	   * <p>
 	   *  The data passed through the <i>options</i> parameter is
@@ -10241,8 +10472,8 @@
 	   *  </pre>
 	   * </p>
 	   * <p>
-	   *  This means that a {@link ProAct.Stream} stored in <i>this</i> registry by the key 'foo' should be set
-	   *  as a source to the passed as the <i>object</i> parameter simple {@link ProAct.Stream}.
+	   *  This means that a {{#crossLink "ProAct.Stream"}}{{/crossLink}} stored in <i>this</i> registry by the key 'foo' should be set
+	   *  as a source to the passed as the <i>object</i> parameter simple {{#crossLink "ProAct.Stream"}}{{/crossLink}}.
 	   * </p>
 	   * <p>
 	   *  It also means that for every value comming in the <i>object</i> parameter's stream there should be mapping of negativity and
@@ -10252,19 +10483,17 @@
 	   *  So if we trigger in the 'foo' stream the value of <b>4</b> in our stream we will get <b>-4</b>, and if we trigger 5, we won't get anything.
 	   * </p>
 	   *
-	   * @memberof ProAct.Registry
+	   * @for ProAct.Registry
 	   * @instance
 	   * @method setup
 	   * @param {Object} object
 	   *      The object to setup.
 	   * @param {String|Object} options
-	   *      A {@link ProAct.DSL} data object or string used to setup the object.
+	   *      A {{#crossLink "ProAct.DSL"}}{{/crossLink}} data object or string used to setup the object.
 	   * @param {Array} args
-	   *      Arguments to be used by the {@link ProAct.DSL#run} method while configuring the passed <i>object</i>.
+	   *      Arguments to be used by the {{#crossLink "ProAct.DSL/run:method"}}{{/crossLink}} method while configuring the passed <i>object</i>.
 	   * @return {Object}
 	   *      Ready to strore object.
-	   * @see {@link ProAct.DSL}
-	   * @see {@link ProAct.DSL#run}
 	   */
 	  setup: function (object, options, args) {
 	    return dsl.run.apply(null, [object, options, this].concat(args));
@@ -10274,16 +10503,16 @@
 	   * Creates a new object and stores it in <i>this</i> registry, using the right provider for the creation
 	   * and configuring it using the DSL passed through the <i>options</i> parameter.
 	   * <p>
-	   *  {@link ProAct.Registry#getProviderByName} is used to locate the right provider to create the object with.
+	   *  {{#crossLink "ProAct.Registry/getProviderByName:method"}}{{/crossLink}} is used to locate the right provider to create the object with.
 	   * </p>
 	   * <p>
-	   *  {@link ProAct.Registry#setup} is used to setup the newly created object using the {@link ProAct.DSL}
+	   *  {{#crossLink "ProAct.Registry/setup:method"}}{{/crossLink}} is used to setup the newly created object using the {{#crossLink "ProAct.DSL"}}{{/crossLink}}
 	   * </p>
 	   * <p>
-	   *  The idea of this method is to create and configure {@link ProAct.Actor} objects.
+	   *  The idea of this method is to create and configure {{#crossLink "ProAct.Actor"}}{{/crossLink}} objects.
 	   * </p>
 	   *
-	   * @memberof ProAct.Registry
+	   * @for ProAct.Registry
 	   * @instance
 	   * @method make
 	   * @param {String} name
@@ -10292,15 +10521,11 @@
 	   *        It must be in the format '{namespace}:{key}'
 	   *      </p>
 	   * @param {String|Object} options
-	   *      A {@link ProAct.DSL} data object or string used to setup the object to be created.
+	   *      A {{#crossLink "ProAct.DSL"}}{{/crossLink}} data object or string used to setup the object to be created.
 	   * @param [...]
-	   *      <b>Arguments</b> to be used by the {@link ProAct.DSL#run} method while configuring the newly created <i>object</i>.
+	   *      <b>Arguments</b> to be used by the {{#crossLink "ProAct.DSL/run:method"}}{{/crossLink}} method while configuring the newly created <i>object</i>.
 	   * @return {Object}
-	   *      The newly created, stored and configured object, or null if there was no {@link ProAct.Registry.Provider} register for its type.
-	   * @see {@link ProAct.DSL}
-	   * @see {@link ProAct.Registry#getProviderByName}
-	   * @see {@link ProAct.Registry#setup}
-	   * @see {@link ProAct.Actor}
+	   *      The newly created, stored and configured object, or null if there was no {{#crossLink "ProAct.Registry.Provider"}}{{/crossLink}} register for its type.
 	   */
 	  make: function (name, options) {
 	    var args = slice.call(arguments, 2),
@@ -10317,10 +10542,10 @@
 	  /**
 	   * Stores an object  in <i>this</i> registry, using the right provider to configure it using the DSL passed through the <i>options</i> parameter.
 	   * <p>
-	   *  {@link ProAct.Registry#getProviderByName} is used to locate the right provider to store the object to.
+	   *  {{#crossLink "ProAct.Registry/getProviderByName:method"}}{{/crossLink}} is used to locate the right provider to store the object to.
 	   * </p>
 	   *
-	   * @memberof ProAct.Registry
+	   * @for ProAct.Registry
 	   * @instance
 	   * @method store
 	   * @param {String} name
@@ -10331,13 +10556,11 @@
 	   * @param {Object} object
 	   *      The object to store.
 	   * @param {String|Object} options
-	   *      A {@link ProAct.DSL} data object or string used to setup the object to be stored (optional).
+	   *      A {{#crossLink "ProAct.DSL"}}{{/crossLink}} data object or string used to setup the object to be stored (optional).
 	   * @param [...]
-	   *      <b>Arguments</b> to be used by the {@link ProAct.DSL#run} method while configuring the <i>object</i>.
+	   *      <b>Arguments</b> to be used by the {{#crossLink "ProAct.DSL/run:method"}}{{/crossLink}} method while configuring the <i>object</i>.
 	   * @return {Object}
-	   *      The stored and configured object, or null if there was no {@link ProAct.Registry.Provider} register for its type.
-	   * @see {@link ProAct.DSL}
-	   * @see {@link ProAct.Registry#getProviderByName}
+	   *      The stored and configured object, or null if there was no {{#crossLink "ProAct.Registry.Provider"}}{{/crossLink}} register for its type.
 	   */
 	  store: function (name, object, options) {
 	    var args = slice.call(arguments, 2),
@@ -10352,10 +10575,10 @@
 	  /**
 	   * Retrieves an object, stored <i>this</i> registry.
 	   * <p>
-	   *  {@link ProAct.Registry#getProviderByName} is used to locate the right provider to retrieve the object from.
+	   *  {{#crossLink "ProAct.Registry/getProviderByName:method"}}{{/crossLink}} is used to locate the right provider to retrieve the object from.
 	   * </p>
 	   *
-	   * @memberof ProAct.Registry
+	   * @for ProAct.Registry
 	   * @instance
 	   * @method get
 	   * @param {String} name
@@ -10364,8 +10587,7 @@
 	   *        It must be in the format '{namespace}:{key}'
 	   *      </p>
 	   * @return {Object}
-	   *      The stored object, or null if there was no {@link ProAct.Registry.Provider} register for its type or no object registered for the passed <i>name</i>.
-	   * @see {@link ProAct.Registry#getProviderByName}
+	   *      The stored object, or null if there was no {{#crossLink "ProAct.Registry.Provider"}}{{/crossLink}} register for its type or no object registered for the passed <i>name</i>.
 	   */
 	  get: function (name) {
 	    var p = this.getProviderByName(name);
@@ -10377,23 +10599,22 @@
 	  },
 	
 	  /**
-	   * Helper method for transforming an array of keys of stored items in <i>this</i> ProAct.Registry to an array of the actual items.
+	   * Helper method for transforming an array of keys of stored items in <i>this</i> `ProAct.Registry` to an array of the actual items.
 	   * <p>
-	   *  Mainly used by the {@link ProAct.DSL} logic.
+	   *  Mainly used by the {{#crossLink "ProAct.DSL"}}{{/crossLink}} logic.
 	   * </p>
 	   *
-	   * @memberof ProAct.Registry
+	   * @for ProAct.Registry
+	   * @protected
 	   * @instance
 	   * @method toObjectArray
 	   * @param {Array} array
-	   *      Array of string keys to objects stored in <i>this</i> registry to be retrieved using {@link ProAct.Registry#toObject}.
+	   *      Array of string keys to objects stored in <i>this</i> registry to be retrieved using {{#crossLink "ProAct.Registry/toObject:method"}}{{/crossLink}}.
 	   *      <p>
 	   *        If object is not stored on some key, the key itself is returned in the same possition in the result array.
 	   *      </p>
 	   * @return {Array}
 	   *      Of the retrieved objects, in the same order as the keys.
-	   * @see {@link ProAct.Registry#toObject}
-	   * @see {@link ProAct.DSL}
 	   */
 	  toObjectArray: function (array) {
 	    var self = this;
@@ -10406,13 +10627,14 @@
 	  },
 	
 	  /**
-	   * Helper method for transforming a key of stored item in <i>this</i> ProAct.Registry to the actual item or returning the key, if
-	   * the item is not found in the ProAct.Registry.
+	   * Helper method for transforming a key of stored item in <i>this</i> `ProAct.Registry` to the actual item or returning the key, if
+	   * the item is not found in the `ProAct.Registry`.
 	   * <p>
-	   *  Mainly used by the {@link ProAct.DSL} logic.
+	   *  Mainly used by the {{#crossLink "ProAct.DSL"}}{{/crossLink}} logic.
 	   * </p>
 	   *
-	   * @memberof ProAct.Registry
+	   * @for ProAct.Registry
+	   * @protected
 	   * @instance
 	   * @method toObject
 	   * @param {String|Object} data
@@ -10422,8 +10644,6 @@
 	   *      </p>
 	   * @return {Object}
 	   *      Stored object, if found using the passed <i>data</i> or the <i>data</i> itself.
-	   * @see {@link ProAct.DSL}
-	   * @see {@link ProAct.Registry#get}
 	   */
 	  toObject: function (data) {
 	    if (P.U.isString(data)) {
@@ -10435,8 +10655,68 @@
 	  }
 	};
 	
+	P.U.ex(P.Actor.prototype, {
+	
+	  /**
+	   * Adds a new <i>transformation</i> to the list of transformations
+	   * of <i>this actor</i>.
+	   *
+	   * <p>
+	   *  A transformation is a function or an object that has a <i>call</i> method defined.
+	   *  This function or call method should have one argument and to return a transformed version of it.
+	   *  If the returned value is {{#crossLink "ProAct.Actor/BadValue:property"}}{{/crossLink}}, the next transformations are skipped and the updating
+	   *  value/event becomes - bad value.
+	   * </p>
+	   *
+	   * <p>
+	   *  Every value/event that updates <i>this actor</i> will be transformed using the new transformation.
+	   * </p>
+	   *
+	   * This method uses {{#crossLink "ProAct.Actor/transform:method"}}{{/crossLink}}, but can read transformation
+	   * funtion/object stored in the registry (if the proact-dsl module is present) by it's string name.
+	   *
+	   * @for ProAct.Actor
+	   * @instance
+	   * @method transformStored
+	   * @protected
+	   * @param {Object|String} transformation The transformation to add. Can be string - to be retrieved by name.
+	   * @param {String} type The type of the transformation, for example `mapping`.
+	   * @return {ProAct.Actor}
+	   *      <b>this</b>
+	   */
+	  transformStored: function (transformation, type) {
+	    if (P.U.isString(transformation)) {
+	      P.DSL.run(this, type + '(' + transformation + ')', P.registry);
+	      return this;
+	    }
+	
+	    return this.transform(transformation);
+	  }
+	
+	});
+	
+	P.U.ex(P.ObjectCore.prototype, {
+	
+	  applyMeta: function (meta, property) {
+	    if (meta && P.registry) {
+	      if (!P.U.isArray(meta)) {
+	        meta = [meta];
+	      }
+	
+	      if (!(meta[0] instanceof ProAct.Property)) {
+	        P.registry.setup.apply(P.registry, [property].concat(meta));
+	      }
+	    }
+	  }
+	
+	});
+	
 	/**
-	 * Contains {@link ProAct.DSl} operation logic definitions.
+	 * @module proact-dsl
+	 */
+	
+	/**
+	 * Contains {{#crossLink "ProAct.DSL"}}{{/crossLink}} operation logic definitions.
 	 * <p>
 	 *  Every operation has
 	 *  <ol>
@@ -10450,16 +10730,18 @@
 	 *  </ol>
 	 * </p>
 	 *
-	 * @namespace ProAct.OpStore
+	 * @namespace ProAct
+	 * @class OpStore
+	 * @static
 	 */
 	ProAct.OpStore = {
 	
 	  /**
 	   * Default operation definitions, that can be used by most of the operations to be defined.
 	   *
-	   * @memberof ProAct.OpStore
+	   * @namespace ProAct.OpStore
+	   * @class all
 	   * @static
-	   * @constant
 	   */
 	  all: {
 	
@@ -10469,7 +10751,7 @@
 	     *  It is used for defining all the simple operations, like <i>map</i> or <i>filter</i>.
 	     * </p>
 	     *
-	     * @memberof ProAct.OpStore.all
+	     * @for ProAct.OpStore.all
 	     * @static
 	     * @param {String} name
 	     *      The name of the operation to define.
@@ -10495,7 +10777,6 @@
 	     *          </p>
 	     *        </li>
 	     *      </ol>
-	     * @see {@link ProAct.DSl.predefined}
 	     */
 	    simpleOp: function(name, sym) {
 	      return {
@@ -10593,32 +10874,35 @@
 	opStoreAll = P.OpStore.all;
 	
 	/**
-	 * Contains implementation of the ProAct.js DSL.
+	 * Contains implementation of the `ProAct.js DSL`.
 	 * <p>
-	 *  The idea of the DSL is to define {@link ProAct.Actor}s and their dependencies on each other in a declarative and simple way.
+	 *  The idea of the DSL is to define {{#crossLink "ProAct.Actor"}}{{/crossLink}}s and their dependencies on each other in a declarative and simple way.
 	 * </p>
 	 * <p>
-	 *  The {@link ProAct.Registry} is used to store these actors.
+	 *  The {{#crossLink "ProAct.Registry"}}{{/crossLink}} is used to store these actors.
 	 * </p>
 	 * <p>
 	 *  For example if we want to have a stream configured to write in a property, it is very easy done using the DSL:
 	 *  <pre>
 	 *    ProAct.registry.prob('val', 0, '<<(s:data)');
 	 *  </pre>
-	 *  This tells the {@link ProAct.Registry} to create a {@link ProAct.Property} with the value of zero, and to point the previously,
+	 *  This tells the {{#crossLink "ProAct.Registry"}}{{/crossLink}} to create a {{#crossLink "ProAct.Property"}}{{/crossLink}} with the value of zero, and to point the previously,
 	 *  stored 'data' stream to it.
 	 * </p>
 	 *
-	 * @namespace ProAct.DSL
+	 * @namespace ProAct
+	 * @class DSL
+	 * @static
 	 */
 	ProAct.DSL = {
 	
 	  /**
 	   * A separator which can be used to separate multiple DSL expressions in one string.
 	   *
-	   * @memberof ProAct.DSL
-	   * @static
-	   * @constant
+	   * @for ProAct.DSL
+	   * @type String
+	   * @property separator
+	   * @final
 	   */
 	  separator: '|',
 	
@@ -10634,170 +10918,151 @@
 	   *  </pre>
 	   * </p>
 	   *
-	   * @namespace ProAct.DSL.ops
-	   * @memberof ProAct.DSL
+	   * @namespace ProAct.DSL
+	   * @class ops
 	   * @static
-	   * @see {@link ProAct.OpStore}
 	   */
 	  ops: {
 	
 	    /**
-	     * DSL operation for defining sources of {@link ProAct.Actor}s.
+	     * DSL operation for defining sources of {{#crossLink "ProAct.Actor"}}{{/crossLink}}s.
 	     * <p>
 	     *  For example
 	     *  <pre>
 	     *    '<<(s:bla)'
 	     *  </pre>
-	     *  means that the source of the targed of the DSL should be a stream stored in the {@link ProAct.Registry} by the key 'bla'.
+	     *  means that the source of the targed of the DSL should be a stream stored in the {{#crossLink "ProAct.Registry"}}{{/crossLink}} by the key 'bla'.
 	     * </p>
 	     * <p>
 	     *  or
 	     *  <pre>
 	     *    '<<($1)'
 	     *  </pre>
-	     *  means that the source of the targed of the DSL should be an {@link ProAct.Actor} passed to the {@link ProAct.Dsl.run}
+	     *  means that the source of the targed of the DSL should be an {{#crossLink "ProAct.Actor"}}{{/crossLink}} passed to the {{#crossLink "ProAct.DSL/run:method"}}{{/crossLink}}
 	     *  method as the first argument after the targed object, the DSL data and the registry.
 	     * </p>
 	     *
-	     * @memberof ProAct.DSL.ops
-	     * @static
-	     * @constant
-	     * @see {@link ProAct.OpStore}
-	     * @see {@link ProAct.Registry}
-	     * @see {@link ProAct.Actor}
-	     * @see {@link ProAct.DSL.run}
+	     * @for ProAct.DSL.ops
+	     * @final
+	     * @property into
+	     * @type Object
 	     */
 	    into: opStoreAll.simpleOp('into', '<<'),
 	
 	    /**
-	     * DSL operation for setting the targed of the DSL as sources of another {@link ProAct.Actor}s.
+	     * DSL operation for setting the targed of the DSL as sources of another {{#crossLink "ProAct.Actor"}}{{/crossLink}}s.
 	     * <p>
 	     *  For example
 	     *  <pre>
 	     *    '>>(s:bla)'
 	     *  </pre>
-	     *  means that the targed of the DSL should become a source for a stream stored in the {@link ProAct.Registry} by the key 'bla'.
+	     *  means that the targed of the DSL should become a source for a stream stored in the {{#crossLink "ProAct.Registry"}}{{/crossLink}} by the key 'bla'.
 	     * </p>
 	     * <p>
 	     *  or
 	     *  <pre>
 	     *    '>>($1)'
 	     *  </pre>
-	     *  means that the targed of the DSL should become a source for an {@link ProAct.Actor} passed to the {@link ProAct.Dsl.run}
+	     *  means that the targed of the DSL should become a source for an {{#crossLink "ProAct.Actor"}}{{/crossLink}} passed to the {{#crossLink "ProAct.DSL/run:method"}}{{/crossLink}}
 	     *  method as the first argument after the targed object, the DSL data and the registry.
 	     * </p>
 	     *
-	     * @memberof ProAct.DSL.ops
-	     * @static
-	     * @constant
-	     * @see {@link ProAct.OpStore}
-	     * @see {@link ProAct.Registry}
-	     * @see {@link ProAct.Actor}
-	     * @see {@link ProAct.DSL.run}
+	     * @for ProAct.DSL.ops
+	     * @final
+	     * @property out
+	     * @type Object
 	     */
 	    out: opStoreAll.simpleOp('out', '>>'),
 	
 	    /**
-	     * DSL operation for attaching listener to the target {@link ProAct.Actor} of the DSL.
+	     * DSL operation for attaching listener to the target {{#crossLink "ProAct.Actor"}}{{/crossLink}} of the DSL.
 	     * <p>
 	     *  For example
 	     *  <pre>
 	     *    '@(f:bla)'
 	     *  </pre>
-	     *  means that listener function, stored in the {@link ProAct.Registry} as 'bla'
-	     *  should be attached as a listener to the targed {@link ProAct.Actor} of the DSL.
+	     *  means that listener function, stored in the {{#crossLink "ProAct.Registry"}}{{/crossLink}} as 'bla'
+	     *  should be attached as a listener to the targed {{#crossLink "ProAct.Actor"}}{{/crossLink}} of the DSL.
 	     * </p>
 	     *
-	     * @memberof ProAct.DSL.ops
-	     * @static
-	     * @constant
-	     * @see {@link ProAct.OpStore}
-	     * @see {@link ProAct.Registry}
-	     * @see {@link ProAct.Actor}
-	     * @see {@link ProAct.DSL.run}
+	     * @for ProAct.DSL.ops
+	     * @final
+	     * @property on
+	     * @type Object
 	     */
 	    on: opStoreAll.simpleOp('on', '@'),
 	
 	    /**
-	     * DSL operation for adding mapping to the target {@link ProAct.Actor} of the DSL.
+	     * DSL operation for adding mapping to the target {{#crossLink "ProAct.Actor"}}{{/crossLink}} of the DSL.
 	     * <p>
 	     *  For example
 	     *  <pre>
 	     *    'map(f:bla)'
 	     *  </pre>
-	     *  means that mapping function, stored in the {@link ProAct.Registry} as 'bla'
-	     *  should be mapped to the targed {@link ProAct.Actor} of the DSL.
+	     *  means that mapping function, stored in the {{#crossLink "ProAct.Registry"}}{{/crossLink}} as 'bla'
+	     *  should be mapped to the targed {{#crossLink "ProAct.Actor"}}{{/crossLink}} of the DSL.
 	     * </p>
 	     * <p>
 	     *  or
 	     *  <pre>
 	     *    'map($2)'
 	     *  </pre>
-	     *  means that mapping function passed to the {@link ProAct.Dsl.run}
+	     *  means that mapping function passed to the {{#crossLink "ProAct.DSL/run:method"}}{{/crossLink}}
 	     *  method as the second argument after the targed object, the DSL data and the registry
-	     *  should be mapped to the targed {@link ProAct.Actor} of the DSL.
+	     *  should be mapped to the targed {{#crossLink "ProAct.Actor"}}{{/crossLink}} of the DSL.
 	     * </p>
 	     *
-	     * @memberof ProAct.DSL.ops
-	     * @static
-	     * @constant
-	     * @see {@link ProAct.OpStore}
-	     * @see {@link ProAct.Registry}
-	     * @see {@link ProAct.Actor}
-	     * @see {@link ProAct.DSL.run}
+	     * @for ProAct.DSL.ops
+	     * @final
+	     * @property mapping
+	     * @type Object
 	     */
 	    mapping: opStoreAll.simpleOp('mapping', 'map'),
 	
 	    /**
-	     * DSL operation for adding filters to the target {@link ProAct.Actor} of the DSL.
+	     * DSL operation for adding filters to the target {{#crossLink "ProAct.Actor"}}{{/crossLink}} of the DSL.
 	     * <p>
 	     *  For example
 	     *  <pre>
 	     *    'filter(f:bla)'
 	     *  </pre>
-	     *  means that filtering function, stored in the {@link ProAct.Registry} as 'bla'
-	     *  should be add as filter to the targed {@link ProAct.Actor} of the DSL.
+	     *  means that filtering function, stored in the {{#crossLink "ProAct.Registry"}}{{/crossLink}} as 'bla'
+	     *  should be add as filter to the targed {{#crossLink "ProAct.Actor"}}{{/crossLink}} of the DSL.
 	     * </p>
 	     * <p>
 	     *  or
 	     *  <pre>
 	     *    'filter($1)'
 	     *  </pre>
-	     *  means that filtering function passed to the {@link ProAct.Dsl.run}
+	     *  means that filtering function passed to the {{#crossLink "ProAct.DSL/run:method"}}{{/crossLink}}
 	     *  method as the first argument after the targed object, the DSL data and the registry
-	     *  should be added as filter to the targed {@link ProAct.Actor} of the DSL.
+	     *  should be added as filter to the targed {{#crossLink "ProAct.Actor"}}{{/crossLink}} of the DSL.
 	     * </p>
 	     *
-	     * @memberof ProAct.DSL.ops
-	     * @static
-	     * @constant
-	     * @see {@link ProAct.OpStore}
-	     * @see {@link ProAct.Registry}
-	     * @see {@link ProAct.Actor}
-	     * @see {@link ProAct.DSL.run}
+	     * @for ProAct.DSL.ops
+	     * @final
+	     * @property filtering
+	     * @type Object
 	     */
 	    filtering: opStoreAll.simpleOp('filtering', 'filter'),
 	
 	    /**
-	     * DSL operation for adding accumulation to the target {@link ProAct.Actor} of the DSL.
+	     * DSL operation for adding accumulation to the target {{#crossLink "ProAct.Actor"}}{{/crossLink}} of the DSL.
 	     * <p>
 	     *  For example
 	     *  <pre>
 	     *    'acc($1, f:bla)'
 	     *  </pre>
-	     *  means that accumulating function, stored in the {@link ProAct.Registry} as 'bla'
-	     *  should be added as accumulation to the targed {@link ProAct.Actor} of the DSL,
-	     *  and the first argument passed to {@link ProAct.DSL.run} after the targed object, the DSL data and the registry should
+	     *  means that accumulating function, stored in the {{#crossLink "ProAct.Registry"}}{{/crossLink}} as 'bla'
+	     *  should be added as accumulation to the targed {{#crossLink "ProAct.Actor"}}{{/crossLink}} of the DSL,
+	     *  and the first argument passed to {{#crossLink "ProAct.DSL/run:method"}}{{/crossLink}} after the targed object, the DSL data and the registry should
 	     *  be used as initial value for the accumulation.
 	     * </p>
 	     *
-	     * @memberof ProAct.DSL.ops
-	     * @static
-	     * @constant
-	     * @see {@link ProAct.OpStore}
-	     * @see {@link ProAct.Registry}
-	     * @see {@link ProAct.Actor}
-	     * @see {@link ProAct.DSL.run}
+	     * @for ProAct.DSL.ops
+	     * @final
+	     * @property accumulation
+	     * @type Object
 	     */
 	    accumulation: opStoreAll.simpleOp('accumulation', 'acc')
 	  },
@@ -10805,20 +11070,18 @@
 	  /**
 	   * A set of predefined operations to be used by the DSL.
 	   *
-	   * @namespace ProAct.DSL.predefined
-	   * @memberof ProAct.DSL
+	   * @namespace ProAct.DSL
+	   * @class predefined
 	   * @static
-	   * @see {@link ProAct.DSL.ops}
 	   */
 	  predefined: {
 	
 	    /**
 	     * A set of predefined mapping operations to be used by the DSL.
 	     *
-	     * @namespace ProAct.DSL.predefined.mapping
-	     * @memberof ProAct.DSL.predefined
+	     * @class mapping
+	     * @namespace ProAct.DSL.predefined
 	     * @static
-	     * @see {@link ProAct.DSL.ops.mapping}
 	     */
 	    mapping: {
 	
@@ -10834,10 +11097,14 @@
 	       *  </pre>
 	       * </p>
 	       *
-	       * @memberof ProAct.DSL.predefined.mapping
+	       * @for ProAct.DSL.predefined.mapping
+	       * @final
 	       * @static
-	       * @method
-	       * @see {@link ProAct.DSL.ops.map}
+	       * @method -
+	       * @param {Number} n
+	       *      The number which will have its sign inverted.
+	       * @return {Number}
+	       *      The same number as `n`, but with opposite sign.
 	       */
 	      '-': function (el) { return -el; },
 	
@@ -10853,10 +11120,13 @@
 	       *  </pre>
 	       * </p>
 	       *
-	       * @memberof ProAct.DSL.predefined.mapping
+	       * @for ProAct.DSL.predefined.mapping
 	       * @static
-	       * @method
-	       * @see {@link ProAct.DSL.ops.map}
+	       * @method pow
+	       * @param {Number} n
+	       *      The number to power.
+	       * @return {Number}
+	       *      The square of `n`.
 	       */
 	      'pow': function (el) { return el * el; },
 	
@@ -10872,15 +11142,18 @@
 	       *  </pre>
 	       * </p>
 	       *
-	       * @memberof ProAct.DSL.predefined.mapping
+	       * @for ProAct.DSL.predefined.mapping
 	       * @static
-	       * @method
-	       * @see {@link ProAct.DSL.ops.map}
+	       * @method sqrt
+	       * @param {Number} n
+	       *      The number to compute the square root for.
+	       * @return {Number}
+	       *      The square root of `n`.
 	       */
 	      'sqrt': function (el) { return Math.sqrt(el); },
 	
 	      /**
-	       * Mapping operation for turning an object to a decimal Number - integer.
+	       * Mapping operation for turning an string to a decimal Number - integer.
 	       * <p>
 	       *  For example '4' becomes 4.
 	       * </p>
@@ -10891,10 +11164,13 @@
 	       *  </pre>
 	       * </p>
 	       *
-	       * @memberof ProAct.DSL.predefined.mapping
+	       * @for ProAct.DSL.predefined.mapping
 	       * @static
-	       * @method
-	       * @see {@link ProAct.DSL.ops.map}
+	       * @method int
+	       * @param {String} str
+	       *      The string to convert to integer.
+	       * @return {Number}
+	       *      The integer representation of `str`.
 	       */
 	      'int': function (el) { return parseInt(el, 10); },
 	
@@ -10908,10 +11184,13 @@
 	       *  This will call the 'target.go' method and use its result.
 	       * </p>
 	       *
-	       * @memberof ProAct.DSL.predefined.mapping
+	       * @for ProAct.DSL.predefined.mapping
 	       * @static
-	       * @method
-	       * @see {@link ProAct.DSL.ops.map}
+	       * @method &.
+	       * @param {String} methodName
+	       *      The method name to call.
+	       * @return {Object}
+	       *      The result of the method call.
 	       */
 	      '&.': function (arg) {
 	        return function (el) {
@@ -10936,10 +11215,11 @@
 	       *  </pre>
 	       * </p>
 	       *
-	       * @memberof ProAct.DSL.predefined.mapping
+	       * @for ProAct.DSL.predefined.mapping
 	       * @static
-	       * @method
-	       * @see {@link ProAct.DSL.ops.map}
+	       * @method pop
+	       * @return {Event}
+	       *      Pop event.
 	       */
 	      pop: function () {
 	        return P.E.simple('array', 'pop');
@@ -10955,10 +11235,11 @@
 	       *  </pre>
 	       * </p>
 	       *
-	       * @memberof ProAct.DSL.predefined.mapping
+	       * @for ProAct.DSL.predefined.mapping
 	       * @static
-	       * @method
-	       * @see {@link ProAct.DSL.ops.map}
+	       * @method shift
+	       * @return {Event}
+	       *      Shift event.
 	       */
 	      shift: function () {
 	        return P.E.simple('array', 'shift');
@@ -10973,10 +11254,13 @@
 	       *  </pre>
 	       * </p>
 	       *
-	       * @memberof ProAct.DSL.predefined.mapping
+	       * @for ProAct.DSL.predefined.mapping
 	       * @static
-	       * @method
-	       * @see {@link ProAct.DSL.ops.map}
+	       * @method eventToVal
+	       * @param {Event} event
+	       *      The value event to get the new value from.
+	       * @return {Object}
+	       *      The value.
 	       */
 	      eventToVal: function (event) {
 	        return event.args[0][event.target];
@@ -10991,19 +11275,58 @@
 	       *  </pre>
 	       * </p>
 	       *
-	       * @memberof ProAct.DSL.predefined.mapping
+	       * @for ProAct.DSL.predefined.mapping
 	       * @static
-	       * @method
-	       * @see {@link ProAct.DSL.ops.map}
+	       * @method true
+	       * @param {Object} value
+	       *      Arbitrary value.
+	       * @return {Boolean}
+	       *      Just the `true` constant.
 	       */
 	      'true': function (event) {
 	        return true;
 	      },
 	
+	      /**
+	       * Toggles a boolean value. If the value is `true` it becomes `false` and vice versa.
+	       * <p>
+	       *  Usage in a DSL expression:
+	       *  <pre>
+	       *    map(!)
+	       *  </pre>
+	       * </p>
+	       *
+	       * @for ProAct.DSL.predefined.mapping
+	       * @static
+	       * @method !
+	       * @param {Boolean} value
+	       *      A boolean value.
+	       * @return {Boolean}
+	       *      The opposite of `value`.
+	       */
 	      '!': function (value) {
 	        return !value;
 	      },
 	
+	      /**
+	       * Adds the current time to the object value, called upon
+	       * If the value is not an object (for example it is a Number), it is returned as it is.
+	       *
+	       * <p>
+	       *  Usage in a DSL expression:
+	       *  <pre>
+	       *    map(time)
+	       *  </pre>
+	       * </p>
+	       *
+	       * @for ProAct.DSL.predefined.mapping
+	       * @static
+	       * @method time
+	       * @param {Object} value
+	       *      The object to modify with time.
+	       * @return {Object}
+	       *      The modified value.
+	       */
 	      'time': function (value) {
 	        if (P.U.isObject(value)) {
 	          value.time = new Date().getTime();
@@ -11015,10 +11338,9 @@
 	    /**
 	     * A set of predefined filtering operations to be used by the DSL.
 	     *
-	     * @namespace ProAct.DSL.predefined.filtering
-	     * @memberof ProAct.DSL.predefined
+	     * @class filtering
+	     * @namespace ProAct.DSL.predefined
 	     * @static
-	     * @see {@link ProAct.DSL.ops.filtering}
 	     */
 	    filtering: {
 	
@@ -11031,10 +11353,13 @@
 	       *  </pre>
 	       * </p>
 	       *
-	       * @memberof ProAct.DSL.predefined.filtering
+	       * @for ProAct.DSL.predefined.filtering
 	       * @static
-	       * @method
-	       * @see {@link ProAct.DSL.ops.filter}
+	       * @method odd
+	       * @param {Number} n
+	       *      The number to check if it is odd.
+	       * @return {Boolean}
+	       *      True, if the number is odd.
 	       */
 	      'odd': function (el) { return el % 2 !== 0; },
 	
@@ -11047,10 +11372,13 @@
 	       *  </pre>
 	       * </p>
 	       *
-	       * @memberof ProAct.DSL.predefined.filtering
+	       * @for ProAct.DSL.predefined.filtering
 	       * @static
-	       * @method
-	       * @see {@link ProAct.DSL.ops.filter}
+	       * @method even
+	       * @param {Number} n
+	       *      The number to check if it is even.
+	       * @return {Boolean}
+	       *      True, if the number is even.
 	       */
 	      'even': function (el) { return el % 2 === 0; },
 	
@@ -11063,10 +11391,13 @@
 	       *  </pre>
 	       * </p>
 	       *
-	       * @memberof ProAct.DSL.predefined.filtering
+	       * @for ProAct.DSL.predefined.filtering
 	       * @static
-	       * @method
-	       * @see {@link ProAct.DSL.ops.filter}
+	       * @method +
+	       * @param {Number} n
+	       *      The number to check if it is positive.
+	       * @return {Boolean}
+	       *      True, if the number is positive or zero.
 	       */
 	      '+': function (el) { return el >= 0; },
 	
@@ -11079,10 +11410,13 @@
 	       *  </pre>
 	       * </p>
 	       *
-	       * @memberof ProAct.DSL.predefined.filtering
+	       * @for ProAct.DSL.predefined.filtering
 	       * @static
-	       * @method
-	       * @see {@link ProAct.DSL.ops.filter}
+	       * @method -
+	       * @param {Number} n
+	       *      The number to check if it is negative.
+	       * @return {Boolean}
+	       *      True, if the number is negative or zero.
 	       */
 	      '-': function (el) { return el <= 0; },
 	
@@ -11096,10 +11430,13 @@
 	       *  This will call the 'target.boolFunc' method and use its result as a filter.
 	       * </p>
 	       *
-	       * @memberof ProAct.DSL.predefined.filtering
+	       * @for ProAct.DSL.predefined.filtering
 	       * @static
-	       * @method
-	       * @see {@link ProAct.DSL.ops.filter}
+	       * @method &.
+	       * @param {String} methodName
+	       *      The name of the method to use for filtering.
+	       * @return {Boolean}
+	       *      The result of the method call.
 	       */
 	      '&.': function (arg) {
 	        return function (el) {
@@ -11128,10 +11465,13 @@
 	       *  </pre>
 	       * </p>
 	       *
-	       * @memberof ProAct.DSL.predefined.filtering
+	       * @for ProAct.DSL.predefined.filtering
 	       * @static
-	       * @method
-	       * @see {@link ProAct.DSL.ops.filter}
+	       * @method defined
+	       * @param {Event} event
+	       *      The value event to check if its value is defined.
+	       * @return {Boolean}
+	       *      True if the value in the event is not `undefined`.
 	       */
 	      defined: function (event) {
 	        return event.args[0][event.target] !== undefined;
@@ -11147,10 +11487,13 @@
 	       *  </pre>
 	       * </p>
 	       *
-	       * @memberof ProAct.DSL.predefined.filtering
+	       * @for ProAct.DSL.predefined.filtering
 	       * @static
-	       * @method
-	       * @see {@link ProAct.DSL.ops.filter}
+	       * @method originalEvent
+	       * @param {Event} event
+	       *      The value event to check if it has a source or not.
+	       * @return {Boolean}
+	       *      True if the `event` passed has no source.
 	       */
 	      originalEvent: function (event) {
 	        return event.source === undefined || event.source === null;
@@ -11165,10 +11508,13 @@
 	       *  </pre>
 	       * </p>
 	       *
-	       * @memberof ProAct.DSL.predefined.filtering
+	       * @for ProAct.DSL.predefined.filtering
 	       * @static
-	       * @method
-	       * @see {@link ProAct.DSL.ops.filter}
+	       * @method all
+	       * @param {Object} val
+	       *      Anything.
+	       * @return {Boolean}
+	       *      True.
 	       */
 	      all: function () {
 	        return true;
@@ -11178,10 +11524,9 @@
 	    /**
 	     * A set of predefined accumulation operations to be used by the DSL.
 	     *
-	     * @namespace ProAct.DSL.predefined.accumulation
-	     * @memberof ProAct.DSL.predefined
+	     * @class accumulation
+	     * @namespace ProAct.DSL.predefined
 	     * @static
-	     * @see {@link ProAct.DSL.ops.accumulation}
 	     */
 	    accumulation: {
 	
@@ -11194,10 +11539,10 @@
 	       *  </pre>
 	       * </p>
 	       *
-	       * @memberof ProAct.DSL.predefined.accumulation
+	       * @for ProAct.DSL.predefined.accumulation
 	       * @static
-	       * @constant
-	       * @see {@link ProAct.DSL.ops.accumulation}
+	       * @property +
+	       * @type Array
 	       */
 	      '+': [0, function (x, y) { return x + y; }],
 	
@@ -11210,10 +11555,11 @@
 	       *  </pre>
 	       * </p>
 	       *
-	       * @memberof ProAct.DSL.predefined.accumulation
+	       * @for ProAct.DSL.predefined.accumulation
 	       * @static
 	       * @constant
-	       * @see {@link ProAct.DSL.ops.accumulation}
+	       * @property *
+	       * @type Array
 	       */
 	      '*': [1, function (x, y) { return x * y; }],
 	
@@ -11226,15 +11572,41 @@
 	       *  </pre>
 	       * </p>
 	       *
-	       * @memberof ProAct.DSL.predefined.accumulation
+	       * @for ProAct.DSL.predefined.accumulation
 	       * @static
-	       * @constant
-	       * @see {@link ProAct.DSL.ops.accumulation}
+	       * @property +str
+	       * @type Array
 	       */
 	      '+str': ['', function (x, y) { return x + y; }],
 	    }
 	  },
 	
+	  /**
+	   * Defines a new predefined function to be reused in the DSL.
+	   *
+	   * For example:
+	   * ```
+	   *   ProAct.DSL.defPredefined('filter', 'enter', function (event) {
+	   *    return event.keyCode === 13;
+	   *   });
+	   *
+	   * ```
+	   * creates a new `filtering` function, which can be used like this:
+	   * ```
+	   *   actor2 = actor1.filter('enter');
+	   * ```
+	   * the `actor2` in this case will recieve only the events with keyCode of `13`.
+	   *
+	   * @for ProAct.DSL
+	   * @static
+	   * @method defPredefined
+	   * @param {String} type
+	   *      One of the three -> `mapping`, `filtering` and `accumulation` types.
+	   * @param {String} id
+	   *      The identificator of the predefined function to be passed to trasfromation or filtering operations.
+	   * @param {Function|Array} operation
+	   *      The implementation of the operation.
+	   */
 	  defPredefined: function(type, id, operation) {
 	    if (type === 'm' || type === 'map') {
 	      type = 'mapping';
@@ -11252,13 +11624,13 @@
 	  /**
 	   * Extracts DSL actions and options from a string.
 	   * <p>
-	   *  Splits the passed <i>optionString</i> using {@link ProAct.DSL.separator} as saparator and calls {@link ProAct.DSL.optionsFromArray} on
-	   *  the result.
+	   *  Splits the passed <i>optionString</i> using {{#crossLink "ProAct.DSL/separator:property"}}{{/crossLink}} as saparator
+	   *  and calls {{#crossLink "ProAct.DSL/optionsFromArray:method"}}{{/crossLink}} on the result.
 	   * </p>
 	   *
-	   * @memberof ProAct.DSL
+	   * @for ProAct.DSL
 	   * @static
-	   * @method
+	   * @method optionsFromString
 	   * @param {String} optionString
 	   *      The string to use to extract options from.
 	   * @param [...]
@@ -11274,14 +11646,11 @@
 	   *        <pre>
 	   *          {
 	   *            mapping: {first-argument-to-this-function-after-the-optionString-arg},
-	   *            filtering: {@link ProAct.DSL.predefined.filtering['+']},
+	   *            filtering: ProAct.DSL.predefined.filtering['+'],
 	   *            on: {second-argument-to-this-function-after-the-optionString-arg}
 	   *          }
 	   *        </pre>
 	   *      </p>
-	   * @see {@link ProAct.DSL.run}
-	   * @see {@link ProAct.DSL.optionsFromArray}
-	   * @see {@link ProAct.DSL.separator}
 	   */
 	  optionsFromString: function (optionString) {
 	    return dsl.optionsFromArray.apply(null, [optionString.split(dsl.separator)].concat(slice.call(arguments, 1)));
@@ -11291,12 +11660,12 @@
 	   * Extracts DSL actions and options from an array of strings.
 	   * <p>
 	   *  Example <i>optionArray</i> is ['map($1)', 'filter(+)', @($2)'] and it will become options object of functions and arguments to
-	   *  be applied on a target {@link ProAct.Actor} passed to the {@link ProAct.DSL.run} method.
+	   *  be applied on a target {{#crossLink "ProAct.Actor"}}{{/crossLink}} passed to the {{#crossLink "ProAct.DSL/run:method"}}{{/crossLink}} method.
 	   * </p>
 	   *
-	   * @memberof ProAct.DSL
+	   * @for ProAct.DSL
 	   * @static
-	   * @method
+	   * @method optionsFromArray
 	   * @param {Array} optionArray
 	   *      The array of strings to use to extract options from.
 	   * @param [...]
@@ -11312,12 +11681,11 @@
 	   *        <pre>
 	   *          {
 	   *            mapping: {first-argument-to-this-function-after-the-optionString-arg},
-	   *            filtering: {@link ProAct.DSL.predefined.filtering['+']},
+	   *            filtering: ProAct.DSL.predefined.filtering['+'],
 	   *            on: {second-argument-to-this-function-after-the-optionString-arg}
 	   *          }
 	   *        </pre>
 	   *      </p>
-	   * @see {@link ProAct.DSL.run}
 	   */
 	  optionsFromArray: function (optionArray) {
 	    var result = {}, i, ln = optionArray.length,
@@ -11336,12 +11704,12 @@
 	  },
 	
 	  /**
-	   * Configures an {@link ProAct.Actor} using the DSL passed with the <i>options</i> argument.
+	   * Configures an {{#crossLink "ProAct.Actor"}}{{/crossLink}} using the DSL passed with the <i>options</i> argument.
 	   * <p>
-	   *  Uses the passed {@link ProAct.Registry} to read stored values from.
+	   *  Uses the passed {{#crossLink "ProAct.Registry"}}{{/crossLink}} to read stored values from.
 	   * </p>
 	   *
-	   * @memberof ProAct.DSL
+	   * @for ProAct.DSL
 	   * @static
 	   * @method
 	   * @param {ProAct.Actor} actor
@@ -11349,10 +11717,10 @@
 	   * @param {ProAct.Actor|String|Object} options
 	   *      The DSL formatted options to be used for the configuration.
 	   *      <p>
-	   *        If the value of this parameter is instance of {@link ProAct.Actor} it is set as a source to the <i>target actor</i>.
+	   *        If the value of this parameter is instance of {{#crossLink "ProAct.Actor"}}{{/crossLink}} it is set as a source to the <i>target actor</i>.
 	   *      </p>
 	   *      <p>
-	   *        If the value ot this parameter is String - {@link ProAct.DSL.optionsFromString} is used to be turned to an options object.
+	   *        If the value ot this parameter is String - {{#crossLink "ProAct.DSL/optionsFromString:method"}}{{/crossLink}} is used to be turned to an options object.
 	   *      </p>
 	   *      <p>
 	   *        If the values of this parameter is object, it is used to configure the <i>targed actor</i>.
@@ -11381,8 +11749,6 @@
 	   *      </p>
 	   * @return {ProAct.Actor}
 	   *      The configured actor.
-	   * @see {@link ProAct.DSL.optionsFromString}
-	   * @see {@link ProAct.Actor}
 	   */
 	  run: function (actor, options, registry) {
 	    var isS = P.U.isString,
@@ -11445,6 +11811,10 @@
 	dsl = P.DSL;
 	dslOps = dsl.ops;
 	
+	/**
+	 * @module proact-dsl
+	 */
+	
 	function Provider () {
 	  this.stored = {};
 	}
@@ -11470,56 +11840,57 @@
 	P.U.ex(ProAct.Registry, {
 	
 	  /**
-	   * Constructs a ProAct.Registry.Provider. The {@link ProAct.Registry} uses registered providers as storage for different objects.
+	   * Constructs a `ProAct.Registry.Provider`.
+	   * The {{#crossLink "ProAct.Registry"}}{{/crossLink}} uses registered providers as storage for different objects.
 	   * <p>
-	   *  Every provider has one or more namespaces in the {@link ProAct.Registry} it is registered to.
+	   *  Every provider has one or more namespaces in the {{#crossLink "ProAct.Registry"}}{{/crossLink}} it is registered to.
 	   * </p>
 	   * <p>
 	   *  Every provider knows how to store its type of obects, how to make them, or delete them.
 	   * </p>
 	   *
-	   * @class ProAct.Registry.Provider
-	   * @memberof ProAct.Registry
+	   * @namespace ProAct.Registry
+	   * @class Provider
+	   * @constructor
 	   * @static
-	   * @see {@link ProAct.Registry}
 	   */
 	  Provider: Provider,
 	
 	  /**
-	   * Constructs a ProAct.Registry.StreamProvider. The {@link ProAct.Registry} uses registered stream providers as storage for {@link ProAct.Stream}s.
+	   * Constructs a `ProAct.Registry.StreamProvider`. The {{#crossLink "ProAct.Registry"}}{{/crossLink}} uses registered stream providers as storage for {{#crossLink "ProAct.Stream"}}{{/crossLink}}s.
 	   *
-	   * @class ProAct.Registry.StreamProvider
+	   * @namespace ProAct.Registry
+	   * @class StreamProvider
+	   * @constructor
 	   * @extends ProAct.Registry.Provider
-	   * @memberof ProAct.Registry
 	   * @static
-	   * @see {@link ProAct.Registry}
 	   */
 	  StreamProvider: StreamProvider,
 	
 	  /**
-	   * Constructs a ProAct.Registry.FunctionProvider. The {@link ProAct.Registry} uses registered function providers as storage for Functions.
+	   * Constructs a `ProAct.Registry.FunctionProvider`.
+	   * The {{#crossLink "ProAct.Registry"}}{{/crossLink}} uses registered function providers as storage for Functions.
 	   * <p>
 	   *  The function provider doesn't have implementation for creation of new functions, only for storing, readin and removing them.
 	   * </p>
 	   *
-	   * @class ProAct.Registry.FunctionProvider
+	   * @namespace ProAct.Registry
+	   * @class FunctionProvider
+	   * @constructor
 	   * @extends ProAct.Registry.Provider
-	   * @memberof ProAct.Registry
 	   * @static
-	   * @see {@link ProAct.Registry}
 	   */
 	  FunctionProvider: FunctionProvider,
 	
 	  /**
-	   * Constructs a ProAct.Registry.ProObjectProvider.
-	   * The {@link ProAct.Registry} uses registered function providers as storage for objects with reactive {@link ProAct.Property} instances.
+	   * Constructs a `ProAct.Registry.ProObjectProvider`.
+	   * The {{#crossLink "ProAct.Registry"}}{{/crossLink}} uses registered function providers as storage for objects with reactive {{#crossLink "ProAct.Property"}}{{/crossLink}} instances.
 	   *
-	   * @class ProAct.Registry.ProObjectProvider
+	   * @namespace ProAct.Registry
+	   * @class ProObjectProvider
+	   * @constructor
 	   * @extends ProAct.Registry.Provider
-	   * @memberof ProAct.Registry
 	   * @static
-	   * @see {@link ProAct.Registry}
-	   * @see {@link ProAct.Property}
 	   */
 	  ProObjectProvider: ProObjectProvider
 	});
@@ -11529,20 +11900,20 @@
 	  /**
 	   * Reference to the constructor of this object.
 	   *
-	   * @memberof ProAct.Registry.Provider
-	   * @instance
-	   * @constant
-	   * @default ProAct.Registry.Provider
+	   * @property constructor
+	   * @type ProAct.Registry.Provider
+	   * @final
+	   * @for ProAct.Registry.Provider
 	   */
 	  constructor: ProAct.Registry.Provider,
 	
 	  /**
-	   * Creates and stores an instance of the object this ProAct.Registry.Provider manages.
+	   * Creates and stores an instance of the object this `ProAct.Registry.Provider` manages.
 	   * <p>
-	   *  For the creation is used the {@link ProAct.Registry.Provider#provide} method.
+	   *  For the creation is used the {{#crossLink "ProAct.Registry.Provider/provide:method"}}{{/crossLink}} method.
 	   * </p>
 	   *
-	   * @memberof ProAct.Registry.Provider
+	   * @for ProAct.Registry.Provider
 	   * @instance
 	   * @method make
 	   * @param {String} key
@@ -11553,7 +11924,6 @@
 	   *      Parameters passed to the constructor when the new instance is created.
 	   * @return {Object}
 	   *      The newly created and stored object.
-	   * @see {@link ProAct.Registry.Provider#provide}
 	   */
 	  make: function (key, options) {
 	    var provided, args = slice.call(arguments, 1);
@@ -11562,9 +11932,9 @@
 	  },
 	
 	  /**
-	   * Stores an instance of an object this ProAct.Registry.Provider manages.
+	   * Stores an instance of an object this `ProAct.Registry.Provider` manages.
 	   *
-	   * @memberof ProAct.Registry.Provider
+	   * @for ProAct.Registry.Provider
 	   * @instance
 	   * @method store
 	   * @param {String} key
@@ -11579,7 +11949,7 @@
 	  /**
 	   * Reads a stored instance.
 	   *
-	   * @memberof ProAct.Registry.Provider
+	   * @for ProAct.Registry.Provider
 	   * @instance
 	   * @method get
 	   * @param {String} key
@@ -11592,7 +11962,7 @@
 	  /**
 	   * Deletes a stored instance.
 	   *
-	   * @memberof ProAct.Registry.Provider
+	   * @for ProAct.Registry.Provider
 	   * @instance
 	   * @method delete
 	   * @param {String} key
@@ -11607,10 +11977,11 @@
 	  },
 	
 	  /**
-	   * A callback called by the {@link ProAct.Registry} when <i>this</i> ProAct.Registry.Provider is registered.
+	   * A callback called by the {{#crossLink "ProAct.Registry"}}{{/crossLink}} when <i>this</i> `ProAct.Registry.Provider` is registered.
 	   *
-	   * @memberof ProAct.Registry.Provider
+	   * @for ProAct.Registry.Provider
 	   * @instance
+	   * @protected
 	   * @abstract
 	   * @method registered
 	   * @param {ProAct.Registry} registery
@@ -11624,8 +11995,8 @@
 	   *  Should always have a 'basic' field for the default construction operation.
 	   * </p>
 	   *
-	   * @namespace ProAct.Registry.Provider.types
-	   * @memberof ProAct.Registry.Provider
+	   * @namespace ProAct.Registry.Provider
+	   * @class types
 	   * @static
 	   */
 	  types: {
@@ -11633,7 +12004,7 @@
 	    /**
 	     * Defines default construction logic for the managed object.
 	     * <p>
-	     *  For example if we have a 'FooProvider', this method will be something like:
+	     *  For example if we have a `FooProvider`, this method will be something like:
 	     *  <pre>
 	     *    return new Foo();
 	     *  </pre>
@@ -11642,7 +12013,8 @@
 	     *  It is abstract and must be overridden by the extenders, or an Error will be thrown.
 	     * </p>
 	     *
-	     * @memberof ProAct.Registry.Provider.types
+	     * @for ProAct.Registry.Provider.types
+	     * @protected
 	     * @instance
 	     * @abstract
 	     * @method basic
@@ -11653,13 +12025,14 @@
 	  },
 	
 	  /**
-	   * Provides a new instance of the managed by <i>this</i> ProAct.Registry.Provider object.
+	   * Provides a new instance of the managed by <i>this</i> `ProAct.Registry.Provider` object.
 	   *
-	   * @memberof ProAct.Registry.Provider
+	   * @for ProAct.Registry.Provider
 	   * @instance
 	   * @method provide
 	   * @param {Array} options
-	   *      An array containing the key of the object to create and store. It may contain data to pass to the constructor of the object.
+	   *      An array containing the key of the object to create and store.
+	   *      It may contain data to pass to the constructor of the object.
 	   * @param [...]
 	   *      Arguments that should be passed to the constructor.
 	   * @return {Object}
@@ -11693,23 +12066,27 @@
 	  /**
 	   * Reference to the constructor of this object.
 	   *
-	   * @memberof ProAct.Registry.StreamProvider
-	   * @instance
-	   * @constant
-	   * @default ProAct.Registry.StreamProvider
+	   * @property constructor
+	   * @type ProAct.Registry.StreamProvider
+	   * @final
+	   * @for ProAct.Registry.StreamProvider
 	   */
 	  constructor: ProAct.Registry.StreamProvider,
 	
 	  /**
-	   * A callback called by the {@link ProAct.Registry} when <i>this</i> ProAct.Registry.StreamProvider is registered.
+	   * A callback called by the {{#crossLink "ProAct.Registry"}}{{/crossLink}}
+	   * when <i>this</i> `ProAct.Registry.StreamProvider` is registered.
 	   * <p>
-	   *  It adds the methods <i>s</i> and <i>stream</i> to the {@link ProAct.Registry}, which are aliases of <i>this</i>' {@link ProAct.Registry.StreamProvider#get} method.
+	   *  It adds the methods <i>s</i> and <i>stream</i> to the
+	   *  {{#crossLink "ProAct.Registry"}}{{/crossLink}}, which are aliases
+	   *  of <i>this</i>' {{#crossLink "ProAct.Registry.StreamProvider/get:method"}}{{/crossLink}} method.
 	   * </p>
 	   *
-	   * @memberof ProAct.Registry.StreamProvider
+	   * @for ProAct.Registry.StreamProvider
+	   * @protected
 	   * @instance
 	   * @method registered
-	   * @param {ProAct.Registry} registery
+	   * @param {ProAct.Registry} registry
 	   *      The registry in which <i>this</i> is being registered.
 	   */
 	  registered: function (registry) {
@@ -11719,45 +12096,47 @@
 	  /**
 	   * An object containing all the available sub-types constructions of the managed by <i>this</i> class.
 	   *
-	   * @namespace ProAct.Registry.StreamProvider.types
-	   * @memberof ProAct.Registry.StreamProvider
-	   * @static
+	   * @for ProAct.Registry.StreamProvider
+	   * @namespace ProAct.Registry.StreamProvider
+	   * @class types
+	   * @type Object
+	   * @property types
 	   */
 	  types: {
 	
 	    /**
-	     * Constructs a simple {@link ProAct.Stream}
+	     * Constructs a simple {{#crossLink "ProAct.Stream"}}{{/crossLink}}
 	     * <p>
 	     *  <pre>
 	     *    return new ProAct.Stream();
 	     *  </pre>
 	     * </p>
 	     *
-	     * @memberof ProAct.Registry.StreamProvider.types
+	     * @for ProAct.Registry.StreamProvider.types
+	     * @protected
 	     * @instance
 	     * @method basic
 	     * @return {ProAct.Stream}
-	     *      An isntance of {@link ProAct.Stream}.
-	     * @see {@link ProAct.Stream}
+	     *      An isntance of {{#crossLink "ProAct.Stream"}}{{/crossLink}}.
 	     */
 	    basic: function (args) { return P.stream(undefined, undefined, undefined, args[0]); },
 	
 	    /**
-	     * Constructs a {@link ProAct.DelayedStream}
+	     * Constructs a {{#crossLink "ProAct.DelayedStream"}}{{/crossLink}}
 	     * <p>
 	     *  <pre>
 	     *    return new ProAct.DelayedStream(delay);
 	     *  </pre>
 	     * </p>
 	     *
-	     * @memberof ProAct.Registry.StreamProvider.types
+	     * @for ProAct.Registry.StreamProvider.types
+	     * @protected
 	     * @instance
 	     * @method delayed
 	     * @param {Array} args
 	     *      An array of arguments - the first element of which is the <i>delay</i> of the stream to construct.
 	     * @return {ProAct.DelayedStream}
-	     *      An isntance of {@link ProAct.DelayedStream}.
-	     * @see {@link ProAct.DelayedStream}
+	     *      An isntance of {{#crossLink "ProAct.DelayedStream"}}{{/crossLink}}.
 	     */
 	    delayed: function (args) {
 	      var args = streamConstructArgs(args);
@@ -11765,21 +12144,21 @@
 	    },
 	
 	    /**
-	     * Constructs a {@link ProAct.SizeBufferedStream}
+	     * Constructs a {{#crossLink "ProAct.SizeBufferedStream"}}{{/crossLink}}
 	     * <p>
 	     *  <pre>
 	     *    return new ProAct.SizeBufferedStream(size);
 	     *  </pre>
 	     * </p>
 	     *
-	     * @memberof ProAct.Registry.StreamProvider.types
+	     * @for ProAct.Registry.StreamProvider.types
+	     * @protected
 	     * @instance
 	     * @method size
 	     * @param {Array} args
 	     *      An array of arguments - the first element of which is the <i>size</i> of the stream to construct.
 	     * @return {ProAct.SizeBufferedStream}
-	     *      An isntance of {@link ProAct.SizeBufferedStream}.
-	     * @see {@link ProAct.SizeBufferedStream}
+	     *      An isntance of {{#crossLink "ProAct.SizeBufferedStream"}}{{/crossLink}}.
 	     */
 	    size: function (args) {
 	      var args = streamConstructArgs(args);
@@ -11787,21 +12166,21 @@
 	    },
 	
 	    /**
-	     * Constructs a {@link ProAct.DebouncingStream}
+	     * Constructs a {{#crossLink "ProAct.DebouncingStream"}}{{/crossLink}}
 	     * <p>
 	     *  <pre>
 	     *    return new ProAct.DebouncingStream(delay);
 	     *  </pre>
 	     * </p>
 	     *
-	     * @memberof ProAct.Registry.StreamProvider.types
+	     * @for ProAct.Registry.StreamProvider.types
+	     * @protected
 	     * @instance
 	     * @method debouncing
 	     * @param {Array} args
 	     *      An array of arguments - the first element of which is the <i>delay</i> of the stream to construct.
 	     * @return {ProAct.DebouncingStream}
-	     *      An isntance of {@link ProAct.DebouncingStream}.
-	     * @see {@link ProAct.DebouncingStream}
+	     *      An isntance of {{#crossLink "ProAct.DebouncingStream"}}{{/crossLink}}.
 	     */
 	    debouncing: function (args) {
 	      var args = streamConstructArgs(args);
@@ -11809,21 +12188,21 @@
 	    },
 	
 	    /**
-	     * Constructs a {@link ProAct.ThrottlingStream}
+	     * Constructs a {{#crossLink "ProAct.ThrottlingStream"}}{{/crossLink}}
 	     * <p>
 	     *  <pre>
 	     *    return new ProAct.ThrottlingStream(delay);
 	     *  </pre>
 	     * </p>
 	     *
-	     * @memberof ProAct.Registry.StreamProvider.types
+	     * @for ProAct.Registry.StreamProvider.types
+	     * @protected
 	     * @instance
 	     * @method throttling
 	     * @param {Array} args
 	     *      An array of arguments - the first element of which is the <i>delay</i> of the stream to construct.
 	     * @return {ProAct.ThrottlingStream}
-	     *      An isntance of {@link ProAct.ThrottlingStream}.
-	     * @see {@link ProAct.ThrottlingStream}
+	     *      An isntance of {{#crossLink "ProAct.ThrottlingStream"}}{{/crossLink}}.
 	     */
 	    throttling: function (args) {
 	      var args = streamConstructArgs(args);
@@ -11843,7 +12222,6 @@
 	
 	    return functions;
 	  },
-	
 	  accumulator: function (functions, initial, computation) {
 	    return function () {
 	      var i, ln = functions.length, result = initial;
@@ -11866,10 +12244,10 @@
 	  /**
 	   * Reference to the constructor of this object.
 	   *
-	   * @memberof ProAct.Registry.FunctionProvider
-	   * @instance
-	   * @constant
-	   * @default ProAct.Registry.FunctionProvider
+	   * @property constructor
+	   * @type ProAct.Registry.FunctionProvider
+	   * @final
+	   * @for ProAct.Registry.FunctionProvider
 	   */
 	  constructor: ProAct.Registry.FunctionProvider,
 	
@@ -11890,7 +12268,7 @@
 	   *  </pre>
 	   * </p>
 	   *
-	   * @memberof ProAct.Registry.FunctionProvider
+	   * @for ProAct.Registry.FunctionProvider
 	   * @instance
 	   * @method get
 	   * @param {String} key
@@ -11935,24 +12313,29 @@
 	  /**
 	   * Reference to the constructor of this object.
 	   *
-	   * @memberof ProAct.Registry.ProObjectProvider
-	   * @instance
-	   * @constant
-	   * @default ProAct.Registry.ProObjectProvider
+	   * @property constructor
+	   * @type ProAct.Registry.ProObjectProvider
+	   * @final
+	   * @for ProAct.Registry.ProObjectProvider
 	   */
 	  constructor: ProAct.Registry.ProObjectProvider,
 	
 	  /**
-	   * A callback called by the {@link ProAct.Registry} when <i>this</i> ProAct.Registry.ProObjectProvider is registered.
+	   * A callback called by the {{#crossLink "ProAct.Registry"}}{{/crossLink}}
+	   * when <i>this</i> `ProAct.Registry.ProObjectProvider` is registered.
 	   * <p>
-	   *  It adds the methods <i>po</i> and <i>proObject</i> to the {@link ProAct.Registry}, which are aliases of <i>this</i>' {@link ProAct.Registry.ProObjectProvider#get} method.
+	   *  It adds the methods <i>po</i> and <i>proObject</i> to the {{#crossLink "ProAct.Registry"}}{{/crossLink}},
+	   *  which are aliases of <i>this</i>' {{#crossLink "ProAct.Registry.ProObjectProvider/get:method"}}{{/crossLink}} method.
 	   * </p>
 	   * <p>
-	   *  It adds the method <i>prob</i> to the {@link ProAct.Registry}, which is alias of <i>this</i>' {@link ProAct.Registry.ProObjectProvider#make} method.
+	   *  It adds the method <i>prob</i> to the {{#crossLink "ProAct.Registry"}}{{/crossLink}},
+	   *  which is alias of <i>this</i>' {{#crossLink "ProAct.Registry.ProObjectProvider/make:method"}}{{/crossLink}} method.
 	   * </p>
 	   *
-	   * @memberof ProAct.Registry.StreamProvider
+	   * @for ProAct.Registry.StreamProvider
+	   * @protected
 	   * @instance
+	   * @protected
 	   * @method registered
 	   * @param {ProAct.Registry} registery
 	   *      The registry in which <i>this</i> is being registered.
@@ -11967,9 +12350,11 @@
 	  /**
 	   * An object containing all the available sub-types constructions of the managed by <i>this</i> class.
 	   *
-	   * @namespace ProAct.Registry.ProObjectProvider.types
-	   * @memberof ProAct.Registry.ProObjectProvider
-	   * @static
+	   * @for ProAct.Registry.ProObjectProvider
+	   * @namespace ProAct.Registry.ProObjectProvider
+	   * @class types
+	   * @type Object
+	   * @property types
 	   */
 	  types: {
 	    stat: function (options, value, meta) {
@@ -11977,16 +12362,17 @@
 	    },
 	
 	    /**
-	     * Constructs a ProAct.js reactive object from original one, using {@link ProAct.prob}
+	     * Constructs a ProAct.js reactive object from original one, using {{#crossLink "ProAct/prob:method"}}{{/crossLink}}
 	     * <p>
 	     *  <pre>
 	     *    return new ProAct.prob(value, meta);
 	     *  </pre>
 	     * </p>
 	     *
-	     * @memberof ProAct.Registry.ProObjectProvider.types
+	     * @for ProAct.Registry.ProObjectProvider.types
 	     * @instance
 	     * @method basic
+	     * @protected
 	     * @param {Array} options
 	     *      Array containing options for the creation process.
 	     * @param {Object} value
@@ -11995,7 +12381,6 @@
 	     *      Meta-data used to help in the reactive object creation.
 	     * @return {Object}
 	     *      A ractive object.
-	     * @see {@link ProAct.prob}
 	     */
 	    basic: function (options, value, meta) {
 	      return P.prob(value, meta);
@@ -12008,22 +12393,23 @@
 	proObjectProvider = new P.R.ProObjectProvider();
 	
 	/**
-	 * The {@link ProAct.Registry} instance used by ProAct's by default.
+	 * The {{#crossLink "ProAct.Registry"}}{{/crossLink}} instance used by ProAct's by default.
 	 * <p>
-	 *  It has a {@link ProAct.Registry.StreamProvider} registered on the <i>s</i> namespace.
+	 *  It has a {{#crossLink "ProAct.Registry.StreamProvider"}}{{/crossLink}} registered on the <i>s</i> namespace.
 	 * </p>
 	 * <p>
-	 *  It has a {@link ProAct.Registry.ProObjectProvider} registered on the <i>po</i> and <i>obj</i> namespaces.
+	 *  It has a {{#crossLink "ProAct.Registry.ProObjectProvider"}}{{/crossLink}} registered on the <i>po</i> and <i>obj</i> namespaces.
 	 * </p>
 	 * <p>
-	 *  It has a {@link ProAct.Registry.FunctionProvider} registered on the <i>f</i> and <i>l</i> namespaces.
+	 *  It has a {{#crossLink "ProAct.Registry.FunctionProvider"}}{{/crossLink}} registered on the <i>f</i> and <i>l</i> namespaces.
 	 * </p>
 	 * <p>
 	 *  Override this instance or register your own providers in it to extend the ProAct.js DSL.
 	 * </p>
 	 *
+	 * @property registry
 	 * @type ProAct.Registry
-	 * @memberof ProAct
+	 * @for ProAct
 	 * @static
 	 */
 	ProAct.registry = new P.R()
