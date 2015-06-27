@@ -145,7 +145,7 @@ ProAct.ObjectCore.prototype = P.U.ex(Object.create(P.C.prototype), {
    *      Initial listeners for 'change' of the property, can be skipped.
    * @param {String|Array} meta
    *      Meta information for the property to create, for example if the meta contains 'noprop', no property is created,
-   *      and the initial value of the field is preserved. The meta is in format of the {{#crossLink "ProAct.DSL"}}{{/crossLink}}.
+   *      and the initial value of the field is preserved.
    * @return {ProAct.Property}
    *      The newly crated and stored in <i>this</i> property, or null if no property was created.
    * @throws {Error}
@@ -187,6 +187,21 @@ ProAct.ObjectCore.prototype = P.U.ex(Object.create(P.C.prototype), {
     return result;
   },
 
+  /**
+   * Applies meta information and actions on already created property.
+   *
+   * This method is called by the {{#crossLink "ProAct.ObjectCore/makeProp:method"}}{{/crossLink}} one,
+   * other modules can inject logic by overriding it.
+   *
+   * @for ProAct.ObjectCore
+   * @protected
+   * @instance
+   * @method applyMeta
+   * @param {String|Array} meta
+   *      Meta information for the property to modify with.
+   * @param {ProAct.Property} property
+   *      The property to update.
+   */
   applyMeta: function (meta, property) {
   },
 

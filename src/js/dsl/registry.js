@@ -340,6 +340,7 @@ P.U.ex(P.Actor.prototype, {
 
 P.U.ex(P.ObjectCore.prototype, {
 
+  // The meta is in format of the {{#crossLink "ProAct.DSL"}}{{/crossLink}}.
   applyMeta: function (meta, property) {
     if (meta && P.registry) {
       if (!P.U.isArray(meta)) {
