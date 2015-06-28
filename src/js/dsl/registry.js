@@ -340,7 +340,23 @@ P.U.ex(P.Actor.prototype, {
 
 P.U.ex(P.ObjectCore.prototype, {
 
-  // The meta is in format of the {{#crossLink "ProAct.DSL"}}{{/crossLink}}.
+  /**
+   * Applies meta information and actions on already created property.
+   *
+   * This method is called by the {{#crossLink "ProAct.ObjectCore/makeProp:method"}}{{/crossLink}} one,
+   * other modules can inject logic by overriding it.
+   *
+   * The meta is in format of the {{#crossLink "ProAct.DSL"}}{{/crossLink}}.
+   *
+   * @for ProAct.ObjectCore
+   * @protected
+   * @instance
+   * @method applyMeta
+   * @param {String|Array} meta
+   *      Meta information for the property to modify with.
+   * @param {ProAct.Property} property
+   *      The property to update.
+   */
   applyMeta: function (meta, property) {
     if (meta && P.registry) {
       if (!P.U.isArray(meta)) {
