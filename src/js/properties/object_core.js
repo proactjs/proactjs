@@ -156,9 +156,6 @@ ProAct.ObjectCore.prototype = P.U.ex(Object.create(P.C.prototype), {
         conf = ProAct.Configuration,
         keyprops = conf.keyprops,
         keypropList = conf.keypropList,
-        isF = P.U.isFunction,
-        isA = P.U.isArrayObject,
-        isO = P.U.isObject,
         result;
 
     if (meta && (meta === 'noprop' || (meta.indexOf && meta.indexOf('noprop') >= 0))) {
