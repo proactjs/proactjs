@@ -173,3 +173,81 @@ ProAct.ArrayProperty.prototype = P.U.ex(Object.create(P.P.prototype), {
    */
   afterInit: function () {}
 });
+
+/**
+ * <p>
+ *  Constructor for `ProAct.ArrayPropertyProvider`.
+ * </p>
+ * <p>
+ *  Provides {{#crossLink "ProAct.ArrayProperty"}}{{/crossLink}} instances for fields pointing to arrays.
+ * </p>
+ * <p>
+ *  `ProAct.ArrayPropertyProvider` is part of the proact-properties module of ProAct.js.
+ * </p>
+ *
+ * @for ProAct.ArrayPropertyProvider
+ * @extends ProAct.PropertyProvider
+ * @constructor
+ */
+ProAct.ArrayPropertyProvider = P.APP = function () {
+  P.PP.call(this);
+};
+
+ProAct.ArrayPropertyProvider.prototype = P.U.ex(Object.create(P.PP.prototype), {
+
+  /**
+   * Reference to the constructor of this object.
+   *
+   * @property constructor
+   * @type ProAct.ArrayPropertyProvider
+   * @final
+   * @for ProAct.ArrayPropertyProvider
+   */
+  constructor: ProAct.ArrayPropertyProvider,
+
+  /**
+   * Used to check if this `ProAct.ArrayPropertyProvider` is compliant with the field and meta data.
+   *
+   * @for ProAct.ArrayPropertyProvider
+   * @instance
+   * @method filter
+   * @param {Object} object
+   *      The object to which a new {{#crossLink "ProAct.ArrayProperty"}}{{/crossLink}} instance should be provided.
+   * @param {String} property
+   *      The field name of the <i>object</i> to turn into a {{#crossLink "ProAct.ArrayProperty"}}{{/crossLink}}.
+   * @param {String|Array} meta
+   *      Meta information to be used for filtering and configuration of the {{#crossLink "ProAct.ArrayProperty"}}{{/crossLink}} instance to be provided.
+   * @return {Boolean}
+   *      True if the value of <b>object[property]</b> an array.
+   */
+  filter: function (object, property, meta) {
+    return P.U.isArrayObject(object[property]);
+  },
+
+  /**
+   * Provides an instance of {{#crossLink "ProAct.ArrayProperty"}}{{/crossLink}}.
+   *
+   * @for ProAct.ArrayPropertyProvider
+   * @instance
+   * @method provide
+   * @param {String} queueName
+   *      The name of the queue all the updates should be pushed to.
+   *      <p>
+   *        If this parameter is null/undefined the default queue of
+   *        {{#crossLink "ProAct/flow:property"}}{{/crossLink}} is used.
+   *      </p>
+   * @param {Object} object
+   *      The object to which a new {{#crossLink "ProAct.ArrayProperty"}}{{/crossLink}} instance should be provided.
+   * @param {String} property
+   *      The field of the <i>object</i> to turn into a {{#crossLink "ProAct.ArrayProperty"}}{{/crossLink}}.
+   * @param {String|Array} meta
+   *      Meta information to be used for filtering and configuration of the {{#crossLink "ProAct.ArrayProperty"}}{{/crossLink}} instance to be provided.
+   * @return {ProAct.ArrayProperty}
+   *      A {{#crossLink "ProAct.ArrayProperty"}}{{/crossLink}} instance provided by <i>this</i> provider.
+   */
+  provide: function (queueName, object, property, meta) {
+    return new P.AP(queueName, object, property);
+  }
+});
+
+P.PP.registerProvider(new P.ArrayPropertyProvider());
