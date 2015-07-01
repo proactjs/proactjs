@@ -31,6 +31,12 @@ describe('ProAct.ArrayProperty', function () {
     expect(property.val.valueOf()).toEqual(original);
   });
 
+  it('has type - "array"', function () {
+    var property = new ProAct.ArrayProperty(obj, 'a');
+
+    expect(property.type()).toBe(P.P.Types.array);
+  });
+
   it('updates depending properties when set', function () {
     var property = new ProAct.ArrayProperty(obj, 'a'),
         autoProperty = new ProAct.AutoProperty(obj, 'ap');
