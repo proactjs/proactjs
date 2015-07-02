@@ -129,7 +129,7 @@ P.U.ex(ProAct.Property, {
      * @final
      * @for ProAct.Property.Types
      */
-    simple: 0, // strings, booleans and numbers
+    simple: 'simple', // strings, booleans and numbers
 
     /**
      * ProAct.Property for auto computed types - Functions.
@@ -139,7 +139,7 @@ P.U.ex(ProAct.Property, {
      * @final
      * @for ProAct.Property.Types
      */
-    auto: 1, // functions - dependent
+    auto: {}, // functions - dependent
 
     /**
      * ProAct.Property for object types - fields containing objects.
@@ -149,17 +149,7 @@ P.U.ex(ProAct.Property, {
      * @final
      * @for ProAct.Property.Types
      */
-    object: 2, // references Pro objects
-
-    /**
-     * ProAct.Property for array types - fields containing arrays.
-     *
-     * @property array
-     * @type Number
-     * @final
-     * @for ProAct.Property.Types
-     */
-    array: 3, // arrays
+    object: {}, // references Pro objects
 
     /**
      * ProAct.Property for nil types - fields containing null or undefined.
@@ -169,7 +159,7 @@ P.U.ex(ProAct.Property, {
      * @final
      * @for ProAct.Property.Types
      */
-    nil: 4, // nulls
+    nil: {}, // nulls
 
     /**
      * Retrieves the right` ProAct.Property.Types` value from a value.
@@ -186,8 +176,6 @@ P.U.ex(ProAct.Property, {
         return P.P.Types.nil;
       } else if (P.U.isFunction(value)) {
         return P.P.Types.auto;
-      } else if (P.U.isArray(value)) {
-        return P.P.Types.array;
       } else if (P.U.isObject(value)) {
         return P.P.Types.object;
       } else {

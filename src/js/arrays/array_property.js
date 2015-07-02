@@ -251,3 +251,26 @@ ProAct.ArrayPropertyProvider.prototype = P.U.ex(Object.create(P.PP.prototype), {
 });
 
 P.PP.registerProvider(new P.ArrayPropertyProvider());
+
+var oldTypeFunction = P.P.Types.type;
+P.U.ex(P.Property.Types, {
+
+    /**
+     * ProAct.Property for array types - fields containing arrays.
+     *
+     * @property array
+     * @type Number
+     * @final
+     * @for ProAct.Property.Types
+     */
+    array: {}, // arrays
+
+    type: function (value) {
+      if (P.U.isArray(value)) {
+        return P.P.Types.array;
+      }
+
+      return oldTypeFunction(value);
+    }
+
+});
