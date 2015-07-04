@@ -700,12 +700,6 @@ ProAct.Property.prototype = P.U.ex(Object.create(P.Actor.prototype), {
    *  acc.get(); // 10
    * ```
    *
-   * or
-   *
-   * ```
-   *  var acc = prop.accumulate('+'); // The same as the above if the DSL module is present.
-   * ```
-   *
    * @for ProAct.Property
    * @instance
    * @method accumulate
