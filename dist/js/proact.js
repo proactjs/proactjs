@@ -5515,7 +5515,7 @@
 	     * @final
 	     * @for ProAct.Property.Types
 	     */
-	    simple: 0, // strings, booleans and numbers
+	    simple: 'simple', // strings, booleans and numbers
 	
 	    /**
 	     * ProAct.Property for auto computed types - Functions.
@@ -5525,7 +5525,7 @@
 	     * @final
 	     * @for ProAct.Property.Types
 	     */
-	    auto: 1, // functions - dependent
+	    auto: {}, // functions - dependent
 	
 	    /**
 	     * ProAct.Property for object types - fields containing objects.
@@ -5535,17 +5535,7 @@
 	     * @final
 	     * @for ProAct.Property.Types
 	     */
-	    object: 2, // references Pro objects
-	
-	    /**
-	     * ProAct.Property for array types - fields containing arrays.
-	     *
-	     * @property array
-	     * @type Number
-	     * @final
-	     * @for ProAct.Property.Types
-	     */
-	    array: 3, // arrays
+	    object: {}, // references Pro objects
 	
 	    /**
 	     * ProAct.Property for nil types - fields containing null or undefined.
@@ -5555,7 +5545,7 @@
 	     * @final
 	     * @for ProAct.Property.Types
 	     */
-	    nil: 4, // nulls
+	    nil: {}, // nulls
 	
 	    /**
 	     * Retrieves the right` ProAct.Property.Types` value from a value.
@@ -5572,8 +5562,6 @@
 	        return P.P.Types.nil;
 	      } else if (P.U.isFunction(value)) {
 	        return P.P.Types.auto;
-	      } else if (P.U.isArray(value)) {
-	        return P.P.Types.array;
 	      } else if (P.U.isObject(value)) {
 	        return P.P.Types.object;
 	      } else {
@@ -7123,82 +7111,6 @@
 	
 	/**
 	 * <p>
-	 *  Constructor for `ProAct.ArrayPropertyProvider`.
-	 * </p>
-	 * <p>
-	 *  Provides {{#crossLink "ProAct.ArrayProperty"}}{{/crossLink}} instances for fields pointing to arrays.
-	 * </p>
-	 * <p>
-	 *  `ProAct.ArrayPropertyProvider` is part of the proact-properties module of ProAct.js.
-	 * </p>
-	 *
-	 * @for ProAct.ArrayPropertyProvider
-	 * @extends ProAct.PropertyProvider
-	 * @constructor
-	 */
-	ProAct.ArrayPropertyProvider = P.APP = function () {
-	  P.PP.call(this);
-	};
-	
-	ProAct.ArrayPropertyProvider.prototype = P.U.ex(Object.create(P.PP.prototype), {
-	
-	  /**
-	   * Reference to the constructor of this object.
-	   *
-	   * @property constructor
-	   * @type ProAct.ArrayPropertyProvider
-	   * @final
-	   * @for ProAct.ArrayPropertyProvider
-	   */
-	  constructor: ProAct.ArrayPropertyProvider,
-	
-	  /**
-	   * Used to check if this `ProAct.ArrayPropertyProvider` is compliant with the field and meta data.
-	   *
-	   * @for ProAct.ArrayPropertyProvider
-	   * @instance
-	   * @method filter
-	   * @param {Object} object
-	   *      The object to which a new {{#crossLink "ProAct.ArrayProperty"}}{{/crossLink}} instance should be provided.
-	   * @param {String} property
-	   *      The field name of the <i>object</i> to turn into a {{#crossLink "ProAct.ArrayProperty"}}{{/crossLink}}.
-	   * @param {String|Array} meta
-	   *      Meta information to be used for filtering and configuration of the {{#crossLink "ProAct.ArrayProperty"}}{{/crossLink}} instance to be provided.
-	   * @return {Boolean}
-	   *      True if the value of <b>object[property]</b> an array.
-	   */
-	  filter: function (object, property, meta) {
-	    return P.U.isArrayObject(object[property]);
-	  },
-	
-	  /**
-	   * Provides an instance of {{#crossLink "ProAct.ArrayProperty"}}{{/crossLink}}.
-	   *
-	   * @for ProAct.ArrayPropertyProvider
-	   * @instance
-	   * @method provide
-	   * @param {String} queueName
-	   *      The name of the queue all the updates should be pushed to.
-	   *      <p>
-	   *        If this parameter is null/undefined the default queue of
-	   *        {{#crossLink "ProAct/flow:property"}}{{/crossLink}} is used.
-	   *      </p>
-	   * @param {Object} object
-	   *      The object to which a new {{#crossLink "ProAct.ArrayProperty"}}{{/crossLink}} instance should be provided.
-	   * @param {String} property
-	   *      The field of the <i>object</i> to turn into a {{#crossLink "ProAct.ArrayProperty"}}{{/crossLink}}.
-	   * @param {String|Array} meta
-	   *      Meta information to be used for filtering and configuration of the {{#crossLink "ProAct.ArrayProperty"}}{{/crossLink}} instance to be provided.
-	   * @return {ProAct.ArrayProperty}
-	   *      A {{#crossLink "ProAct.ArrayProperty"}}{{/crossLink}} instance provided by <i>this</i> provider.
-	   */
-	  provide: function (queueName, object, property, meta) {
-	    return new P.AP(queueName, object, property);
-	  }
-	});
-	
-	/**
-	 * <p>
 	 *  Constructor for ProAct.ObjectPropertyProvider.
 	 * </p>
 	 * <p>
@@ -7357,7 +7269,6 @@
 	P.PP.registerProvider(new P.ProxyPropertyProvider());
 	P.PP.registerProvider(new P.SimplePropertyProvider());
 	P.PP.registerProvider(new P.AutoPropertyProvider());
-	P.PP.registerProvider(new P.ArrayPropertyProvider());
 	P.PP.registerProvider(new P.ObjectPropertyProvider());
 	
 	/**
@@ -7507,7 +7418,7 @@
 	   *      Initial listeners for 'change' of the property, can be skipped.
 	   * @param {String|Array} meta
 	   *      Meta information for the property to create, for example if the meta contains 'noprop', no property is created,
-	   *      and the initial value of the field is preserved. The meta is in format of the {{#crossLink "ProAct.DSL"}}{{/crossLink}}.
+	   *      and the initial value of the field is preserved.
 	   * @return {ProAct.Property}
 	   *      The newly crated and stored in <i>this</i> property, or null if no property was created.
 	   * @throws {Error}
@@ -7518,9 +7429,6 @@
 	        conf = ProAct.Configuration,
 	        keyprops = conf.keyprops,
 	        keypropList = conf.keypropList,
-	        isF = P.U.isFunction,
-	        isA = P.U.isArrayObject,
-	        isO = P.U.isObject,
 	        result;
 	
 	    if (meta && (meta === 'noprop' || (meta.indexOf && meta.indexOf('noprop') >= 0))) {
@@ -7549,6 +7457,21 @@
 	    return result;
 	  },
 	
+	  /**
+	   * Applies meta information and actions on already created property.
+	   *
+	   * This method is called by the {{#crossLink "ProAct.ObjectCore/makeProp:method"}}{{/crossLink}} one,
+	   * other modules can inject logic by overriding it.
+	   *
+	   * @for ProAct.ObjectCore
+	   * @protected
+	   * @instance
+	   * @method applyMeta
+	   * @param {String|Array} meta
+	   *      Meta information for the property to modify with.
+	   * @param {ProAct.Property} property
+	   *      The property to update.
+	   */
 	  applyMeta: function (meta, property) {
 	  },
 	
@@ -7874,6 +7797,107 @@
 	   * @method afterInit
 	   */
 	  afterInit: function () {}
+	});
+	
+	/**
+	 * <p>
+	 *  Constructor for `ProAct.ArrayPropertyProvider`.
+	 * </p>
+	 * <p>
+	 *  Provides {{#crossLink "ProAct.ArrayProperty"}}{{/crossLink}} instances for fields pointing to arrays.
+	 * </p>
+	 * <p>
+	 *  `ProAct.ArrayPropertyProvider` is part of the proact-properties module of ProAct.js.
+	 * </p>
+	 *
+	 * @for ProAct.ArrayPropertyProvider
+	 * @extends ProAct.PropertyProvider
+	 * @constructor
+	 */
+	ProAct.ArrayPropertyProvider = P.APP = function () {
+	  P.PP.call(this);
+	};
+	
+	ProAct.ArrayPropertyProvider.prototype = P.U.ex(Object.create(P.PP.prototype), {
+	
+	  /**
+	   * Reference to the constructor of this object.
+	   *
+	   * @property constructor
+	   * @type ProAct.ArrayPropertyProvider
+	   * @final
+	   * @for ProAct.ArrayPropertyProvider
+	   */
+	  constructor: ProAct.ArrayPropertyProvider,
+	
+	  /**
+	   * Used to check if this `ProAct.ArrayPropertyProvider` is compliant with the field and meta data.
+	   *
+	   * @for ProAct.ArrayPropertyProvider
+	   * @instance
+	   * @method filter
+	   * @param {Object} object
+	   *      The object to which a new {{#crossLink "ProAct.ArrayProperty"}}{{/crossLink}} instance should be provided.
+	   * @param {String} property
+	   *      The field name of the <i>object</i> to turn into a {{#crossLink "ProAct.ArrayProperty"}}{{/crossLink}}.
+	   * @param {String|Array} meta
+	   *      Meta information to be used for filtering and configuration of the {{#crossLink "ProAct.ArrayProperty"}}{{/crossLink}} instance to be provided.
+	   * @return {Boolean}
+	   *      True if the value of <b>object[property]</b> an array.
+	   */
+	  filter: function (object, property, meta) {
+	    return P.U.isArrayObject(object[property]);
+	  },
+	
+	  /**
+	   * Provides an instance of {{#crossLink "ProAct.ArrayProperty"}}{{/crossLink}}.
+	   *
+	   * @for ProAct.ArrayPropertyProvider
+	   * @instance
+	   * @method provide
+	   * @param {String} queueName
+	   *      The name of the queue all the updates should be pushed to.
+	   *      <p>
+	   *        If this parameter is null/undefined the default queue of
+	   *        {{#crossLink "ProAct/flow:property"}}{{/crossLink}} is used.
+	   *      </p>
+	   * @param {Object} object
+	   *      The object to which a new {{#crossLink "ProAct.ArrayProperty"}}{{/crossLink}} instance should be provided.
+	   * @param {String} property
+	   *      The field of the <i>object</i> to turn into a {{#crossLink "ProAct.ArrayProperty"}}{{/crossLink}}.
+	   * @param {String|Array} meta
+	   *      Meta information to be used for filtering and configuration of the {{#crossLink "ProAct.ArrayProperty"}}{{/crossLink}} instance to be provided.
+	   * @return {ProAct.ArrayProperty}
+	   *      A {{#crossLink "ProAct.ArrayProperty"}}{{/crossLink}} instance provided by <i>this</i> provider.
+	   */
+	  provide: function (queueName, object, property, meta) {
+	    return new P.AP(queueName, object, property);
+	  }
+	});
+	
+	P.PP.registerProvider(new P.ArrayPropertyProvider());
+	
+	var oldTypeFunction = P.P.Types.type;
+	P.U.ex(P.Property.Types, {
+	
+	    /**
+	     * ProAct.Property for array types - fields containing arrays.
+	     *
+	     * @property array
+	     * @type Number
+	     * @final
+	     * @for ProAct.Property.Types
+	     */
+	    array: {}, // arrays
+	
+	    type: function (value) {
+	      if (P.U.isArray(value)) {
+	        return P.P.Types.array;
+	      }
+	
+	      return oldTypeFunction(value);
+	    }
+	
 	});
 	
 	/**
@@ -10697,6 +10721,23 @@
 	
 	P.U.ex(P.ObjectCore.prototype, {
 	
+	  /**
+	   * Applies meta information and actions on already created property.
+	   *
+	   * This method is called by the {{#crossLink "ProAct.ObjectCore/makeProp:method"}}{{/crossLink}} one,
+	   * other modules can inject logic by overriding it.
+	   *
+	   * The meta is in format of the {{#crossLink "ProAct.DSL"}}{{/crossLink}}.
+	   *
+	   * @for ProAct.ObjectCore
+	   * @protected
+	   * @instance
+	   * @method applyMeta
+	   * @param {String|Array} meta
+	   *      Meta information for the property to modify with.
+	   * @param {ProAct.Property} property
+	   *      The property to update.
+	   */
 	  applyMeta: function (meta, property) {
 	    if (meta && P.registry) {
 	      if (!P.U.isArray(meta)) {
