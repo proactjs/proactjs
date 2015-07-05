@@ -286,7 +286,7 @@ ProAct.SimplePropertyProvider.prototype = P.U.ex(Object.create(P.PP.prototype), 
    */
   filter: function (object, property, meta) {
     var v = object[property];
-    return (v === null || v === undefined) || (!P.U.isFunction(v) && !P.U.isArrayObject(v) && !P.U.isObject(v));
+    return (v === null || v === undefined) || (!P.U.isFunction(v) && !P.U.isArray(v) && !P.U.isObject(v));
   },
 
   /**
