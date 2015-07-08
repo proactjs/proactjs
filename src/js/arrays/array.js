@@ -210,7 +210,7 @@ ProAct.Array.prototype = pArrayProto = P.U.ex(Object.create(arrayProto), {
   concat: function () {
     var res, rightProArray;
 
-    if (arguments.length === 1 && P.U.isProArray(arguments[0])) {
+    if (arguments.length === 1 && P.AU.isProArray(arguments[0])) {
       rightProArray = arguments[0];
       arguments[0] = rightProArray._array;
     }
@@ -991,7 +991,7 @@ ProAct.Array.prototype = pArrayProto = P.U.ex(Object.create(arrayProto), {
    */
   toArray: function () {
     var result = [], i, ar = this._array, ln = ar.length, el,
-        isPA = P.U.isProArray;
+        isPA = P.AU.isProArray;
 
     for (i = 0; i < ln; i++) {
       el = ar[i];

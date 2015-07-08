@@ -29,6 +29,7 @@ module.exports = function(karma) {
       'src/js/properties/property_provider.js',
       'src/js/properties/object_core.js',
       'src/js/properties/functions.js',
+      'src/js/arrays/array_utils.js',
       'src/js/arrays/array_property.js',
       'src/js/arrays/array_core.js',
       'src/js/arrays/array.js',

@@ -266,7 +266,7 @@ describe('ProAct.prob', function () {
     var array = [1, '2', 3.0, true, null], proArray;
 
     proArray = ProAct.prob(array);
-    expect(ProAct.Utils.isProArray(proArray)).toBe(true);
+    expect(ProAct.ArrayUtils.isProArray(proArray)).toBe(true);
     expect(proArray.valueOf()).toEqual([1, '2', 3.0, true, null]);
   });
 

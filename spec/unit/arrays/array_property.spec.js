@@ -20,14 +20,14 @@ describe('ProAct.ArrayProperty', function () {
         property = new ProAct.ArrayProperty(obj, 'a');
 
     expect(ProAct.Utils.isArray(property.val)).toBe(true);
-    expect(ProAct.Utils.isProArray(property.val)).toBe(false);
+    expect(ProAct.ArrayUtils.isProArray(property.val)).toBe(false);
     expect(property.state).toBe(ProAct.States.init);
     expect(property.val).toBe(original);
 
     obj.a;
     expect(property.state).toBe(ProAct.States.ready);
     expect(ProAct.Utils.isArray(property.val)).toBe(false);
-    expect(ProAct.Utils.isProArray(property.val)).toBe(true);
+    expect(ProAct.ArrayUtils.isProArray(property.val)).toBe(true);
     expect(property.val.valueOf()).toEqual(original);
   });
 

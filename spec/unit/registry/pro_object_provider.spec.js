@@ -16,7 +16,7 @@ describe('ProAct.Registry.ProObjectProvider', function () {
     it ('creates and stores in the registry a ProAct.Array if called with array value', function () {
       var val = provider.make('test', null, [4, 5, 6]);
 
-      expect(P.U.isProArray(val)).toBe(true);
+      expect(P.ArrayUtils.isProArray(val)).toBe(true);
       expect(val.valueOf()).toEqual([4, 5, 6]);
     });
 

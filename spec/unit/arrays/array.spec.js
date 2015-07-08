@@ -108,8 +108,8 @@ describe('ProAct.Array', function () {
     expect(result.lastIndexOf(4)).toBe(1);
 
     expect(array instanceof Array).toBe(true);
-    expect(ProAct.Utils.isArrayObject(array)).toBe(true);
-    expect(ProAct.Utils.isProArray(array)).toBe(true);
+    expect(ProAct.ArrayUtils.isArrayObject(array)).toBe(true);
+    expect(ProAct.ArrayUtils.isProArray(array)).toBe(true);
     expect(ProAct.Utils.isArray(array)).toBe(false);
   });
 
@@ -222,7 +222,7 @@ describe('ProAct.Array', function () {
       var array = new ProAct.Array(1, 2, 3, 4, 5),
           res = array.concat(6, 7);
 
-      expect(ProAct.Utils.isProArray(res)).toBe(true);
+      expect(ProAct.ArrayUtils.isProArray(res)).toBe(true);
       expect(res.valueOf()).toEqual([1, 2, 3, 4, 5, 6, 7]);
     });
 
@@ -537,7 +537,7 @@ describe('ProAct.Array', function () {
         return (el % 2) === 0;
       });
 
-      expect(ProAct.Utils.isProArray(filtered)).toBe(true);
+      expect(ProAct.ArrayUtils.isProArray(filtered)).toBe(true);
       expect(filtered.toArray()).toEqual([2, 4]);
 
       array[0] = -2;
@@ -703,7 +703,7 @@ describe('ProAct.Array', function () {
         return el + el;
       });
 
-      expect(ProAct.Utils.isProArray(mapped)).toBe(true);
+      expect(ProAct.ArrayUtils.isProArray(mapped)).toBe(true);
       expect(mapped.toArray()).toEqual([2, 4, 6]);
 
       array[0] = 0;
@@ -1527,7 +1527,7 @@ describe('ProAct.Array', function () {
 
   it ('turns array memebers into ProAct.Arrays.', function () {
     var array = new ProAct.Array(1, [1, 2], [[1, 2, 3], [1, 2, 3, 4], [1, 2, 3, 4, 5]], [[[6], 7], 8]),
-        isPA = ProAct.Utils.isProArray;
+        isPA = ProAct.ArrayUtils.isProArray;
 
     expect(isPA(array)).toBe(true);
     expect(isPA(array[0])).toBe(false);
@@ -1570,7 +1570,7 @@ describe('ProAct.Array', function () {
   it ('turns object memebers into ProAct.Objects.', function () {
     var array = new ProAct.Array(1, [1, 2], {a:1, b: 2}, {c:3, d: {e: 4, f: [5, 6]}}, {g:7, h: function () {return this.g + 3;}}),
         isPO = ProAct.Utils.isProObject,
-        isPA = ProAct.Utils.isProArray;
+        isPA = ProAct.ArrayUtils.isProArray;
 
     expect(isPA(array)).toBe(true);
     expect(isPA(array[0])).toBe(false);
@@ -1593,7 +1593,7 @@ describe('ProAct.Array', function () {
   it ('turns new object memebers into ProAct.Objects.', function () {
     var array = new ProAct.Array(),
         isPO = ProAct.Utils.isProObject,
-        isPA = ProAct.Utils.isProArray;
+        isPA = ProAct.ArrayUtils.isProArray;
 
     array.push({
       a: 3,

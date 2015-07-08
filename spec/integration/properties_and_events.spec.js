@@ -63,11 +63,11 @@ describe('ProAct.Event, ProAct.ValueEvent, ProAct.Property, ProAct.AutoProperty,
     expect(obj.e.b).toBe(true);
 
     expect(obj.p('f').type()).toEqual(ProAct.Property.Types.array);
-    expect(ProAct.U.isProArray(obj.f)).toBe(true);
+    expect(ProAct.AU.isProArray(obj.f)).toBe(true);
     expect(obj.f[0]).toEqual(1);
     expect(obj.f[1]).toEqual(false);
     expect(obj.f[2]).toBeNull;
-    expect(ProAct.U.isProArray(obj.f[3])).toBe(true);
+    expect(ProAct.AU.isProArray(obj.f[3])).toBe(true);
     expect(obj.f[3][0]).toEqual('two');
     expect(ProAct.U.isProObject(obj.f[3][1])).toBe(true);
     expect(obj.f[3][1].p('a').type()).toEqual(ProAct.Property.Types.simple);
@@ -79,10 +79,10 @@ describe('ProAct.Event, ProAct.ValueEvent, ProAct.Property, ProAct.AutoProperty,
     expect(obj.g.v).toEqual(5);
 
     expect(obj.p('h').type()).toEqual(ProAct.Property.Types.array);
-    expect(ProAct.U.isProArray(obj.h)).toBe(true);
+    expect(ProAct.AU.isProArray(obj.h)).toBe(true);
     expect(obj.h[0]).toEqual(1);
     expect(obj.h[1]).toEqual(2);
-    expect(ProAct.U.isProArray(obj.h[2])).toBe(true);
+    expect(ProAct.AU.isProArray(obj.h[2])).toBe(true);
     expect(obj.h[2][0]).toEqual('one');
 
     expect(obj.p('i').type()).toEqual(ProAct.Property.Types.object);
@@ -125,7 +125,7 @@ describe('ProAct.Event, ProAct.ValueEvent, ProAct.Property, ProAct.AutoProperty,
     expect(obj.k).toEqual(false);
 
     obj.c = [4];
-    expect(ProAct.U.isProArray(obj.c)).toBe(true);
+    expect(ProAct.AU.isProArray(obj.c)).toBe(true);
     expect(obj.c.valueOf()).toEqual([4]);
     expect(obj.p('c').type()).toEqual(ProAct.Property.Types.array);
     expect(obj.p('c').listeners.change.length).toEqual(1);
@@ -152,7 +152,7 @@ describe('ProAct.Event, ProAct.ValueEvent, ProAct.Property, ProAct.AutoProperty,
 
   it ('array property can be set to null and it will be turned to simple property', function () {
     expect(obj.p('f').type()).toEqual(ProAct.Property.Types.array);
-    expect(ProAct.U.isProArray(obj.f)).toBe(true);
+    expect(ProAct.AU.isProArray(obj.f)).toBe(true);
     expect(obj.k).toBe(false);
 
     obj.f = null;

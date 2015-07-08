@@ -32,7 +32,7 @@ describe('ProAct', function () {
       var array = ProAct.prob([1, 2, 3, 4, 5]),
           joined = array.pjoin('-');
 
-      expect(ProAct.Utils.isProArray(array)).toBe(true);
+      expect(ProAct.ArrayUtils.isProArray(array)).toBe(true);
       expect(joined.v).toEqual('1-2-3-4-5');
 
       array[2] = 30;

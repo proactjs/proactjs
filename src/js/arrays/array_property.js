@@ -54,8 +54,10 @@ function ArrayProperty (queueName, proObject, property) {
   var self = this, getter;
 
   getter = function () {
+    var isPA = P.AU.isProArray;
+
     self.addCaller();
-    if (!P.U.isProArray(self.val)) {
+    if (!isPA(self.val)) {
       self.val = new P.A(self.val);
     }
 
@@ -73,7 +75,7 @@ function ArrayProperty (queueName, proObject, property) {
             return self;
           }
 
-          if (!P.U.isProArray(self.val)) {
+          if (!isPA(self.val)) {
             self.val = new P.A(self.val);
             if (queueName) {
               self.val.core.queueName = queueName;
@@ -221,7 +223,7 @@ ProAct.ArrayPropertyProvider.prototype = P.U.ex(Object.create(P.PP.prototype), {
    *      True if the value of <b>object[property]</b> an array.
    */
   filter: function (object, property, meta) {
-    return P.U.isArrayObject(object[property]);
+    return P.AU.isArrayObject(object[property]);
   },
 
   /**

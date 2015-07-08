@@ -99,7 +99,7 @@ ProAct.Array.Listeners = P.A.L = pArrayLs = {
         }
       } else if (op === pArrayOps.reverse || op === pArrayOps.sort) {
         nvs = transformed._array;
-        if (P.U.isProArray(args)) {
+        if (P.AU.isProArray(args)) {
           toAdd = args._array;
         } else {
           toAdd = args;
