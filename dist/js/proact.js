@@ -260,31 +260,6 @@
 	  },
 	
 	  /**
-	   * Checks if the passed value is instance of the {{#crossLink "ProAct.Array"}}{{/crossLink}} type or not.
-	   * TODO Move to the proact-arrays module.
-	   *
-	   * @method isProArray
-	   * @param {Object} value The value to check.
-	   * @return {Boolean} True if the passed `value` is a ProAct.Array instance.
-	   */
-	  isProArray: function (value) {
-	    return value !== null && P.U.isObject(value) && P.U.isArray(value._array) && value.length !== undefined;
-	  },
-	
-	  /**
-	   * Checks if the passed value is a valid array-like object or not.
-	   * Array like objects in ProAct.js are plain JavaScript arrays and {{#crossLink "ProAct.Array"}}{{/crossLink}}s.
-	   * TODO Move to the proact-arrays module.
-	   *
-	   * @method isArrayObject
-	   * @param {Object} value The value to check.
-	   * @return {Boolean} True if the passed `value` is an Array or ProAct.Array instance.
-	   */
-	  isArrayObject: function (value) {
-	    return P.U.isArray(value) || P.U.isProArray(value);
-	  },
-	
-	  /**
 	   * Clones the passed object. It creates a deep copy of it.
 	   * For now it clones only arrays.
 	   *
@@ -6086,12 +6061,6 @@
 	   *  acc.get(); // 10
 	   * ```
 	   *
-	   * or
-	   *
-	   * ```
-	   *  var acc = prop.accumulate('+'); // The same as the above if the DSL module is present.
-	   * ```
-	   *
 	   * @for ProAct.Property
 	   * @instance
 	   * @method accumulate
@@ -7004,7 +6973,7 @@
 	   */
 	  filter: function (object, property, meta) {
 	    var v = object[property];
-	    return (v === null || v === undefined) || (!P.U.isFunction(v) && !P.U.isArrayObject(v) && !P.U.isObject(v));
+	    return (v === null || v === undefined) || (!P.U.isFunction(v) && !P.U.isArray(v) && !P.U.isObject(v));
 	  },
 	
 	  /**
@@ -7623,6 +7592,33 @@
 	 */
 	ProAct.currentCaller = null;
 	
+	ProAct.ArrayUtils = Pro.AU = {
+	
+	  /**
+	   * Checks if the passed value is instance of the {{#crossLink "ProAct.Array"}}{{/crossLink}} type or not.
+	   *
+	   * @method isProArray
+	   * @param {Object} value The value to check.
+	   * @return {Boolean} True if the passed `value` is a ProAct.Array instance.
+	   */
+	  isProArray: function (value) {
+	    return value !== null && P.U.isObject(value) && P.U.isArray(value._array) && value.length !== undefined;
+	  },
+	
+	  /**
+	   * Checks if the passed value is a valid array-like object or not.
+	   * Array like objects in ProAct.js are plain JavaScript arrays and {{#crossLink "ProAct.Array"}}{{/crossLink}}s.
+	   *
+	   * @method isArrayObject
+	   * @param {Object} value The value to check.
+	   * @return {Boolean} True if the passed `value` is an Array or ProAct.Array instance.
+	   */
+	  isArrayObject: function (value) {
+	    return P.U.isArray(value) || P.ArrayUtils.isProArray(value);
+	  }
+	
+	};
+	
 	/**
 	 * @module proact-arrays
 	 */
@@ -7679,8 +7675,10 @@
 	  var self = this, getter;
 	
 	  getter = function () {
+	    var isPA = P.AU.isProArray;
+	
 	    self.addCaller();
-	    if (!P.U.isProArray(self.val)) {
+	    if (!isPA(self.val)) {
 	      self.val = new P.A(self.val);
 	    }
 	
@@ -7698,7 +7696,7 @@
 	            return self;
 	          }
 	
-	          if (!P.U.isProArray(self.val)) {
+	          if (!isPA(self.val)) {
 	            self.val = new P.A(self.val);
 	            if (queueName) {
 	              self.val.core.queueName = queueName;
@@ -7846,7 +7844,7 @@
 	   *      True if the value of <b>object[property]</b> an array.
 	   */
 	  filter: function (object, property, meta) {
-	    return P.U.isArrayObject(object[property]);
+	    return P.AU.isArrayObject(object[property]);
 	  },
 	
 	  /**
@@ -8617,7 +8615,7 @@
 	  concat: function () {
 	    var res, rightProArray;
 	
-	    if (arguments.length === 1 && P.U.isProArray(arguments[0])) {
+	    if (arguments.length === 1 && P.AU.isProArray(arguments[0])) {
 	      rightProArray = arguments[0];
 	      arguments[0] = rightProArray._array;
 	    }
@@ -9398,7 +9396,7 @@
 	   */
 	  toArray: function () {
 	    var result = [], i, ar = this._array, ln = ar.length, el,
-	        isPA = P.U.isProArray;
+	        isPA = P.AU.isProArray;
 	
 	    for (i = 0; i < ln; i++) {
 	      el = ar[i];
@@ -9567,7 +9565,7 @@
 	        }
 	      } else if (op === pArrayOps.reverse || op === pArrayOps.sort) {
 	        nvs = transformed._array;
-	        if (P.U.isProArray(args)) {
+	        if (P.AU.isProArray(args)) {
 	          toAdd = args._array;
 	        } else {
 	          toAdd = args;
