@@ -1,3 +1,13 @@
+/**
+ * Contains a set of utility functions to ease working with {{#crossLink "ProAct.Array"}}{{/crossLink}}s.
+ * Can be reffered by using `ProAct.AU` too.
+ *
+ * This class is part of the `proact-arrays` module of ProAct.js.
+ *
+ * @namespace ProAct
+ * @class ArrayUtils
+ * @static
+ */
 ProAct.ArrayUtils = Pro.AU = {
 
   /**
