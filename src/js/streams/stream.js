@@ -112,6 +112,12 @@ function Stream (queueName, source, transforms) {
 }
 ProAct.Stream = ProAct.S = Stream;
 
+P.U.ex(P.S, {
+  fromString: function (str, args) {
+    throw new Error('Stream.fromString is not implemented!');
+  }
+});
+
 ProAct.Stream.prototype = P.U.ex(Object.create(P.Actor.prototype), {
 
   /**

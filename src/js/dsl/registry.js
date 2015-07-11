@@ -338,6 +338,14 @@ P.U.ex(P.Actor.prototype, {
 
 });
 
+P.U.ex(P.S, {
+  fromString: function (str, args) {
+    return P.registry.setup(
+      new ProAct.Stream(), str, args
+    );
+  }
+});
+
 P.U.ex(P.ObjectCore.prototype, {
 
   /**

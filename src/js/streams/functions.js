@@ -13,10 +13,8 @@ function stream (subscribe, transformations, source, queueName) {
     stream = new ProAct.Stream(queueName, source, transformations);
   } else if (P.U.isFunction(subscribe)) {
     stream = new ProAct.SubscribableStream(subscribe, queueName, source, transformations);
-  } else if (P.U.isString(subscribe) && P.registry) {
-    stream = P.registry.setup(
-      new ProAct.Stream(), subscribe, slice.call(arguments, 1)
-    );
+  } else if (P.U.isString(subscribe)) {
+    stream = Stream.fromString(subscribe, slice.call(arguments, 1));
   }
 
   stream.trigger = StreamUtil.trigger;
