@@ -17,9 +17,11 @@ function stream (subscribe, transformations, source, queueName) {
     stream = Stream.fromString(subscribe, slice.call(arguments, 1));
   }
 
-  stream.trigger = StreamUtil.trigger;
-  stream.triggerErr = StreamUtil.triggerErr;
-  stream.triggerClose= StreamUtil.triggerClose;
+  if (!subscribe || P.U.isString(subscribe)) {
+    stream.trigger = StreamUtil.trigger;
+    stream.triggerErr = StreamUtil.triggerErr;
+    stream.triggerClose= StreamUtil.triggerClose;
+  }
 
   return stream;
 }
