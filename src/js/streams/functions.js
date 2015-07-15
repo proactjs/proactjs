@@ -1,5 +1,23 @@
 /**
+ * @module proact-streams
+ */
+
+/**
  * Creates a {{#crossLink "ProAct.Stream"}}{{/crossLink}} instance.
+ *
+ * This method is capable of creating various `source` streams.
+ *
+ * For example if the method is called like that:
+ * ```
+ *  var stream = ProAct.stream();
+ * ```
+ *
+ * A sourceless stream will be created, but it will be possible to invoke `trigger*` on it:
+ * ```
+ *  stream.trigger(val);
+ *  stream.triggerErr(new Error());
+ *  stream.triggerClose();
+ * ```
  *
  * @for ProAct
  * @method stream
