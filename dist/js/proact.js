@@ -3403,6 +3403,12 @@
 	}
 	ProAct.Stream = ProAct.S = Stream;
 	
+	P.U.ex(P.S, {
+	  fromString: function (str, args) {
+	    throw new Error('Stream.fromString is not implemented!');
+	  }
+	});
+	
 	ProAct.Stream.prototype = P.U.ex(Object.create(P.Actor.prototype), {
 	
 	  /**
@@ -4942,10 +4948,8 @@
 	    stream = new ProAct.Stream(queueName, source, transformations);
 	  } else if (P.U.isFunction(subscribe)) {
 	    stream = new ProAct.SubscribableStream(subscribe, queueName, source, transformations);
-	  } else if (P.U.isString(subscribe) && P.registry) {
-	    stream = P.registry.setup(
-	      new ProAct.Stream(), subscribe, slice.call(arguments, 1)
-	    );
+	  } else if (P.U.isString(subscribe)) {
+	    stream = Stream.fromString(subscribe, slice.call(arguments, 1));
 	  }
 	
 	  stream.trigger = StreamUtil.trigger;
@@ -7592,6 +7596,16 @@
 	 */
 	ProAct.currentCaller = null;
 	
+	/**
+	 * Contains a set of utility functions to ease working with {{#crossLink "ProAct.Array"}}{{/crossLink}}s.
+	 * Can be reffered by using `ProAct.AU` too.
+	 *
+	 * This class is part of the `proact-arrays` module of ProAct.js.
+	 *
+	 * @namespace ProAct
+	 * @class ArrayUtils
+	 * @static
+	 */
 	ProAct.ArrayUtils = Pro.AU = {
 	
 	  /**
@@ -10715,6 +10729,14 @@
 	    return this.transform(transformation);
 	  }
 	
+	});
+	
+	P.U.ex(P.S, {
+	  fromString: function (str, args) {
+	    return P.registry.setup(
+	      new ProAct.Stream(), str, args
+	    );
+	  }
 	});
 	
 	P.U.ex(P.ObjectCore.prototype, {
