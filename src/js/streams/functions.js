@@ -19,6 +19,23 @@
  *  stream.triggerClose();
  * ```
  *
+ * The method can be called with a subscribe function too:
+ * ```
+ *  var stream = ProAct.stream(function (source) {
+ *    // ... logic using the source - the source is a stream, that has trigger/triggerErr/triggerClose
+ *    $('.sel').on('click.myClick', function (e) {
+ *      source.trigger(e);
+ *    });
+ *
+ *    return function () {
+ *      // unsubscribing logic
+ *      $('.sel').off('click.myClick');
+ *    };
+ *  });
+ * ```
+ *
+ * So subscribe/unsubscribe to an even source can be programmed here.
+ *
  * @for ProAct
  * @method stream
  * @static
