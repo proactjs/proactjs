@@ -41,6 +41,7 @@
  *
  * @for ProAct
  * @method stream
+ * @param {String|Function} subscribe
  * @static
  * @return {ProAct.Stream}
  *      A {{#crossLink "ProAct.Stream"}}{{/crossLink}} instance.
