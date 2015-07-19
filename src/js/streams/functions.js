@@ -34,7 +34,10 @@
  *  });
  * ```
  *
- * So subscribe/unsubscribe to an even source can be programmed here.
+ * So subscribe/unsubscribe to an even source can be programmed using this method.
+ *
+ * The first argument can be a string too and if that's the case, {{#crossLink "ProAct.Stream"}}{{/crossLink}}'s
+ * `fromString` method will be used for the stream construction.
  *
  * @for ProAct
  * @method stream
