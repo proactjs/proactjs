@@ -23,13 +23,6 @@
  */
 ProAct.OpStore = {
 
-  /**
-   * Default operation definitions, that can be used by most of the operations to be defined.
-   *
-   * @namespace ProAct.OpStore
-   * @class all
-   * @static
-   */
   all: {
 
     /**
