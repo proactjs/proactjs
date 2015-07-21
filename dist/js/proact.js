@@ -4934,10 +4934,49 @@
 	});
 	
 	/**
+	 * @module proact-streams
+	 */
+	
+	/**
 	 * Creates a {{#crossLink "ProAct.Stream"}}{{/crossLink}} instance.
+	 *
+	 * This method is capable of creating various `source` streams.
+	 *
+	 * For example if the method is called like that:
+	 * ```
+	 *  var stream = ProAct.stream();
+	 * ```
+	 *
+	 * A sourceless stream will be created, but it will be possible to invoke `trigger*` on it:
+	 * ```
+	 *  stream.trigger(val);
+	 *  stream.triggerErr(new Error());
+	 *  stream.triggerClose();
+	 * ```
+	 *
+	 * The method can be called with a subscribe function too:
+	 * ```
+	 *  var stream = ProAct.stream(function (source) {
+	 *    // ... logic using the source - the source is a stream, that has trigger/triggerErr/triggerClose
+	 *    $('.sel').on('click.myClick', function (e) {
+	 *      source.trigger(e);
+	 *    });
+	 *
+	 *    return function () {
+	 *      // unsubscribing logic
+	 *      $('.sel').off('click.myClick');
+	 *    };
+	 *  });
+	 * ```
+	 *
+	 * So subscribe/unsubscribe to an even source can be programmed using this method.
+	 *
+	 * The first argument can be a string too and if that's the case, {{#crossLink "ProAct.Stream"}}{{/crossLink}}'s
+	 * `fromString` method will be used for the stream construction.
 	 *
 	 * @for ProAct
 	 * @method stream
+	 * @param {String|Function} subscribe
 	 * @static
 	 * @return {ProAct.Stream}
 	 *      A {{#crossLink "ProAct.Stream"}}{{/crossLink}} instance.
