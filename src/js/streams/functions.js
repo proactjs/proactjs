@@ -42,6 +42,8 @@
  * @for ProAct
  * @method stream
  * @param {String|Function} subscribe
+ *      Can be null for no subsbcribe functon, can function to be used for subscribtion to a source or
+ *      can be string to use it with {{#crossLink "ProAct.Stream/fromString:method"}}{{/crossLink}}
  * @static
  * @return {ProAct.Stream}
  *      A {{#crossLink "ProAct.Stream"}}{{/crossLink}} instance.
