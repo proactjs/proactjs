@@ -4976,7 +4976,23 @@
 	 *
 	 * @for ProAct
 	 * @method stream
-	 * @param {String|Function} subscribe
+	 * @param {String|Function} [subscribe]
+	 *      Can be null for no subsbcribe functon, can function to be used for subscribtion to a source or
+	 *      can be string to use it with {{#crossLink "ProAct.Stream/fromString:method"}}{{/crossLink}}
+	 * @param {Array} [transformations]
+	 *      A list of transformation to be used on all incoming chages.
+	 * @param {ProAct.Actor} source
+	 *      A default source of the stream, can be null.
+	 * @param {String} queueName
+	 *      The name of the queue all the updates should be pushed to.
+	 *      <p>
+	 *        If this parameter is null/undefined the default queue of
+	 *        {{#crossLink "ProAct/flow:property"}}{{/crossLink}} is used.
+	 *      </p>
+	 *      <p>
+	 *        If this parameter is not a string it is used as the
+	 *        <i>source</i>.
+	 *      </p>
 	 * @static
 	 * @return {ProAct.Stream}
 	 *      A {{#crossLink "ProAct.Stream"}}{{/crossLink}} instance.
@@ -10836,13 +10852,6 @@
 	 */
 	ProAct.OpStore = {
 	
-	  /**
-	   * Default operation definitions, that can be used by most of the operations to be defined.
-	   *
-	   * @namespace ProAct.OpStore
-	   * @class all
-	   * @static
-	   */
 	  all: {
 	
 	    /**
