@@ -51,15 +51,6 @@ module.exports = function(grunt) {
       }
     },
 
-    jsdoc : {
-      dist : {
-        src: ['src/js/**/*.js'],
-        options: {
-          destination: 'doc'
-        }
-      }
-    },
-
     pkg: grunt.file.readJSON('package.json'),
     yuidoc: {
       compile: {
@@ -67,7 +58,7 @@ module.exports = function(grunt) {
         description: '<%= pkg.description %>',
         version: '<%= pkg.version %>',
         url: '<%= pkg.homepage %>',
-        logo: '../proact_logo_icon.png',
+        logo: 'https://proactjs.github.io/proact_logo_small.png',
         options: {
           linkNatives: true,
           paths: [
