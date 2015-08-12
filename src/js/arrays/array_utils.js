@@ -18,7 +18,7 @@ ProAct.ArrayUtils = Pro.AU = {
    * @return {Boolean} True if the passed `value` is a ProAct.Array instance.
    */
   isProArray: function (value) {
-    return value !== null && P.U.isObject(value) && P.U.isArray(value._array) && value.length !== undefined;
+    return value !== null && P.U.isObject(value) && P.U.isArray(value._array) && value.length !== undefined && value.core != undefined;
   },
 
   /**
