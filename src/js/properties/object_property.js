@@ -78,7 +78,7 @@ function ObjectProperty (queueName, proObject, property) {
             }
 
             if (P.U.isArray(this)) {
-              self.update();
+              ProAct.ActorUtil.update.call(self);
               return;
             }
 
