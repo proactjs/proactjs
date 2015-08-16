@@ -6504,7 +6504,7 @@
 	            }
 	
 	            if (P.U.isArray(this)) {
-	              self.update();
+	              ProAct.ActorUtil.update.call(self);
 	              return;
 	            }
 	
@@ -6671,7 +6671,7 @@
 	      return;
 	    }
 	
-	    ActorUtil.update.call();
+	    ActorUtil.update.call(target);
 	  };
 	
 	  P.P.call(this, queueName, proObject, property, getter, setter);
@@ -7671,7 +7671,7 @@
 	   * @return {Boolean} True if the passed `value` is a ProAct.Array instance.
 	   */
 	  isProArray: function (value) {
-	    return value !== null && P.U.isObject(value) && P.U.isArray(value._array) && value.length !== undefined;
+	    return value !== null && P.U.isObject(value) && P.U.isArray(value._array) && value.length !== undefined && value.core != undefined;
 	  },
 	
 	  /**
