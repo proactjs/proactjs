@@ -69,7 +69,7 @@ var ProAct = Pro = P = {},
  * @static
  * @for ProAct
  */
-ProAct.VERSION = '1.3.0';
+ProAct.VERSION = '1.3.1';
 
 
 /**
