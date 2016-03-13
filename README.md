@@ -66,6 +66,7 @@ Let's say we want to define sum=a+b. We want whenever 'a' or 'b' changes, 'sum' 
   obj.b = 25;
   console.log(obj.sum); // sum is 30
 ```
+
 Now. What about a sum of all the array's elements:
 ```javascript
   var obj = ProAct.prob({
